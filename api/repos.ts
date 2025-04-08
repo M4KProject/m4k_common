@@ -1,4 +1,4 @@
-import { Err, toErr } from "../helpers/err";
+import { Err } from "../helpers/err";
 import { AssetModel, DeviceModel, GroupModel, MemberModel, Model, supabase } from "./_generated";
 import { checkAuth } from "./auth";
 
@@ -11,18 +11,18 @@ export interface ModelBase<T = number> {
 export class RepoError extends Error {
     response: any;
 
-    constructor(response) {
+    constructor(response: any) {
         super(String(response.error || response));
         this.response = response;
         console.warn('RepoError', response.error, response);
     }
 }
 
-const _toPromise = <T>(p: any) => {
-    return new Promise<T | null>((resolve, reject) => {
-        p.then(response => {
+const _toPromise = <T>(p: any, defaultValue: T) => {
+    return new Promise<T>((resolve, reject) => {
+        p.then((response: any) => {
             if (response.error) reject(new RepoError(response))
-            else resolve((response.data || null) as T | null)
+            else resolve((response.data || defaultValue) as T)
         })
         if (p.catch) p.catch((error: any) => reject(new RepoError(error)))
     })
@@ -51,10 +51,6 @@ const _addFilter = <T extends Model = any>(query: Select<T>, filter?: Filter<T>)
     return query;
 }
 
-const _checkAuth = async () => {
-    supabase.auth
-}
-
 export type From<T extends Model = any> = ReturnType<typeof supabase.from<any, T>>
 export type Select<T extends Model = any> = ReturnType<From<T>['select']>
 export type FilterItem<T extends Model = any> = Partial<T> | ((query: Select<T>) => any) | undefined | null
@@ -76,14 +72,14 @@ export class Repo<T extends Model> {
         return this.from().select(_toColumnsString(columns));
     }
 
-    async filter(filter: Filter<T>, columns?: Columns<T>, limit = 1000) {
+    async list(filter?: Filter<T>, columns?: Columns<T>, limit = 1000) {
         await checkAuth()
-        return _toPromise<T[]>(_addFilter(this.select(columns), filter).limit(limit)).then(items => items || []);
+        return _toPromise<T[]>(_addFilter(this.select(columns), filter).limit(limit), []);
     }
 
     async find(filter: Filter<T>, columns?: Columns<T>) {
         await checkAuth()
-        return _toPromise<T>(_addFilter(this.select(columns), filter).maybeSingle());
+        return _toPromise<T|null>(_addFilter(this.select(columns), filter).maybeSingle(), null);
     }
 
     async get(id: string, columns?: Columns<T>) {
@@ -91,14 +87,15 @@ export class Repo<T extends Model> {
         return this.find({ id } as Partial<T>, columns);
     }
 
-    async insert(item: Omit<T, 'id'>, selectColumns?: Columns<T>) {
+    async insert(item: Insert<T>, selectColumns?: Columns<T>) {
         console.debug('insert', this.schema, item, selectColumns);
         await checkAuth()
-        return _toPromise<T>(
+        return _toPromise<T|null>(
             this.from()
                 .insert(item as any)
                 .select(_toColumnsString(selectColumns))
-                .single()
+                .single(),
+            null
         )
     }
 
@@ -106,13 +103,29 @@ export class Repo<T extends Model> {
         console.debug('update', this.schema, id, changes, selectColumns);
         if (!id) throw new Err('no id');
         await checkAuth()
-        return _toPromise<T>(
+        return _toPromise<T|null>(
             this.from()
                 .update(changes as any)
                 .eq('id', id as any)
                 .select(_toColumnsString(selectColumns))
-                .single()
+                .single(),
+            null
         )
+    }
+
+    async delete(id: string): Promise<number | null> {
+        console.debug('delete', this.schema, id);
+        if (!id) throw new Err('no id');
+        await checkAuth()
+        return new Promise((resolve, reject) => {
+            this.from().delete().eq('id', id as any).then(value => {
+                if (value.error) {
+                    reject(value.error)
+                    return
+                }
+                resolve(value.count)
+            })
+        })
     }
 }
 

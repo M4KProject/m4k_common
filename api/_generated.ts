@@ -44,6 +44,7 @@ export interface DeviceModel extends Model {
 }
 
 export interface AssetModel extends Model {
+  key?: string;
   status?: string;
   path?: string;
   title?: string;

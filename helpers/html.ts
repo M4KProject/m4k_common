@@ -198,7 +198,7 @@ const cssFunMap = {
 }
 
 type CssFunMap = typeof cssFunMap
-type CssRecord = React.CSSProperties & {
+export type CssRecord = React.CSSProperties & {
     [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0]
 }
 export type Css = null|string|string[]|Record<string, CssRecord>;

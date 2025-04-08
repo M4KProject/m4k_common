@@ -3,13 +3,16 @@ import { Session } from "@supabase/supabase-js";
 import { supabase } from "./_generated";
 
 export const auth$ = new Msg<Session | null>(null)
-export const isAuth$ = new Msg<boolean>(false)
+export const isAuth$ = new Msg(false)
+export const isAuthLoading$ = new Msg(true)
 
 supabase.auth.getSession().then(({ data: { session } }) => {
+    isAuthLoading$.set(false);
     auth$.set(session)
 })
 
 supabase.auth.onAuthStateChange((_event, session) => {
+    isAuthLoading$.set(false);
     auth$.set(session)
 })
 
@@ -48,6 +51,7 @@ export const checkAuth = async (): Promise<Session> => {
         const session = auth$.v;
         if (session) return session;
         
+        isAuthLoading$.set(true);
         const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
         const nextSession = refreshData.session
         if (refreshError || !nextSession) {
