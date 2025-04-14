@@ -38,10 +38,21 @@ export const getChanges = (source: any, target: any): any => {
   return result;
 };
 
-export const deleteKey = <T>(record: Record<string, T>, ...keys: string[]): Record<string, T> => {
-  for (const key of keys) delete record[key];
+export const setKey = <T, K extends keyof T>(record: T, key: K, value: T[K]): T => {
+  record[key] = value;
   return record;
 };
+
+interface DeleteKey {
+  <T, K1 extends keyof T>(record: T, k1: K1): Omit<T, K1>;
+  <T, K1 extends keyof T, K2 extends keyof T>(record: T, k1: K1, k2: K2): Omit<Omit<T, K1>, K2>;
+  <T, K1 extends keyof T, K2 extends keyof T, K3 extends keyof T>(record: T, k1: K1, k2: K2, k3: K3): Omit<Omit<Omit<T, K1>, K2>, K3>;
+  <T>(record: Record<string, T>, ...keys: string[]): Record<string, T>;
+}
+export const deleteKey = ((record: any, ...keys: string[]): any => {
+  for (const key of keys) delete record[key];
+  return record;
+}) as DeleteKey;
 
 export const clone = <T>(obj: T): T => {
   if (typeof obj !== 'object' || obj === null) return obj;

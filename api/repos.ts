@@ -1,6 +1,7 @@
-import { Err } from "../helpers/err";
-import { AssetModel, DeviceModel, GroupModel, MemberModel, Model, supabase } from "./_generated";
+import { Err, toErr } from "../helpers/err";
+import { Model, supabase } from "./_generated";
 import { checkAuth } from "./auth";
+import { DeviceModel, GroupModel, MemberModel, ContentModel } from "./interfaces";
 
 export interface ModelBase<T = number> {
     id: T;
@@ -18,11 +19,20 @@ export class RepoError extends Error {
     }
 }
 
-const _toPromise = <T>(p: any, defaultValue: T) => {
+const _toPromise = <T>(p: any, onNull: () => T) => {
     return new Promise<T>((resolve, reject) => {
         p.then((response: any) => {
-            if (response.error) reject(new RepoError(response))
-            else resolve((response.data || defaultValue) as T)
+            if (response.error) {
+                reject(new RepoError(response))
+            }
+            else {
+                try {
+                    resolve((response.data || onNull()) as T)
+                }
+                catch (err) {
+                    reject(err)
+                }
+            }
         })
         if (p.catch) p.catch((error: any) => reject(new RepoError(error)))
     })
@@ -74,12 +84,12 @@ export class Repo<T extends Model> {
 
     async list(filter?: Filter<T>, columns?: Columns<T>, limit = 1000) {
         await checkAuth()
-        return _toPromise<T[]>(_addFilter(this.select(columns), filter).limit(limit), []);
+        return _toPromise<T[]>(_addFilter(this.select(columns), filter).limit(limit), () => []);
     }
 
     async find(filter: Filter<T>, columns?: Columns<T>) {
         await checkAuth()
-        return _toPromise<T|null>(_addFilter(this.select(columns), filter).maybeSingle(), null);
+        return _toPromise<T|null>(_addFilter(this.select(columns), filter).maybeSingle(), () => null);
     }
 
     async get(id: string, columns?: Columns<T>) {
@@ -87,29 +97,33 @@ export class Repo<T extends Model> {
         return this.find({ id } as Partial<T>, columns);
     }
 
-    async insert(item: Insert<T>, selectColumns?: Columns<T>) {
+    async create(item: Insert<T>, selectColumns?: Columns<T>) {
         console.debug('insert', this.schema, item, selectColumns);
         await checkAuth()
-        return _toPromise<T|null>(
+        return _toPromise<T>(
             this.from()
                 .insert(item as any)
                 .select(_toColumnsString(selectColumns))
                 .single(),
-            null
+            () => {
+                throw toErr('create-no-result');
+            }
         )
     }
 
-    async update(id: string, changes?: Update, selectColumns?: Columns<T>): Promise<T | null> {
+    async update(id: string, changes?: Update, selectColumns?: Columns<T>) {
         console.debug('update', this.schema, id, changes, selectColumns);
         if (!id) throw new Err('no id');
         await checkAuth()
-        return _toPromise<T|null>(
+        return _toPromise<T>(
             this.from()
                 .update(changes as any)
                 .eq('id', id as any)
                 .select(_toColumnsString(selectColumns))
                 .single(),
-            null
+            () => {
+                throw toErr('update-no-result');
+            }
         )
     }
 
@@ -132,4 +146,4 @@ export class Repo<T extends Model> {
 export const memberRepo = new Repo<MemberModel>('members');
 export const groupRepo = new Repo<GroupModel>('groups');
 export const deviceRepo = new Repo<DeviceModel>('devices');
-export const assetRepo = new Repo<AssetModel>('assets');
+export const contentRepo = new Repo<ContentModel>('contents');

@@ -2,12 +2,10 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const URL = 'https://prod.m4k.fr';
+const URL = 'https://a.m4k.fr';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzQyOTk2NDExLCJleHAiOjE4NDI5OTY0MTF9.ZrHQ3c5bPtL018UT0l0qgvwYmMPE0aksoVnCTa3H9Ws';
 export const supabase = createClient(URL, ANON_KEY)
 export type Supabase = typeof supabase
-
-export type Role = 'none'|'viewer'|'editor'|'admin';
 
 export interface Model {
   id: string;
@@ -15,44 +13,42 @@ export interface Model {
   updated: string;
 }
 
-export interface MemberModel extends Model {
-  role: Role;
-  user_id: string;
-  group_id: string;
+export interface _MemberModel extends Model {
+  role: string; // USER-DEFINED
+  user_id: string; // uuid
+  group_id: string; // uuid
 }
 
-export interface GroupModel extends Model {
-  name?: string;
-  desc?: string;
-  owner_id?: string;
+export interface _ContentModel extends Model {
+  public?: boolean; // boolean
+  key?: string; // text
+  title?: string; // text
+  type?: string; // text
+  data?: any; // jsonb
+  meta?: any; // jsonb
+  owner_id?: string; // uuid
+  group_id?: string; // uuid
+  parent_id?: string; // uuid
 }
 
-export interface DeviceModel extends Model {
-  started?: Date;
-  online?: Date;
-  name?: string;
-  type?: string;
-  info?: string;
-  width?: number;
-  height?: number;
-  action?: string;
-  status?: string;
-  input?: any;
-  result?: any;
-  user_id?: string;
-  group_id?: string;
+export interface _GroupModel extends Model {
+  name?: string; // text
+  desc?: string; // text
+  owner_id?: string; // uuid
 }
 
-export interface AssetModel extends Model {
-  key?: string;
-  status?: string;
-  path?: string;
-  title?: string;
-  mime?: string;
-  data?: any;
-  public?: boolean;
-  owner_id?: string;
-  group_id?: string;
-  parent_id?: string;
-  object_id?: string;
+export interface _DeviceModel extends Model {
+  started?: string; // timestamp with time zone
+  online?: string; // timestamp with time zone
+  name?: string; // text
+  type?: string; // text
+  info?: string; // text
+  width?: number; // integer
+  height?: number; // integer
+  action?: string; // text
+  status?: string; // text
+  input?: any; // jsonb
+  result?: any; // jsonb
+  user_id?: string; // uuid
+  group_id?: string; // uuid
 }

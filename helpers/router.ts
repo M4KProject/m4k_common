@@ -5,32 +5,7 @@ const queryDecode = (s: string) => decodeURIComponent(s.replace(PLUS_EXP, ' '));
 
 export type RouterHandler = (route: RouterValue) => void;
 
-// export type RouterParams = Record<string, string>;
-
-export enum AdminPage {
-  None = '',
-  Auth = 'auth',
-  Site = 'site',
-  Device = 'device',
-  Group = 'group',
-  Admin = 'admin',
-}
-
-export type RouterParams = {
-  adminPage?: AdminPage;
-  siteKey?: string;
-  sitePage?: string;
-  groupKey?: string;
-  deviceId?: string;
-  siteId?: string;
-  lang?: string;
-
-  cls?: string;
-
-  // auth
-  refreshToken?: string;
-  error?: string;
-};
+export type RouterParams = Record<string, string>;
 
 export type RouterNode = {
   children?: { [part: string]: RouterNode };

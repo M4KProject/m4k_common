@@ -1,11 +1,8 @@
-import { setCss, Css } from "../helpers/html"
-import { useEffect } from "react"
+import { setCss, Css } from "../helpers/html";
 
-const useCss = (className: string, css?: Css, isShow: boolean = true) => {
-    useEffect(() => {
-        if (isShow) setCss(className, css)
-    }, [className, css, isShow])
-    return className
+const useCss = (className: string, css?: Css) => {
+    setCss(className, css);
+    return className;
 }
 
-export default useCss
+export default useCss;

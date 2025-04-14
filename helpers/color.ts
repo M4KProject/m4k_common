@@ -253,56 +253,65 @@ export const addRgb = (color: any, values: Partial<RgbColor>) => {
 }
 
 export const addHsl = (color: any, values: Partial<HslColor>) => {
-    color = toHsl(color)
-    if (isNumber(values.h)) color.h += values.h
-    if (isNumber(values.s)) color.s += values.s
-    if (isNumber(values.l)) color.l += values.l
-    if (isNumber(values.a)) color.a += values.a
-    return toHex(color)
+    color = toHsl(color);
+    if (isNumber(values.h)) color.h += values.h;
+    if (isNumber(values.s)) color.s += values.s;
+    if (isNumber(values.l)) color.l += values.l;
+    if (isNumber(values.a)) color.a += values.a;
+    return toHex(color);
+}
+
+export const mulHsl = (color: any, values: Partial<HslColor>) => {
+    color = toHsl(color);
+    if (isNumber(values.h)) color.h *= values.h;
+    if (isNumber(values.s)) color.s *= values.s;
+    if (isNumber(values.l)) color.l *= values.l;
+    if (isNumber(values.a)) color.a *= values.a;
+    return toHex(color);
 }
 
 export const setRgb = (color: any, values: Partial<RgbColor>) => {
-    color = toRgb(color)
-    if (isNumber(values.r)) color.r = values.r
-    if (isNumber(values.g)) color.g = values.g
-    if (isNumber(values.b)) color.b = values.b
-    if (isNumber(values.a)) color.a = values.a
-    return toHex(color)
+    color = toRgb(color);
+    if (isNumber(values.r)) color.r = values.r;
+    if (isNumber(values.g)) color.g = values.g;
+    if (isNumber(values.b)) color.b = values.b;
+    if (isNumber(values.a)) color.a = values.a;
+    return toHex(color);
 }
 
 export const setHsl = (color: any, values: Partial<HslColor>) => {
-    color = toHsl(color)
-    if (isNumber(values.h)) color.h = values.h
-    if (isNumber(values.s)) color.s = values.s
-    if (isNumber(values.l)) color.l = values.l
-    if (isNumber(values.a)) color.a = values.a
-    return toHex(color)
+    color = toHsl(color);
+    if (isNumber(values.h)) color.h = values.h;
+    if (isNumber(values.s)) color.s = values.s;
+    if (isNumber(values.l)) color.l = values.l;
+    if (isNumber(values.a)) color.a = values.a;
+    return toHex(color);
 }
 
 /**
- * Lightens a color by a specified amount
- * @param color - Color in any supported format
- * @param amount - Amount to lighten (0-100), defaults to 10
- * @returns Hex string of lightened color
+ * lightens a color by a specified amount
+ * @param color - color in any supported format
+ * @param amount - amount to lighten (0-100), defaults to 10
+ * @returns hex string of lightened color
  */
 export const lighten = (color: any, amount: number = 10): string => addHsl(color, { l: amount })
 
 /**
- * Darkens a color by a specified amount
- * @param color - Color in any supported format
- * @param amount - Amount to darken (0-100), defaults to 10
- * @returns Hex string of darkened color
+ * darkens a color by a specified amount
+ * @param color - color in any supported format
+ * @param amount - amount to darken (0-100), defaults to 10
+ * @returns hex string of darkened color
  */
 export const darken = (color: any, amount: number = 10): string => lighten(color, -amount);
 
 /**
- * Mixes two colors with a specified ratio
- * @param color1 - First color in any supported format
- * @param color2 - Second color in any supported format
- * @param ratio - Mix ratio (0-1) where 0 is color1 and 1 is color2, defaults to 0.5
- * @returns Hex string of mixed color
+ * mixes two colors with a specified ratio
+ * @param color1 - first color in any supported format
+ * @param color2 - second color in any supported format
+ * @param ratio - mix ratio (0-1) where 0 is color1 and 1 is color2, defaults to 0.5
+ * @returns hex string of mixed color
  */
-export const mixColor = (color1: any, color2: any, ratio: number = 0.5): string => {
+export const mixcolor = (color1: any, color2: any, ratio: number = 0.5): string => {
     const a = toRgb(color1);
     const b = toRgb(color2);
     
@@ -315,18 +324,18 @@ export const mixColor = (color1: any, color2: any, ratio: number = 0.5): string 
 }
 
 /**
- * Increases the saturation of a color
- * @param color - Color in any supported format
- * @param amount - Amount to increase saturation (0-100), defaults to 10
- * @returns Hex string of saturated color
+ * increases the saturation of a color
+ * @param color - color in any supported format
+ * @param amount - amount to increase saturation (0-100), defaults to 10
+ * @returns hex string of saturated color
  */
 export const saturate = (color: any, amount: number = 10): string => addHsl(color, { s: amount })
 
 /**
- * Decreases the saturation of a color
- * @param color - Color in any supported format
- * @param amount - Amount to decrease saturation (0-100), defaults to 10
- * @returns Hex string of desaturated color
+ * decreases the saturation of a color
+ * @param color - color in any supported format
+ * @param amount - amount to decrease saturation (0-100), defaults to 10
+ * @returns hex string of desaturated color
  */
 export const desaturate = (color: any, amount: number = 10): string => saturate(color, -amount);
 

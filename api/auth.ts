@@ -1,19 +1,28 @@
 import Msg from "../helpers/Msg";
-import { Session } from "@supabase/supabase-js";
+import { AuthError, Session } from "@supabase/supabase-js";
 import { supabase } from "./_generated";
 
-export const auth$ = new Msg<Session | null>(null)
-export const isAuth$ = new Msg(false)
-export const isAuthLoading$ = new Msg(true)
+export const auth$ = new Msg<Session | null>(null);
+export const authError$ = new Msg<AuthError | null>(null);
+export const authId$ = new Msg('');
+export const isAuth$ = new Msg(false);
+export const isAuthLoading$ = new Msg(true);
 
-supabase.auth.getSession().then(({ data: { session } }) => {
+supabase.auth.getSession().then((result) => {
+    console.debug('auth getSession', result);
     isAuthLoading$.set(false);
-    auth$.set(session)
+    if (result.error) {
+        authError$.set(result.error);
+        auth$.set(null);
+    } else {
+        authError$.set(null);
+        auth$.set(result.data.session);
+    }
 })
 
-supabase.auth.onAuthStateChange((_event, session) => {
-    isAuthLoading$.set(false);
-    auth$.set(session)
+supabase.auth.onAuthStateChange((event, session) => {
+    console.debug('auth onAuthStateChange', event, session);
+    auth$.set(session);
 })
 
 let sessionTimeout: any = null;
@@ -24,7 +33,8 @@ const getRemainingTimeMs = (session: Session) => {
 }
 
 auth$.on(session => {
-    isAuth$.set(!!session)
+    isAuth$.set(!!session);
+    authId$.set(session?.user?.id||'');
 
     if (session) {
         const remainingTimeMs = getRemainingTimeMs(session)

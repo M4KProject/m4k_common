@@ -6,10 +6,10 @@ import { toArray, toNbr, toRecord } from './cast';
 import { setAttrs, addJsFile, addCssFile, Cls, setCls, createEl } from './html';
 import addFont from './addFont';
 import router from './router';
-import calcBodyClass from './calcBodyClass';
 import getCallCb from './getCallCb';
 import tPriceToHtml from './tPriceToHtml';
 import priceToHtml from './priceToHtml';
+import { addResponsiveListener, responsive$, Responsive } from './responsive';
 
 const body = document.body;
 const bodyClass = body.classList;
@@ -22,14 +22,11 @@ export type RenderProp = (el: BElement, value: any, b: B) => void;
 
 ///// Element Render /////
 
-type ViewWidth = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+addResponsiveListener()
 
-calcBodyClass();
-window.addEventListener('resize', calcBodyClass);
-
-function styleProp(viewWidth?: ViewWidth) {
+const styleProp = (responsive?: Responsive) => {
   return (el: BElement, style: CSSStyleDeclaration) => {
-    if (viewWidth && !bodyClass.contains(viewWidth)) return;
+    if (responsive && responsive$.v !== responsive) return;
     Object.assign(el.style, toRecord(style));
   };
 }

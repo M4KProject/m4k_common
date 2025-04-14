@@ -7,6 +7,17 @@ export const clean = (arg: string): string =>
         .replace(/[^\w]/g, ' ')
         .trim();
 
+export const isSearched = (source: string|null|undefined, search: string|null|undefined) => {
+    if (!search) return true;
+    if (!source) return false;
+    const sourceCleaned = clean(source).toLowerCase();
+    const searchTags = clean(search).toLowerCase().split(' ');
+    for (const tag of searchTags) {
+        if (sourceCleaned.indexOf(tag) === -1) return false;
+    }
+    return true;
+}
+
 /**
  * words("abc") -> ["abc"]
  * words("abcDef") -> ["abc", "def"]

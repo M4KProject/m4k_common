@@ -193,4 +193,14 @@ export default class Msg<T = any> implements IMsg<T> {
       });
     });
   }
+
+  private _g?: () => T;
+  getter() {
+    return this._g || (this._g = () => this.get());
+  }
+
+  private _s?: (next: T) => void;
+  setter() {
+    return this._s || (this._s = (next: T) => this.set(next));
+  }
 }

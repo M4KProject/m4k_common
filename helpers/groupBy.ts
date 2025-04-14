@@ -20,7 +20,7 @@ interface ValueBy {
 }
 
 const _groupBy = (items: any, key: any, val: any, add: any) => {
-  const getK = isFunction(key) ? key : isNil(key) ? (_: any, k: any) => k : (i: any) => i[key];
+  const getK = isFunction(key) ? key : isNil(key) ? (i: any) => i : (i: any) => i[key];
   const getV = isFunction(val) ? val : isNil(val) ? (i: any) => i : (i: any) => i[val];
   if (isArray(items)) {
     items.forEach((item, index) => {
