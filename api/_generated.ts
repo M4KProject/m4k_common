@@ -2,9 +2,9 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const URL = 'https://a.m4k.fr';
+export const SUPABASE_URL = 'https://prod.m4k.fr';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzQyOTk2NDExLCJleHAiOjE4NDI5OTY0MTF9.ZrHQ3c5bPtL018UT0l0qgvwYmMPE0aksoVnCTa3H9Ws';
-export const supabase = createClient(URL, ANON_KEY)
+export const supabase = createClient(SUPABASE_URL, ANON_KEY)
 export type Supabase = typeof supabase
 
 export interface Model {
@@ -48,6 +48,19 @@ export interface _DeviceModel extends Model {
   action?: string; // text
   status?: string; // text
   input?: any; // jsonb
+  result?: any; // jsonb
+  user_id?: string; // uuid
+  group_id?: string; // uuid
+}
+
+export interface _JobModel extends Model {
+  started?: string; // timestamp with time zone
+  finished?: string; // timestamp with time zone
+  status?: string; // text
+  progress?: number; // integer
+  action?: string; // text
+  input?: any; // jsonb
+  error?: string; // text
   result?: any; // jsonb
   user_id?: string; // uuid
   group_id?: string; // uuid

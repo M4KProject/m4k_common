@@ -22,7 +22,7 @@ export type RenderProp = (el: BElement, value: any, b: B) => void;
 
 ///// Element Render /////
 
-addResponsiveListener()
+// addResponsiveListener()
 
 const styleProp = (responsive?: Responsive) => {
   return (el: BElement, style: CSSStyleDeclaration) => {

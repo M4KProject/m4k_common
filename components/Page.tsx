@@ -19,7 +19,7 @@ const css: Css = {
     },
     '&HeaderTitle': {
         ...flexRow({ align: 'center' }),
-        fontSize: 2,
+        fontSize: 1.4,
         fg: 'headerTitle',
     },
     '&HeaderContent': {

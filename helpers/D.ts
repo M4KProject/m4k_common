@@ -202,6 +202,9 @@ export interface D {
 }
 
 export interface DRoot extends D {
+  css: string;
+  js: string;
+
   /** Templates */
   templates?: Record<string, D>;
 

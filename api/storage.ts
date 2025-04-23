@@ -1,6 +1,11 @@
-import { valueBy } from "@common/helpers/groupBy";
 import { supabase } from "./_generated";
 import { sort } from "@common/helpers/array";
+import { supaPromise } from "./helpers";
+import { groupId$ } from "./repos";
+import Msg from "@common/helpers/Msg";
+import { isAuth$ } from "./auth";
+import { getMedias } from "./rpc";
+import { deleteKey, valueBy } from "@common/helpers";
 
 export type Storage = (typeof supabase)['storage'];
 export type StorageFrom = ReturnType<Storage['from']>;
@@ -25,21 +30,6 @@ export type StorageError = NonNullable<AsyncReturnType<StorageFrom['list']>['err
 // export type FileObject = (Parameters<ReturnType<StorageFrom['list']>['then']>['0'] & {});
 
 export const from = (bucket: string) => supabase.storage.from(bucket);
-
-const _toPromise = async <T>(name: string, promiseLike: PromiseLike<{ data: T|null, error: StorageError|null; }>): Promise<T|null> => {
-    try {
-        console.debug('storage', name);
-        const { data, error } = await promiseLike;
-        if (error) throw error;
-        console.debug('storage', name, 'result', data);
-        return data;
-    }
-    catch (error) {
-        console.warn('storage', name, 'error', error);
-        throw error;
-    }
-}
-
 
 // export const uploadFile = async (bucket: string, path: string, file: File, options: FileOptions = {}) => {
 //     try {
@@ -133,53 +123,91 @@ const _toPromise = async <T>(name: string, promiseLike: PromiseLike<{ data: T|nu
 
 const MEDIAS_BUCKET = 'medias';
 
-export const uploadMedia = (path: string, file: File) => (
-    _toPromise('uploadMedia',
-        from(MEDIAS_BUCKET).upload(path, file, {
-            cacheControl: '3600',
-            upsert: true,
-        })
-    )
+const uploadMedia = (path: string, file: File) => supaPromise('uploadMedia',
+    from(MEDIAS_BUCKET).upload(path, file, {
+        cacheControl: '3600',
+        upsert: true,
+    })
 );
 
-export const removeMedia = (path: string) => (
-    _toPromise('removeMedia',
-        from(MEDIAS_BUCKET).remove([path])
-    )
-);
+const getMediaFilePath = (groupId: string, file: File) => `${groupId}/${file.name}`;
 
-export const moveMedia = async (fromPath: string, toPath: string) => (
-    _toPromise('moveMedia',
-        from(MEDIAS_BUCKET).move(fromPath, toPath)
-    )
-);
+export const medias$ = new Msg<Record<string, MediaInfo>>({});
+export const mediaUploadByPath$ = new Msg<Record<string, number>>({});
 
-export const getMediaPreviewUrl = async (media: MediaInfo) => {
-    if (media.mimetype.startsWith('image')) {
-        const result = await _toPromise(
-            'getMediaPreviewUrl',
-            from(MEDIAS_BUCKET).createSignedUrl(media.path, 120, { transform: { width: 200 } })
-        )
-        return result?.signedUrl;
-    }
-    return "";
+const setMediaUploadProgress = (groupId: string, file: File, progress: number|null) => {
+    mediaUploadByPath$.next(next => {
+        const path = getMediaFilePath(groupId, file);
+        if (progress === null) {
+            return deleteKey({ ...next }, path);
+        } else {
+            return ({ ...next, [path]: progress });
+        }
+    });
 }
 
-export const getMediaSignedUrl = async (path: string) => {
-    const result = await _toPromise(
-        'getMediaSignedUrl',
-        from(MEDIAS_BUCKET).createSignedUrl(path, 120)
-    );
-    return result?.signedUrl;
+export const uploadMedias = async (files: File[]) => {
+    const results: { id: string; path: string; fullPath: string; }[] = [];
+    const isAuth = isAuth$.v;
+    const groupId = groupId$.v;
+    if (!isAuth && !groupId) return results;
+    for (const file of files) {
+        setMediaUploadProgress(groupId, file, 0);
+    }
+    for (const file of files) {
+        const path = getMediaFilePath(groupId, file);
+        setMediaUploadProgress(groupId, file, 10);
+        const result = await uploadMedia(path, file).catch(error => {
+            console.error('uploadMedia', error);
+        });
+        if (result) results.push(result);
+        setMediaUploadProgress(groupId, file, 100);
+    }
+    setTimeout(() => {
+        for (const file of files) {
+            setMediaUploadProgress(groupId, file, null);
+        }
+    }, 5000);
+    await mediasRefresh();
+    return results;
 };
+
+export const removeMedia = (path: string) => supaPromise('removeMedia',
+    from(MEDIAS_BUCKET).remove([path])
+);
+
+export const moveMedia = (fromPath: string, toPath: string) => supaPromise('moveMedia',
+    from(MEDIAS_BUCKET).move(fromPath, toPath)
+);
+
+// export const getMediaSignedUrl = async (path: string) => {
+//     const result = await _toPromise(
+//         'getMediaSignedUrl',
+//         from(MEDIAS_BUCKET).createSignedUrl(path, 120)
+//     );
+//     return result?.signedUrl;
+// };
 
 export interface MediaInfo {
     id: string;
-    name: string;
-    mimetype: string;
     path: string;
-    size: number;
     updated: string;
+    mimetype: string;
+    size: number;
+    data: MediaData;
+
+    name: string;
+}
+
+export interface MediaData {
+    jobId?: string;
+    icon?: string; // path
+    uhd?: string; // path
+    hd?: string; // path
+    sd?: string; // path
+    svg?: string; // path
+    pages?: { hd?: string }[];
+    pdf?: string;
 }
 
 export interface FolderInfo {
@@ -192,8 +220,8 @@ export interface FolderInfo {
     parent?: FolderInfo;
 }
 
-export const getFolderPath = (path: string) => path.substring(0, path.lastIndexOf('/'));
-export const getFileName = (path: string) => path.substring(path.lastIndexOf('/') + 1);
+export const getFolderPath = (path: string) => path ? path.substring(0, path.lastIndexOf('/')) : '';;
+export const getFileName = (path: string) => path ? path.substring(path.lastIndexOf('/') + 1) : '';
 
 export const getFolderTree = (medias: MediaInfo[]) => {
     const newFolder = (): FolderInfo => ({ mimetype: 'folder', size: 0, path: '', name: '', folders: {}, medias: {} });
@@ -223,4 +251,32 @@ export const getFolderTree = (medias: MediaInfo[]) => {
     }
     _getFolderItems(root, items);
     return { root, items };
+}
+
+export const pathToUrl = (path?: string) => {
+    return path ? "https://a.m4k.fr/" + path : '';
+}
+
+export const getMediaImageUrl = (media: MediaInfo|MediaData, size: 'uhd'|'hd'|'icon') => {
+    console.debug('getMediaImageUrl', media, size);
+    const { svg, icon, hd, uhd } = (media as MediaInfo).data || (media as MediaData);
+    let image = (
+        svg ? svg :
+        size === 'icon' ? icon || hd :
+        size === 'hd' ? hd || icon :
+        uhd || hd || icon);
+    if (!image) {
+        console.warn('no image url', media);
+        return null;
+    }
+    console.debug('getMediaImageUrl', media, size, image);
+    return pathToUrl(image);
+};
+
+export const mediasRefresh = async () => {
+    const isAuth = isAuth$.v;
+    const groupId = groupId$.v;
+    if (!isAuth && !groupId) return;
+    const medias = await getMedias(groupId);
+    medias$.set(valueBy(medias, a => a.id));
 }

@@ -108,6 +108,11 @@ export default class Msg<T = any> implements IMsg<T> {
     return this.set(isFunction(value) ? value(this.v) : value, ignoreEqual);
   }
 
+  signal() {
+    this.set(this.v, true);
+    return this;
+  }
+
   merge(changes: Record<string,any>&Partial<T>) {
     const prev = (this.v as any) || {}
     this.set({ ...prev, ...changes } as any)

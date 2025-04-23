@@ -1,4 +1,5 @@
 import { addEl, Css, setCss, setEl } from "../helpers/html";
+import { sleep } from "./async";
 
 const overlayCss: Css = {
     '&': {
@@ -19,8 +20,10 @@ export const addOverlay = () => {
     return el as HTMLDivElement;
 }
 
-export const removeOverlay = (el: HTMLDivElement) => {
+export const removeOverlay = async (el: HTMLDivElement) => {
     const c = setCss('Overlay', overlayCss);
     setEl(el, { className: `${c} ${c}-removed` });
-    setTimeout(() => el.remove(), 500);
+    await sleep(300);
+    el.remove();
+    return;
 }

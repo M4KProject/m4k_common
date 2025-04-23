@@ -54,20 +54,20 @@ export const deleteKey = ((record: any, ...keys: string[]): any => {
   return record;
 }) as DeleteKey;
 
-export const clone = <T>(obj: T): T => {
+export const deepClone = <T>(obj: T): T => {
   if (typeof obj !== 'object' || obj === null) return obj;
   let c: any;
   if (Array.isArray(obj)) {
     c = [];
     for (let i = 0, l = obj.length; i < l; i++) {
-      c[i] = clone(obj[i]);
+      c[i] = deepClone(obj[i]);
     }
   } else {
     c = {};
     const keys = Object.keys(obj);
     for (let i = 0, l = keys.length; i < l; i++) {
       const key = keys[i];
-      c[key] = clone((obj as any)[key]);
+      c[key] = deepClone((obj as any)[key]);
     }
   }
   return c as T;

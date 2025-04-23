@@ -2,22 +2,24 @@ import { HTMLAttributes, ReactNode, useRef } from "react";
 import { flexCenter, flexRow } from "../helpers/flexBox";
 import { Css, clsx } from "../helpers/html";
 import useCss from "../hooks/useCss";
-import Div, { DivProps } from "./Div";
+import Div from "./Div";
 import Tr from "./Tr";
-import React from "react";
+import { router } from "@common/helpers";
 
 const css: Css = {
     '&': {
         ...flexRow({ align: 'center', justify: 'start' }),
         position: "relative",
-        m: 0.5,
+        // m: 0.5,
         p: 0.5,
         rounded: 2,
         border: 'none',
-        fontSize: 1,
         bg: 'transparent',
         fg: 'fg',
         hMin: 2.5,
+    },
+    '&-icon': {
+        m: 0,
     },
     '&Icon': {
         ...flexCenter(),
@@ -25,14 +27,12 @@ const css: Css = {
         w: 1.4,
         h: 1.4,
         rounded: 2,
-        fontSize: 1.2,
         bg: 'white',
         fg: 'selectedFg',
     },
     '&Content': {
         m: 0.25,
         flex: 1,
-        fontSize: 1.1,
         textAlign: 'left',
     },
     '&Sfx': {
@@ -74,8 +74,8 @@ export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
     icon?: ReactNode,
 };
 
-const Button = ({ cls, color, variant, selected, icon, children, ...props }: ButtonProps) => {
-    const c = useCss('Button', css)
+const Button = ({ cls, color, variant, selected, icon, children, onClick, ...props }: ButtonProps) => {
+    const c = useCss('Button', css);
 
     return (
         <button
@@ -86,6 +86,7 @@ const Button = ({ cls, color, variant, selected, icon, children, ...props }: But
                 variant && `${c}-${variant}`,
                 cls
             )}
+            onClick={onClick}
             {...props}
         >
             <Div cls={`${c}Sfx`} />

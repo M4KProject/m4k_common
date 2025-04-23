@@ -254,7 +254,7 @@ const animToCss = (value: AnimValue, ctx: CssContext) => {
 // }
 
 type Em = number|string|(number|string)[];
-const em = (v: Em): string => typeof v === 'number' ? v + 'em' : typeof v === 'string' ? v : v.map(em).join(' ');
+const em = (v: Em): string => typeof v === 'number' ? v + 'rem' : typeof v === 'string' ? v : v.map(em).join(' ');
 const cssFunMap = {
     w: (v: Em) => `width:${em(v)};`,
     h: (v: Em) => `height:${em(v)};`,

@@ -1,12 +1,11 @@
 import { ReactNode } from "react";
-import { Css } from "../helpers/html";
+import { Css, addListener } from "../helpers/html";
 import useCss from "../hooks/useCss";
 import Div, { DivProps } from "./Div";
 import Tr from "./Tr";
 import { addOverlay, removeOverlay } from "../helpers/overlay";
 import { flexCenter } from "../helpers/flexBox";
 import { createRoot } from "react-dom/client";
-import React from "react";
 
 // const css: Css = {
 //     '&': {
@@ -139,30 +138,53 @@ const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
 // , pos?: 'top'|'bottom'|'left'|'right'
 
 export const tooltip = (content: ReactNode|(() => ReactNode)) => {
+    let intervalRef: any;
     let overlay: HTMLDivElement|null = null;
     let root: ReturnType<typeof createRoot>|null = null;
-    let intervalRef: any;
-    const remove = () => {
+    let removeLeaveListener: (() => void)|null = null;
+    let removeClickListener: (() => void)|null = null;
+    const remove = async () => {
         clearInterval(intervalRef);
-        if (root) root.unmount();
-        root = null;
-        if (overlay) removeOverlay(overlay);
-        overlay = null;
+        if (removeLeaveListener) {
+            removeLeaveListener();
+            removeLeaveListener = null;
+        }
+        if (removeClickListener) {
+            removeClickListener();
+            removeClickListener = null;
+        }
+        if (overlay) {
+            await removeOverlay(overlay);
+            overlay = null;
+        }
+        if (root) {
+            root.unmount();
+            root = null;
+        }
     }
     return {
         onMouseOver: (event: any) => {
-            if (!overlay) overlay = addOverlay();
-            if (!root) root = createRoot(overlay);
             const target = (event.currentTarget || event.target) as HTMLElement;
+
+            clearInterval(intervalRef);
             intervalRef = setInterval(() => {
                 if (!target.isConnected) remove();
             }, 500);
+
+            if (removeLeaveListener) removeLeaveListener();
+            removeLeaveListener = addListener(target, 'mouseleave', remove);
+
+            if (removeClickListener) removeClickListener();
+            removeClickListener = addListener(0, 'click', remove);
+
+            if (!overlay) overlay = addOverlay();
+            if (!root) root = createRoot(overlay);
+
             root.render(
                 <Tooltip target={target}>
                     {typeof content === 'function' ? content() : content}
                 </Tooltip>
             );
         },
-        onMouseLeave: remove,
     }
 }

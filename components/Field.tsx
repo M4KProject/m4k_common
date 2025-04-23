@@ -1,11 +1,15 @@
 import { Css } from "../helpers/html";
 import useCss from "../hooks/useCss";
-import React, { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { flexCenter, flexColumn, flexRow } from "../helpers/flexBox";
 import { toNbr } from "../helpers/cast";
 import Div, { DivProps } from "./Div";
 import Tr from "./Tr";
 import { toErr } from "../helpers/err";
+import Button, { UploadButton } from "./Button";
+import useMsg from "@common/hooks/useMsg";
+import { getFileName, groupId$, medias$, uploadMedias } from "@common/api";
+import { valueBy } from "@common/helpers";
 
 const css: Css = {
     '&': {
@@ -84,32 +88,65 @@ export type FieldComp<T = any> = (props: {
     fieldProps: FieldProps<T>,
 }) => ReactNode;
 
-export interface FieldProps<T = any> extends DivProps {
-    row?: boolean,
-    type?: string,
+export type FieldType = 'text'|'multiline'|'html'|'color'|'number'|'select'|'switch'|'image'|'doc';
+
+export interface FieldInfo {
+    row?: boolean;
+    type?: FieldType;
     name?: string;
-    label?: ReactNode,
-    helper?: ReactNode,
-    value?: T,
-    cast?: (next: T) => T,
-    readonly?: boolean,
-    required?: boolean,
-    onValue?: (next: T) => void,
-    delay?: number,
-    items?: [string, ReactNode][],
+    label?: ReactNode;
+    helper?: ReactNode;
+    items?: [string, ReactNode][];
+    required?: boolean;
+    readonly?: boolean;
+    castType?: string;
 }
 
-const compByType: Record<string, FieldComp> = {
+export interface FieldProps<T = any> extends FieldInfo, DivProps {
+    value?: T;
+    cast?: (next: any) => T;
+    onValue?: (next: T) => void;
+    delay?: number;
+}
+
+export const castByType: Record<string, (next: any) => any> = {
+    number: (next: any) => {
+        const casted = toNbr(next, null);
+        if (casted === null) throw toErr('not-a-number');
+        return casted;
+    }
+}
+
+const getMediaField = (mimetypes: string[]): FieldComp => {
+    const mimetypeMap = valueBy(mimetypes, m => m, () => true);
+    return ({ cls, name, required, value, onChange }) => {
+        const medias = Object.values(useMsg(medias$));
+        const filteredMedias = medias.filter(m => mimetypeMap[m.mimetype]);
+        const groupId = useMsg(groupId$);
+        return (
+            <select className={cls} name={name} required={required} value={value} onChange={onChange}>
+                <option value="" className={!value ? `${cls}Selected` : undefined}></option>
+                {Object.values(filteredMedias).map(media => (
+                    <option key={media.id} value={media.id} className={media.id === value ? `${cls}Selected` : undefined}>
+                        {media.name.replace(`${groupId}/`, '')}
+                    </option>
+                ))}
+            </select>
+        );
+    }
+}
+
+const compByType: Record<FieldType, FieldComp> = {
     color: ({ cls, name, required, value, onChange }) => (
         <input className={cls} type="color" name={name} required={required} value={value} onChange={onChange} />
     ),
-    input: ({ cls, name, required, value, onChange }) => (
+    text: ({ cls, name, required, value, onChange }) => (
         <input className={cls} type="text" name={name} required={required} value={value} onChange={onChange} />
     ),
     number: ({ cls, name, required, value, onChange }) => (
         <input className={cls} type="number" name={name} required={required} value={value} onChange={onChange} />
     ),
-    text: ({ cls, name, required, value, onChange }) => (
+    multiline: ({ cls, name, required, value, onChange }) => (
         <textarea className={cls} name={name} required={required} value={value} onChange={onChange} rows={5} />
     ),
     html: ({ cls, name, required, value, onChange }) => (
@@ -131,11 +168,13 @@ const compByType: Record<string, FieldComp> = {
                 <Div cls={`${cls}Handle`}></Div>
             </Div>
         )
-    }
+    },
+    image: getMediaField(['image/png', 'image/jpeg']),
+    doc: getMediaField(['application/pdf']), 
 };
 
 const Field = (props: FieldProps) => {
-    const { cls, row, type, name, label, helper, readonly, required, value, cast, onValue, delay, items, ...divProps } = props;
+    const { cls, row, type, name, label, helper, readonly, required, value, cast, castType, onValue, delay, items, ...divProps } = props;
     const c = useCss('Field', css);
     
     const [initiated, setInitiated] = useState<any>(value);
@@ -143,7 +182,7 @@ const Field = (props: FieldProps) => {
     const [sended, setSended] = useState<any>(undefined);
     const [error, setError] = useState<any>(undefined);
 
-    console.debug('Field', name, { value, initiated, changed, sended, error });
+    // console.debug('Field', name, { value, initiated, changed, sended, error });
 
     const reset = () => {
         setInitiated(value);
@@ -156,31 +195,34 @@ const Field = (props: FieldProps) => {
 
     // if sync value change -> reset
     useEffect(() => {
-        console.debug('Field value', name, value);
+        // console.debug('Field value', name, value);
         if (sended !== undefined) {
             if (sended === value) return;
         }
         else {
             if (initiated === value) return;
         }
-        console.debug('Field value changed', name, initiated, '->', value);
+        // console.debug('Field value changed', name, initiated, '->', value);
         reset();
     }, [value]);
 
     // if next value change -> error or send
     useEffect(() => {
-        console.debug('Field changed', name, changed);
+        // console.debug('Field changed', name, changed);
         setError(undefined);
         if (changed === undefined) return;
         if (changed === sended) return;
         const timer = setTimeout(() => {
             try {
                 let casted = changed;
-                if (type === 'number') {
-                    casted = toNbr(casted, null);
-                    if (casted === null) throw toErr('not-a-number');
-                }
-                if (cast) casted = cast(casted);
+
+                if (castType && castType in castByType)
+                    casted = castByType[castType](casted);
+                else if (cast)
+                    casted = cast(casted);
+                else if (type && type in castByType)
+                    casted = castByType[type](casted);
+
                 if (casted === sended) return;
                 console.debug('Field sync', name, sended, '->', casted);
                 setSended(casted);
@@ -189,7 +231,7 @@ const Field = (props: FieldProps) => {
             catch (error) {
                 setError(error);
             }
-        }, delay === undefined ? 100 : delay);
+        }, delay === undefined ? 500 : delay);
         return () => clearTimeout(timer);
     }, [changed]);
 
@@ -201,7 +243,7 @@ const Field = (props: FieldProps) => {
         setChanged(next);
     }
 
-    const Comp = compByType[type as any] || compByType.input;
+    const Comp = compByType[type||'text'] || compByType.text;
     
     return (
         <Div {...divProps} cls={[c, row && `${c}-row`, type && `${c}-${type}`, error && `${c}-error`, cls]}>
