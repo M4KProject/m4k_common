@@ -2,7 +2,6 @@ import { HTMLAttributes } from "react";
 import { Css, clsx } from "../helpers/html";
 import useCss from "../hooks/useCss";
 import { flexCenter, flexColumn, flexRow } from "../helpers/flexBox";
-import React from "react";
 import Div from "./Div";
 
 const css: Css = {

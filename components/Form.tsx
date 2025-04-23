@@ -2,7 +2,6 @@ import { Css } from "../helpers/html";
 import useCss from "../hooks/useCss";
 import { flexColumn } from "../helpers/flexBox";
 import Div, { DivProps } from "./Div";
-import React from "react";
 
 const css: Css = {
     '&': {

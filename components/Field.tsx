@@ -6,9 +6,8 @@ import { toNbr } from "../helpers/cast";
 import Div, { DivProps } from "./Div";
 import Tr from "./Tr";
 import { toErr } from "../helpers/err";
-import Button, { UploadButton } from "./Button";
 import useMsg from "@common/hooks/useMsg";
-import { getFileName, groupId$, medias$, uploadMedias } from "@common/api";
+import { groupId$, medias$ } from "@common/api";
 import { valueBy } from "@common/helpers";
 
 const css: Css = {

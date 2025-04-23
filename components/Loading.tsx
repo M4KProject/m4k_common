@@ -5,7 +5,6 @@ import Tr from "./Tr";
 import { FcSynchronize } from "react-icons/fc";
 import { flexCenter } from "../helpers/flexBox";
 import { addTranslates } from "../hooks/useTr";
-import React from "react";
 
 const css: Css = {
     '&': {

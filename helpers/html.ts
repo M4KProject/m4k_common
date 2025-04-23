@@ -1,5 +1,5 @@
 import { isEqual, isNumber } from "./check";
-import { round } from "./nbr";
+// import { round } from "./nbr";
 
 export type Style = Partial<CSSStyleDeclaration>;
 

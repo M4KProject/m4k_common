@@ -5,7 +5,6 @@ import useCss from "../hooks/useCss";
 import { ReactNode } from "react";
 import Msg from "../helpers/Msg";
 import Div from "./Div";
-import React from "react";
 import Tr from "./Tr";
 
 export interface DialogOptions {

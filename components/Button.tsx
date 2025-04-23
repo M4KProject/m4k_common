@@ -4,7 +4,6 @@ import { Css, clsx } from "../helpers/html";
 import useCss from "../hooks/useCss";
 import Div from "./Div";
 import Tr from "./Tr";
-import { router } from "@common/helpers";
 
 const css: Css = {
     '&': {

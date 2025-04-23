@@ -9,7 +9,7 @@ import router from './router';
 import getCallCb from './getCallCb';
 import tPriceToHtml from './tPriceToHtml';
 import priceToHtml from './priceToHtml';
-import { addResponsiveListener, responsive$, Responsive } from './responsive';
+import { responsive$, Responsive } from './responsive';
 
 const body = document.body;
 const bodyClass = body.classList;

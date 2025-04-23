@@ -67,7 +67,7 @@ export function addHistory() {
   clearTimeout(historyTimer);
   historyTimer = setTimeout(async () => {
     console.debug('addHistory cb');
-    const data = exportData(B.root);
+    const data = exportData(B.root) as DRoot;
     histories.length = historyIndex;
     histories.push(data);
     historyIndex = histories.length;
@@ -138,7 +138,7 @@ export function exportData(b: B) {
   return d;
 }
 
-export function importData(b: B, d: D) {
+export function importData(b: B, d: DRoot) {
   console.debug('importData', d);
   cleanD(d);
   if (b === B.root) {

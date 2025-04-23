@@ -1,5 +1,5 @@
 import { setCssColors } from './html';
-import { lighten, darken, setHsl, addHsl } from './color';
+import { lighten, setHsl, addHsl } from './color';
 
 export const setTheme = (primary: string, secondary?: string, { colors }: { colors?: Record<string, string> } = {}) => {
     if (!secondary) secondary = addHsl(primary, { h: 180 });
@@ -13,7 +13,7 @@ export const setTheme = (primary: string, secondary?: string, { colors }: { colo
     // isDark ? lighten : darken
 
     const grey = '#808080';
-    const bg = lighten(grey, 40);
+    // const bg = lighten(grey, 40);
     const fg = lighten(grey, -40);
 
     setCssColors({
