@@ -56,7 +56,7 @@ const css: Css = {
 export interface TableProps extends HTMLAttributes<HTMLTableElement> {
     cls?: any
 };
-const Table = ({ cls, ...props }: TableProps) => {
+export const Table = ({ cls, ...props }: TableProps) => {
     const c = useCss('Table', css)
     return <table className={clsx(c, cls)} {...props} />;
 };

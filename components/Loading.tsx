@@ -33,7 +33,7 @@ addTranslates({
     loading: 'Chargement...',
 })
 
-const Loading = ({ cls, content, children, ...props }: DivProps & { content?: string }) => {
+export const Loading = ({ cls, content, children, ...props }: DivProps & { content?: string }) => {
     const c = useCss('Loading', css);
     return (
         <Div {...props} cls={[c, cls]}>

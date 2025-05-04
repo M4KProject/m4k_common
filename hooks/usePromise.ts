@@ -43,7 +43,7 @@ const _refresh = <T>(
  * @param deps Dependency array that triggers re-execution of the promise
  * @returns [value, error, isLoading, refresh] - Tuple containing result value, error state, and loading indicator
  */
-const usePromise = <T>(
+export const usePromise = <T>(
     constructor: () => IPromise<T>|null|undefined,
     deps: React.DependencyList
 ): [T|undefined, any, boolean, () => void] => {

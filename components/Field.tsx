@@ -6,9 +6,10 @@ import { toNbr } from "../helpers/cast";
 import Div, { DivProps } from "./Div";
 import Tr from "./Tr";
 import { toErr } from "../helpers/err";
-import useMsg from "@common/hooks/useMsg";
-import { groupId$, medias$ } from "@common/api";
-import { valueBy } from "@common/helpers";
+import { useMsg } from "../hooks/useMsg";
+import { groupId$ } from "../api/repos";
+import { medias$ } from "../api/storage";
+import { by } from "../helpers/by";
 
 const css: Css = {
     '&': {
@@ -117,7 +118,7 @@ export const castByType: Record<string, (next: any) => any> = {
 }
 
 const getMediaField = (mimetypes: string[]): FieldComp => {
-    const mimetypeMap = valueBy(mimetypes, m => m, () => true);
+    const mimetypeMap = by(mimetypes, m => m, () => true);
     return ({ cls, name, required, value, onChange }) => {
         const medias = Object.values(useMsg(medias$));
         const filteredMedias = medias.filter(m => mimetypeMap[m.mimetype]);
@@ -168,11 +169,11 @@ const compByType: Record<FieldType, FieldComp> = {
             </Div>
         )
     },
-    image: getMediaField(['image/png', 'image/jpeg']),
+    image: getMediaField(['image/png', 'image/jpeg', 'image/svg+xml', 'application/pdf']),
     doc: getMediaField(['application/pdf']), 
 };
 
-const Field = (props: FieldProps) => {
+export const Field = (props: FieldProps) => {
     const { cls, row, type, name, label, helper, readonly, required, value, cast, castType, onValue, delay, items, ...divProps } = props;
     const c = useCss('Field', css);
     

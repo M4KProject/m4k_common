@@ -68,13 +68,16 @@ const css: Css = {
 export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
     cls?: any
     color?: 'primary'|'secondary'|'success'|'warn'|'error',
-    variant?: 'icon',
+    variant?: 'upload',
     selected?: boolean,
     icon?: ReactNode,
+    before?: ReactNode,
 };
 
-const Button = ({ cls, color, variant, selected, icon, children, onClick, ...props }: ButtonProps) => {
+export const Button = ({ cls, color, variant, selected, icon, children, before, onClick, ...props }: ButtonProps) => {
     const c = useCss('Button', css);
+
+    const isIcon = icon && !children;
 
     return (
         <button
@@ -82,6 +85,7 @@ const Button = ({ cls, color, variant, selected, icon, children, onClick, ...pro
                 c,
                 color && `${c}-${color}`,
                 selected && `${c}-selected`,
+                isIcon && `${c}-icon`,
                 variant && `${c}-${variant}`,
                 cls
             )}
@@ -89,21 +93,12 @@ const Button = ({ cls, color, variant, selected, icon, children, onClick, ...pro
             {...props}
         >
             <Div cls={`${c}Sfx`} />
-            {icon && (
-                <Div cls={`${c}Icon`}>{icon}</Div>
-            )}
-            {children && (
-                <Div cls={`${c}Content`}>
-                    <Tr>{children}</Tr>
-                </Div>
-            )}
+            {before}
+            {icon && <Div cls={`${c}Icon`}>{icon}</Div>}
+            {children && <Div cls={`${c}Content`}><Tr>{children}</Tr></Div>}
         </button>
     );
 };
-
-export const IconButton = (props: ButtonProps) => <Button {...props} variant="icon" />
-export const PrimaryButton = (props: ButtonProps) => <Button {...props} color="primary" />
-export const SecondaryButton = (props: ButtonProps) => <Button {...props} color="secondary" />
 
 export interface UploadButtonProps extends ButtonProps {
     onFiles?: (files: File[]) => void;
@@ -111,33 +106,33 @@ export interface UploadButtonProps extends ButtonProps {
     multiple?: boolean;
     icon?: ReactNode;
 }
-export const UploadButton = ({ cls, children, onClick, onFiles, accept, multiple, ...props }: UploadButtonProps) => {
-    const c = useCss('Button', css);
+
+export const UploadButton = ({ onClick, onFiles, accept, multiple, ...props }: UploadButtonProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     
     return (
         <Button
-            cls={[`${c}-upload`, cls]}
+            variant="upload"
             onClick={event => {
                 if (onClick) onClick(event);
                 inputRef.current?.click();
             }}
             {...props}
-        >
-            <input
-                style={{ display: "none" }}
-                type="file"
-                ref={inputRef}
-                accept={accept}
-                multiple={multiple||true}
-                onChange={event => {
-                    const files = Array.from(event.target.files||[]);
-                    if (onFiles) onFiles(files);
-                    if (inputRef.current) inputRef.current.value = "";
-                }}
-            />
-            <Tr>{children}</Tr>
-        </Button>
+            before={
+                <input
+                    style={{ display: "none" }}
+                    type="file"
+                    ref={inputRef}
+                    accept={accept}
+                    multiple={multiple||true}
+                    onChange={event => {
+                        const files = Array.from(event.target.files||[]);
+                        if (onFiles) onFiles(files);
+                        if (inputRef.current) inputRef.current.value = "";
+                    }}
+                />
+            }
+        />
     )
 }
 

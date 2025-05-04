@@ -1,4 +1,4 @@
-import { deleteKey, toNbr, valueBy } from "@common/helpers";
+import { deleteKey, toNbr, by, byId } from "@common/helpers";
 import { Err, toErr } from "../helpers/err";
 import { Model, supabase } from "./_generated";
 import { checkAuth } from "./auth";
@@ -130,7 +130,7 @@ export class Repo<T extends Model> {
 
     async load(columns?: Columns<T>) {
         const items = await this.list(undefined, columns);
-        this.items$.set(valueBy(items, item => item.id));
+        this.items$.set(byId(items));
     }
 
     async list(filter?: Filter<T>, columns?: Columns<T>, limit = 1000): Promise<T[]> {
@@ -238,7 +238,7 @@ members$.on(async (members) => {
     emails$.set({});
     const userIds = Object.values(members).map(m => m.user_id);
     const emails = await getEmails(userIds);
-    emails$.set(valueBy(emails, e => e.id, e => e.email))
+    emails$.set(byId(emails, e => e.email))
 });
 
 

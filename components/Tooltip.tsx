@@ -110,17 +110,22 @@ const css: Css = {
 
     '&-top &Content': { top: '-0.5em', left: '50%', transform: 'translate(-50%, -100%)' },
     '&-top &Arrow': { top: '-0.5em', left: '50%' },
+
+    '&-bottom &Content': { bottom: '-0.5em', left: '50%', transform: 'translate(-50%, 100%)' },
+    '&-bottom &Arrow': { bottom: '-0.5em', left: '50%' },
 }
 
 export interface TooltipProps extends Omit<DivProps, 'title'> {
     target: HTMLElement,
     children: ReactNode,
 }
-const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
+export const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
     const c = useCss('Tooltip', css);
     const { top, left, width, height } = target.getBoundingClientRect();
 
-    const pos: string = 'top';
+    console.debug('top', top);
+
+    const pos: string = top > 40 ? 'top' : 'bottom';
     return (
         <Div cls={[`${c} ${c}-${pos}`, cls]} {...props} style={{
             top,

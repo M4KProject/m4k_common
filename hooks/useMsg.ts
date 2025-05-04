@@ -8,7 +8,7 @@ interface UseMsg {
 
 let i=0;
 
-const useMsg = (<T = any>(msg: IMsgReadonly<T> | null | undefined): T | undefined => {
+export const useMsg = (<T = any>(msg: IMsgReadonly<T> | null | undefined): T | undefined => {
   const setState = useState(0)[1];
   useEffect(() => {
     setState(i++)

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useTimerMs = (
+export const useTimerMs = (
     ms: number = 100,
     deps: React.DependencyList = []
 ): number => {

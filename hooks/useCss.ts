@@ -1,6 +1,6 @@
 import { setCss, Css } from "../helpers/html";
 
-const useCss = (className: string, css?: Css) => {
+export const useCss = (className: string, css?: Css) => {
     setCss(className, css);
     return className;
 }

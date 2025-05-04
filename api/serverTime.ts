@@ -1,5 +1,5 @@
 import { toErr } from '../helpers/err';
-import { rpc } from './rpc';
+import { rpcServerTime } from './rpc';
 
 export const getTime = (value: any) => {
     if (!value || (typeof value !== 'string' && typeof value !== 'number'))
@@ -11,7 +11,7 @@ let _serverTimeSync: number|null = null;
 
 export const resetServerTimeSync = async () => {
     const start = Date.now();
-    const remote = await rpc<string>('now').then(getTime);
+    const remote = await rpcServerTime().then(getTime);
     const local = (start + Date.now()) / 2;
     _serverTimeSync = remote - local;
 }

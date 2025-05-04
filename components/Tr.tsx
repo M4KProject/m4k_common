@@ -5,7 +5,7 @@ export interface TrProps extends HTMLAttributes<HTMLDivElement> {
     children?: any;
 };
 
-const Tr = ({ children }: TrProps) => {
+export const Tr = ({ children }: TrProps) => {
     const tr = useTr();
     return tr(children);
 };

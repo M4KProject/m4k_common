@@ -11,7 +11,7 @@ const css: Css = {
 
 interface FormProps extends DivProps {}
 
-const Form = ({ cls, children, ...props }: FormProps) => {
+export const Form = ({ cls, children, ...props }: FormProps) => {
     const c = useCss('Form', css);
 
     return (

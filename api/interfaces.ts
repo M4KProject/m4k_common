@@ -58,13 +58,25 @@ export interface DeviceModel extends _DeviceModel {}
 
 // JobModel
 interface _JobModelBase extends _JobModel {
-    status?: 'pending'|'processing'|'finished'|'deleted';
+    status?: 'pending'|'processing'|'finished'|'failed'|'deleted';
 }
 export interface ConverterJobModel extends _JobModelBase {
     action: 'convert';
     input: {
-        path: string;
+        name: string;
     };
 }
-export type JobModel = ConverterJobModel;
+export interface UnzipJobModel extends _JobModelBase {
+    action: 'unzip';
+    input: {
+        name: string;
+    };
+}
+export interface ZipJobModel extends _JobModelBase {
+    action: 'zip';
+    input: {
+        name: string;
+    };
+}
+export type JobModel = ConverterJobModel|UnzipJobModel|ZipJobModel;
 export type JobAction = JobModel['action'];

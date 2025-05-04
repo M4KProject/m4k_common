@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useAnimState = (isShow: boolean, duration: number = 300): string => {
+export const useAnimState = (isShow: boolean, duration: number = 300): string => {
     const [state, setState] = useState<string>(isShow ? 'show' : '');
 
     useEffect(() => {

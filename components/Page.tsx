@@ -34,7 +34,7 @@ const css: Css = {
 }
 
 export interface PageProps extends DivProps {};
-const Page = ({ cls, children, ...props }: PageProps) => {
+export const Page = ({ cls, children, ...props }: PageProps) => {
     const c = useCss('Page', css)
     return (
         <Div cls={[c, cls]} {...props}>
