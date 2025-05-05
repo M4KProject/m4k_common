@@ -158,7 +158,7 @@ export const upload = async (bucketId: string, name: string, file: File|string) 
     await mediasRefresh();
 }
 
-const getMediaFileName = (file: File) => file.name;
+// const getMediaFileName = (file: File) => file.name;
 
 // const setMediaUploadProgress = (file: File, progress: number|null) => {
 //     mediaUploadByPath$.next(next => {
