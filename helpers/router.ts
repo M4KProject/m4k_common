@@ -3,7 +3,7 @@ import Msg from './Msg'
 const PLUS_EXP = /\+/g;
 const queryDecode = (s: string) => decodeURIComponent(s.replace(PLUS_EXP, ' '));
 
-export type RouterHandler = (route: RouterValue) => void;
+export type RouterHandler = (route: RouterValue) => any;
 
 export type RouterParams = Record<string, string>;
 
@@ -87,11 +87,20 @@ const resolve = (path: string): RouterValue => {
   return result;
 };
 
-const forceRefresh = () => {
+let _lastResult: any = null;
+const forceRefresh = async () => {
   // console.debug('router.forceRefresh');
   const val = resolve(location.href);
   updated$.set(val);
-  if (val.handler) val.handler(val);
+  const h = val.handler;
+  if (h) {
+    const result = await h(val);
+    console.debug('result', result);
+    if (_lastResult === result) return;
+    (_lastResult?.unmount||(() => {}))();
+    _lastResult = result;
+    (result?.mount||(() => {}))();
+  }
 };
 
 const refresh = (_event?: Event | string) => {

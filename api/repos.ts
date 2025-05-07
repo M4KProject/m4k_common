@@ -2,7 +2,7 @@ import { deleteKey, toNbr, byId } from "@common/helpers";
 import { Err, toErr } from "../helpers/err";
 import { Model, supabase } from "./_generated";
 import { checkAuth } from "./auth";
-import { supaPromise } from "./helpers";
+import { supa } from "./helpers";
 import { DeviceModel, GroupModel, MemberModel, ContentModel, JobModel } from "./interfaces";
 import Msg from "@common/helpers/Msg";
 import { getEmails } from "./rpc";
@@ -135,14 +135,14 @@ export class Repo<T extends Model> {
 
     async list(filter?: Filter<T>, columns?: Columns<T>, limit = 1000): Promise<T[]> {
         await checkAuth();
-        return supaPromise<any[]>(`${this.schema}.list`, () => (
+        return supa<any[]>(`${this.schema}.list`, () => (
             _addFilter(this.select(columns), filter).limit(limit)
         ), () => []);
     }
 
     async find(filter: Filter<T>, columns?: Columns<T>) {
         await checkAuth();
-        const item = await supaPromise<T|null>(`${this.schema}.find`, () => (
+        const item = await supa<T|null>(`${this.schema}.find`, () => (
             _addFilter(this.select(columns), filter).maybeSingle()
         ), () => null);
         if (item?.id) this.sync(item.id, item, columns);
@@ -157,7 +157,7 @@ export class Repo<T extends Model> {
     async create(item: Insert<T>, columns?: Columns<T>) {
         console.debug('insert', this.schema, item, columns);
         await checkAuth();
-        const next = await supaPromise<T>(`${this.schema}.create`, () => (
+        const next = await supa<T>(`${this.schema}.create`, () => (
             this.from()
                 .insert(item as any)
                 .select(_toColumnsString(columns))
@@ -175,7 +175,7 @@ export class Repo<T extends Model> {
         if (!changes) changes = {};
         await checkAuth();
         this.sync(id, changes, columns);
-        const item = await supaPromise<T>(`${this.schema}.update`, () => (
+        const item = await supa<T>(`${this.schema}.update`, () => (
             this.from()
                 .update(changes as any)
                 .eq('id', id as any)
@@ -193,7 +193,7 @@ export class Repo<T extends Model> {
         if (!id) throw new Err('no id');
         await checkAuth();
         this.sync(id, null, []);
-        return await supaPromise(`${this.schema}.delete`, () => (
+        return await supa(`${this.schema}.delete`, () => (
             this.from().delete().eq('id', id as any)
         )).then((data: any) => toNbr(data.count, null));
     }

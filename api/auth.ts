@@ -1,6 +1,8 @@
 import Msg from "../helpers/Msg";
-import { AuthError, Session } from "@supabase/supabase-js";
+import { AuthError, Session, User, WeakPassword } from "@supabase/supabase-js";
 import { supabase } from "./_generated";
+import { supa } from "./helpers";
+import { toErr } from "@common/helpers";
 
 export const auth$ = new Msg<Session | null>(null);
 export const authError$ = new Msg<AuthError | null>(null);
@@ -62,11 +64,9 @@ export const checkAuth = async (): Promise<Session> => {
         if (session) return session;
         
         isAuthLoading$.set(true);
-        const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-        const nextSession = refreshData.session
-        if (refreshError || !nextSession) {
-            throw refreshError || new Error("session-expired");
-        }
+        const data = await supa('refreshSession', s => s.auth.refreshSession());
+        const nextSession = data?.session
+        if (!nextSession) throw toErr("session-expired");
 
         auth$.set(nextSession)
         return nextSession
@@ -76,3 +76,42 @@ export const checkAuth = async (): Promise<Session> => {
         throw error;
     }
 };
+
+export const signUp = async (email: string, password: string) => (
+    supa('signUp', s => s.auth.signUp({
+        email,
+        password,
+        options: {
+            emailRedirectTo: location.href,
+        }
+    }))
+    // auth$.set(result?.session || null);
+)
+
+export const signIn = (email: string, password: string) => (
+    supa<{
+        user?: User|null,
+        session?: Session|null,
+        weakPassword?: WeakPassword|null,
+    }>('signIn', s => s.auth.signInWithPassword({
+        email,
+        password,
+    }))
+    // auth$.set(result?.session || null);
+);
+
+export const resetPassword = (email: string) => (
+    supa('resetPassword', s => s.auth.resetPasswordForEmail(
+        email,
+        { redirectTo: location.href }
+    ))
+);
+
+export const signWithCode = (email: string, token: string) => (
+    supa<{
+        user: User|null,
+        session: Session|null,
+    }>('signWithCode', s => s.auth.verifyOtp({ email, token, type: 'email' }))
+);
+
+export const signOut = () => supa('signOut', s => s.auth.signOut());

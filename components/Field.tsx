@@ -10,19 +10,23 @@ import { useMsg } from "../hooks/useMsg";
 import { groupId$ } from "../api/repos";
 import { medias$ } from "../api/storage";
 import { by } from "../helpers/by";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import Button from "./Button";
 
 const css: Css = {
     '&': {
         ...flexColumn({ align: 'stretch' }),
         w: '100%',
-        m: 0.2,
+        m: 0.5,
     },
     '&-row': {
         ...flexRow({ align: 'start' })
     },
     '&Label': {
+        mb: 0.6,
         flex: 1,
         textAlign: 'left',
+        opacity: 0.6,
     },
     '&Content': {
         ...flexRow({ align: 'center', justify: 'start' }),
@@ -32,7 +36,14 @@ const css: Css = {
     '&Input': {
         w: '100%',
         h: '100%',
-        px: 0.8,
+        py: 0.2,
+        px: 1,
+        border: '1px solid #ddd',
+        rounded: 1,
+        outline: 'none',
+    },
+    '&Input:hover': {
+        borderColor: '#777',
     },
 
     '& select': {
@@ -88,7 +99,7 @@ export type FieldComp<T = any> = (props: {
     fieldProps: FieldProps<T>,
 }) => ReactNode;
 
-export type FieldType = 'text'|'multiline'|'html'|'color'|'number'|'select'|'switch'|'image'|'doc';
+export type FieldType = 'email'|'password'|'text'|'multiline'|'html'|'color'|'number'|'select'|'switch'|'image'|'doc';
 
 export interface FieldInfo {
     row?: boolean;
@@ -137,6 +148,18 @@ const getMediaField = (mimetypes: string[]): FieldComp => {
 }
 
 const compByType: Record<FieldType, FieldComp> = {
+    email: ({ cls, name, required, value, onChange }) => (
+        <input className={cls} type="email" name={name} required={required} value={value} onChange={onChange} />
+    ),
+    password: ({ cls, name, required, value, onChange }) => {
+        const [show, setShow] = useState(false);
+        return (
+            <>
+                <input className={cls} type={show ? 'text' : 'password'} name={name} required={required} value={value} onChange={onChange} />
+                <Button onClick={() => setShow(s => !s)} icon={show ? <IoMdEyeOff /> : <IoMdEye />} />
+            </>
+        )
+    },
     color: ({ cls, name, required, value, onChange }) => (
         <input className={cls} type="color" name={name} required={required} value={value} onChange={onChange} />
     ),

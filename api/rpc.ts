@@ -1,10 +1,9 @@
 import { by, toErr } from '@common/helpers';
-import { supabase } from './_generated';
-import { supaPromise } from './helpers';
+import { supa } from './helpers';
 import { MediaData, MediaInfo, medias$ } from './storage';
 
-const _rpc = <T>(fn: string, args?: Record<string, any>): Promise<T> => supaPromise(fn,
-    () => supabase.rpc(fn, args ? by(args, (_, k) => '_' + k) : null)
+const _rpc = <T>(fn: string, args?: Record<string, any>): Promise<T> => supa(fn,
+    s => s.rpc(fn, args ? by(args, (_, k) => '_' + k) : null)
 )
 
 export const rpcServerTime = () => _rpc('server_time');

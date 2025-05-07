@@ -1,5 +1,5 @@
 import { supabase } from "./_generated";
-import { supaPromise } from "./helpers";
+import { supa } from "./helpers";
 import { groupId$ } from "./repos";
 import Msg from "@common/helpers/Msg";
 import { isAuth$ } from "./auth";
@@ -131,12 +131,12 @@ export const medias$ = new Msg<Record<string, MediaInfo>>({});
 export const upload$ = new Msg<UploadInfo[]>([]);
 
 const _upload = async (bucketId: string, name: string, file: File|string) => {
-    await supaPromise('upload',
+    await supa('upload', () => (
         from(bucketId).upload(name, file, {
             cacheControl: '3600',
             upsert: true,
         })
-    );
+    ));
     await mediasRefresh();
 }
 
@@ -209,7 +209,7 @@ export const rm = async (bucketId: string, name: string) => {
         return next;
     });
     for (const media of medias)
-        await supaPromise('rm', () => from(bucketId).remove([media.name]));
+        await supa('rm', () => from(bucketId).remove([media.name]));
     await mediasRefresh();
 };
 
@@ -230,7 +230,7 @@ export const mv = async (bucketId: string, fromName: string, toName: string) => 
         return next;
     });
     for (const media of medias) {
-        await supaPromise('mv',
+        await supa('mv',
             () => from(bucketId).move(
                 media.name,
                 media.name.replace(fromName, toName),

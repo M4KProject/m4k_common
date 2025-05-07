@@ -1,5 +1,5 @@
 import { addCssFile } from "./html";
 
-export default function addFont(name: string) {
-  return addCssFile(`https://fonts.m4k.fr/v1/${name}`);
-}
+export const addFont = (name: string) => addCssFile(`https://fonts.m4k.fr/v1/${name}`);
+
+export default addFont;
