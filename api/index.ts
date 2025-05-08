@@ -7,3 +7,4 @@ export * from "./repos";
 export * from "./rpc";
 export * from "./serverTime";
 export * from "./storage";
+export * from "./fun";
