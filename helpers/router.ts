@@ -1,4 +1,4 @@
-import Msg from './Msg'
+import { Msg } from './Msg'
 
 const PLUS_EXP = /\+/g;
 const queryDecode = (s: string) => decodeURIComponent(s.replace(PLUS_EXP, ' '));

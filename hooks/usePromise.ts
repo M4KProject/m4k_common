@@ -1,4 +1,4 @@
-import { toVoid } from "@common/helpers/cast";
+import { toVoid } from "@common/helpers";
 import { useEffect, useState } from "react";
 
 export interface IPromise<T> {
@@ -51,5 +51,3 @@ export const usePromise = <T>(
     useEffect(() => _refresh(constructor, setResult), deps) // eslint-disable-line react-hooks/exhaustive-deps
     return result
 }
-
-export default usePromise;

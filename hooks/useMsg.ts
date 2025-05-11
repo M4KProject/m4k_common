@@ -16,5 +16,3 @@ export const useMsg = (<T = any>(msg: IMsgReadonly<T> | null | undefined): T | u
   }, [msg]);
   return msg ? msg.get() : undefined;
 }) as UseMsg;
-
-export default useMsg;

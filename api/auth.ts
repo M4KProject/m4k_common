@@ -1,4 +1,4 @@
-import Msg from "../helpers/Msg";
+import { Msg } from "../helpers/Msg";
 import { AuthError, Session, User, WeakPassword } from "@supabase/supabase-js";
 import { supabase } from "./_generated";
 import { supa } from "./helpers";

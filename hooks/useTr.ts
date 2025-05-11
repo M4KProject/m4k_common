@@ -1,6 +1,6 @@
 import { setTemplate } from "../helpers/str";
-import Msg from "../helpers/Msg";
-import useMsg from "./useMsg";
+import { Msg } from "../helpers/Msg";
+import { useMsg } from "./useMsg";
 
 export const translateByKey$ = new Msg<Record<string, string>>({}); 
 
@@ -34,5 +34,3 @@ export const useTr = () => {
     useMsg(translateByKey$);
     return tr;
 };
-
-export default useTr;

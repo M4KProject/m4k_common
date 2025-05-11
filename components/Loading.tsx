@@ -1,7 +1,7 @@
 import { Css } from "../helpers/html";
-import useCss from "../hooks/useCss";
-import Div, { DivProps } from "./Div";
-import Tr from "./Tr";
+import { useCss } from "../hooks/useCss";
+import { Div, DivProps } from "./Div";
+import { Tr } from "./Tr";
 import { FcSynchronize } from "react-icons/fc";
 import { flexCenter } from "../helpers/flexBox";
 import { addTranslates } from "../hooks/useTr";
@@ -47,5 +47,3 @@ export const Loading = ({ cls, content, children, ...props }: DivProps & { conte
         </Div>
     );
 }
-
-export default Loading;

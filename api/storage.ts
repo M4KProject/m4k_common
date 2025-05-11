@@ -1,10 +1,10 @@
 import { supabase } from "./_generated";
 import { supa } from "./helpers";
 import { groupId$ } from "./repos";
-import Msg from "@common/helpers/Msg";
+import { Msg } from "../helpers/Msg";
 import { isAuth$ } from "./auth";
 import { getMedias } from "./rpc";
-import { byId, deleteKey, sort, uuid } from "@common/helpers";
+import { byId, deleteKey, sort, uuid } from "../helpers";
 
 export type Storage = (typeof supabase)['storage'];
 export type StorageFrom = ReturnType<Storage['from']>;

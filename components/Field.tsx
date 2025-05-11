@@ -1,17 +1,17 @@
 import { Css } from "../helpers/html";
-import useCss from "../hooks/useCss";
+import { useCss } from "../hooks/useCss";
 import { ReactNode, useEffect, useState } from "react";
 import { flexCenter, flexColumn, flexRow } from "../helpers/flexBox";
 import { toNbr } from "../helpers/cast";
-import Div, { DivProps } from "./Div";
-import Tr from "./Tr";
+import { Div, DivProps } from "./Div";
+import { Tr } from "./Tr";
 import { toErr } from "../helpers/err";
-import { useMsg } from "../hooks/useMsg";
-import { groupId$ } from "../api/repos";
-import { medias$ } from "../api/storage";
-import { by } from "../helpers/by";
+// import { useMsg } from "../hooks/useMsg";
+// import { groupId$ } from "../api/repos";
+// import { medias$ } from "../api/storage";
+// import { by } from "../helpers/by";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import Button from "./Button";
+import { Button } from "./Button";
 
 const css: Css = {
     '&': {
@@ -111,6 +111,7 @@ export interface FieldInfo {
     required?: boolean;
     readonly?: boolean;
     castType?: string;
+    props?: any;
 }
 
 export interface FieldProps<T = any> extends FieldInfo, DivProps {
@@ -128,55 +129,55 @@ export const castByType: Record<string, (next: any) => any> = {
     }
 }
 
-const getMediaField = (mimetypes: string[]): FieldComp => {
-    const mimetypeMap = by(mimetypes, m => m, () => true);
-    return ({ cls, name, required, value, onChange }) => {
-        const medias = Object.values(useMsg(medias$));
-        const filteredMedias = medias.filter(m => mimetypeMap[m.mimetype]);
-        const groupId = useMsg(groupId$);
+const getMediaField = (_mimetypes: string[]): FieldComp => {
+    // const mimetypeMap = by(mimetypes, m => m, () => true);
+    return ({ cls, name, required, value, onChange, fieldProps }) => {
+        // const medias = Object.values(useMsg(medias$));
+        // const filteredMedias = medias.filter(m => mimetypeMap[m.mimetype]);
+        // const groupId = useMsg(groupId$);
         return (
-            <select className={cls} name={name} required={required} value={value} onChange={onChange}>
-                <option value="" className={!value ? `${cls}Selected` : undefined}></option>
+            <select className={cls} name={name} required={required} value={value} onChange={onChange} {...fieldProps.props}>
+                {/* <option value="" className={!value ? `${cls}Selected` : undefined}></option>
                 {Object.values(filteredMedias).map(media => (
                     <option key={media.id} value={media.id} className={media.id === value ? `${cls}Selected` : undefined}>
                         {media.name.replace(`${groupId}/`, '')}
                     </option>
-                ))}
+                ))} */}
             </select>
         );
     }
 }
 
 const compByType: Record<FieldType, FieldComp> = {
-    email: ({ cls, name, required, value, onChange }) => (
-        <input className={cls} type="email" name={name} required={required} value={value} onChange={onChange} />
+    email: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <input className={cls} type="email" name={name} required={required} value={value} onChange={onChange} {...fieldProps.props} />
     ),
-    password: ({ cls, name, required, value, onChange }) => {
+    password: ({ cls, name, required, value, onChange, fieldProps }) => {
         const [show, setShow] = useState(false);
         return (
             <>
-                <input className={cls} type={show ? 'text' : 'password'} name={name} required={required} value={value} onChange={onChange} />
+                <input className={cls} type={show ? 'text' : 'password'} name={name} required={required} value={value} onChange={onChange} {...fieldProps.props} />
                 <Button onClick={() => setShow(s => !s)} icon={show ? <IoMdEyeOff /> : <IoMdEye />} />
             </>
         )
     },
-    color: ({ cls, name, required, value, onChange }) => (
-        <input className={cls} type="color" name={name} required={required} value={value} onChange={onChange} />
+    color: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <input className={cls} type="color" name={name} required={required} value={value} onChange={onChange} {...fieldProps.props} />
     ),
-    text: ({ cls, name, required, value, onChange }) => (
-        <input className={cls} type="text" name={name} required={required} value={value} onChange={onChange} />
+    text: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <input className={cls} type="text" name={name} required={required} value={value} onChange={onChange} {...fieldProps.props} />
     ),
-    number: ({ cls, name, required, value, onChange }) => (
-        <input className={cls} type="number" name={name} required={required} value={value} onChange={onChange} />
+    number: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <input className={cls} type="number" name={name} required={required} value={value} onChange={onChange} {...fieldProps.props} />
     ),
-    multiline: ({ cls, name, required, value, onChange }) => (
-        <textarea className={cls} name={name} required={required} value={value} onChange={onChange} rows={5} />
+    multiline: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <textarea className={cls} name={name} required={required} value={value} onChange={onChange} rows={5} {...fieldProps.props} />
     ),
-    html: ({ cls, name, required, value, onChange }) => (
-        <textarea className={cls} name={name} required={required} value={value} onChange={onChange} rows={5} />
+    html: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <textarea className={cls} name={name} required={required} value={value} onChange={onChange} rows={5} {...fieldProps.props} />
     ),
     select: ({ cls, name, required, value, onChange, fieldProps }) => (
-        <select className={cls} name={name} required={required} value={value} onChange={onChange}>
+        <select className={cls} name={name} required={required} value={value} onChange={onChange} {...fieldProps.props}>
             {/* <option value=""></option> */}
             {fieldProps.items?.map(([id, content]) => (
                 <option key={id} value={id} className={id === value ? `${cls}Selected` : undefined}>
@@ -185,9 +186,9 @@ const compByType: Record<FieldType, FieldComp> = {
             ))}
         </select>
     ),
-    switch: ({ cls, value, onChange }) => {
+    switch: ({ cls, value, onChange, fieldProps }) => {
         return (
-            <Div cls={[`${cls}`, value && `${cls}-selected`]} onClick={() => onChange(!value)}>
+            <Div cls={[`${cls}`, value && `${cls}-selected`]} onClick={() => onChange(!value)} {...fieldProps.props}>
                 <Div cls={`${cls}Handle`}></Div>
             </Div>
         )
@@ -284,8 +285,6 @@ export const Field = (props: FieldProps) => {
         </Div>
     );
 };
-
-export default Field;
 
 // //     type?: 'text'|'textarea'|'select';
 // //     name: string;

@@ -45,7 +45,7 @@ export interface IMsg<T> extends IMsgReadonly<T>, IMsgSet<T> {
 
 const _msgs: Record<string, Msg> = (window as any).m4kMsgs || ((window as any).m4kMsgs = {});
 
-export default class Msg<T = any> implements IMsg<T> {
+export class Msg<T = any> implements IMsg<T> {
   static keyPrefix = "m4k_"
   static storage = localStorage
 

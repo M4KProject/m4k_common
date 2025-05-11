@@ -19,5 +19,3 @@ export const useAnimState = (isShow: boolean, duration: number = 300): string =>
 
     return state;
 };
-
-export default useAnimState;

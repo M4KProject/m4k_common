@@ -1,4 +1,4 @@
-import type { FieldInfo } from "@common/components/Field";
+import type { FieldInfo } from "@common/components";
 import { _MemberModel, _ContentModel, _GroupModel, _DeviceModel, _JobModel } from "./_generated"
 
 // MemberModel

@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { Css, addListener } from "../helpers/html";
-import useCss from "../hooks/useCss";
-import Div, { DivProps } from "./Div";
-import Tr from "./Tr";
+import { useCss } from "../hooks/useCss";
+import { Div, DivProps } from "./Div";
+import { Tr } from "./Tr";
 import { addOverlay, removeOverlay } from "../helpers/overlay";
 import { flexCenter } from "../helpers/flexBox";
 import { createRoot } from "react-dom/client";

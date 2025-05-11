@@ -1,8 +1,8 @@
 import { flexColumn, flexRow } from "../helpers/flexBox";
 import { Css } from "../helpers/html";
-import useCss from "../hooks/useCss";
-import Div, { DivProps } from "./Div";
-import Tr from "./Tr";
+import { useCss } from "../hooks/useCss";
+import { Div, DivProps } from "./Div";
+import { Tr } from "./Tr";
 import { ReactNode } from "react";
 
 const css: Css = {
@@ -69,5 +69,3 @@ export const PageBody = ({ cls, children, ...props }: PageBodyProps) => {
         </Div>
     );
 };
-
-export default Page

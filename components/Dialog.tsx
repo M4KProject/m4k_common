@@ -1,11 +1,11 @@
 import { flexCenter, flexColumn } from "../helpers/flexBox";
-import useMsg from "../hooks/useMsg";
+import { useMsg } from "../hooks/useMsg";
 import { Css } from "../helpers/html";
-import useCss from "../hooks/useCss";
+import { useCss } from "../hooks/useCss";
 import { ReactNode } from "react";
-import Msg from "../helpers/Msg";
-import Div from "./Div";
-import Tr from "./Tr";
+import { Msg } from "../helpers/Msg";
+import { Div } from "./Div";
+import { Tr } from "./Tr";
 
 export interface DialogOptions {
     id?: string;
@@ -55,7 +55,7 @@ const css: Css = {
     },
 }
 
-const Dialog = () => {
+export const Dialog = () => {
     const c = useCss('Dialog', css)
     const dialog = useMsg(dialog$)
     console.debug("Dialog", dialog);
@@ -80,5 +80,3 @@ const Dialog = () => {
         </Div>
     );
 };
-
-export default Dialog

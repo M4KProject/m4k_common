@@ -24,5 +24,3 @@ export const useAsyncEffect = (effect: AsyncEffectCallback, deps?: React.Depende
         };
     }, deps);
 };
-
-export default useAsyncEffect;

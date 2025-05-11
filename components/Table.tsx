@@ -1,8 +1,8 @@
 import { HTMLAttributes } from "react";
 import { Css, clsx } from "../helpers/html";
-import useCss from "../hooks/useCss";
+import { useCss } from "../hooks/useCss";
 import { flexCenter, flexColumn, flexRow } from "../helpers/flexBox";
-import Div from "./Div";
+import { Div } from "./Div";
 
 const css: Css = {
     '&': {
@@ -124,5 +124,3 @@ export const CellHeader = ({ cls, variant, children, ...props }: CellHeaderProps
         </th>
     );
 }
-
-export default Table

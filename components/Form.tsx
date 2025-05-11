@@ -1,7 +1,7 @@
 import { Css } from "../helpers/html";
-import useCss from "../hooks/useCss";
+import { useCss } from "../hooks/useCss";
 import { flexColumn } from "../helpers/flexBox";
-import Div, { DivProps } from "./Div";
+import { Div, DivProps } from "./Div";
 
 const css: Css = {
     '&': {
@@ -20,5 +20,3 @@ export const Form = ({ cls, children, ...props }: FormProps) => {
         </Div>
     );
 };
-
-export default Form;

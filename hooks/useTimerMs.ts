@@ -16,5 +16,3 @@ export const useTimerMs = (
     }, deps)
     return now - start
 }
-
-export default useTimerMs;

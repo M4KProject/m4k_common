@@ -1,5 +1,5 @@
 import { D, DCall, DRoot, DStyle } from './D';
-import Msg from './Msg';
+import { Msg } from './Msg';
 import { isEqual } from './check';
 import { clone } from './json';
 import { toArray, toNbr, toRecord } from './cast';

@@ -1,9 +1,9 @@
 import { Css } from "../helpers/html";
-import Div, { DivProps } from "./Div";
-import useCss from "../hooks/useCss";
+import { Div, DivProps } from "./Div";
+import { useCss } from "../hooks/useCss";
 import { clamp, round } from "../helpers/nbr";
-import { toNbr } from "@common/helpers/cast";
-import { flexCenter } from "@common/helpers/flexBox";
+import { toNbr } from "@common/helpers";
+import { flexCenter } from "@common/helpers";
 
 const css: Css = {
     '&': {
@@ -40,5 +40,3 @@ export const Progress = ({ progress, cls, children, ...props }: DivProps & { pro
         </Div>
     );
 }
-
-export default Progress

@@ -5,5 +5,3 @@ export const useConstant = <T>(fn: () => T): T => {
   if (!ref.current) ref.current = { v: fn() };
   return ref.current.v;
 }
-
-export default useConstant;

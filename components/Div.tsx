@@ -26,5 +26,3 @@ const getStyle = (style: string|React.CSSProperties|undefined): React.CSSPropert
 export const Div = ({ cls, style, className, ...props }: DivProps) => (
     <div {...props} style={getStyle(style)} className={clsx(cls, className)} />
 );
-
-export default Div
