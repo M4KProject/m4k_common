@@ -1,4 +1,5 @@
 export * from "./useAnimState";
+export * from "./useAsyncEffect";
 export * from "./useConstant";
 export * from "./useCss";
 export * from "./useMsg";
