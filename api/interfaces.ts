@@ -1,5 +1,5 @@
 import type { FieldInfo } from "@common/components";
-import { _MemberModel, _ContentModel, _GroupModel, _DeviceModel, _JobModel } from "./_generated"
+import { _MemberModel, _ContentModel, _GroupModel, _DeviceModel, _JobModel, _FileModel } from "./_generated"
 
 // MemberModel
 export interface MemberModel extends _MemberModel {
@@ -55,6 +55,9 @@ export interface GroupModel extends _GroupModel {}
 
 // DeviceModel
 export interface DeviceModel extends _DeviceModel {}
+
+// FileModel
+export interface FileModel extends _FileModel {}
 
 // JobModel
 interface _JobModelBase extends _JobModel {

@@ -17,13 +17,14 @@ const css: Css = {
     '&': {
         ...flexColumn({ align: 'stretch' }),
         w: '100%',
-        m: 0.5,
+        // m: 0.5,
     },
     '&-row': {
         ...flexRow({ align: 'start' })
     },
     '&Label': {
-        mb: 0.6,
+        mt: 1,
+        mb: 0.5,
         flex: 1,
         textAlign: 'left',
         opacity: 0.6,

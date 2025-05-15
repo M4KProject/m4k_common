@@ -19,6 +19,18 @@ export interface _MemberModel extends Model {
   group_id: string; // uuid
 }
 
+export interface _FileModel extends Model {
+  type: string; // text
+  name: string; // text
+  title: string; // text
+  storage: string; // text
+  size?: number; // bigint
+  info: any; // jsonb
+  owner_id?: string; // uuid
+  group_id?: string; // uuid
+  parent_id?: string; // uuid
+}
+
 export interface _ContentModel extends Model {
   public?: boolean; // boolean
   key?: string; // text
@@ -54,8 +66,6 @@ export interface _DeviceModel extends Model {
 }
 
 export interface _JobModel extends Model {
-  started?: string; // timestamp with time zone
-  finished?: string; // timestamp with time zone
   status?: string; // text
   progress?: number; // integer
   action?: string; // text

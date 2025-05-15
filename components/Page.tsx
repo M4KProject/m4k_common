@@ -24,10 +24,12 @@ const css: Css = {
     '&HeaderContent': {
         ...flexRow({ align: 'center' }),
     },
+    '&Actions': {
+        ...flexRow({ align: 'center', justify: 'around' }),
+    },
     '&Body': {
         ...flexColumn({ align: 'stretch', justify: 'start' }),
         position: 'relative',
-        flex: 1,
         overflowX: 'hidden',
         overflowY: 'auto',
     },
@@ -59,6 +61,12 @@ export const PageHeader = ({ cls, title, children, ...props }: PageHeaderProps) 
         </Div>
     );
 };
+
+export interface PageActionsProps extends DivProps {};
+export const PageActions = (props: PageActionsProps) => {
+    const c = useCss('Page', css)
+    return <Div {...props} cls={[`${c}Actions`, props.cls]} />;
+}
 
 export interface PageBodyProps extends DivProps {};
 export const PageBody = ({ cls, children, ...props }: PageBodyProps) => {

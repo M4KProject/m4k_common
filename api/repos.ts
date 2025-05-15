@@ -5,7 +5,7 @@ import { Err, toErr } from "../helpers/err";
 import { Model, supabase } from "./_generated";
 import { checkAuth } from "./auth";
 import { supa } from "./helpers";
-import { DeviceModel, GroupModel, MemberModel, ContentModel, JobModel } from "./interfaces";
+import { DeviceModel, GroupModel, MemberModel, ContentModel, JobModel, FileModel } from "./interfaces";
 import { Msg } from "../helpers/Msg";
 import { getEmails } from "./rpc";
 
@@ -206,24 +206,28 @@ export const groupRepo = new Repo<GroupModel>('groups');
 export const deviceRepo = new Repo<DeviceModel>('devices');
 export const contentRepo = new Repo<ContentModel>('contents');
 export const jobRepo = new Repo<JobModel>('jobs');
+export const fileRepo = new Repo<FileModel>('files');
 
 export const members$ = memberRepo.items$;
 export const groups$ = groupRepo.items$;
 export const devices$ = deviceRepo.items$;
 export const contents$ = contentRepo.items$;
 export const jobs$ = jobRepo.items$;
+export const files$ = fileRepo.items$;
 
 export const memberId$ = memberRepo.selectId$;
 export const groupId$ = groupRepo.selectId$;
 export const deviceId$ = deviceRepo.selectId$;
 export const contentId$ = contentRepo.selectId$;
 export const jobId$ = jobRepo.selectId$;
+export const fileId$ = fileRepo.selectId$;
 
 export const member$ = memberRepo.select$;
 export const group$ = groupRepo.select$;
 export const device$ = deviceRepo.select$;
 export const content$ = contentRepo.select$;
 export const job$ = jobRepo.select$;
+export const file$ = fileRepo.select$;
 
 const setGroupId = (item?: { group_id?: string }|null) => {
     const groupId = item?.group_id;

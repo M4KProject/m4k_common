@@ -1,5 +1,5 @@
 import { Msg } from "../helpers/Msg";
-import { AuthError, Session, User, WeakPassword } from "@supabase/supabase-js";
+import { AuthError, Session, User, UserAttributes, WeakPassword } from "@supabase/supabase-js";
 import { supabase } from "./_generated";
 import { supa } from "./helpers";
 import { toErr } from "@common/helpers";
@@ -115,3 +115,5 @@ export const signWithCode = (email: string, token: string) => (
 );
 
 export const signOut = () => supa('signOut', s => s.auth.signOut());
+
+export const updateUser = (changes: UserAttributes) => supabase.auth.updateUser(changes);

@@ -2,7 +2,7 @@ import { HTMLAttributes, ReactNode, useRef } from "react";
 import { flexCenter, flexRow } from "../helpers/flexBox";
 import { Css, clsx } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
-import { Div } from "./Div";
+import { Div, DivProps } from "./Div";
 import { Tr } from "./Tr";
 
 const css: Css = {
@@ -134,4 +134,10 @@ export const UploadButton = ({ onClick, onFiles, accept, multiple, ...props }: U
             }
         />
     )
+}
+
+export interface ButtonGroupProps extends DivProps {};
+export const ButtonGroup = (props: ButtonGroupProps) => {
+    const c = useCss('Button', css)
+    return <Div {...props} cls={[`${c}Group`, props.cls]} />;
 }
