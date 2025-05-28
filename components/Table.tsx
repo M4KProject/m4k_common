@@ -16,6 +16,9 @@ const css: Css = {
         borderCollapse: 'collapse',
         w: '100%',
     },
+    '&Row-success': { fg: 'success' },
+    '&Row-error': { fg: 'error' },
+    '&Row-selected': { fg: 'selected' },
     '&Row:nth-child(even)': { bg: '#ffffff70' },
     '&Row:hover': {  bg: 'transparent', elevation: 1 },
     '&Cell': {
@@ -86,12 +89,17 @@ export const TableFoot = ({ cls, ...props }: TableFootProps) => {
 };
 
 export interface RowProps extends HTMLAttributes<HTMLTableRowElement> {
+    mode?: 'success'|'error'|'selected';
     cls?: any
 };
-export const Row = ({ cls, ...props }: RowProps) => {
+export const Row = ({ cls, mode, ...props }: RowProps) => {
     const c = useCss('Table', css);
     return (
-        <tr className={clsx(`${c}Row`, cls)} {...props} />
+        <tr className={clsx(
+            `${c}Row`,
+            mode && `${c}Row-${mode}`,
+            cls
+        )} {...props} />
     );
 };
 

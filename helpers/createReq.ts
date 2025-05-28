@@ -281,7 +281,7 @@ export interface Req {
     <T = any>(options: ReqOptions<T>): Promise<T>;
 }
 
-const createReq = (baseOptions: ReqOptions): Req => {
+export const createReq = (baseOptions: ReqOptions): Req => {
     return <T = any>(optionsOrMethod: ReqMethod|ReqOptions<T>|null, url?: string|null, options?: ReqOptions<T>): Promise<T> => (
         _req<T>((optionsOrMethod && typeof optionsOrMethod === 'object') ? {
             ...baseOptions,
@@ -296,5 +296,3 @@ const createReq = (baseOptions: ReqOptions): Req => {
 }
 
 export const req = createReq({});
-
-export default createReq;

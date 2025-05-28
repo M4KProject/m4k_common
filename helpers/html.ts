@@ -388,10 +388,15 @@ export type ElOptions = Omit<Omit<Partial<HTMLAllElement>, 'children'>, 'style'>
     readonly parent?: 'body'|HTMLElement;
 };
 
-export const setEl = (el: HTMLElement, options?: ElOptions) => {
-    if (!options) return el;
+export const El = (el: HTMLElement|keyof HTMLElementTagNameMap, o?: ElOptions) => {
+    const id = o?.id;
+    const last = id && document.getElementById(id);
+    el = typeof el === 'string' ? last || createEl(el) : el;
+    if (id) el.id = id;
+    
+    if (!o) return el;
 
-    const { reset, attrs, style, cls, children, ctn, parent, ...rest } = options;
+    const { reset, attrs, style, cls, children, ctn, parent, ...rest } = o;
 
     if (reset) setAttrs(el, {});
     if (attrs) setAttrs(el, attrs, true);
@@ -407,8 +412,8 @@ export const setEl = (el: HTMLElement, options?: ElOptions) => {
     return el;
 };
 
-export const addEl = (tag: keyof HTMLElementTagNameMap = 'div', options?: ElOptions) =>
-    setEl(createEl(tag), options);
+export const setEl = (el: HTMLElement, options?: ElOptions) => El(el, options);
+export const addEl = (tag: keyof HTMLElementTagNameMap = 'div', options?: ElOptions) => El(tag, options);
 
     // for (const el of els) el && containerEl.appendChild(el);
     //     const el =  as HTMLElement;

@@ -4,6 +4,7 @@ import { useCss } from "../hooks/useCss";
 import { clamp, round } from "../helpers/nbr";
 import { toNbr } from "@common/helpers";
 import { flexCenter } from "@common/helpers";
+import { ReactNode } from "react";
 
 const css: Css = {
     '&': {
@@ -29,13 +30,21 @@ const css: Css = {
     }
 }
 
-export const Progress = ({ progress, cls, children, ...props }: DivProps & { progress?: number|null }) => {
+export interface ProgressProps extends DivProps {
+    step?: ReactNode;
+    progress?: number|null;
+};
+export const Progress = ({ progress, step, cls, children, ...props }: ProgressProps) => {
     const c = useCss('Progress', css);
     const prct = clamp(round(toNbr(progress, 0)), 0, 100);
     return (
         <Div {...props} cls={[c, cls]}>
             <Div cls={`${c}Bar`} style={{ width: prct + '%' }} />
-            <Div cls={`${c}Text`}>{prct}%</Div>
+            {step ? (
+                <Div cls={`${c}Text`}>{step} ({prct}%)</Div>
+            ) : (
+                <Div cls={`${c}Text`}>{prct}%</Div>
+            )}
             {children}
         </Div>
     );

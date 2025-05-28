@@ -32,24 +32,25 @@ export type PlaylistItem = M4kFileInfo & {
 }
 
 export interface M4kConfig {
-    name?: string
-    copyDir?: string
-    password?: string
+    name?: string;
+    copyDir?: string;
+    password?: string;
     playlist?: {
-        items?: PlaylistItem[]
+        items?: PlaylistItem[];
     };
-    test?: any
+    test?: any;
 
-    auth_email?: string
-    auth_password?: string
+    auth_email?: string;
+    auth_password?: string;
 
-    isKioskOn?: boolean
-    isScreenOn?: boolean
-    screenOrientation?: "landscape" | "portrait" | "reverse_landscape" | "reverse_portrait"
-    injectJs?: string
-    url?: string
+    isKioskOn?: boolean;
+    isScreenOn?: boolean;
+    screenOrientation?: "landscape" | "portrait" | "reverse_landscape" | "reverse_portrait";
+    injectJs?: string;
+    url?: string;
+    backColor?: string;
 
-    initialScale?: number
+    initialScale?: number;
 
     // isDebugging?: boolean
     // isSupportZoom?: boolean
@@ -62,17 +63,19 @@ export interface M4kConfig {
     // displayZoomControls?: boolean
     // hasMediaPlaybackRequiresUserGesture?: boolean
     
-    textZoom?: number
-    mixedContent?: "never" | "compatible" | "always"
+    textZoom?: number;
+    mixedContent?: "never" | "compatible" | "always";
 
-    readTimeout?: number
+    readTimeout?: number;
 
-    itemAnim?: 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom'
-    itemDurationMs?: number
-    itemFit?: 'contain' | 'cover' | 'fill'
-    hasVideoMuted?: boolean
+    itemAnim?: 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
+    itemDurationMs?: number;
+    itemFit?: 'contain' | 'cover' | 'fill';
+    hasVideoMuted?: boolean;
 
-    views?: { [key: string]: M4kViewConfig }
+    views?: {
+        [key: string]: M4kViewConfig;
+    };
 }
 
 export interface M4kViewConfig {
@@ -122,8 +125,8 @@ export interface M4kViewConfig {
 // }
 
 export interface M4kDeviceInfo {
-    webView?: string;
-    software?: string;
+    webview?: string;
+    type?: string;
     os?: string;
     ip?: string;
     width?: number;
@@ -298,11 +301,12 @@ export interface M4Kiosk {
     readAsset(path: string, encoding?: 'utf8'|'base64'): Promise<string|undefined>;
     read(path: string, encoding?: 'utf8'|'base64'): Promise<string|undefined>;
     write(path: string, content: string, encoding?: 'utf8'|'base64', append?: boolean): Promise<void>;
+    url(path: string): Promise<string>;
     reboot(): Promise<void>;
     restart(): Promise<void>;
     reload(): Promise<void>;
     exit(): Promise<void>;
-    deviceInfo(): Promise<M4kDeviceInfo>;
+    info(): Promise<M4kDeviceInfo>;
     
     log(level: string, message: string, data?: any, source?: string, line?: number): Promise<void>;
     // popLogs(count?: number): Promise<M4kLog[]>;

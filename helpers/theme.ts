@@ -14,7 +14,7 @@ export const setTheme = (primary: string, secondary?: string, { colors }: { colo
 
     const grey = '#808080';
     // const bg = lighten(grey, 40);
-    const fg = lighten(grey, -40);
+    const fg = lighten(grey, -50);
 
     setCssColors({
         primary,
@@ -38,13 +38,16 @@ export const setTheme = (primary: string, secondary?: string, { colors }: { colo
         btnBg: "transparent",
         btnFg: fg,
 
+        labelFg: lighten(primary, -40),
+
         btnBgHover: "",
         btnFgHover: "",
 
         info: setHsl(primary, { h: 240 }),
-        success: setHsl(primary, { h: 120 }),
+        success: setHsl(primary, { h: 120, l: 40 }),
         error: setHsl(primary, { h: 0 }),
         warn: setHsl(primary, { h: 30 }),
+        selected: '#0a536f',
 
         shadow: "#11698a1c",
 

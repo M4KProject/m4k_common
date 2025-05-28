@@ -21,13 +21,9 @@ const css: Css = {
         fontWeight: 'bold',
         // borderBottom: '1px solid #0a536f',
     },
-    '&Actions': {
-        ...flexRow({ align: 'center', justify: 'around', wrap: 'wrap' }),
-    },
 }
 
 interface FormProps extends DivProps {}
-
 export const Form = ({ cls, children, title, ...props }: FormProps) => {
     const c = useCss('Form', css);
     return (

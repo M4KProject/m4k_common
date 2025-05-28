@@ -11,10 +11,12 @@ const css: Css = {
         flex: 1,
         position: 'relative',
         overflow: 'hidden',
+        bg: '#eee',
     },
     '&Header': {
         ...flexRow({ align: 'center', justify: 'around' }),
         bg: 'headerBg',
+        mt: 1,
     },
     '&HeaderTitle': {
         ...flexRow({ align: 'center' }),

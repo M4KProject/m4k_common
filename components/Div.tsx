@@ -1,13 +1,14 @@
-import { HTMLAttributes } from "react";
+
 import { clsx } from "../helpers/html";
 import React from "react";
 
-export interface DivProps extends Omit<HTMLAttributes<HTMLDivElement>, 'style'> {
+type DivHTMLProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+export interface DivProps extends Omit<DivHTMLProps, 'style'> {
     cls?: any;
     style?: string | React.CSSProperties | undefined;
 };
 
-const getStyle = (style: string|React.CSSProperties|undefined): React.CSSProperties|undefined => {
+export const getStyle = (style: string|React.CSSProperties|undefined): React.CSSProperties|undefined => {
     if (typeof style === 'string') {
         const styleObject = {} as any;
         style.split(";").forEach((declaration) => {
@@ -25,4 +26,15 @@ const getStyle = (style: string|React.CSSProperties|undefined): React.CSSPropert
 
 export const Div = ({ cls, style, className, ...props }: DivProps) => (
     <div {...props} style={getStyle(style)} className={clsx(cls, className)} />
+);
+
+export const DivWithRef = React.forwardRef<HTMLDivElement, DivProps>(
+  ({ cls, style, className, ...props }, ref) => (
+    <div
+      {...props}
+      ref={ref}
+      style={getStyle(style)}
+      className={clsx(cls, className)}
+    />
+  )
 );

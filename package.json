@@ -7,10 +7,13 @@
     "dev": "npx vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gen:pb": "cd pb && npx vite-node _models.generator.ts",
+    "gen:pb2": "npx pocketbase-typegen --url http://127.0.0.1:8090 --email dev@m4k.fr --password 'dev-pass' --out 'pb/_types.ts'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
+    "pocketbase": "^0.26.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0"

@@ -4,22 +4,41 @@ import { Css } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
 import { ReactNode } from "react";
 import { Msg } from "../helpers/Msg";
-import { Div } from "./Div";
+import { Div, DivProps } from "./Div";
 import { Tr } from "./Tr";
+import { portal } from "./Portal";
+import { useEffect } from "react";
+import { useState } from "react";
 
-export interface DialogOptions {
-    id?: string;
-    title: string;
-    content: () => ReactNode;
-    onClose?: () => void;
-}
+// export interface DialogOptions {
+//     id?: string;
+//     title: string;
+//     content: () => ReactNode;
+//     closed: number;
+//     onClose?: () => void;
+// }
 
-export const dialog$ = new Msg<DialogOptions|null>(null)
+export const showDialog = (title: string, content: (open$: Msg<boolean>) => ReactNode) => {
+    console.debug("showDialog", title);
 
-export const showDialog = (title: string, content: () => ReactNode, options?: Partial<DialogOptions>) => {
-    console.debug("showDialog", title)
-    const onClose = () => dialog$.set(null)
-    dialog$.set({ title, content, onClose, ...options })
+    // const dialog$ = new Msg<DialogOptions>({
+    //     id,
+    //     title,
+    //     content,
+    //     closed: 0,
+    //     onClose: () => {
+    //         dialog$.merge()
+    //     }
+    // });
+
+    const open$ = new Msg(false);
+    open$.on(v => !v && setTimeout(() => el.remove(), 500));
+
+    const el = portal(
+        <DialogRender open$={open$} title={title}>
+            {content(open$)}
+        </DialogRender>
+    );
 }
 
 const css: Css = {
@@ -28,6 +47,8 @@ const css: Css = {
         inset: 0,
         bg: '#000000AA',
         ...flexCenter(),
+        opacity: 0,
+        transition: 'all 0.5s ease',
     },
     '&Window': {
         ...flexColumn(),
@@ -37,6 +58,8 @@ const css: Css = {
         minWidth: '80%',
         overflow: 'hidden',
         bg: 'bg',
+        transform: 'scale(0)',
+        transition: 'all 0.5s ease',
     },
     '&Header': {
         ...flexCenter(),
@@ -45,7 +68,6 @@ const css: Css = {
         fontWeight: "bold",
         m: 0,
         p: 1,
-        py: 0.2,
         bg: 'header',
         fg: 'headerTitle',
     },
@@ -53,20 +75,36 @@ const css: Css = {
         ...flexColumn(),
         m: 1,
     },
+
+    '&-open': {
+        opacity: 1,
+    },
+    '&-open &Window': {
+        transform: 'scale(1)',
+    },
 }
 
-export const Dialog = () => {
-    const c = useCss('Dialog', css)
-    const dialog = useMsg(dialog$)
-    console.debug("Dialog", dialog);
+interface DialogRenderProps extends DivProps {
+    open$: Msg<boolean>;
+}
+const DialogRender = ({ open$, title, children, ...props }: DialogRenderProps) => {
+    const c = useCss('Dialog', css);
+    const open = useMsg(open$);
+    const onClose = () => open$.set(false);
+    const [init, setInit] = useState(false);
 
-    if (!dialog) return null;
+    useEffect(() => {
+        setTimeout(() => {
+            open$.set(true)
+        }, 10);
+    }, []);
 
-    const { onClose, title, content } = dialog
-    const Content = content
+    useEffect(() => {
+        if (open) setInit(true);
+    }, [open])
     
     return (
-        <Div cls={c} onClick={onClose}>
+        <Div cls={[c, open && `${c}-open`]} onClick={onClose} {...props}>
             <Div cls={`${c}Window`} onClick={e => e.stopPropagation()}>
                 {title && (
                     <Div cls={`${c}Header`}>
@@ -74,7 +112,7 @@ export const Dialog = () => {
                     </Div>
                 )}
                 <Div cls={`${c}Content`}>
-                    <Content />
+                    {init ? children : null}
                 </Div>
             </Div>
         </Div>

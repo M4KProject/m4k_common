@@ -50,6 +50,8 @@ const css: Css = {
     '&:hover &Sfx, &-selected &Sfx': { transform: 'scaleX(1)' },
     // '&:hover &Content, &-selected &Content': { fontWeight: 'bold' },
     '&:active &Sfx': { elevation: 0 },
+
+    '&-primary': { bg: 'primary' },
     
     '&-primary &Icon': { bg: 'white', fg: 'primary' },
     '&-secondary &Icon': { bg: 'white', fg: 'secondary' },
