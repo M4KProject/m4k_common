@@ -9,8 +9,8 @@ const css: Css = {
     '&': {
         ...flexRow({ align: 'center', justify: 'start' }),
         position: "relative",
-        // m: 0.5,
-        p: 0.5,
+        m: 0.2,
+        p: 0.2,
         rounded: 2,
         border: 'none',
         bg: 'transparent',
@@ -51,7 +51,11 @@ const css: Css = {
     // '&:hover &Content, &-selected &Content': { fontWeight: 'bold' },
     '&:active &Sfx': { elevation: 0 },
 
-    '&-primary': { bg: 'primary' },
+    '&-primary': { bg: 'primary', fg: 'white' },
+    '&-secondary': { bg: 'secondary', fg: 'white' },
+    '&-success': { bg: 'success', fg: 'white' },
+    '&-warn': { bg: 'warn', fg: 'white' },
+    '&-error': { bg: 'error', fg: 'white' },
     
     '&-primary &Icon': { bg: 'white', fg: 'primary' },
     '&-secondary &Icon': { bg: 'white', fg: 'secondary' },
@@ -76,10 +80,10 @@ export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
     before?: ReactNode,
 };
 
-export const Button = ({ cls, color, variant, selected, icon, children, before, onClick, ...props }: ButtonProps) => {
+export const Button = ({ title, cls, color, variant, selected, icon, children, before, onClick, ...props }: ButtonProps) => {
     const c = useCss('Button', css);
 
-    const isIcon = icon && !children;
+    const isIcon = icon && !(children || title);
 
     return (
         <button
@@ -97,7 +101,7 @@ export const Button = ({ cls, color, variant, selected, icon, children, before, 
             <Div cls={`${c}Sfx`} />
             {before}
             {icon && <Div cls={`${c}Icon`}>{icon}</Div>}
-            {children && <Div cls={`${c}Content`}><Tr>{children}</Tr></Div>}
+            {(title || children) && <Div cls={`${c}Content`}><Tr>{title}{children}</Tr></Div>}
         </button>
     );
 };

@@ -1,5 +1,7 @@
 import { toErr } from "../helpers/err";
 import { parse, stringify } from "../helpers/json";
+import { pathJoin } from "../helpers/pathJoin";
+import { apiUrl$ } from "../api";
 import { M4K_METHODS } from "./m4kBridge";
 import { M4Kiosk } from "./m4kInterface";
 
@@ -60,4 +62,6 @@ export const m4kBrowser = (m4k: M4Kiosk) => {
         width: screen.width,
         height: screen.height,
     });
+
+    m4k.capture = () => Promise.resolve(pathJoin(apiUrl$.v, 'capture.png').replace('/api', ''));
 };

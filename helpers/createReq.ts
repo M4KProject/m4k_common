@@ -1,6 +1,6 @@
 import { Err, toErr } from "./err";
 import { parse, stringify } from "./json";
-import pathJoin from "./pathJoin";
+import { pathJoin } from "./pathJoin";
 
 export type FormDataObject = { [prop: string]: any };
 export type ReqURL = string | URL;
@@ -97,6 +97,7 @@ export const toFormData = (form: FormDataObject | FormData | null | undefined, b
 export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
     try {
         const o = ctx.options;
+        console.debug('reqXHR options', o);
         const xhr: XMLHttpRequest = ctx.xhr || (ctx.xhr = new XMLHttpRequest());
 
         xhr.timeout = ctx.timeout || 20000;
@@ -116,8 +117,14 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
         const onProgress = o.onProgress;
         if (onProgress) {
             const _onProgress = (event: ProgressEvent<XMLHttpRequestEventTarget>) => {
-                ctx.event = event;
-                onProgress(event.loaded / event.total, ctx);
+                try {
+                    console.debug('reqXHR onProgress', event.loaded, event.total);
+                    ctx.event = event;
+                    onProgress(event.loaded / event.total, ctx);
+                }
+                catch (error) {
+                    console.warn('reqXHR onProgress', event);
+                }
             };
             xhr.addEventListener('progress', _onProgress);
             xhr.upload?.addEventListener('progress', _onProgress);
@@ -228,8 +235,12 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     headers.Accept = acceptMap[responseType] || acceptJson;
 
     const body = o.body || (json ? formData ? toFormData(json, formData) : stringify(json) : formData);
-    if (typeof body === 'object' && !(body instanceof FormData) && !(body instanceof File)) {
-        headers['Content-Type'] = 'application/json';
+    if (typeof body === 'object') {
+        if (body instanceof FormData || body instanceof File || body instanceof Blob) {
+            // ❌ NE PAS définir 'Content-Type' ici
+        } else {
+            headers['Content-Type'] = 'application/json';
+        }
     }
 
     const oHeaders = o.headers;
@@ -281,8 +292,8 @@ export interface Req {
     <T = any>(options: ReqOptions<T>): Promise<T>;
 }
 
-export const createReq = (baseOptions: ReqOptions): Req => {
-    return <T = any>(optionsOrMethod: ReqMethod|ReqOptions<T>|null, url?: string|null, options?: ReqOptions<T>): Promise<T> => (
+export const createReq = (baseOptions: ReqOptions): Req => (
+    <T = any>(optionsOrMethod: ReqMethod|ReqOptions<T>|null, url?: string|null, options?: ReqOptions<T>): Promise<T> => (
         _req<T>((optionsOrMethod && typeof optionsOrMethod === 'object') ? {
             ...baseOptions,
             ...optionsOrMethod,
@@ -293,6 +304,6 @@ export const createReq = (baseOptions: ReqOptions): Req => {
             ...options,
         })
     )
-}
+);
 
 export const req = createReq({});

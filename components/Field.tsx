@@ -12,6 +12,9 @@ import { toErr } from "../helpers/err";
 // import { by } from "../helpers/by";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Button } from "./Button";
+import { Msg } from "../helpers/Msg";
+import { useMsg } from "@common/hooks";
+import { isArray } from "../helpers/check";
 
 const css: Css = {
     '&': {
@@ -22,6 +25,9 @@ const css: Css = {
     '&-row': {
         ...flexRow({ align: 'start' })
     },
+    '&-error &Label': { fg: 'error' },
+    '&-error &Input': { border: 'error' },
+    '&Error': { fg: 'error' },
     '&Label': {
         mt: 1,
         mb: 0.2,
@@ -37,7 +43,7 @@ const css: Css = {
     },
     '&Input': {
         w: '100%',
-        h: '100%',
+        h: 2,
         py: 0.2,
         px: 1,
         border: '1px solid #ddd',
@@ -101,7 +107,7 @@ export type FieldComp<T = any> = (props: {
     fieldProps: FieldProps<T>,
 }) => ReactNode;
 
-export type FieldType = 'email'|'password'|'text'|'multiline'|'html'|'color'|'number'|'select'|'switch'|'image'|'doc';
+export type FieldType = 'email'|'password'|'text'|'multiline'|'html'|'color'|'number'|'select'|'switch'|'image'|'doc'|'date'|'datetime'|'time';
 
 export interface FieldInfo {
     row?: boolean;
@@ -109,7 +115,8 @@ export interface FieldInfo {
     name?: string;
     label?: ReactNode;
     helper?: ReactNode;
-    items?: [string, ReactNode][];
+    error?: ReactNode;
+    items?: ([string, ReactNode]|false|null|undefined)[];
     required?: boolean;
     readonly?: boolean;
     castType?: string;
@@ -117,6 +124,7 @@ export interface FieldInfo {
 }
 
 export interface FieldProps<T = any> extends FieldInfo, DivProps {
+    msg?: Msg<T>;
     value?: T;
     cast?: (next: any) => T;
     onValue?: (next: T) => void;
@@ -150,6 +158,12 @@ const getMediaField = (_mimetypes: string[]): FieldComp => {
     }
 }
 
+const getDateField = (type: 'date'|'datetime'|'time'): FieldComp => {
+    return ({ cls, name, required, value, onChange, fieldProps }) => (
+        <input className={cls} type="date" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+    )
+}
+
 const compByType: Record<FieldType, FieldComp> = {
     email: ({ cls, name, required, value, onChange, fieldProps }) => (
         <input className={cls} type="email" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
@@ -181,10 +195,12 @@ const compByType: Record<FieldType, FieldComp> = {
     select: ({ cls, name, required, value, onChange, fieldProps }) => (
         <select className={cls} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props}>
             {/* <option value=""></option> */}
-            {fieldProps.items?.map(([id, content]) => (
-                <option key={id} value={id} className={id === value ? `${cls}Selected` : undefined}>
-                    {content}
-                </option>
+            {fieldProps.items?.map(kv => (
+                isArray(kv) ? (
+                    <option key={kv[0]} value={kv[0]} className={kv[0] === value ? `${cls}Selected` : undefined}>
+                        {kv[1]}
+                    </option>
+                ) : null
             ))}
         </select>
     ),
@@ -196,25 +212,38 @@ const compByType: Record<FieldType, FieldComp> = {
         )
     },
     image: getMediaField(['image/png', 'image/jpeg', 'image/svg+xml', 'application/pdf']),
-    doc: getMediaField(['application/pdf']), 
+    doc: getMediaField(['application/pdf']),
+    date: getDateField('date'),
+    datetime: getDateField('datetime'),
+    time: getDateField('time'),
 };
 
 export const Field = (props: FieldProps) => {
-    const { cls, row, type, name, label, helper, readonly, required, value, cast, castType, onValue, delay, items, ...divProps } = props;
+    const { cls, row, type, name, label, helper, error, readonly, required, msg, value, cast, castType, onValue, delay, items, ...divProps } = props;
     const c = useCss('Field', css);
+
+    const msgVal = useMsg(msg);
+    const val = msg ? msgVal : value;
+
+    const handleValue = (casted: any) => {
+        if (onValue) onValue(casted);
+        if (msg) msg.set(casted);
+    }
     
-    const [initiated, setInitiated] = useState<any>(value);
+    const [initiated, setInitiated] = useState<any>(val);
     const [changed, setChanged] = useState<any>(undefined);
     const [sended, setSended] = useState<any>(undefined);
-    const [error, setError] = useState<any>(undefined);
+    const [valueError, setValueError] = useState<any>(undefined);
+
+    const err = error ? error : valueError;
 
     // console.debug('Field', name, { value, initiated, changed, sended, error });
 
     const reset = () => {
-        setInitiated(value);
+        setInitiated(val);
         setChanged(undefined);
         setSended(undefined);
-        setError(undefined);
+        setValueError(undefined);
     }
 
     useEffect(reset, [type, name]);
@@ -223,19 +252,19 @@ export const Field = (props: FieldProps) => {
     useEffect(() => {
         // console.debug('Field value', name, value);
         if (sended !== undefined) {
-            if (sended === value) return;
+            if (sended === val) return;
         }
         else {
-            if (initiated === value) return;
+            if (initiated === val) return;
         }
         // console.debug('Field value changed', name, initiated, '->', value);
         reset();
-    }, [value]);
+    }, [val]);
 
     // if next value change -> error or send
     useEffect(() => {
         // console.debug('Field changed', name, changed);
-        setError(undefined);
+        setValueError(undefined);
         if (changed === undefined) return;
         if (changed === sended) return;
         const timer = setTimeout(() => {
@@ -252,12 +281,12 @@ export const Field = (props: FieldProps) => {
                 if (casted === sended) return;
                 console.debug('Field sync', name, sended, '->', casted);
                 setSended(casted);
-                if (onValue) onValue(casted);
+                handleValue(casted);
             }
             catch (error) {
-                setError(error);
+                setValueError(error);
             }
-        }, delay === undefined ? 500 : delay);
+        }, delay === undefined ? 400 : delay);
         return () => clearTimeout(timer);
     }, [changed]);
 
@@ -272,13 +301,13 @@ export const Field = (props: FieldProps) => {
     const Comp = compByType[type||'text'] || compByType.text;
     
     return (
-        <Div {...divProps} cls={[c, row && `${c}-row`, type && `${c}-${type}`, error && `${c}-error`, cls]}>
+        <Div {...divProps} cls={[c, row && `${c}-row`, type && `${c}-${type}`, err && `${c}-error`, cls]}>
             {label && (<Div cls={`${c}Label`}>{label} :</Div>)}
             <Div cls={`${c}Content`}>
                 <Comp cls={`${c}Input`} name={name} value={changed === undefined ? initiated : changed} onChange={handleChange} required={required} fieldProps={props} />
-                {error ? (
+                {err ? (
                     <Div cls={`${c}Error`}>
-                        <Tr>{error}</Tr>
+                        <Tr>{err}</Tr>
                     </Div>
                 ) : helper ? (
                     <Div cls={`${c}Helper`}>{helper}</Div>

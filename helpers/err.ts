@@ -1,5 +1,5 @@
 import { toStr } from "./cast";
-import { isObject, isString } from "./check";
+import { isEmpty, isObject, isString } from "./check";
 import { stringify } from "./json";
 
 export class Err extends Error {
@@ -76,13 +76,18 @@ export const throwErr = (error: any, data?: any) => {
   throw toErr(error, data);
 }
 
+export const throwIf = <T>(value: T, check: (value: T) => any, error?: any) => {
+  if (check(value)) throwErr(error, { value });
+  return value;
+}
+
 // export const toErr = (...args: any[]) => args[0] instanceof Err ? args[0] : new Err(...args);
 
 // export const throwErr = (...args: any[]) => {
 //   throw toErr(...args);
 // }
 
-type Fun = (...args: any[]) => any;
+export type Fun = (...args: any[]) => any;
 
 interface Catcher {
   <F extends Fun>(fun: F): (...args: Parameters<F>) => ReturnType<F> | undefined;

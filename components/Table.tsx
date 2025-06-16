@@ -38,6 +38,9 @@ const css: Css = {
     '&Cell-center &CellContent': {
         ...flexCenter({}),
     },
+    '&Cell-around &CellContent': {
+        ...flexRow({ align: 'center', justify: 'around' }),
+    },
     '&Cell-header': {
         pt: 1,
         bg: 'white',
@@ -104,7 +107,7 @@ export const Row = ({ cls, mode, ...props }: RowProps) => {
 };
 
 export interface CellProps extends HTMLAttributes<HTMLTableCellElement> {
-    variant?: 'row'|'center';
+    variant?: 'row'|'center'|'around';
     cls?: any,
 };
 export const Cell = ({ cls, variant, children, ...props }: CellProps) => {

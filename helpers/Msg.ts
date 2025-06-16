@@ -2,6 +2,7 @@ import { removeItem } from "./array";
 import { debounce, throttle } from "./async";
 import { toVoid } from "./cast";
 import { isFunction, isNotNull } from "./check";
+import { catcher } from "./err";
 import { parse, stringify } from "./json";
 
 export type IMsgHandler<T> = (value: T, oldValue: T) => void;
@@ -78,16 +79,20 @@ export class Msg<T = any> implements IMsg<T> {
   private sOff?: () => void;
   private sHandler?: IMsgHandler<any>;
 
-  constructor(initValue: T, key?: string, isStored?: boolean) {
-    this.v = initValue
-    this.key = key
-    if (key) _msgs[key] = this
+  constructor(initValue: T, key?: string, isStored?: boolean, storedCheck?: (value: T) => boolean) {
+    this.v = initValue;
+    this.key = key;
+    if (key) _msgs[key] = this;
     if (isStored && key) {
-      const k = Msg.keyPrefix + key
-      const storedJson = Msg.storage.getItem(k)
-      const storedValue = storedJson ? parse(storedJson) : undefined
-      this.v = storedValue !== undefined ? storedValue : initValue
-      this.on((next) => Msg.storage.setItem(k, stringify(next)))
+      const k = Msg.keyPrefix + key;
+      const storedJson = Msg.storage.getItem(k);
+      let storedValue = storedJson ? parse(storedJson) : undefined;
+      if (storedCheck && !storedCheck(storedValue)) {
+        console.warn('error stored value', key, storedValue);
+        storedValue = undefined;
+      }
+      this.v = storedValue !== undefined ? storedValue : initValue;
+      this.on((next) => Msg.storage.setItem(k, stringify(next)));
     }
   }
 

@@ -60,7 +60,7 @@ const css: Css = {
         flex: 1,
         color: '#0a536f',
         fontWeight: 'bold',
-        borderBottom: '1px solid #0a536f',
+        // borderBottom: '1px solid #0a536f',
     },
 
     '&-editor': { w: 0 },
@@ -74,7 +74,7 @@ const css: Css = {
     '&-editor &Sep': { visibility: 'hidden' },
 }
 
-const SideContext = createContext<Msg<string>|null>(null);
+const SideContext = createContext<Msg<string>|null|undefined>(undefined);
 const SideProvider = SideContext.Provider;
 
 export interface SideButtonProps extends ButtonProps { page: string }
@@ -101,7 +101,7 @@ export const SideSep = ({ cls, ...props }: SideSepProps) => {
     return <Div {...props} cls={[`${c}Sep`, cls]} />
 }
 
-export interface SideProps extends DivProps { page$: Msg<string> }
+export interface SideProps extends DivProps { page$?: Msg<string>|null }
 export const Side = ({ cls, children, page$, ...props }: SideProps) => {
     const c = useCss('Side', css);
     const [open, setOpen] = useState(true);

@@ -19,6 +19,7 @@ export * from "./flexBox";
 export * from "./format";
 export * from "./getCallCb";
 export * from "./getDatasetValue";
+export * from "./global";
 export * from "./html";
 export * from "./imgResize";
 export * from "./json";

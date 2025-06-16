@@ -1,15 +1,14 @@
-import { ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from "./_models.generated";
+import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from "./_models.generated";
 import { Req, ReqOptions, ReqParams, createReq } from "../helpers/createReq";
 import { Err } from "../helpers/err";
 import { parse, stringify } from "../helpers/json";
-import pathJoin from "../helpers/pathJoin";
+import { pathJoin } from "../helpers/pathJoin";
 import { removeItem } from "../helpers/array";
-import { toVoid } from "../helpers";
-
-export type Keys<T> = { [K in keyof T]: K extends symbol ? never : K }[keyof T];
+import { auth$, getApiUrl } from "./messages";
+import { realtime } from "./realtime";
 
 export type RepoWhere<T extends ModelBase> = {
-  [P in keyof T]?: string | number | Date
+  [P in keyof T]?: boolean | string | number | Date
 }
 
 export interface RepoOptions<T extends ModelBase> {
@@ -22,12 +21,7 @@ export interface RepoOptions<T extends ModelBase> {
   skipTotal?: boolean;
   headers?: Record<string, string>;
   intervalMs?: number;
-  reqOptions?: ReqOptions<T>;
-}
-
-export const apiContext = {
-  token: '',
-  onError: toVoid,
+  req?: ReqOptions<T>;
 }
 
 export const getParams = (o?: RepoOptions<any>): ReqParams => {
@@ -43,7 +37,7 @@ export const getParams = (o?: RepoOptions<any>): ReqParams => {
   if (page) r.page = page;
   if (perPage) r.perPage = perPage;
   if (skipTotal) r.skipTotal = 'true';
-  if (where) {
+  if (where && Object.keys(where).length > 0) {
     const filters = Object.entries(where||{}).map(([k, v]) => (
       (typeof v === "string" && v.match(/^ *[=<>]/)) ? `${k} ${v}` : `${k} = "${v}"`
     ));
@@ -52,124 +46,6 @@ export const getParams = (o?: RepoOptions<any>): ReqParams => {
 
   return r;
 }
-
-const pbApiURL = localStorage.getItem('_PB_API_URL') || 'http://127.0.0.1:8090/api';
-
-const initRealtime = () => {
-  let clientId: string = "";
-  let eventSource: EventSource|undefined = undefined;
-  let xhr: XMLHttpRequest|undefined = undefined;
-  let intervalId: any;
-  let lastState = "";
-  const subscriptions: Record<string, ((data: any) => void)[]> = {};
-  const realtimeUrl = pathJoin(pbApiURL, 'realtime');
-
-  const isConnected = (): boolean => !!eventSource && !!clientId;
-  
-  const addAllListeners = (eventSource: EventSource) => {
-    console.debug('realtime addAllListeners', eventSource);
-    for (const key in subscriptions) {
-      const listeners = subscriptions[key];
-      for (let listener of listeners) {
-        eventSource.addEventListener(key, listener);
-      }
-    }
-  }
-  
-  const disconnect = () => {
-    console.debug('realtime disconnect', !!xhr, !!eventSource, clientId);
-    if (xhr) {
-      xhr.abort();
-      xhr = undefined;
-    }
-    if (eventSource) {
-      eventSource.close();
-      eventSource = undefined;
-    }
-    clientId = "";
-  }
-  
-  const connect = async () => {
-    console.debug('realtime connect', { realtimeUrl  });
-    await disconnect();
-    await new Promise<void>(resolve => {
-      eventSource = new EventSource(realtimeUrl);
-      eventSource.addEventListener("PB_CONNECT", (e: MessageEvent) => {
-        console.debug('PB_CONNECT', e);
-        if (!e) return console.warn('PB_CONNECT e');
-        const id = (parse(e.data) || {}).clientId;
-        if (!id) return console.warn('PB_CONNECT id');
-        clientId = id;
-        resolve();
-      });
-    });
-    console.debug('realtime connected', { clientId });
-  }
-  
-  const update = async (req: Req) => {
-    try {
-      console.debug('realtime update');
-      clearInterval(intervalId);
-      intervalId = setInterval(() => update(req), 10000);
-
-      const state = Object.keys(subscriptions).join(',') + isConnected();
-      if (state === lastState) return;
-      lastState = state;
-
-      const subscriptionKeys: string[] = [];
-      for (const key in subscriptions) {
-        if (!subscriptions[key].length) {
-          delete subscriptions[key];
-        }
-        else {
-          subscriptionKeys.push(key);
-        }
-      }
-      console.debug('realtime update keys', subscriptionKeys);
-
-      if (!subscriptionKeys.length) return await disconnect();
-      if (!isConnected()) await connect();
-
-
-//         await ky.post(this.getRealtimeUrl(), {
-//             json: {
-//                 clientId: this.clientId,
-//                 subscriptions: this.lastSentSubscriptions,
-//             },
-//             headers: {
-//                 Authorization: this.tokenRef.token,
-//             },
-//             signal: (this.cancel = new AbortController()).signal
-//         });
-      await req('POST', realtimeUrl, {
-        xhr: true,
-        json: {
-          clientId,
-          subscriptions: subscriptionKeys,
-        },
-        headers: {
-          'content-type': 'application/json',
-        },
-        before: (ctx) => {
-          xhr = ctx.xhr;
-        }
-      });
-
-      xhr = undefined;
-      if (eventSource) addAllListeners(eventSource);
-    }
-    catch (error) {
-      console.error('realtime update', error);
-    }
-  }
-
-  return {
-    subscriptions,
-    update,
-  }
-}
-
-const realtime = initRealtime();
 
 // class Realtime {
 //   connected = false;
@@ -282,28 +158,29 @@ const realtime = initRealtime();
 //   }
 // }
 
-let serverTimeOffset = 0;
-
-export class PbRepo<T extends ModelBase> {
-  unsubscribes: (() => void)[] = [];
-  req: Req;
-
-  constructor(public coll: string) {
-    this.req = createReq({
-      xhr: true,
-      baseUrl: `${pbApiURL}/collections/${this.coll}/`,
-      timeout: 10000,
-      base: (options) => {
+export const apiReq = (baseUrl: string) => (
+  createReq({
+    xhr: true,
+    baseUrl: pathJoin(getApiUrl(), baseUrl),
+    timeout: 10000,
+    base: (options) => {
+      const auth = auth$.v;
+      if (auth) {
         options.headers = {
-          Authorization: apiContext.token,
+          Authorization: auth.token, // `Bearer ${auth.token}`,
           ...options.headers,
         }
-      },
-    });
-  }
+      }
+    },
+  })
+);
 
-  now() {
-    return new Date();
+export class Coll<T extends ModelBase> {
+  unsubscribes: (() => void)[] = [];
+  r: Req;
+  
+  constructor(public coll: string) {
+    this.r = apiReq(`collections/${this.coll}/`);
   }
 
   // async _get<O = any>(path: string, options: RepoOptions<T> = {}): Promise<O> {
@@ -328,10 +205,15 @@ export class PbRepo<T extends ModelBase> {
   //   return result;
   // }
 
-  get(id: string, o?: RepoOptions<T>): Promise<T> {
-    if (!id) throw new Err('no id');
-    const reqOptions = o?.reqOptions || {};
-    return this.req('GET', `records/${id}`, {
+  log(...args: any[]) {
+    console.debug('Coll', this.coll, ...args);
+  }
+
+  get(id: string, o?: RepoOptions<T>): Promise<T|null> {
+    this.log('get', id, o);
+    if (!id) return Promise.resolve(null);
+    const reqOptions: ReqOptions = o?.req || {};
+    return this.r('GET', `records/${id}`, {
       ...reqOptions,
       params: {
         ...getParams(o),
@@ -341,13 +223,16 @@ export class PbRepo<T extends ModelBase> {
   }
 
   findPage(where: RepoWhere<T>, o?: RepoOptions<T>) {
-    return this.req<{
+    this.log('findPage', where, o);
+    const reqOptions: ReqOptions = o?.req || {};
+    return this.r<{
       items: T[],
       page: number,
       perPage: number,
       totalItems: number,
       totalPages: number,
     }>('GET', `records`, {
+      ...reqOptions,
       params: getParams({ where, ...o } as RepoOptions<T>),
     });
   }
@@ -365,50 +250,45 @@ export class PbRepo<T extends ModelBase> {
   }
 
   create(item: ModelCreate<T>, o?: RepoOptions<T>): Promise<T> {
-    return this.req('POST', `records`, {
+    this.log('create', item, o);
+    const reqOptions: ReqOptions = o?.req || {};
+    return this.r('POST', `records`, {
+      ...reqOptions,
       params: getParams(o),
       form: item
     });
   }
 
   update(id: string, changes: ModelUpdate<T>, o?: RepoOptions<T>): Promise<T> {
+    this.log('update', id, changes, o);
     if (!id) throw new Err('no id');
-    return this.req('PATCH', `records/${id}`, {
+    const reqOptions: ReqOptions = o?.req || {};
+    return this.r('PATCH', `records/${id}`, {
+      ...reqOptions,
       params: getParams(o),
       form: changes
     });
   }
 
-  upsert(where: RepoWhere<T>, changes: ModelUpsert<T>, o?: RepoOptions<T>) {
-    return this.findOne(where, { select: ['id'] as Keys<T>[] })
-      .then(item => item ? this.update(item.id, changes, o) : this.create(changes, o));
-  }
-
-  setToken(token: string) {
-    apiContext.token = token;
-    localStorage.setItem('token', token);
-  }
-
-  getToken() {
-    return apiContext.token;
-  }
-
-  login(usernameOrEmail: string, password: string, o?: RepoOptions<T>): Promise<T> {
-    return this.req('POST', `auth-with-password`, {
+  delete(id: string, o?: RepoOptions<T>): Promise<void> {
+    this.log('delete', id, o);
+    if (!id) throw new Err('no id');
+    const reqOptions: ReqOptions = o?.req || {};
+    return this.r('DELETE', `records/${id}`, {
+      ...reqOptions,
       params: getParams(o),
-      form: {
-        identity: usernameOrEmail,
-        password,
-      }
-    }).then(result => {
-      console.debug('login result', result);
-      this.setToken(result.token);
-      return result.record;
     });
   }
 
-  logout() {
-    this.setToken('');
+  upsert(where: RepoWhere<T>, changes: ModelUpsert<T>, o?: RepoOptions<T>) {
+    this.log('upsert', where, changes, o);
+    return this.findOne(where, { select: ['id'] as Keys<T>[] })
+      .then(item => item ? this.update(item.id, changes, o) : this.create(changes, o));
+  }
+  
+  getUrl(id?: string, filename?: any, thumb?: [number, number]) {
+    const query = thumb ? `?thumb=${thumb[0]}x${thumb[1]}` : '';
+    return id && filename ? pathJoin(getApiUrl(), `files/${this.coll}/${id}/${filename}${query}`) : '';
   }
 
   async subscribe(topic: string, cb: (item: T, action: 'update'|'create'|'delete') => void, o?: RepoOptions<T>) {
@@ -436,12 +316,12 @@ export class PbRepo<T extends ModelBase> {
     const listeners = subscriptions[key] || (subscriptions[key] = []);
     listeners.push(listener);
 
-    await realtime.update(this.req);
+    await realtime.update(this.r);
 
     return async () => {
       const listeners = subscriptions[key] || (subscriptions[key] || []);
       removeItem(listeners, listener);
-      await realtime.update(this.req);;
+      await realtime.update(this.r);
     };
 
     

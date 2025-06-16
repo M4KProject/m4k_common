@@ -1,21 +1,50 @@
+import { FieldInfo, FieldType } from '@common/components';
 import {
-    ModelBase,
     _ContentModel,
     _DeviceModel,
-    _FileModel,
+    _MediaModel,
     _GroupModel,
     _JobModel,
     _MemberModel,
     _UserModel,
 } from './_models.generated';
-import { PbRepo } from './PbRepo';
+
+export * from './_models.generated';
 
 export interface ContentModel extends _ContentModel {}
+
+export interface FormContentModel extends ContentModel {
+    data: {
+        fields: FieldInfo[],
+        values: { [prop: string]: any },
+    }
+}
+
+export interface TableContentModel extends ContentModel {
+    data: {
+        fields: FieldInfo[],
+        items: { [prop: string]: any }[],
+    }
+}
+
 export interface DeviceModel extends _DeviceModel {}
-export interface FileModel extends _FileModel {}
+
+export interface MediaModel extends _MediaModel {}
+
 export interface GroupModel extends _GroupModel {}
+
 export interface JobModel extends _JobModel {}
-export interface MemberModel extends _MemberModel {}
+
+export enum Role {
+    viewer = 10,
+    editor = 20,
+    admin = 30,
+}
+
+export interface MemberModel extends _MemberModel {
+    role?: Role; // admin > editor > viewer
+}
+
 export interface UserModel extends Omit<_UserModel, 'tokenKey'> {}
 
 export interface DeviceModel extends _DeviceModel {
@@ -69,13 +98,3 @@ export interface DeviceModel extends _DeviceModel {
     //     value?: any;
     // };
 }
-
-export const pbRepo = <T extends ModelBase>(name: string) => new PbRepo<T>(name);
-
-export const contentRepo = pbRepo<ContentModel>('contents');
-export const deviceRepo = pbRepo<DeviceModel>('devices');
-export const fileRepo = pbRepo<FileModel>('files');
-export const groupRepo = pbRepo<GroupModel>('groups');
-export const jobRepo = pbRepo<JobModel>('jobs');
-export const memberRepo = pbRepo<MemberModel>('members');
-export const userRepo = pbRepo<UserModel>('users');

@@ -8,8 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "gen:pb": "cd pb && npx vite-node _models.generator.ts",
-    "gen:pb2": "npx pocketbase-typegen --url http://127.0.0.1:8090 --email dev@m4k.fr --password 'dev-pass' --out 'pb/_types.ts'"
+    "gen:pb": "cd api && npx vite-node _models.generator.ts",
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
