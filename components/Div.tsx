@@ -1,9 +1,9 @@
 
 import { clsx } from "../helpers/html";
-import React from "react";
+import React, { forwardRef } from "react";
 
 type DivHTMLProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-export interface DivProps extends Omit<DivHTMLProps, 'style'> {
+export interface DivProps extends Omit<Omit<DivHTMLProps, 'style'>, 'ref'> {
     cls?: any;
     style?: string | React.CSSProperties | undefined;
 };
@@ -28,7 +28,7 @@ export const Div = ({ cls, style, className, ...props }: DivProps) => (
     <div {...props} style={getStyle(style)} className={clsx(cls, className)} />
 );
 
-export const DivWithRef = React.forwardRef<HTMLDivElement, DivProps>(
+export const DivWithRef = forwardRef<HTMLDivElement, DivProps>(
   ({ cls, style, className, ...props }, ref) => (
     <div
       {...props}

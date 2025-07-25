@@ -1,4 +1,4 @@
-/* generated : Mon Jun 16 2025 16:05:54 GMT+0200 (heure d’été d’Europe centrale) */
+/* generated : Sat Jun 28 2025 16:41:19 GMT+0200 (heure d’été d’Europe centrale) */
 
 export const _models = [
   {
@@ -511,12 +511,12 @@ export const _models = [
       "CREATE UNIQUE INDEX `idx_email_pbc_3142635823` ON `_superusers` (`email`) WHERE `email` != ''"
     ],
     "created": "2025-05-23 12:26:47.208Z",
-    "updated": "2025-05-28 11:40:11.680Z",
+    "updated": "2025-06-17 15:46:16.239Z",
     "system": true,
     "authRule": "",
     "manageRule": null,
     "authAlert": {
-      "enabled": true,
+      "enabled": false,
       "emailTemplate": {
         "subject": "Login from a new location",
         "body": "<p>Hello,</p>\n<p>We noticed a login to your {APP_NAME} account from a new location.</p>\n<p>If this was you, you may disregard this email.</p>\n<p><strong>If this wasn't you, you should immediately change your {APP_NAME} account password to revoke access from all other locations.</strong></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
@@ -1372,6 +1372,16 @@ export const _models = [
       },
       {
         "hidden": false,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
         "id": "file1602912115",
         "maxSelect": 1,
         "maxSize": 500000000,
@@ -1434,7 +1444,7 @@ export const _models = [
       "CREATE INDEX `idx_CpaKol68gh` ON `medias` (\n  `group`,\n  `name`\n)"
     ],
     "created": "2025-05-23 12:28:50.262Z",
-    "updated": "2025-06-13 12:42:11.360Z",
+    "updated": "2025-06-25 09:43:16.460Z",
     "system": false
   },
   {
@@ -1598,7 +1608,8 @@ export const _models = [
         "type": "select",
         "values": [
           "test",
-          "hiboutik"
+          "hiboutik",
+          "odoo"
         ]
       },
       {
@@ -1657,7 +1668,7 @@ export const _models = [
       {
         "hidden": false,
         "id": "json325763347",
-        "maxSize": 0,
+        "maxSize": 104857600,
         "name": "result",
         "presentable": false,
         "required": false,
@@ -1665,14 +1676,18 @@ export const _models = [
         "type": "json"
       },
       {
+        "autogeneratePattern": "",
         "hidden": false,
-        "id": "json4035954268",
-        "maxSize": 0,
+        "id": "text4035954268",
+        "max": 999999,
+        "min": 0,
         "name": "logs",
+        "pattern": "",
         "presentable": false,
+        "primaryKey": false,
         "required": false,
         "system": false,
-        "type": "json"
+        "type": "text"
       },
       {
         "hidden": false,
@@ -1704,7 +1719,7 @@ export const _models = [
     ],
     "indexes": [],
     "created": "2025-05-23 12:28:50.267Z",
-    "updated": "2025-06-16 03:58:38.286Z",
+    "updated": "2025-06-24 11:25:50.388Z",
     "system": false
   },
   {
@@ -1838,6 +1853,20 @@ export const _models = [
       {
         "autogeneratePattern": "",
         "hidden": false,
+        "id": "text2324736937",
+        "max": 0,
+        "min": 0,
+        "name": "key",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
         "id": "text1579384326",
         "max": 0,
         "min": 0,
@@ -1877,15 +1906,6 @@ export const _models = [
       },
       {
         "hidden": false,
-        "id": "bool1358543748",
-        "name": "enabled",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "bool"
-      },
-      {
-        "hidden": false,
         "id": "file3309110367",
         "maxSelect": 1,
         "maxSize": 0,
@@ -1900,6 +1920,24 @@ export const _models = [
       },
       {
         "hidden": false,
+        "id": "bool1358543748",
+        "name": "disabled",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "bool3946532403",
+        "name": "deleted",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
         "id": "json2918445923",
         "maxSize": 0,
         "name": "data",
@@ -1907,6 +1945,29 @@ export const _models = [
         "required": false,
         "system": false,
         "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "json1521909682",
+        "maxSize": 0,
+        "name": "remote",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_3292755704",
+        "hidden": false,
+        "id": "relation1032740943",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "parent",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
       },
       {
         "cascadeDelete": false,
@@ -1920,17 +1981,6 @@ export const _models = [
         "required": false,
         "system": false,
         "type": "relation"
-      },
-      {
-        "hidden": false,
-        "id": "date3991540156",
-        "max": "",
-        "min": "",
-        "name": "synchronized",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "date"
       },
       {
         "hidden": false,
@@ -1953,9 +2003,11 @@ export const _models = [
         "type": "autodate"
       }
     ],
-    "indexes": [],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_T7oKZbyJYA` ON `categories` (\n  `group`,\n  `key`\n)"
+    ],
     "created": "2025-06-13 11:00:08.015Z",
-    "updated": "2025-06-13 12:42:11.371Z",
+    "updated": "2025-06-27 16:07:50.479Z",
     "system": false
   },
   {
@@ -1980,6 +2032,20 @@ export const _models = [
         "primaryKey": true,
         "required": true,
         "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text2324736937",
+        "max": 0,
+        "min": 0,
+        "name": "key",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": false,
         "type": "text"
       },
       {
@@ -2037,7 +2103,7 @@ export const _models = [
       {
         "hidden": false,
         "id": "bool1358543748",
-        "name": "enabled",
+        "name": "disabled",
         "presentable": false,
         "required": false,
         "system": false,
@@ -2068,6 +2134,25 @@ export const _models = [
         "type": "json"
       },
       {
+        "hidden": false,
+        "id": "json741078394",
+        "maxSize": 0,
+        "name": "remote",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "bool3946532403",
+        "name": "deleted",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
         "cascadeDelete": false,
         "collectionId": "pbc_3292755704",
         "hidden": false,
@@ -2095,17 +2180,6 @@ export const _models = [
       },
       {
         "hidden": false,
-        "id": "date3991540156",
-        "max": "",
-        "min": "",
-        "name": "synchronized",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "date"
-      },
-      {
-        "hidden": false,
         "id": "autodate2990389176",
         "name": "created",
         "onCreate": true,
@@ -2125,9 +2199,11 @@ export const _models = [
         "type": "autodate"
       }
     ],
-    "indexes": [],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_9NgDOQqj3q` ON `products` (\n  `group`,\n  `key`\n)"
+    ],
     "created": "2025-06-13 11:05:35.487Z",
-    "updated": "2025-06-13 12:42:11.373Z",
+    "updated": "2025-06-27 16:07:39.962Z",
     "system": false
   },
   {
@@ -2171,7 +2247,7 @@ export const _models = [
       {
         "hidden": false,
         "id": "bool1358543748",
-        "name": "enabled",
+        "name": "disabled",
         "presentable": false,
         "required": false,
         "system": false,
@@ -2237,14 +2313,13 @@ export const _models = [
       },
       {
         "hidden": false,
-        "id": "date3991540156",
-        "max": "",
-        "min": "",
-        "name": "synchronized",
+        "id": "json741078394",
+        "maxSize": 0,
+        "name": "sync",
         "presentable": false,
         "required": false,
         "system": false,
-        "type": "date"
+        "type": "json"
       },
       {
         "hidden": false,
@@ -2269,7 +2344,7 @@ export const _models = [
     ],
     "indexes": [],
     "created": "2025-06-13 11:11:22.288Z",
-    "updated": "2025-06-13 12:42:11.376Z",
+    "updated": "2025-06-20 22:21:29.052Z",
     "system": false
   },
   {
@@ -2363,14 +2438,13 @@ export const _models = [
       },
       {
         "hidden": false,
-        "id": "date3991540156",
-        "max": "",
-        "min": "",
-        "name": "synchronized",
+        "id": "json741078394",
+        "maxSize": 0,
+        "name": "sync",
         "presentable": false,
         "required": false,
         "system": false,
-        "type": "date"
+        "type": "json"
       },
       {
         "hidden": false,
@@ -2395,7 +2469,7 @@ export const _models = [
     ],
     "indexes": [],
     "created": "2025-06-13 11:16:56.419Z",
-    "updated": "2025-06-13 12:42:11.378Z",
+    "updated": "2025-06-20 22:21:10.384Z",
     "system": false
   }
 ];

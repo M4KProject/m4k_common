@@ -1,7 +1,3 @@
-import { toStr } from "./cast";
-import { isEmpty, isObject, isString } from "./check";
-import { stringify } from "./json";
-
 export class Err extends Error {
   data: any;
   // error: any;
@@ -15,16 +11,16 @@ export class Err extends Error {
       this.message = error.message;
     } else {
       this.name = 'Err';
-      this.message = toStr(error);
+      this.message = String(error);
     }
     this.init(data);
   }
 
   init(data: any) {
     this.data = data;
-    if (isObject(data)) {
-      if (isString(data.name)) this.name = data.name;
-      if (isString(data.message)) this.message = data.message;
+    if (typeof data === 'object') {
+      if (typeof data.name === 'string') this.name = data.name;
+      if (typeof data.message === 'string') this.message = data.message;
     }
     return this;
   }
@@ -65,8 +61,8 @@ export class Err extends Error {
     };
   }
 
-  toString() {
-    return `${this.name}: ${this.message} ${stringify(this.data)}`;
+  override toString() {
+    return `${this.name}: ${this.message}`;
   }
 }
 

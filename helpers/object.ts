@@ -1,7 +1,7 @@
-import { uniq } from "./array";
-import { isArray, isObject } from "./check";
+import { uniq } from "./array.ts";
+import { isArray, isObject } from "./check.ts";
 
-export const merge = <T extends {}>(target: T, changes: Partial<T>): T => {
+export const merge = <T extends Record<string, any>>(target: T, changes: Partial<T>): T => {
     const keys = Object.keys(changes);
     for (const key of keys) {
       const v = (changes as any)[key];

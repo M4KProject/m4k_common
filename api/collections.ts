@@ -1,5 +1,6 @@
-import { ContentModel, DeviceModel, MediaModel, GroupModel, JobModel, MemberModel, ModelBase, UserModel } from './models';
-import { Coll } from './Coll';
+import { ContentModel, DeviceModel, MediaModel, GroupModel, JobModel, MemberModel, ModelBase, UserModel, CategoryModel, ProductModel, ModifierModel, SaleModel } from './models.ts';
+import { Coll } from './Coll.ts';
+import { global } from '../helpers/global.ts';
 
 export const coll = <T extends ModelBase>(name: string) => new Coll<T>(name);
 
@@ -11,11 +12,20 @@ export const jobColl = coll<JobModel>('jobs');
 export const memberColl = coll<MemberModel>('members');
 export const userColl = coll<UserModel>('users');
 
-const g = (window as any);
-g.contentColl = contentColl;
-g.deviceColl = deviceColl;
-g.mediaColl = mediaColl;
-g.groupColl = groupColl;
-g.jobColl = jobColl;
-g.memberColl = memberColl;
-g.userColl = userColl;
+export const categoryColl = coll<CategoryModel>("categories");
+export const productColl = coll<ProductModel>("products");
+export const modifierColl = coll<ModifierModel>("modifiers");
+export const saleColl = coll<SaleModel>("sales");
+
+global.contentColl = contentColl;
+global.deviceColl = deviceColl;
+global.mediaColl = mediaColl;
+global.groupColl = groupColl;
+global.jobColl = jobColl;
+global.memberColl = memberColl;
+global.userColl = userColl;
+
+global.categoryColl = categoryColl;
+global.productColl = productColl;
+global.modifierColl = modifierColl;
+global.saleColl = saleColl;

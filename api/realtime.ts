@@ -1,7 +1,8 @@
-import { Req } from "../helpers/createReq";
-import { parse } from "../helpers/json";
-import { pathJoin } from "../helpers/pathJoin";
-import { getApiUrl } from "./messages";
+/// <reference lib="dom" />
+import { Req } from "../helpers/req.ts";
+import { parse } from "../helpers/json.ts";
+import { pathJoin } from "../helpers/pathJoin.ts";
+import { getApiUrl } from "./messages.ts";
 
 const initRealtime = () => {
   let clientId: string = "";
@@ -18,7 +19,7 @@ const initRealtime = () => {
     console.debug('realtime addAllListeners', eventSource);
     for (const key in subscriptions) {
       const listeners = subscriptions[key];
-      for (let listener of listeners) {
+      for (const listener of listeners) {
         eventSource.addEventListener(key, listener);
       }
     }

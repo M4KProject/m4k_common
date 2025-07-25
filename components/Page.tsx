@@ -34,6 +34,7 @@ const css: Css = {
         position: 'relative',
         overflowX: 'hidden',
         overflowY: 'auto',
+        flex: 1,
     },
 }
 

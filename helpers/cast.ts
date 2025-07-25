@@ -1,4 +1,4 @@
-import { isArray, isDate, isNil, isNumber, isRecord, isString } from "./check";
+import { isArray, isDate, isNil, isNumber, isRecord, isString } from "./check.ts";
 
 export const me = <T = any>(value: T): T => value;
 
@@ -61,7 +61,7 @@ interface ToRecord {
     <T = any, U = any>(v: T | null | undefined, def: U): T | U;
 }
 export const toRecord = (<T = any>(v: any, def: T = {} as any): T =>
-    isRecord(v) ? v : def) as ToRecord;
+    isRecord(v) ? (v as any) : def) as ToRecord;
 
 export const toStr = (v: any, def: string = ''): string => (isNil(v) ? def : String(v));
 

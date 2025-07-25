@@ -1,6 +1,7 @@
 /// <reference types="@types/node" />
 
 import { stringify } from "../helpers/json.ts";
+import { firstUpper } from "../helpers/str.ts";
 import { _models } from "./_models.ts";
 import { writeFile } from "fs/promises";
 
@@ -60,8 +61,15 @@ const models: typeof _models = await res.json();
 await writeFile("_models.ts", `/* generated : ${new Date()} */\n\nexport const _models = ${stringify(models, null, 2)};`);
 
 for (const model of models) {
-  const interfaceName = "_" + model.name[0].toUpperCase() +
-    model.name.substring(1, model.name.length - 1) + "Model";
+  if (model.name.startsWith('_')) continue;
+
+  let name = model.name;
+  name = name.substring(0, name.length - 1);
+
+  if (name === "categorie") name = "category";
+
+  const interfaceName = "_" + firstUpper(name) + "Model";
+
   sb.push(
     `export interface ${interfaceName} extends ${
       model.type === "auth" ? "AuthModelBase" : "ModelBase"

@@ -8,6 +8,11 @@ import { Field } from './Field';
 import { Button, ButtonGroup } from './Button';
 import { Form } from './Form';
 import { toErr } from '@common/helpers/err';
+import { addTranslates } from '@common/hooks';
+
+addTranslates({
+    'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
+});
 
 const css: Css = {
     '&': {

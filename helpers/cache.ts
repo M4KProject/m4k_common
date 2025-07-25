@@ -1,11 +1,11 @@
-import { parse, stringify } from "./json";
+import { parse, stringify } from "./json.ts";
 
 type Cache<T> = ['CACHE', number, T];
 
 const cache = async <T>(key: string, expiredMs: number, load: () => Promise<T>): Promise<T> => {
   console.debug('cache', key, expiredMs);
   if (expiredMs !== 0) {
-    const lastJson = await localStorage.getItem(key);
+    const lastJson = localStorage.getItem(key);
     if (lastJson) {
       const last = parse(lastJson) as Cache<T>;
       if (Array.isArray(last) && last[0] === 'CACHE') {

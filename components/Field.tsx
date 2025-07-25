@@ -158,7 +158,7 @@ const getMediaField = (_mimetypes: string[]): FieldComp => {
     }
 }
 
-const getDateField = (type: 'date'|'datetime'|'time'): FieldComp => {
+const getDateField = (_type: 'date'|'datetime'|'time'): FieldComp => {
     return ({ cls, name, required, value, onChange, fieldProps }) => (
         <input className={cls} type="date" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
     )

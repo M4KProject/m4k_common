@@ -1,7 +1,7 @@
-import B, { BElement } from './B';
-import { D, DRoot, DStyle } from './D';
-import { clone } from './json';
-import { clipboardCopy, clipboardPaste } from './clipboard';
+import B, { BElement } from './B.ts';
+import { D, DRoot, DStyle } from './D.ts';
+import { clone } from './json.ts';
+import { clipboardCopy, clipboardPaste } from './clipboard.ts';
 
 function cleanD(d: D) {
   delete d.l;
@@ -65,7 +65,7 @@ let historyTimer: any = null;
 export function addHistory() {
   console.debug('addHistory');
   clearTimeout(historyTimer);
-  historyTimer = setTimeout(async () => {
+  historyTimer = setTimeout(() => {
     console.debug('addHistory cb');
     const data = exportData(B.root) as DRoot;
     histories.length = historyIndex;

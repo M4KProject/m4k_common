@@ -1,15 +1,16 @@
-import { D, DCall, DRoot, DStyle } from './D';
-import { Msg } from './Msg';
-import { isEqual } from './check';
-import { clone } from './json';
-import { toArray, toNbr, toRecord } from './cast';
-import { setAttrs, addJsFile, addCssFile, Cls, setCls, createEl } from './html';
-import addFont from './addFont';
-import router from './router';
-import getCallCb from './getCallCb';
-import tPriceToHtml from './tPriceToHtml';
-import priceToHtml from './priceToHtml';
-import { responsive$, Responsive } from './responsive';
+/// <reference lib="dom" />
+import { D, DCall, DRoot, DStyle } from './D.ts';
+import { Msg } from './Msg.ts';
+import { isEqual } from './check.ts';
+import { clone } from './json.ts';
+import { toArray, toNbr, toRecord } from './cast.ts';
+import { setAttrs, addJsFile, addCssFile, Cls, setCls, createEl } from './html.ts';
+import addFont from './addFont.ts';
+import router from './router.ts';
+import getCallCb from './getCallCb.ts';
+import tPriceToHtml from './tPriceToHtml.ts';
+import priceToHtml from './priceToHtml.ts';
+import { responsive$, Responsive } from './responsive.ts';
 
 const body = document.body;
 const bodyClass = body.classList;
@@ -360,7 +361,7 @@ export default class B {
 
   static query(selector: string): B[] {
     const results: B[] = [];
-    for (const el of document.querySelectorAll(selector)) {
+    for (const el of (document as any).querySelectorAll(selector)) {
       const b = (el as BElement)._b;
       if (b) results.push(b);
     }
@@ -643,7 +644,7 @@ export default class B {
   query(selector: string | ((b: B) => boolean), el?: HTMLElement | null) {
     const results: B[] = [];
     if (typeof selector === 'string') {
-      for (const childEl of (el || this.el).querySelectorAll(selector)) {
+      for (const childEl of (el || this.el as any).querySelectorAll(selector)) {
         const b = (childEl as BElement)._b;
         if (b) results.push(b);
       }

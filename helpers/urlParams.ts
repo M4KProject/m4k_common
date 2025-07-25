@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-window
 export const updateUrlParams = (update: Record<string, string>) => {
 	const queryParams = new URLSearchParams(window.location.search);
 	let count = 0;

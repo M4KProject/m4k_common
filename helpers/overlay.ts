@@ -1,5 +1,5 @@
-import { addEl, Css, setCss, setEl } from "../helpers/html";
-import { sleep } from "./async";
+import { addEl, Css, setCss, setEl } from "../helpers/html.ts";
+import { sleep } from "./async.ts";
 
 const overlayCss: Css = {
     '&': {

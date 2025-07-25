@@ -1,4 +1,4 @@
-// GENERATED : 2025-06-16T14:05:54.727Z
+// GENERATED : 2025-06-28T14:41:19.352Z
 
 export interface ModelBase {
   // collectionId: string;
@@ -42,45 +42,6 @@ export interface FindOptions<T extends ModelBase> {
   sort?: string;
   page?: number;
   perPage?: number;
-}
-
-export interface __mfaModel extends ModelBase {
-    id: string;
-    collectionRef: string;
-    recordRef: string;
-    method: string;
-}
-
-export interface __otpModel extends ModelBase {
-    id: string;
-    collectionRef: string;
-    recordRef: string;
-    password: string;
-    sentTo?: string;
-}
-
-export interface __externalAuthModel extends ModelBase {
-    id: string;
-    collectionRef: string;
-    recordRef: string;
-    provider: string;
-    providerId: string;
-}
-
-export interface __authOriginModel extends ModelBase {
-    id: string;
-    collectionRef: string;
-    recordRef: string;
-    fingerprint: string;
-}
-
-export interface __superuserModel extends AuthModelBase {
-    id: string;
-    password: string;
-    tokenKey: string;
-    email: string;
-    emailVisibility?: boolean;
-    verified?: boolean;
 }
 
 export interface _UserModel extends AuthModelBase {
@@ -137,6 +98,7 @@ export interface _MediaModel extends ModelBase {
     width?: number;
     height?: number;
     duration?: number;
+    data?: any;
     file?: File|Blob|string;
     variants?: File|Blob|string;
     group?: string;
@@ -152,13 +114,13 @@ export interface _GroupModel extends ModelBase {
 
 export interface _JobModel extends ModelBase {
     id: string;
-    action?: ""|"test"|"hiboutik";
+    action?: ""|"test"|"hiboutik"|"odoo";
     status?: ""|"pending"|"processing"|"finished"|"failed"|"deleted";
     progress?: number;
     error?: string;
     input?: any;
     result?: any;
-    logs?: any;
+    logs?: string;
     files?: File|Blob|string;
     group?: string;
 }
@@ -171,42 +133,47 @@ export interface _MemberModel extends ModelBase {
     group?: string;
 }
 
-export interface _CategorieModel extends ModelBase {
+export interface _CategoryModel extends ModelBase {
     id: string;
+    key?: string;
     name?: string;
     desc?: string;
     order?: number;
-    enabled?: boolean;
     image?: File|Blob|string;
+    disabled?: boolean;
+    deleted?: boolean;
     data?: any;
+    remote?: any;
+    parent?: string;
     group?: string;
-    synchronized?: Date|string;
 }
 
 export interface _ProductModel extends ModelBase {
     id: string;
+    key?: string;
     name?: string;
     desc?: string;
     order?: number;
     price?: number;
-    enabled?: boolean;
+    disabled?: boolean;
     image?: File|Blob|string;
     data?: any;
+    remote?: any;
+    deleted?: boolean;
     category?: string;
     group?: string;
-    synchronized?: Date|string;
 }
 
 export interface _ModifierModel extends ModelBase {
     id: string;
     name?: string;
-    enabled?: boolean;
+    disabled?: boolean;
     required?: boolean;
     price?: number;
     image?: File|Blob|string;
     data?: any;
     group?: string;
-    synchronized?: Date|string;
+    sync?: any;
 }
 
 export interface _SaleModel extends ModelBase {
@@ -217,5 +184,5 @@ export interface _SaleModel extends ModelBase {
     lines?: any;
     data?: any;
     group?: string;
-    synchronized?: Date|string;
+    sync?: any;
 }

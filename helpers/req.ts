@@ -1,6 +1,6 @@
-import { Err, toErr } from "./err";
-import { parse, stringify } from "./json";
-import { pathJoin } from "./pathJoin";
+import { Err, toErr } from "./err.ts";
+import { parse, stringify } from "./json.ts";
+import { pathJoin } from "./pathJoin.ts";
 
 export type FormDataObject = { [prop: string]: any };
 export type ReqURL = string | URL;
@@ -35,6 +35,7 @@ export interface ReqOptions<T = any> {
     cors?: boolean | null;
     password?: string | null;
     username?: string | null;
+    log?: boolean;
 }
 
 export interface ReqContext<T = any> {
@@ -97,7 +98,8 @@ export const toFormData = (form: FormDataObject | FormData | null | undefined, b
 export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
     try {
         const o = ctx.options;
-        console.debug('reqXHR options', o);
+        const log = o.log;
+        if (log) console.debug('reqXHR options', o);
         const xhr: XMLHttpRequest = ctx.xhr || (ctx.xhr = new XMLHttpRequest());
 
         xhr.timeout = ctx.timeout || 20000;
@@ -118,12 +120,12 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
         if (onProgress) {
             const _onProgress = (event: ProgressEvent<XMLHttpRequestEventTarget>) => {
                 try {
-                    console.debug('reqXHR onProgress', event.loaded, event.total);
+                    if (log) console.debug('reqXHR onProgress', event.loaded, event.total);
                     ctx.event = event;
                     onProgress(event.loaded / event.total, ctx);
                 }
                 catch (error) {
-                    console.warn('reqXHR onProgress', event);
+                    if (log) console.warn('reqXHR onProgress', event, error);
                 }
             };
             xhr.addEventListener('progress', _onProgress);
@@ -132,7 +134,7 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
 
         if (o.before) await o.before(ctx);
         await new Promise<void>((resolve) => {
-            const cb = async () => {
+            const cb = () => {
                 let data = xhr.response as any;
                 if (responseType === 'text') data = String(data);
                 else if (responseType === 'json') data = typeof data === 'string' ? parse(data) || data : data;
@@ -156,6 +158,7 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
 export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
     try {
         const o = ctx.options;
+        const log = o.log;
         const fetchRequest: RequestInit = (ctx.fetchInit = {
             body: ctx.body as any,
             headers: ctx.headers,
@@ -165,6 +168,9 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
         if (ctx.timeout) fetchRequest.signal = AbortSignal.timeout(ctx.timeout);
 
         if (o.before) await o.before(ctx);
+
+        if (log) console.debug('fetch', ctx.url, fetchRequest);
+
         const response = await (typeof o.fetch === 'function' ? o.fetch : fetch)(ctx.url, fetchRequest);
         ctx.response = response;
         ctx.status = response.status;
@@ -179,11 +185,11 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
                 case 'blob':
                     ctx.data = (await response.blob()) as T;
                     break;
-                case 'json':
-                    const objAny: any = (await response.json()) as any;
-                    const obj = objAny as T;
+                case 'json': {
+                    const obj: any = (await response.json()) as any;
                     ctx.data = typeof obj === 'string' ? parse(obj) || obj : obj;
                     break;
+                }
                 case 'text':
                     ctx.data = (await response.text()) as T;
                     break;
@@ -201,6 +207,8 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
 
 const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     const o = { ...options };
+    const log = o.log === true;
+
     if (o.base) o.base(o);
     if (!o.url) throw new Err('no-url', { options: o });
 
@@ -235,13 +243,14 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     headers.Accept = acceptMap[responseType] || acceptJson;
 
     const body = o.body || (json ? formData ? toFormData(json, formData) : stringify(json) : formData);
-    if (typeof body === 'object') {
-        if (body instanceof FormData || body instanceof File || body instanceof Blob) {
-            // ❌ NE PAS définir 'Content-Type' ici
-        } else {
-            headers['Content-Type'] = 'application/json';
-        }
-    }
+    // if (typeof body === 'object') {
+    //     if (body instanceof FormData || body instanceof File || body instanceof Blob) {
+    //         // ❌ NE PAS définir 'Content-Type' ici
+    //     } else {
+    //         addJsonHeader();
+    //     }
+    // }
+    if (json) headers['Content-Type'] = 'application/json';
 
     const oHeaders = o.headers;
     if (oHeaders) Object.assign(headers, oHeaders);
@@ -264,15 +273,15 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     } as ReqContext<T>;
 
     try {
-        const request = o.request || (o.fetch ? reqFetch : reqXHR);
-        console.debug('req url', o.url);
+        const request = o.request || ((o.fetch || typeof fetch === "function" ) ? reqFetch : reqXHR);
+        if (log) console.debug('req url', o.url);
         await request(ctx as any);
-        console.debug('req result', o.url, ctx);
+        if (log) console.debug('req result', o.url, ctx);
         if (o.cast) ctx.data = await o.cast(ctx);
         if (o.after) await o.after(ctx);
-        console.debug('req data', ctx.data);
+        if (log) console.debug('req data', o.url, ctx.data);
     } catch (error) {
-        console.debug('req error', o.url, error);
+        if (log) console.debug('req error', o.url, error);
         ctx.error = error;
         ctx.ok = false;
     }
@@ -280,7 +289,7 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     const error = ctx.error;
     if (error) {
         const err = toErr(error, { ...ctx, ...ctx.data })
-        console.warn('req throw error', err.toJSON());
+        if (log) console.warn('req throw error', err.toJSON());
         throw err;
     }
 

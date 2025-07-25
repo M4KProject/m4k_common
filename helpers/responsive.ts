@@ -1,5 +1,5 @@
-import { setCss } from './html'
-import { Msg } from './Msg'
+import { setCss } from './html.ts'
+import { Msg } from './Msg.ts'
 
 export type Responsive = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -24,5 +24,6 @@ export const addResponsiveListener = () => {
     [50, 100, 200, 500, 1000, 2000].forEach(
         ms => setTimeout(applyResponsive, ms)
     );
+    // deno-lint-ignore no-window no-window-prefix
     window.addEventListener('resize', applyResponsive, true);
 }

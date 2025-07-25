@@ -1,19 +1,41 @@
-import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from "./_models.generated";
-import { Req, ReqOptions, ReqParams, createReq } from "../helpers/createReq";
-import { Err } from "../helpers/err";
-import { parse, stringify } from "../helpers/json";
-import { pathJoin } from "../helpers/pathJoin";
-import { removeItem } from "../helpers/array";
-import { auth$, getApiUrl } from "./messages";
-import { realtime } from "./realtime";
+// deno-lint-ignore-file no-explicit-any
+import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from "./_models.generated.ts";
+import { Req, ReqOptions, ReqParams, createReq } from "../helpers/req.ts";
+import { Err } from "../helpers/err.ts";
+import { parse, stringify } from "../helpers/json.ts";
+import { pathJoin } from "../helpers/pathJoin.ts";
+import { removeItem } from "../helpers/array.ts";
+import { auth$, getApiUrl } from "./messages.ts";
+import { realtime } from "./realtime.ts";
+import { isArray } from "../helpers/check.ts";
 
-export type RepoWhere<T extends ModelBase> = {
-  [P in keyof T]?: boolean | string | number | Date
-}
+export type CollOperator = 
+  | '=' // Equal
+  | '!=' // NOT equal
+  | '>' // Greater than
+  | '>=' // Greater than or equal
+  | '<' // Less than
+  | '<=' // Less than or equal
+  | '~' // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+  | '!~' // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+  | '?=' // Any/At least one of Equal
+  | '?!=' // Any/At least one of NOT equal
+  | '?>' // Any/At least one of Greater than
+  | '?>=' // Any/At least one of Greater than or equal
+  | '?<' // Any/At least one of Less than
+  | '?<=' // Any/At least one of Less than or equal
+  | '?~' // Any/At least one of Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+  | '?!~' // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
 
-export interface RepoOptions<T extends ModelBase> {
+export type CollOperand = string | number | null | boolean | Date;
+
+export type CollFilter = CollOperand | [CollOperator, CollOperand];
+
+export type CollWhere<T extends ModelBase> = { [P in keyof T]?: CollFilter };
+
+export interface CollOptions<T extends ModelBase> {
   select?: (Keys<T>)[];
-  where?: RepoWhere<T>;
+  where?: CollWhere<T>;
   orderBy?: (Keys<T> | `-${Keys<T>}`)[];
   expand?: string;
   page?: number;
@@ -24,7 +46,33 @@ export interface RepoOptions<T extends ModelBase> {
   req?: ReqOptions<T>;
 }
 
-export const getParams = (o?: RepoOptions<any>): ReqParams => {
+const stringifyFilter = (key: string, propFilter: CollFilter) => {
+  const [ operator, operand ] = isArray(propFilter) ? propFilter : [ '=', propFilter ];
+
+  const operandString =
+    typeof operand === 'string' ? `"${operand}"` :
+    operand instanceof Date ? stringify(operand) :
+    operand;
+
+  return `${key} ${operator} ${operandString}`;
+}
+
+const stringifyWhere = <T extends ModelBase>(where: CollWhere<T>[] | CollWhere<T> | undefined): string|undefined => {
+  if (!where) return undefined;
+  
+  if (isArray(where)) {
+    const orList = where.map(stringifyWhere).filter(f => f);
+    if (orList.length === 0) return undefined;
+    return `(${orList.join(" || ")})`;
+  }
+
+  const filters = Object.entries(where||{}).map(([k, f]) => f ? stringifyFilter(k, f) : '').filter(f => f);
+  if (filters.length === 0) return undefined;
+  
+  return `(${filters.join(" && ")})`;
+}
+
+export const getParams = (o?: CollOptions<any>): ReqParams => {
   if (!o) return {};
   
   const { select, where, orderBy, expand, page, perPage, skipTotal } = o;
@@ -37,12 +85,9 @@ export const getParams = (o?: RepoOptions<any>): ReqParams => {
   if (page) r.page = page;
   if (perPage) r.perPage = perPage;
   if (skipTotal) r.skipTotal = 'true';
-  if (where && Object.keys(where).length > 0) {
-    const filters = Object.entries(where||{}).map(([k, v]) => (
-      (typeof v === "string" && v.match(/^ *[=<>]/)) ? `${k} ${v}` : `${k} = "${v}"`
-    ));
-    r.filter = '(' + filters.join(" && ") + ')';
-  }
+
+  const filter = stringifyWhere(where);
+  if (filter) r.filter = filter;
 
   return r;
 }
@@ -160,7 +205,8 @@ export const getParams = (o?: RepoOptions<any>): ReqParams => {
 
 export const apiReq = (baseUrl: string) => (
   createReq({
-    xhr: true,
+    fetch: true,
+    // xhr: false,
     baseUrl: pathJoin(getApiUrl(), baseUrl),
     timeout: 10000,
     base: (options) => {
@@ -183,19 +229,19 @@ export class Coll<T extends ModelBase> {
     this.r = apiReq(`collections/${this.coll}/`);
   }
 
-  // async _get<O = any>(path: string, options: RepoOptions<T> = {}): Promise<O> {
+  // async _get<O = any>(path: string, options: CollOptions<T> = {}): Promise<O> {
   //   const url = pathJoin(API_URL, path);
   //   console.debug('_get', url, options);
   //   return ky.get(url, getKyOptions(null, options)).json<O>().catch(ApiError.throw);
   // }
 
-  // async _post<O = any, I = any>(path: string, data?: I, options: RepoOptions<T> = {}): Promise<O> {
+  // async _post<O = any, I = any>(path: string, data?: I, options: CollOptions<T> = {}): Promise<O> {
   //   const url = pathJoin(API_URL, path);
   //   console.debug('_post', url, data, options);
   //   return ky.post(url, getKyOptions(data, options)).json<O>().catch(ApiError.throw);
   // }
 
-  // async req<O = any, I = any>(method: 'GET'|'POST'|'PATCH', path: string, data?: I, options: RepoOptions<T> = {}): Promise<O> {
+  // async req<O = any, I = any>(method: 'GET'|'POST'|'PATCH', path: string, data?: I, options: CollOptions<T> = {}): Promise<O> {
   //   console.debug('req', this.coll, method, path, data, options);
   //   const url = pathJoin(API_URL, path);
   //   const requestInit = getRequestInit(options);
@@ -209,7 +255,7 @@ export class Coll<T extends ModelBase> {
     console.debug('Coll', this.coll, ...args);
   }
 
-  get(id: string, o?: RepoOptions<T>): Promise<T|null> {
+  get(id: string, o?: CollOptions<T>): Promise<T|null> {
     this.log('get', id, o);
     if (!id) return Promise.resolve(null);
     const reqOptions: ReqOptions = o?.req || {};
@@ -222,8 +268,8 @@ export class Coll<T extends ModelBase> {
     });
   }
 
-  findPage(where: RepoWhere<T>, o?: RepoOptions<T>) {
-    this.log('findPage', where, o);
+  findPage(where: CollWhere<T>, o?: CollOptions<T>) {
+    // this.log('findPage', where, o);
     const reqOptions: ReqOptions = o?.req || {};
     return this.r<{
       items: T[],
@@ -233,23 +279,23 @@ export class Coll<T extends ModelBase> {
       totalPages: number,
     }>('GET', `records`, {
       ...reqOptions,
-      params: getParams({ where, ...o } as RepoOptions<T>),
+      params: getParams({ where, ...o } as CollOptions<T>),
     });
   }
 
-  find(where: RepoWhere<T>, o?: RepoOptions<T>) {
+  find(where: CollWhere<T>, o?: CollOptions<T>) {
     return this.findPage(where, { page: 1, perPage: 1000, skipTotal: true, ...o }).then(r => r.items);
   }
 
-  findOne(where: RepoWhere<T>, o?: RepoOptions<T>) {
-    return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(r => r.items[0]);
+  findOne(where: CollWhere<T>, o?: CollOptions<T>): Promise<T|null> {
+    return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(r => r.items[0]||null);
   }
 
-  count(where: RepoWhere<T>, o?: RepoOptions<T>) {
+  count(where: CollWhere<T>, o?: CollOptions<T>) {
     return this.findPage(where, { page: 1, perPage: 1, ...o }).then(r => r.totalItems);
   }
 
-  create(item: ModelCreate<T>, o?: RepoOptions<T>): Promise<T> {
+  create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
     this.log('create', item, o);
     const reqOptions: ReqOptions = o?.req || {};
     return this.r('POST', `records`, {
@@ -258,10 +304,16 @@ export class Coll<T extends ModelBase> {
       form: item
     });
   }
-
-  update(id: string, changes: ModelUpdate<T>, o?: RepoOptions<T>): Promise<T> {
+  
+  update(id: string|CollWhere<T>, changes: ModelUpdate<T>, o?: CollOptions<T>): Promise<T|null> {
     this.log('update', id, changes, o);
     if (!id) throw new Err('no id');
+    if (typeof id === 'object') {
+      return this.findOne(id, { ...o, select: ['id' as Keys<T>] }).then(item => {
+        if (!item) return null;
+        return this.update(item.id, changes, o);
+      });
+    }
     const reqOptions: ReqOptions = o?.req || {};
     return this.r('PATCH', `records/${id}`, {
       ...reqOptions,
@@ -270,28 +322,36 @@ export class Coll<T extends ModelBase> {
     });
   }
 
-  delete(id: string, o?: RepoOptions<T>): Promise<void> {
+  delete(id: string, o?: CollOptions<T>): Promise<void> {
     this.log('delete', id, o);
     if (!id) throw new Err('no id');
     const reqOptions: ReqOptions = o?.req || {};
     return this.r('DELETE', `records/${id}`, {
       ...reqOptions,
       params: getParams(o),
+      responseType: 'text',
     });
   }
 
-  upsert(where: RepoWhere<T>, changes: ModelUpsert<T>, o?: RepoOptions<T>) {
+  upsert(where: CollWhere<T>, changes: ModelUpsert<T>, o?: CollOptions<T>) {
     this.log('upsert', where, changes, o);
     return this.findOne(where, { select: ['id'] as Keys<T>[] })
-      .then(item => item ? this.update(item.id, changes, o) : this.create(changes, o));
+      .then(item => item ? this.update(item.id, changes, o) as Promise<T> : this.create(changes, o));
   }
   
-  getUrl(id?: string, filename?: any, thumb?: [number, number]) {
-    const query = thumb ? `?thumb=${thumb[0]}x${thumb[1]}` : '';
-    return id && filename ? pathJoin(getApiUrl(), `files/${this.coll}/${id}/${filename}${query}`) : '';
+  getUrl(id?: string, filename?: any) {
+    if (!id || !filename) return '';
+    return pathJoin(getApiUrl(), `files/${this.coll}/${id}/${filename}`);
   }
 
-  async subscribe(topic: string, cb: (item: T, action: 'update'|'create'|'delete') => void, o?: RepoOptions<T>) {
+  getThumbUrl(id?: string, filename?: any, thumb?: [number, number]) {
+    if (!id || !filename) return '';
+    const url = this.getUrl(id, filename);
+    const [w, h] = thumb || [200, 200];
+    return `${url}?thumb=${w}x${h}`;
+  }
+
+  async subscribe(topic: string, cb: (item: T, action: 'update'|'create'|'delete') => void, o?: CollOptions<T>) {
     console.debug('subscribe', this.coll, topic, o);
     // 'devices/8e2mu4rr32b0glf?options={"headers": {"x-token": "..."}}'
 

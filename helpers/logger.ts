@@ -1,4 +1,4 @@
-import { createEl, setCss } from "./html";
+import { createEl, setCss } from "./html.ts";
 
 export type LogLevel = "debug" | "info" | "warn" | "error";
 export type LogItem = [LogLevel, number, any[], HTMLDivElement | null];
@@ -17,14 +17,14 @@ const argToStr = (arg: any) => {
     if (arg instanceof Error) return `${arg.name}: ${arg.message}`;
     if (arg instanceof Date) return arg.toLocaleString();
     return JSON.stringify(arg);
-  } catch (e) {
+  } catch (_e) {
     return `${arg}(${typeof arg})`;
   }
 }
 
 const getLogMessage = (args: any[]) => {
   const sb: string[] = [];
-  for (let a of args) sb.push(argToStr(a));
+  for (const a of args) sb.push(argToStr(a));
   return sb.join(" ");
 }
 
@@ -119,7 +119,9 @@ const log = (type: LogLevel, ...args: any[]) => {
     if (logs.length > 300) {
       logs.splice(0, 10);
     }
-  } catch { }
+  } catch (_e) {
+    //
+  }
 };
 
 // const getLogs = (last: number) => {

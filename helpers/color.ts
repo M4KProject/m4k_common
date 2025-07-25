@@ -1,5 +1,5 @@
-import { isNumber } from "./check";
-import { clamp, round } from "./nbr";
+import { isNumber } from "./check.ts";
+import { clamp, round } from "./nbr.ts";
 
 const pInt16 = (hex: string) => parseInt(hex, 16);
 const pFloat = (val: string) => parseFloat(val);

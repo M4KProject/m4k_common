@@ -1,4 +1,4 @@
-import { isEqual, isNumber } from "./check";
+import { isEqual, isNumber } from "./check.ts";
 // import { round } from "./nbr";
 
 export type Style = Partial<CSSStyleDeclaration>;
@@ -79,7 +79,7 @@ export const autoScrollEnd = (el?: HTMLElement|null) => {
     if (!el) return
     let lastUserScroll = 0
     let isAutoScrolling = false;
-    let timer = setInterval(() => {
+    const timer = setInterval(() => {
         const isUserScroll = lastUserScroll + 5000 > Date.now()
         const scrollTopMax = el.scrollHeight - el.clientHeight
         const isAtBottom = Math.abs(el.scrollTop - scrollTopMax) < 2
@@ -253,33 +253,68 @@ const animToCss = (value: AnimValue, ctx: CssContext) => {
 //     animation: rotating 2s linear infinite;
 // }
 
+const w = (v: Em) => `width:${em(v)};`;
+const h = (v: Em) => `height:${em(v)};`;
+const wh = (v: Em) => w(v) + h(v);
+
+const wMax = (v: Em) => `max-width:${em(v)};`;
+const hMax = (v: Em) => `max-height:${em(v)};`;
+const whMax = (v: Em) => wMax(v) + hMax(v);
+
+const wMin = (v: Em) => `min-width:${em(v)};`;
+const hMin = (v: Em) => `min-height:${em(v)};`;
+const whMin = (v: Em) => wMin(v) + hMin(v);
+
+const fontSize = (v: Em) => `font-size:${em(v)};`;
+
+const m = (v: Em) => `margin:${em(v)};`;
+const mt = (v: Em) => `margin-top:${em(v)};`;
+const mb = (v: Em) => `margin-bottom:${em(v)};`;
+const ml = (v: Em) => `margin-left:${em(v)};`;
+const mr = (v: Em) => `margin-right:${em(v)};`;
+const mx = (v: Em) => ml(v) + mr(v);
+const my = (v: Em) => mt(v) + mb(v);
+
+const p = (v: Em) => `padding:${em(v)};`;
+const pt = (v: Em) => `padding-top:${em(v)};`;
+const pb = (v: Em) => `padding-bottom:${em(v)};`;
+const pl = (v: Em) => `padding-left:${em(v)};`;
+const pr = (v: Em) => `padding-right:${em(v)};`;
+const px = (v: Em) => pl(v) + pr(v);
+const py = (v: Em) => pt(v) + pb(v);
+
 type Em = number|string|(number|string)[];
 const em = (v: Em): string => typeof v === 'number' ? v + 'rem' : typeof v === 'string' ? v : v.map(em).join(' ');
 const cssFunMap = {
-    w: (v: Em) => `width:${em(v)};`,
-    h: (v: Em) => `height:${em(v)};`,
-    wMax: (v: Em) => `max-width:${em(v)};`,
-    hMax: (v: Em) => `max-height:${em(v)};`,
-    wMin: (v: Em) => `min-width:${em(v)};`,
-    hMin: (v: Em) => `min-height:${em(v)};`,
+    w,
+    h,
+    wh,
 
-    fontSize: (v: Em) => `font-size:${em(v)};`,
+    wMax,
+    hMax,
+    whMax,
 
-    m: (v: Em) => `margin:${em(v)};`,
-    mt: (v: Em) => `margin-top:${em(v)};`,
-    mb: (v: Em) => `margin-bottom:${em(v)};`,
-    ml: (v: Em) => `margin-left:${em(v)};`,
-    mr: (v: Em) => `margin-right:${em(v)};`,
-    mx: (v: Em) => `margin-left:${em(v)};margin-right:${em(v)};`,
-    my: (v: Em) => `margin-top:${em(v)};margin-bottom:${em(v)};`,
+    wMin,
+    hMin,
+    whMin,
 
-    p: (v: Em) => `padding:${em(v)};`,
-    pt: (v: Em) => `padding-top:${em(v)};`,
-    pb: (v: Em) => `padding-bottom:${em(v)};`,
-    pl: (v: Em) => `padding-left:${em(v)};`,
-    pr: (v: Em) => `padding-right:${em(v)};`,
-    px: (v: Em) => `padding-left:${em(v)};padding-right:${em(v)};`,
-    py: (v: Em) => `padding-top:${em(v)};padding-bottom:${em(v)};`,
+    fontSize,
+
+    m,
+    mt,
+    mb,
+    ml,
+    mr,
+    mx,
+    my,
+
+    p,
+    pt,
+    pb,
+    pl,
+    pr,
+    px,
+    py,
 
     elevation: (v: number) => `box-shadow:${em(v*.1)} ${em(v*.2)} ${em(v*.25)} 0px ${_colors.shadow||'#000000AA'};`,
     rounded: (v: number) => `border-radius:${em(v*.2)};`,
@@ -292,14 +327,14 @@ const cssFunMap = {
     bgUrl: (v: string) => `background-image: url("${v}");`,
     bgMode: (v: 'contain'|'cover'|'fill') => `background-repeat:no-repeat;background-position:center;background-size:${v === 'fill' ? '100% 100%' : v};`,
 
-    itemFit: (v: 'contain'|'cover'|'fill') =>
+    itemFit: (v: 'contain'|'cover'|'fill') => 
         v === 'contain' ? `object-fit:contain;max-width:100%;max-height:100%;` :
         v === 'cover' ? `object-fit:cover;min-width:100%;min-height:100%;` :
         v === 'fill' ? `object-fit:fill;min-width:100%;min-height:100%;` :
         '',
     
     anim: animToCss,
-    transition: (v: string) => v === 'all' ? 'transition:all 0.3s ease;' : `transition:${v};`,
+    transition: (v: string|boolean) => v ? v === 'all' || v === true ? 'transition:all 0.3s ease;' : `transition:${v};` : '',
 }
 
 type CssFunMap = typeof cssFunMap

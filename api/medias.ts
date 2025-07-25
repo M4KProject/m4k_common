@@ -1,10 +1,10 @@
-import { Msg } from '../helpers/Msg';
-import { uuid } from '../helpers/str';
-import { retry, sleep } from '../helpers/async';
-import { mediaColl } from './collections';
-import { needAuthId, needGroupId } from './messages';
-import { MediaModel } from './models';
-import { deleteKey } from '../helpers/object';
+import { Msg } from '../helpers/Msg.ts';
+import { uuid } from '../helpers/str.ts';
+import { retry, sleep } from '../helpers/async.ts';
+import { mediaColl } from './collections.ts';
+import { needGroupId } from './messages.ts';
+import { MediaModel } from './models.ts';
+import { deleteKey } from '../helpers/object.ts';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 const MAX_RETRY = 3;
@@ -31,7 +31,7 @@ export const uploadItems$ = new Msg<Record<string, UploadItem>>({});
 
 const update = (id: string, changes: Partial<UploadItem>) => uploadItems$.merge({ [id]: { ...uploadItems$.v[id], ...changes } });
 
-const startUpload = async (item: UploadItem) => retry(async () => {
+const startUpload = (item: UploadItem) => retry(async () => {
     const id = item.id;
 
     try {
@@ -43,7 +43,6 @@ const startUpload = async (item: UploadItem) => retry(async () => {
         const media = await mediaColl.create({
             name: String(file.name),
             file,
-            user: needAuthId(),
             group: needGroupId(),
         }, {
             req: {

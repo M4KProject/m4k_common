@@ -1,7 +1,7 @@
-import { randString } from "./rand";
+import { randString } from "./rand.ts";
+import { global } from '../helpers/global.ts';
 
-const glb = window as any;
-const timers: Record<string, any> = (glb).m4kTimers || (glb.m4kTimers = {});
+const timers: Record<string, any> = global.m4kTimers || (global.m4kTimers = {});
 
 const timer = (id: null|string, ms: number, cb: null|(() => void)) => {
     if (!id) id = randString(10) + Date.now();

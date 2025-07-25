@@ -1,4 +1,4 @@
-import { isRecord, isArray, isFunction, isNil } from './check';
+import { isRecord, isArray, isFunction, isNil } from './check.ts';
 
 export type ArRecKey<T> = undefined | null | keyof T | ((item: T, index: number) => any);
 export type ArRecVal<T, U> = undefined | null | keyof T | ((item: T, index: number) => U);
@@ -27,8 +27,8 @@ interface ById {
 }
 
 const _groupBy = (items: any, key: any, val: any, add: any) => {
-  const getK = isFunction(key) ? key : isNil(key) ? (i: any) => i : (i: any) => i[key];
-  const getV = isFunction(val) ? val : isNil(val) ? (i: any) => i : (i: any) => i[val];
+  const getK: (item: any, index: any) => any = isFunction(key) ? key : isNil(key) ? (i: any) => i : (i: any) => i[key];
+  const getV: (item: any, index: any) => any = isFunction(val) ? val : isNil(val) ? (i: any) => i : (i: any) => i[val];
   if (isArray(items)) {
     items.forEach((item, index) => {
       add(getK(item, index), getV(item, index));

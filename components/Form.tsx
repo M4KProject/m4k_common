@@ -1,8 +1,7 @@
 import { Css } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
-import { flexColumn, flexRow } from "../helpers/flexBox";
+import { flexColumn } from "../helpers/flexBox";
 import { Div, DivProps } from "./Div";
-import { Button, ButtonProps } from "./Button";
 
 const css: Css = {
     '&': {
