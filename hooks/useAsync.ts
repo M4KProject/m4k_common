@@ -1,8 +1,8 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect } from "preact/hooks";
 import { Msg } from "../helpers/Msg";
 import { useMsg } from "./useMsg";
 
-export const useAsync = <T>(initValue: T, load: () => T|Promise<T>, storedKey?: string|null, deps?: React.DependencyList): [T, () => void, Msg<T>] => {
+export const useAsync = <T>(initValue: T, load: () => T|Promise<T>, storedKey?: string|null, deps?: any[]): [T, () => void, Msg<T>] => {
     const _deps = deps ? [...deps, storedKey] : [storedKey];
     
     // import { isArray, isDefined } from "@common/helpers/check";

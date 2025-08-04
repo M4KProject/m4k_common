@@ -1,9 +1,9 @@
-import { removeItem } from "./array.ts";
-import { debounce, throttle } from "./async.ts";
-import { toNull, toVoid } from "./cast.ts";
-import { isFunction, isNotNull } from "./check.ts";
-import { parse, stringify } from "./json.ts";
-import { global } from '../helpers/global.ts';
+import { removeItem } from "./array";
+import { debounce, throttle } from "./async";
+import { toNull, toVoid } from "./cast";
+import { isFunction, isNotNull } from "./check";
+import { parse, stringify } from "./json";
+import { global } from '../helpers/global';
 
 export type IMsgHandler<T> = (value: T, oldValue: T) => void;
 export type IMsgFilter<T> = (value: T) => boolean;

@@ -11,9 +11,9 @@ import {
     _ProductModel,
     _ModifierModel,
     _SaleModel,
-} from './_models.generated.ts';
+} from './_models.generated';
 
-export * from './_models.generated.ts';
+export * from './_models.generated';
 
 export interface ContentModel extends _ContentModel {}
 

@@ -1,7 +1,7 @@
-import B, { BElement } from './B.ts';
-import { D, DRoot, DStyle } from './D.ts';
-import { clone } from './json.ts';
-import { clipboardCopy, clipboardPaste } from './clipboard.ts';
+import B, { BElement } from './B';
+import { D, DRoot, DStyle } from './D';
+import { clone } from './json';
+import { clipboardCopy, clipboardPaste } from './clipboard';
 
 function cleanD(d: D) {
   delete d.l;

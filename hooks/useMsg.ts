@@ -1,5 +1,5 @@
 import { IMsgReadonly } from "../helpers/Msg";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 
 interface UseMsg {
   <T = any>(msg: IMsgReadonly<T>): T;

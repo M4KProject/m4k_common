@@ -2,13 +2,12 @@ import { flexCenter, flexColumn } from "../helpers/flexBox";
 import { useMsg } from "../hooks/useMsg";
 import { Css } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
-import { ReactNode } from "react";
+import { ComponentChildren } from "preact";
 import { Msg } from "../helpers/Msg";
 import { Div, DivProps } from "./Div";
 import { Tr } from "./Tr";
 import { portal } from "./Portal";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 import { toErr } from "@common/helpers/err";
 import { addTranslates } from "@common/hooks/useTr";
 
@@ -17,7 +16,7 @@ addTranslates({
     "Failed to update record.": "Échec de la modification."
 });
 
-export const showDialog = (title: string, content: (open$: Msg<boolean>) => ReactNode, props?: Partial<DialogRenderProps>) => {
+export const showDialog = (title: string, content: (open$: Msg<boolean>) => ComponentChildren, props?: Partial<DialogRenderProps>) => {
     console.debug("showDialog", title);
 
     const open$ = new Msg(false);
@@ -43,7 +42,7 @@ const css: Css = {
         bg: '#000000AA',
         ...flexCenter(),
         opacity: 0,
-        transition: 'all 0.5s ease',
+        transition: 0.5,
     },
     '&Window': {
         ...flexColumn(),
@@ -53,8 +52,8 @@ const css: Css = {
         minWidth: '80%',
         overflow: 'hidden',
         bg: 'bg',
-        transform: 'scale(0)',
-        transition: 'all 0.5s ease',
+        scale: 0,
+        transition: 0.5,
     },
     '&Header': {
         ...flexCenter(),
@@ -75,7 +74,7 @@ const css: Css = {
         opacity: 1,
     },
     '&-open &Window': {
-        transform: 'scale(1)',
+        scale: 1,
     },
     '&-error &Header': {
         fg: 'error',

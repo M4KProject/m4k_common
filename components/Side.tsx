@@ -4,43 +4,40 @@ import { Msg } from '../helpers/Msg';
 import { flexColumn } from '../helpers/flexBox';
 import { Div, DivProps } from './Div';
 import { Button, ButtonProps } from './Button';
-import { createContext } from 'react';
-import { useContext } from 'react';
+import { createContext } from 'preact';
+import { useContext, useState } from 'preact/hooks';
 import { MdMenu } from 'react-icons/md';
-import { useState } from 'react';
 
 const css: Css = {
     '&': {
         position: 'relative',
-        transition: 'all 0.2s ease',
+        transition: 0.2,
         elevation: 1,
         w: 3,
     },
     '&Mask': {
         position: 'absolute',
-        top: '50%',
-        left: 0,
+        x: 0,
+        y: '50%',
         w: 3,
         h: '100%',
         zIndex: 100,
         overflow: 'hidden',
-        transform: 'translateY(-50%)',
-        transition: 'all 0.2s ease',
+        translateY: '-50%',
+        transition: 0.2,
     },
     '&Content': {
         ...flexColumn({ align: 'stretch' }),
         position: 'absolute',
         color: '#ffffff',
         fg: 'sideFg',
-        top: 0,
-        left: 0,
-        wMin: 13,
-        wMax: 13,
+        xy: 0,
+        wMinMax: 13,
         h: '100%',
         bg: '#f4f7fe',
     },
     '& .ButtonContent': {
-        transition: 'all 0.2s ease',
+        transition: 0.2,
         opacity: 0,
     },
 

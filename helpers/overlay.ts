@@ -1,11 +1,10 @@
-import { addEl, Css, setCss, setEl } from "../helpers/html.ts";
-import { sleep } from "./async.ts";
+import { addEl, Css, setCss, setEl } from "../helpers/html";
+import { sleep } from "./async";
 
 const overlayCss: Css = {
     '&': {
         position: 'fixed',
-        top: '0',
-        left: '0',
+        xy: 0,
         transition: 'opacity 0.2s ease',
         opacity: 1,
     },

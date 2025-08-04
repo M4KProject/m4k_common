@@ -1,4 +1,5 @@
-import { HTMLAttributes, ReactNode, useRef } from "react";
+import { ComponentChildren, JSX } from "preact";
+import { useRef } from "preact/hooks";
 import { flexCenter, flexRow } from "../helpers/flexBox";
 import { Css, clsx } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
@@ -40,14 +41,14 @@ const css: Css = {
         bg: 'white',
         zIndex: -1,
         transition: 'transform 0.5s ease',
-        transform: 'scaleX(0)',
+        scaleX: 0,
         transformOrigin: 'left',
         rounded: 2,
         elevation: 1,
     },
 
     '&:hover, &-selected': { fg: 'selectedFg' },
-    '&:hover &Sfx, &-selected &Sfx': { transform: 'scaleX(1)' },
+    '&:hover &Sfx, &-selected &Sfx': { scaleX: 1 },
     // '&:hover &Content, &-selected &Content': { fontWeight: 'bold' },
     '&:active &Sfx': { elevation: 0 },
 
@@ -71,13 +72,14 @@ const css: Css = {
     '&-error:hover &Icon': { bg: 'error', fg: 'white' },
 }
 
-export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
     cls?: any
     color?: 'primary'|'secondary'|'success'|'warn'|'error',
     variant?: 'upload',
     selected?: boolean,
-    icon?: ReactNode,
-    before?: ReactNode,
+    icon?: ComponentChildren,
+    before?: ComponentChildren,
+    title?: string,
 };
 
 export const Button = ({ title, cls, color, variant, selected, icon, children, before, onClick, ...props }: ButtonProps) => {
@@ -87,7 +89,7 @@ export const Button = ({ title, cls, color, variant, selected, icon, children, b
 
     return (
         <button
-            className={clsx(
+            class={clsx(
                 c,
                 color && `${c}-${color}`,
                 selected && `${c}-selected`,
@@ -101,7 +103,12 @@ export const Button = ({ title, cls, color, variant, selected, icon, children, b
             <Div cls={`${c}Sfx`} />
             {before}
             {icon && <Div cls={`${c}Icon`}>{icon}</Div>}
-            {(title || children) && <Div cls={`${c}Content`}><Tr>{title}{children}</Tr></Div>}
+            {(title || children) && (
+                <Div cls={`${c}Content`}>
+                    {title && <Tr>{title}</Tr>}
+                    {children && <Tr>{children}</Tr>}
+                </Div>
+            )}
         </button>
     );
 };
@@ -110,7 +117,7 @@ export interface UploadButtonProps extends ButtonProps {
     onFiles?: (files: File[]) => void;
     accept?: string;
     multiple?: boolean;
-    icon?: ReactNode;
+    icon?: ComponentChildren;
 }
 
 export const UploadButton = ({ onClick, onFiles, accept, multiple, ...props }: UploadButtonProps) => {
@@ -132,7 +139,8 @@ export const UploadButton = ({ onClick, onFiles, accept, multiple, ...props }: U
                     accept={accept}
                     multiple={multiple||true}
                     onChange={event => {
-                        const files = Array.from(event.target.files||[]);
+                        const target = event.target as HTMLInputElement;
+                        const files = Array.from(target.files||[]);
                         if (onFiles) onFiles(files);
                         if (inputRef.current) inputRef.current.value = "";
                     }}

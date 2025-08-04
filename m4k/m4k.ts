@@ -1,8 +1,8 @@
-import { removeItem } from "../helpers/array.ts";
-import { m4kBridge } from "./m4kBridge.ts";
-import { m4kBrowser } from "./m4kBrowser.ts";
-import type { M4Kiosk, M4kEvent, M4kSignalEvent } from "./m4kInterface.ts"
-import { global } from '../helpers/global.ts';
+import { removeItem } from "../helpers/array";
+import { m4kBridge } from "./m4kBridge";
+import { m4kBrowser } from "./m4kBrowser";
+import type { M4Kiosk, M4kEvent, M4kSignalEvent } from "./m4kInterface"
+import { global } from '../helpers/global';
 
 export const m4k = (() => {
     const w = global;

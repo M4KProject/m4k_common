@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 
 export const useAnimState = (isShow: boolean, duration: number = 300): string => {
     const [state, setState] = useState<string>(isShow ? 'show' : '');

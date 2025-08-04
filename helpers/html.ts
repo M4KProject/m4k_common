@@ -1,4 +1,5 @@
-import { isEqual, isNumber } from "./check.ts";
+import { JSX } from "preact";
+import { isEqual, isNumber } from "./check";
 // import { round } from "./nbr";
 
 export type Style = Partial<CSSStyleDeclaration>;
@@ -173,16 +174,17 @@ type CssTransform = string|{
 
 type AnimValue = string|{
     name?: string,
-    count?: React.CSSProperties['animationIterationCount'],
-    timing?: React.CSSProperties['animationTimingFunction'],
-    duration?: React.CSSProperties['animationDuration'],
+    count?: JSX.CSSProperties['animationIterationCount'],
+    timing?: JSX.CSSProperties['animationTimingFunction'],
+    duration?: JSX.CSSProperties['animationDuration'],
     keyframes?: Record<'from'|'to'|string, { transform: CssTransform }>;
 }
 
 interface CssContext {
     key: string,
-    css: CssRecord,
-    after?: string[],
+    css: Record<string, CssRecord>,
+    t?: string[],
+    a?: string[],
 }
 
 const transformToCss = (transform: CssTransform) => {
@@ -203,7 +205,7 @@ const animToCss = (value: AnimValue, ctx: CssContext) => {
     const { keyframes, duration, count, timing } = value;
     let { name } = value;
     if (!name) name = `m4kAnim${animId++}`;
-    const sb = ctx.after || (ctx.after = []);
+    const sb = ctx.a || (ctx.a = []);
     sb.push(`@keyframes ${name} {`);
     for (const key in keyframes) {
         const { transform } = keyframes[key];
@@ -215,43 +217,17 @@ const animToCss = (value: AnimValue, ctx: CssContext) => {
     if (count) css += `animation-iteration-count:${count};`;
     if (timing) css += `animation-timing-function:${timing};`;
     return css;
-
-
-    // return `animationName:${name};`;
-        // value = base;
-    // }
-    // return `animationName:${value};`;
 }
 
-// .Loading {
-//     rotating 2s linear infinite;
-//   }
-//   @keyframes rotating {
-//     from: { transform: rotate(0deg); }
-//     to: { transform: rotate(360deg); }
-//   }
+const transformProp = (prop: string) => (value: number|string, ctx: CssContext) => {
+    const sb = ctx.t || (ctx.t = []);
+    sb.push(`${prop}(${value})`);
+    return '';
+}
 
-
-// animation: {
-//     value: '2s linear infinite',
-//     name: 'rotating',
-//     keyframes: {
-//         from: { transform: 'rotate(0deg)' },
-//         to: { transform: 'rotate(360deg)' },
-//     }
-// }
-
-// '@keyframes rotating': {
-//     from {
-//     transform: rotate(0deg);
-//     }
-//     to {
-//     transform: rotate(360deg);
-//     }
-// }
-// .rotating {
-//     animation: rotating 2s linear infinite;
-// }
+const x = (v: Em) => `left:${em(v)};`;
+const y = (v: Em) => `top:${em(v)};`;
+const xy = (v: Em) => x(v) + y(v);
 
 const w = (v: Em) => `width:${em(v)};`;
 const h = (v: Em) => `height:${em(v)};`;
@@ -286,6 +262,10 @@ const py = (v: Em) => pt(v) + pb(v);
 type Em = number|string|(number|string)[];
 const em = (v: Em): string => typeof v === 'number' ? v + 'rem' : typeof v === 'string' ? v : v.map(em).join(' ');
 const cssFunMap = {
+    x,
+    y,
+    xy,
+
     w,
     h,
     wh,
@@ -334,11 +314,26 @@ const cssFunMap = {
         '',
     
     anim: animToCss,
-    transition: (v: string|boolean) => v ? v === 'all' || v === true ? 'transition:all 0.3s ease;' : `transition:${v};` : '',
+    transition: (v: number|string|boolean) => (
+        typeof v === 'number' ? `transition:all ${v}s ease;` :
+        typeof v === 'string' ? `transition:${v};` :
+        v === true ? 'transition:all 0.3s ease;' :
+        ''
+    ),
+
+    rotate: transformProp('rotate'),
+
+    scale: transformProp('scale'),
+    scaleX: transformProp('scaleX'),
+    scaleY: transformProp('scaleY'),
+
+    translate: transformProp('translate'),
+    translateX: transformProp('translateX'),
+    translateY: transformProp('translateY'),
 }
 
 type CssFunMap = typeof cssFunMap
-export type CssRecord = React.CSSProperties & {
+export type CssRecord = JSX.CSSProperties & {
     [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0]
 }
 export type Css = null|string|string[]|Record<string, CssRecord>;
@@ -360,10 +355,10 @@ export const setCss = (key: string, css?: Css) => {
                 content = css.join('\n');
             }
             else {
-                const ctx: CssContext = { key, css };
                 const sb: string[] = [];
                 const kPrefix = '.' + key;
                 for (const k in css) {
+                    const ctx: CssContext = { key, css };
                     sb.push(`${k.replace(/&/g, kPrefix)} {`);
                     const props = css[k];
                     for (const prop in props) {
@@ -375,8 +370,9 @@ export const setCss = (key: string, css?: Css) => {
                             sb.push(`  ${name}:${value};`);
                         }
                     }
+                    if (ctx.t) sb.push(`  transform: ${ctx.t.join(' ')};`);
                     sb.push('}');
-                    if (ctx.after) sb.push(...ctx.after);
+                    if (ctx.a) sb.push(...ctx.a);
                 }
                 content = sb.join('\n');
             }

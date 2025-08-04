@@ -1,8 +1,8 @@
 /// <reference types="@types/node" />
 
-import { stringify } from "../helpers/json.ts";
-import { firstUpper } from "../helpers/str.ts";
-import { _models } from "./_models.ts";
+import { stringify } from "../helpers/json";
+import { firstUpper } from "../helpers/str";
+import { _models } from "./_models";
 import { writeFile } from "fs/promises";
 
 const base = `// GENERATED : ${new Date().toISOString()}
@@ -58,7 +58,7 @@ const res = await fetch('http://127.0.0.1:8090/api/schema');
 // console.debug('res', res);
 const models: typeof _models = await res.json();
 // console.debug('models', models);
-await writeFile("_models.ts", `/* generated : ${new Date()} */\n\nexport const _models = ${stringify(models, null, 2)};`);
+await writeFile("_models", `/* generated : ${new Date()} */\n\nexport const _models = ${stringify(models, null, 2)};`);
 
 for (const model of models) {
   if (model.name.startsWith('_')) continue;
@@ -114,4 +114,4 @@ for (const model of models) {
 }
 
 const result = sb.join("\n");
-await writeFile("_models.generated.ts", result);
+await writeFile("_models.generated", result);

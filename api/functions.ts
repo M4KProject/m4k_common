@@ -1,5 +1,5 @@
-import { apiReq } from "./Coll.ts";
-import { timeOffset$ } from "./messages.ts";
+import { apiReq } from "./Coll";
+import { timeOffset$ } from "./messages";
 
 export const fun = apiReq('');
 

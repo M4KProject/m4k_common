@@ -4,7 +4,7 @@ import { useCss } from "../hooks/useCss";
 import { clamp, round } from "../helpers/nbr";
 import { toNbr } from "@common/helpers";
 import { flexCenter } from "@common/helpers";
-import { ReactNode } from "react";
+import { ComponentChildren } from "preact";
 
 const css: Css = {
     '&': {
@@ -16,8 +16,7 @@ const css: Css = {
     },
     '&Bar': {
         position: 'absolute',
-        top: 0,
-        left: 0,
+        xy: 0,
         h: '100%',
         w: 0,
         bg: 'primary',
@@ -31,7 +30,7 @@ const css: Css = {
 }
 
 export interface ProgressProps extends DivProps {
-    step?: ReactNode;
+    step?: ComponentChildren;
     progress?: number|null;
 };
 export const Progress = ({ progress, step, cls, children, ...props }: ProgressProps) => {

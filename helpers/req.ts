@@ -1,6 +1,6 @@
-import { Err, toErr } from "./err.ts";
-import { parse, stringify } from "./json.ts";
-import { pathJoin } from "./pathJoin.ts";
+import { Err, toErr } from "./err";
+import { parse, stringify } from "./json";
+import { pathJoin } from "./pathJoin";
 
 export type FormDataObject = { [prop: string]: any };
 export type ReqURL = string | URL;

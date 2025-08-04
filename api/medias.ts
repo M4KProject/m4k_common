@@ -1,10 +1,10 @@
-import { Msg } from '../helpers/Msg.ts';
-import { uuid } from '../helpers/str.ts';
-import { retry, sleep } from '../helpers/async.ts';
-import { mediaColl } from './collections.ts';
-import { needGroupId } from './messages.ts';
-import { MediaModel } from './models.ts';
-import { deleteKey } from '../helpers/object.ts';
+import { Msg } from '../helpers/Msg';
+import { uuid } from '../helpers/str';
+import { retry, sleep } from '../helpers/async';
+import { mediaColl } from './collections';
+import { needGroupId } from './messages';
+import { MediaModel } from './models';
+import { deleteKey } from '../helpers/object';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 const MAX_RETRY = 3;

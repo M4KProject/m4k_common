@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'preact/hooks';
 import { Css } from '../helpers/html';
 import { flexColumn } from '../helpers/flexBox';
 import { useCss } from '../hooks/useCss';

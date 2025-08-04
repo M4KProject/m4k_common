@@ -1,4 +1,4 @@
-import { stringify, parse } from './json.ts';
+import { stringify, parse } from './json';
 
 export const clipboardCopy = async (value: any): Promise<void> => {
   console.debug('clipboardCopy');

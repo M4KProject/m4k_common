@@ -1,5 +1,5 @@
-import { setCssColors } from './html.ts';
-import { lighten, setHsl, addHsl } from './color.ts';
+import { setCssColors } from './html';
+import { lighten, setHsl, addHsl } from './color';
 
 export const setTheme = (primary: string, secondary?: string, { colors }: { colors?: Record<string, string> } = {}) => {
     if (!secondary) secondary = addHsl(primary, { h: 180 });

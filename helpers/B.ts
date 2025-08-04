@@ -1,16 +1,16 @@
 /// <reference lib="dom" />
-import { D, DCall, DRoot, DStyle } from './D.ts';
-import { Msg } from './Msg.ts';
-import { isEqual } from './check.ts';
-import { clone } from './json.ts';
-import { toArray, toNbr, toRecord } from './cast.ts';
-import { setAttrs, addJsFile, addCssFile, Cls, setCls, createEl } from './html.ts';
-import addFont from './addFont.ts';
-import router from './router.ts';
-import getCallCb from './getCallCb.ts';
-import tPriceToHtml from './tPriceToHtml.ts';
-import priceToHtml from './priceToHtml.ts';
-import { responsive$, Responsive } from './responsive.ts';
+import { D, DCall, DRoot, DStyle } from './D';
+import { Msg } from './Msg';
+import { isEqual } from './check';
+import { clone } from './json';
+import { toArray, toNbr, toRecord } from './cast';
+import { setAttrs, addJsFile, addCssFile, Cls, setCls, createEl } from './html';
+import addFont from './addFont';
+import router from './router';
+import getCallCb from './getCallCb';
+import tPriceToHtml from './tPriceToHtml';
+import priceToHtml from './priceToHtml';
+import { responsive$, Responsive } from './responsive';
 
 const body = document.body;
 const bodyClass = body.classList;

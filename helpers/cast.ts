@@ -1,4 +1,4 @@
-import { isArray, isDate, isNil, isNumber, isRecord, isString } from "./check.ts";
+import { isArray, isDate, isNil, isNumber, isRecord, isString } from "./check";
 
 export const me = <T = any>(value: T): T => value;
 

@@ -1,4 +1,4 @@
-import { catcher } from './err.ts';
+import { catcher } from './err';
 
 export const stringify = catcher(JSON.stringify, '');
 

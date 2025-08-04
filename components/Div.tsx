@@ -1,16 +1,16 @@
 
 import { clsx } from "../helpers/html";
-import React, { forwardRef } from "react";
+import { JSX } from "preact";
 
-type DivHTMLProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-export interface DivProps extends Omit<Omit<DivHTMLProps, 'style'>, 'ref'> {
+type DivHTMLProps = JSX.HTMLAttributes<HTMLDivElement>;
+export interface DivProps extends Omit<DivHTMLProps, 'style'> {
     cls?: any;
-    style?: string | React.CSSProperties | undefined;
+    style?: string | JSX.CSSProperties | undefined;
 };
 
-export const getStyle = (style: string|React.CSSProperties|undefined): React.CSSProperties|undefined => {
+export const getStyle = (style: string|JSX.CSSProperties|undefined): JSX.CSSProperties|undefined => {
     if (typeof style === 'string') {
-        const styleObject = {} as any;
+        const styleObject: Record<string, string> = {};
         style.split(";").forEach((declaration) => {
             const [property, value] = declaration.split(":");
             if (property && value) {
@@ -19,22 +19,13 @@ export const getStyle = (style: string|React.CSSProperties|undefined): React.CSS
                 styleObject[camelCaseProp] = value.trim();
             }
         });
-        return styleObject;
+        return styleObject as JSX.CSSProperties;
     }
     return style;
 }
 
-export const Div = ({ cls, style, className, ...props }: DivProps) => (
-    <div {...props} style={getStyle(style)} className={clsx(cls, className)} />
-);
-
-export const DivWithRef = forwardRef<HTMLDivElement, DivProps>(
-  ({ cls, style, className, ...props }, ref) => (
-    <div
-      {...props}
-      ref={ref}
-      style={getStyle(style)}
-      className={clsx(cls, className)}
-    />
-  )
+export const Div = ({ cls, style, className, children, ...props }: DivProps) => (
+    <div {...props} style={getStyle(style)} class={clsx(cls, className)}>
+        {children}
+    </div>
 );

@@ -1,5 +1,5 @@
-import { randString } from "./rand.ts";
-import { global } from '../helpers/global.ts';
+import { randString } from "./rand";
+import { global } from '../helpers/global';
 
 const timers: Record<string, any> = global.m4kTimers || (global.m4kTimers = {});
 

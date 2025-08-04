@@ -1,12 +1,12 @@
-import { setCss } from './html.ts'
-import { Msg } from './Msg.ts'
+import { setCss } from './html'
+import { Msg } from './Msg'
 
 export type Responsive = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export const responsive$ = new Msg<Responsive>('md') 
 
 const applyResponsive = () => {
-    console.debug('applyResponsive');
+    // console.debug('applyResponsive');
     const body = document.documentElement || document.body;
     const w = body.clientWidth;
     const h = body.clientHeight;
@@ -20,7 +20,7 @@ let isAdded = false
 export const addResponsiveListener = () => {
     if (isAdded) return;
     isAdded = true;
-    console.debug('addResponsiveListener');
+    // console.debug('addResponsiveListener');
     [50, 100, 200, 500, 1000, 2000].forEach(
         ms => setTimeout(applyResponsive, ms)
     );

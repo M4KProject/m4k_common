@@ -1,6 +1,6 @@
-import { toDate } from "./cast.ts";
-import { floor } from "./nbr.ts";
-import { pad } from "./str.ts";
+import { toDate } from "./cast";
+import { floor } from "./nbr";
+import { pad } from "./str";
 
 /**
  * Formate le temps selon ces règles :

@@ -1,8 +1,8 @@
-import { toErr } from "@common/helpers/err.ts";
-import { getParams, CollOptions } from "./Coll.ts";
-import { userColl } from "./collections.ts";
-import { auth$ } from "./messages.ts";
-import { UserModel } from "./models.ts";
+import { toErr } from "@common/helpers/err";
+import { getParams, CollOptions } from "./Coll";
+import { userColl } from "./collections";
+import { auth$ } from "./messages";
+import { UserModel } from "./models";
 
 export const login = (
   identity: string,
@@ -45,5 +45,21 @@ export const passwordReset = (email: string, o?: CollOptions<UserModel>) => (
   }).then((result) => {
     console.debug("password reset", result);
     return true;
+  })
+);
+
+export const authRefresh = (): Promise<UserModel> => (
+  userColl.r("POST", `auth-refresh`, {}).then((result) => {
+    console.debug("authRefresh result", result);
+    if (result.status === 401) {
+      logout();
+      throw toErr(result.message);
+    }
+    if (!result.token) throw toErr(result.message);
+    auth$.set({ ...result.record, token: result.token });
+    return auth$.v;
+  }).catch((error) => {
+    console.warn("authRefresh error", error);
+    throw error;
   })
 );

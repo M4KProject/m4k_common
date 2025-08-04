@@ -1,8 +1,8 @@
-import { throwIf } from "../helpers/err.ts";
-import { Msg } from "../helpers/Msg.ts";
-import { isEmpty, isObject, isString } from "../helpers/check.ts";
-import { toDate } from "../helpers/cast.ts";
-import { UserModel } from "./models.ts";
+import { throwIf } from "../helpers/err";
+import { Msg } from "../helpers/Msg";
+import { isEmpty, isObject, isString } from "../helpers/check";
+import { toDate } from "../helpers/cast";
+import { UserModel } from "./models";
 
 export const PB_URL_DEV = "http://127.0.0.1:8090/api/";
 export const PB_URL_PROD = "https://pb.m4k.fr/api/";

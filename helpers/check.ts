@@ -1,4 +1,4 @@
-import { stringify } from "./json.ts";
+import { stringify } from "./json";
 
 export const isArray = Array.isArray;
 

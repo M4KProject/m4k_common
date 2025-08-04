@@ -1,4 +1,4 @@
-import { parse, stringify } from "./json.ts";
+import { parse, stringify } from "./json";
 
 type Cache<T> = ['CACHE', number, T];
 

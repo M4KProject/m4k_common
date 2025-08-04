@@ -1,5 +1,5 @@
 import { toVoid } from "@common/helpers";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 
 export interface IPromise<T> {
     then: (cb: (value: T) => any) => any;
@@ -8,7 +8,7 @@ export interface IPromise<T> {
 
 const _refresh = <T>(
     constructor: () => IPromise<T>|null|undefined,
-    setResult: React.Dispatch<React.SetStateAction<[T | undefined, any, boolean, () => void]>>
+    setResult: (value: [T | undefined, any, boolean, () => void] | ((prev: [T | undefined, any, boolean, () => void]) => [T | undefined, any, boolean, () => void])) => void
 ) => {
     let isMounted = true;
 
@@ -45,7 +45,7 @@ const _refresh = <T>(
  */
 export const usePromise = <T>(
     constructor: () => IPromise<T>|null|undefined,
-    deps: React.DependencyList
+    deps: any[]
 ): [T|undefined, any, boolean, () => void] => {
     const [result, setResult] = useState<[T|undefined, any, boolean, () => void]>([undefined, undefined, true, toVoid])
     useEffect(() => _refresh(constructor, setResult), deps) // eslint-disable-line react-hooks/exhaustive-deps

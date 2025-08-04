@@ -1,4 +1,4 @@
-import { isRecord, isArray, isFunction, isNil } from './check.ts';
+import { isRecord, isArray, isFunction, isNil } from './check';
 
 export type ArRecKey<T> = undefined | null | keyof T | ((item: T, index: number) => any);
 export type ArRecVal<T, U> = undefined | null | keyof T | ((item: T, index: number) => U);

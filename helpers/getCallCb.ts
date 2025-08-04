@@ -1,7 +1,7 @@
 // import { stringify } from './json';
 // import { toNbr } from './cast';
-import type B from './B.ts';
-import type { BElement } from './B.ts';
+import type B from './B';
+import type { BElement } from './B';
 
 export type CallCb = (b: B, el: BElement, app: any) => any;
 // const _nullCb = () => {};

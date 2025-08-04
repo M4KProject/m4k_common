@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import { JSX } from "preact";
 import { clsx, Css } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
 
@@ -12,13 +12,13 @@ const css: Css = {
     },
 }
 
-export interface IframeProps extends HTMLAttributes<HTMLIFrameElement> {
+export interface IframeProps extends JSX.HTMLAttributes<HTMLIFrameElement> {
     cls?: any;
 };
 
 export const Iframe = ({ cls, className, ...props }: IframeProps) => {
     const c = useCss('Iframe', css);
     return (
-        <iframe {...props} className={clsx(c, cls, className)} />
+        <iframe {...props} class={clsx(c, cls, className)} />
     )
 };

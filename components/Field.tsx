@@ -1,10 +1,12 @@
 import { Css } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
-import { ReactNode, useEffect, useState } from "react";
+import { ComponentChildren } from "preact";
+import { useEffect, useState } from "preact/hooks";
 import { flexCenter, flexColumn, flexRow } from "../helpers/flexBox";
 import { toNbr } from "../helpers/cast";
 import { Div, DivProps } from "./Div";
 import { Tr } from "./Tr";
+import { Select } from "./Select";
 import { toErr } from "../helpers/err";
 // import { useMsg } from "../hooks/useMsg";
 // import { groupId$ } from "../api/repos";
@@ -14,7 +16,6 @@ import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Button } from "./Button";
 import { Msg } from "../helpers/Msg";
 import { useMsg } from "@common/hooks";
-import { isArray } from "../helpers/check";
 
 const css: Css = {
     '&': {
@@ -49,9 +50,19 @@ const css: Css = {
         border: '1px solid #ddd',
         rounded: 1,
         outline: 'none',
+        bg: 'white',
+        fg: 'black',
+        // elevation: 1,
     },
     '&Input:hover': {
         borderColor: '#777',
+    },
+
+    // Régle la couleur de l'autocompletion
+    '&Input:autofill': {
+        '-webkit-text-fill-color': 'black',
+        '-webkit-box-shadow': '0 0 0 1000px white inset',
+        'caret-color': 'black',
     },
 
     '& select': {
@@ -81,7 +92,7 @@ const css: Css = {
         bg: '#ddd',
         position: 'relative',
         borderRadius: '999px',
-        transition: 'all 0.3s ease',
+        transition: 0.3,
     },
     '&-switch &Input-selected': { border: 'primary', bg: 'primary' },
 
@@ -92,10 +103,10 @@ const css: Css = {
         borderRadius: '50%',
         position: 'absolute',
         elevation: 1,
-        transition: 'transform 0.3s ease',
-        transform: 'translateX(-1em)',
+        transition: 0.3,
+        translateX: '-1em',
     },
-    '&-switch &Input-selected &InputHandle': { transform: 'translateX(1em)' },
+    '&-switch &Input-selected &InputHandle': { translateX: '1em' },
 }
 
 export type FieldComp<T = any> = (props: {
@@ -105,7 +116,7 @@ export type FieldComp<T = any> = (props: {
     value: T,
     onChange: (e: any) => void,
     fieldProps: FieldProps<T>,
-}) => ReactNode;
+}) => ComponentChildren;
 
 export type FieldType = 'email'|'password'|'text'|'multiline'|'html'|'color'|'number'|'select'|'switch'|'image'|'doc'|'date'|'datetime'|'time';
 
@@ -113,10 +124,10 @@ export interface FieldInfo {
     row?: boolean;
     type?: FieldType;
     name?: string;
-    label?: ReactNode;
-    helper?: ReactNode;
-    error?: ReactNode;
-    items?: ([string, ReactNode]|false|null|undefined)[];
+    label?: ComponentChildren;
+    helper?: ComponentChildren;
+    error?: ComponentChildren;
+    items?: ([string, ComponentChildren]|false|null|undefined)[];
     required?: boolean;
     readonly?: boolean;
     castType?: string;
@@ -146,7 +157,7 @@ const getMediaField = (_mimetypes: string[]): FieldComp => {
         // const filteredMedias = medias.filter(m => mimetypeMap[m.mimetype]);
         // const groupId = useMsg(groupId$);
         return (
-            <select className={cls} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props}>
+            <select class={cls} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props}>
                 {/* <option value="" className={!value ? `${cls}Selected` : undefined}></option>
                 {Object.values(filteredMedias).map(media => (
                     <option key={media.id} value={media.id} className={media.id === value ? `${cls}Selected` : undefined}>
@@ -160,49 +171,56 @@ const getMediaField = (_mimetypes: string[]): FieldComp => {
 
 const getDateField = (_type: 'date'|'datetime'|'time'): FieldComp => {
     return ({ cls, name, required, value, onChange, fieldProps }) => (
-        <input className={cls} type="date" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+        <input class={cls} type="date" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
     )
 }
 
 const compByType: Record<FieldType, FieldComp> = {
     email: ({ cls, name, required, value, onChange, fieldProps }) => (
-        <input className={cls} type="email" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+        <input class={cls} type="email" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
     ),
     password: ({ cls, name, required, value, onChange, fieldProps }) => {
         const [show, setShow] = useState(false);
         return (
             <>
-                <input className={cls} type={show ? 'text' : 'password'} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+                <input class={cls} type={show ? 'text' : 'password'} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
                 <Button onClick={() => setShow(s => !s)} icon={show ? <IoMdEyeOff /> : <IoMdEye />} />
             </>
         )
     },
     color: ({ cls, name, required, value, onChange, fieldProps }) => (
-        <input className={cls} type="color" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+        <input class={cls} type="color" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
     ),
     text: ({ cls, name, required, value, onChange, fieldProps }) => (
-        <input className={cls} type="text" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+        <input class={cls} type="text" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
     ),
     number: ({ cls, name, required, value, onChange, fieldProps }) => (
-        <input className={cls} type="number" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+        <input class={cls} type="number" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
     ),
     multiline: ({ cls, name, required, value, onChange, fieldProps }) => (
-        <textarea className={cls} name={name} required={required} value={value||''} onChange={onChange} rows={5} {...fieldProps.props} />
+        <textarea class={cls} name={name} required={required} value={value||''} onChange={onChange} rows={5} {...fieldProps.props} />
     ),
     html: ({ cls, name, required, value, onChange, fieldProps }) => (
-        <textarea className={cls} name={name} required={required} value={value||''} onChange={onChange} rows={5} {...fieldProps.props} />
+        <textarea class={cls} name={name} required={required} value={value||''} onChange={onChange} rows={5} {...fieldProps.props} />
     ),
-    select: ({ cls, name, required, value, onChange, fieldProps }) => (
-        <select className={cls} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props}>
-            {/* <option value=""></option> */}
-            {fieldProps.items?.map(kv => (
-                isArray(kv) ? (
-                    <option key={kv[0]} value={kv[0]} className={kv[0] === value ? `${cls}Selected` : undefined}>
-                        {kv[1]}
-                    </option>
-                ) : null
-            ))}
-        </select>
+    // select: ({ cls, name, required, value, onChange, fieldProps }) => (
+    //     <select class={cls} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props}>
+    //         {/* <option value=""></option> */}
+    //         {fieldProps.items?.map(kv => (
+    //             isArray(kv) ? (
+    //                 <option key={kv[0]} value={kv[0]} class={kv[0] === value ? `${cls}Selected` : undefined}>
+    //                     {kv[1]}
+    //                 </option>
+    //             ) : null
+    //         ))}
+    //     </select>
+    // ),
+    select: ({ fieldProps, ...props }) => (
+        <Select
+            {...props}
+            items={fieldProps.items}
+            {...fieldProps.props}
+        />
     ),
     switch: ({ cls, value, onChange, fieldProps }) => {
         return (
@@ -222,9 +240,11 @@ export const Field = (props: FieldProps) => {
     const { cls, row, type, name, label, helper, error, readonly, required, msg, value, cast, castType, onValue, delay, items, ...divProps } = props;
     const c = useCss('Field', css);
 
+    const valDelay = delay || type === 'switch' ? 0 : delay;
+
     const msgVal = useMsg(msg);
     const val = msg ? msgVal : value;
-
+    
     const handleValue = (casted: any) => {
         if (onValue) onValue(casted);
         if (msg) msg.set(casted);
@@ -237,8 +257,6 @@ export const Field = (props: FieldProps) => {
 
     const err = error ? error : valueError;
 
-    // console.debug('Field', name, { value, initiated, changed, sended, error });
-
     const reset = () => {
         setInitiated(val);
         setChanged(undefined);
@@ -250,7 +268,6 @@ export const Field = (props: FieldProps) => {
 
     // if sync value change -> reset
     useEffect(() => {
-        // console.debug('Field value', name, value);
         if (sended !== undefined) {
             if (sended === val) return;
         }
@@ -279,22 +296,22 @@ export const Field = (props: FieldProps) => {
                     casted = castByType[type](casted);
 
                 if (casted === sended) return;
-                console.debug('Field sync', name, sended, '->', casted);
+                // console.debug('Field sync', name, sended, '->', casted);
                 setSended(casted);
                 handleValue(casted);
             }
             catch (error) {
                 setValueError(error);
             }
-        }, delay === undefined ? 400 : delay);
+        }, valDelay === undefined ? 400 : valDelay);
         return () => clearTimeout(timer);
     }, [changed]);
 
     const handleChange = (e: any) => {
-        console.debug('Field handleChange', e);
+        // console.debug('Field handleChange', e);
         if (readonly) return;
         let next = typeof e === 'object' && e.target ? e.target.value : e;
-        console.debug('Field next', name, changed, '->', next);
+        // console.debug('Field next', name, changed, '->', next);
         setChanged(next);
     }
 

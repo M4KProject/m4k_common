@@ -5,10 +5,10 @@ import { useMsg } from "./useMsg";
 export const translateByKey$ = new Msg<Record<string, string>>({}); 
 
 export function addTranslates(changes: Record<string, string>) {
-    console.debug('addTranslates', changes);
+    // console.debug('addTranslates', changes);
     const translateByKey = { ...translateByKey$.v };
     Object.assign(translateByKey, changes);
-    console.debug('addTranslates translateByKey', translateByKey);
+    // console.debug('addTranslates translateByKey', translateByKey);
     translateByKey$.set(translateByKey);
 }
 

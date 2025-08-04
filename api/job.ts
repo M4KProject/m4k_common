@@ -1,10 +1,10 @@
 
-import { sleep } from "../helpers/async.ts";
-import { toErr } from "../helpers/err.ts";
-import { JobModel } from "./models.ts";
-import { jobColl } from "./collections.ts";
-import { needGroupId } from "./messages.ts";
-import { Msg } from "../helpers/Msg.ts";
+import { sleep } from "../helpers/async";
+import { toErr } from "../helpers/err";
+import { JobModel } from "./models";
+import { jobColl } from "./collections";
+import { needGroupId } from "./messages";
+import { Msg } from "../helpers/Msg";
 
 export const addJob = async (action: JobModel['action'], input: JobModel['input']) => {
     console.debug('addJob', action, input);

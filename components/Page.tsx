@@ -3,7 +3,7 @@ import { Css } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
 import { Div, DivProps } from "./Div";
 import { Tr } from "./Tr";
-import { ReactNode } from "react";
+import { ComponentChildren } from "preact";
 
 const css: Css = {
     '&': {
@@ -49,7 +49,7 @@ export const Page = ({ cls, children, ...props }: PageProps) => {
 };
 
 export interface PageHeaderProps extends Omit<DivProps, 'title'> {
-    title: ReactNode,
+    title: ComponentChildren,
 };
 export const PageHeader = ({ cls, title, children, ...props }: PageHeaderProps) => {
     const c = useCss('Page', css)

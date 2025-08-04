@@ -1,6 +1,6 @@
-import { ContentModel, DeviceModel, MediaModel, GroupModel, JobModel, MemberModel, ModelBase, UserModel, CategoryModel, ProductModel, ModifierModel, SaleModel } from './models.ts';
-import { Coll } from './Coll.ts';
-import { global } from '../helpers/global.ts';
+import { ContentModel, DeviceModel, MediaModel, GroupModel, JobModel, MemberModel, ModelBase, UserModel, CategoryModel, ProductModel, ModifierModel, SaleModel } from './models';
+import { Coll } from './Coll';
+import { global } from '../helpers/global';
 
 export const coll = <T extends ModelBase>(name: string) => new Coll<T>(name);
 

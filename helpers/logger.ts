@@ -1,4 +1,4 @@
-import { createEl, setCss } from "./html.ts";
+import { createEl, setCss } from "./html";
 
 export type LogLevel = "debug" | "info" | "warn" | "error";
 export type LogItem = [LogLevel, number, any[], HTMLDivElement | null];

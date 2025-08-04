@@ -1,7 +1,7 @@
-import { HTMLAttributes } from "react";
+import { JSX } from "preact";
 import { useTr } from "../hooks/useTr";
 
-export interface TrProps extends HTMLAttributes<HTMLDivElement> {
+export interface TrProps extends JSX.HTMLAttributes<HTMLDivElement> {
     children?: any;
 };
 

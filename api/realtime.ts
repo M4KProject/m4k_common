@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
-import { Req } from "../helpers/req.ts";
-import { parse } from "../helpers/json.ts";
-import { pathJoin } from "../helpers/pathJoin.ts";
-import { getApiUrl } from "./messages.ts";
+import { Req } from "../helpers/req";
+import { parse } from "../helpers/json";
+import { pathJoin } from "../helpers/pathJoin";
+import { getApiUrl } from "./messages";
 
 const initRealtime = () => {
   let clientId: string = "";

@@ -1,13 +1,13 @@
 // deno-lint-ignore-file no-explicit-any
-import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from "./_models.generated.ts";
-import { Req, ReqOptions, ReqParams, createReq } from "../helpers/req.ts";
-import { Err } from "../helpers/err.ts";
-import { parse, stringify } from "../helpers/json.ts";
-import { pathJoin } from "../helpers/pathJoin.ts";
-import { removeItem } from "../helpers/array.ts";
-import { auth$, getApiUrl } from "./messages.ts";
-import { realtime } from "./realtime.ts";
-import { isArray } from "../helpers/check.ts";
+import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from "./_models.generated";
+import { Req, ReqOptions, ReqParams, createReq } from "../helpers/req";
+import { Err } from "../helpers/err";
+import { parse, stringify } from "../helpers/json";
+import { pathJoin } from "../helpers/pathJoin";
+import { removeItem } from "../helpers/array";
+import { auth$, getApiUrl } from "./messages";
+import { realtime } from "./realtime";
+import { isArray } from "../helpers/check";
 
 export type CollOperator = 
   | '=' // Equal

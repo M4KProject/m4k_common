@@ -1,9 +1,9 @@
-import { createRoot } from "react-dom/client";
+import { render } from "preact";
 import { El, ElOptions } from "../helpers/html";
-import { ReactNode } from "react";
+import { ComponentChildren } from "preact";
 
-export const portal = (content: ReactNode, o?: ElOptions) => {
+export const portal = (content: ComponentChildren, o?: ElOptions) => {
     const el = El('div', { parent: 'body', ...o });
-    createRoot(el).render(content);
+    render(content, el);
     return el;
 }

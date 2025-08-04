@@ -1,6 +1,6 @@
-import { toStr } from "./cast.ts";
-import { isString } from "./check.ts";
-import { stringify } from "./json.ts";
+import { toStr } from "./cast";
+import { isString } from "./check";
+import { stringify } from "./json";
 
 export const compact = (value: any) => value.filter(Boolean) as (string | number | object | Date)[];
 

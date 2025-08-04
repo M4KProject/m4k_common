@@ -1,11 +1,11 @@
-import { ReactNode } from "react";
+import { ComponentChildren } from "preact";
+import { render } from "preact";
 import { Css, addListener } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
 import { Div, DivProps } from "./Div";
 import { Tr } from "./Tr";
 import { addOverlay, removeOverlay } from "../helpers/overlay";
 import { flexCenter } from "../helpers/flexBox";
-import { createRoot } from "react-dom/client";
 
 // const css: Css = {
 //     '&': {
@@ -105,19 +105,19 @@ const css: Css = {
         h: 0.5,
         fg: 'tooltipFg',
         bg: 'tooltipBg',
-        transform: 'rotate(45deg)',
+        rotate: '45deg',
     },
 
-    '&-top &Content': { top: '-0.5em', left: '50%', transform: 'translate(-50%, -100%)' },
-    '&-top &Arrow': { top: '-0.5em', left: '50%' },
+    '&-top &Content': { top: '-0.5em', x: '50%', translate: '-50%, -100%' },
+    '&-top &Arrow': { top: '-0.5em', x: '50%' },
 
-    '&-bottom &Content': { bottom: '-0.5em', left: '50%', transform: 'translate(-50%, 100%)' },
-    '&-bottom &Arrow': { bottom: '-0.5em', left: '50%' },
+    '&-bottom &Content': { bottom: '-0.5em', x: '50%', translate: '-50%, 100%' },
+    '&-bottom &Arrow': { bottom: '-0.5em', x: '50%' },
 }
 
 export interface TooltipProps extends Omit<DivProps, 'title'> {
     target: HTMLElement,
-    children: ReactNode,
+    children: ComponentChildren,
 }
 export const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
     const c = useCss('Tooltip', css);
@@ -142,10 +142,10 @@ export const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
 };
 // , pos?: 'top'|'bottom'|'left'|'right'
 
-export const tooltip = (content: ReactNode|(() => ReactNode)) => {
+export const tooltip = (content: ComponentChildren|(() => ComponentChildren)) => {
     let intervalRef: any;
     let overlay: HTMLDivElement|null = null;
-    let root: ReturnType<typeof createRoot>|null = null;
+    let root: any = null;
     let removeLeaveListener: (() => void)|null = null;
     let removeClickListener: (() => void)|null = null;
     const remove = async () => {
@@ -183,12 +183,12 @@ export const tooltip = (content: ReactNode|(() => ReactNode)) => {
             removeClickListener = addListener(0, 'click', remove);
 
             if (!overlay) overlay = addOverlay();
-            if (!root) root = createRoot(overlay);
-
-            root.render(
+            
+            render(
                 <Tooltip target={target}>
                     {typeof content === 'function' ? content() : content}
-                </Tooltip>
+                </Tooltip>,
+                overlay
             );
         },
     }

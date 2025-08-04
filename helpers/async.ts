@@ -1,4 +1,4 @@
-import { toErr } from "./err.ts";
+import { toErr } from "./err";
 
 
 export const retry = async <T>(createPromise: () => Promise<T>, retry = 2): Promise<T> => {

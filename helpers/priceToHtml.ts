@@ -1,4 +1,4 @@
-import { toNbr } from './cast.ts'
+import { toNbr } from './cast'
 
 export default function priceToHtml(v: any, i: number) {
   v = toNbr(v, 0);
