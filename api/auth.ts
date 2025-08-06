@@ -48,8 +48,8 @@ export const passwordReset = (email: string, o?: CollOptions<UserModel>) => (
   })
 );
 
-export const authRefresh = (): Promise<UserModel> => (
-  userColl.r("POST", `auth-refresh`, {}).then((result) => {
+export const authRefresh = (): Promise<UserModel|null> => (
+  auth$.v ? userColl.r("POST", `auth-refresh`, {}).then((result) => {
     console.debug("authRefresh result", result);
     if (result.status === 401) {
       logout();
@@ -61,5 +61,5 @@ export const authRefresh = (): Promise<UserModel> => (
   }).catch((error) => {
     console.warn("authRefresh error", error);
     throw error;
-  })
+  }) : Promise.resolve(null)
 );
