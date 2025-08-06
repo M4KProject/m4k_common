@@ -184,7 +184,10 @@ const compByType: Record<FieldType, FieldComp> = {
         return (
             <>
                 <input class={cls} type={show ? 'text' : 'password'} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
-                <Button onClick={() => setShow(s => !s)} icon={show ? <IoMdEyeOff /> : <IoMdEye />} />
+                <Button onClick={e => {
+                    e.preventDefault();
+                    setShow(s => !s);
+                }} icon={show ? <IoMdEyeOff /> : <IoMdEye />} />
             </>
         )
     },

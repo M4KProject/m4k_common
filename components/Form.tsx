@@ -1,7 +1,8 @@
-import { Css } from "../helpers/html";
+import { clsx, Css } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
 import { flexColumn } from "../helpers/flexBox";
-import { Div, DivProps } from "./Div";
+import { Div, getStyle } from "./Div";
+import { JSX } from "preact/jsx-runtime";
 
 const css: Css = {
     '&': {
@@ -22,13 +23,18 @@ const css: Css = {
     },
 }
 
-interface FormProps extends DivProps {}
-export const Form = ({ cls, children, title, ...props }: FormProps) => {
+type FormHTMLProps = JSX.HTMLAttributes<HTMLFormElement>;
+export interface FormProps extends Omit<FormHTMLProps, 'style'> {
+    cls?: any;
+    style?: string | JSX.CSSProperties | undefined;
+};
+
+export const Form = ({ cls, style, className, children, title, ...props }: FormProps) => {
     const c = useCss('Form', css);
     return (
-        <Div cls={[c, cls]} {...props}>
+        <form {...props} style={getStyle(style)} class={clsx(c, cls, className)}>
             {title && <Div cls={`${c}Title`}>{title}</Div>}
             {children}
-        </Div>
+        </form>
     );
 };
