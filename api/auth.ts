@@ -14,7 +14,7 @@ export const login = (
     form: { identity, password },
   }).then((result) => {
     console.debug("login result", result);
-    if (!result.token) throw toErr(result.message);
+    if (!result.token) throw toErr(result.message, result);
     auth$.set({ ...result.record, token: result.token });
     return result.record;
   })
