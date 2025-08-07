@@ -48,6 +48,36 @@ export const addJsFile = (url: string): HTMLScriptElement => {
     return el;
 };
 
+export const waitScriptLoaded = (el: HTMLScriptElement): Promise<HTMLScriptElement> => {
+    if ((el as any)._loaded) return (el as any)._loaded;
+
+    (el as any)._loaded = new Promise<HTMLScriptElement>((resolve, reject) => {
+        const state = (el as any).readyState;
+        if (state === 'complete' || state === 'loaded') {
+            resolve(el);
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            reject(new Error(`Loading script ${el.src} timed out after 60s`));
+        }, 60000);
+
+        el.addEventListener('load', () => {
+            clearTimeout(timer);
+            resolve(el);
+        }, { once: true });
+
+        el.addEventListener('error', (err) => {
+            clearTimeout(timer);
+            reject(err);
+        }, { once: true });
+    });
+
+    return (el as any)._loaded;
+};
+
+export const addJsFileAsync = (url: string) => waitScriptLoaded(addJsFile(url));
+
 export const addListener = <K extends keyof HTMLElementEventMap, T extends HTMLElement = HTMLElement>(
     element: T | 0,
     type: K,
