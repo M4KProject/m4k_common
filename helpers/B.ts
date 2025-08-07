@@ -496,7 +496,7 @@ export default class B {
         }
         const v = this.get(d.prop) as any;
         if (v === undefined) continue;
-        if (d.propLink) d[d.propLink] = v;
+        if (d.propLink) (d as any)[d.propLink as any] = v;
         else d.ctn = v;
       }
 

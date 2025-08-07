@@ -14,15 +14,15 @@ const css: Css = {
     },
     '& svg': {
         fontSize: 1.2,
-        anim: {
-            count: 'infinite',
-            timing: 'linear',
-            duration: '2s',
-            keyframes: {
-                from: { transform: { rotate: 360 } },
-                to: { transform: { rotate: 0 } },
-            }
-        }
+        // anim: {
+        //     count: 'infinite',
+        //     timing: 'linear',
+        //     duration: '2s',
+        //     keyframes: {
+        //         from: { transform: { rotate: 360 } },
+        //         to: { transform: { rotate: 0 } },
+        //     }
+        // }
     },
     '&Content': {
         ml: 0.5,

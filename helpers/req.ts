@@ -306,12 +306,12 @@ export const createReq = (baseOptions: ReqOptions): Req => (
         _req<T>((optionsOrMethod && typeof optionsOrMethod === 'object') ? {
             ...baseOptions,
             ...optionsOrMethod,
-        } : {
+        } as any : {
             ...baseOptions,
             method: optionsOrMethod,
             url: url!,
             ...options,
-        })
+        } as any)
     )
 );
 

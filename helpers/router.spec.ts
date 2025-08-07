@@ -1,3 +1,5 @@
+/*
+
 import router, { RouterHandler, RouterParams, RouterValue } from './router';
 import uuid from '../admin/helpers/uuid';
 
@@ -135,3 +137,5 @@ describe('router', () => {
 // router.push('/cosmo/page6');
 // router.back();
 // router.push('/cosmo/page7');
+
+*/

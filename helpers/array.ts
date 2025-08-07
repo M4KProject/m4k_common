@@ -30,12 +30,40 @@ export const range = (from: number, to: number): number[] => {
     return r;
 }
 
-export const removeItem = <T>(items: T[], item: T) => {
-    const i = items.indexOf(item);
-    if (i === -1) return items;
-    
-    items.splice(i, 1);
+export const addItem = <T>(items: T[], item: T) => {
+    items.push(item);
     return items;
+}
+
+export const replaceIndex = <T>(items: T[], index: number, replace: T) => {
+    items[index] = replace;
+    return items;
+}
+
+export const replaceItem = <T>(items: T[], item: T, replace: T) => {
+    const index = items.indexOf(item);
+    if (index === -1) return items;
+    return replaceIndex(items, index, replace);
+}
+
+export const updateIndex = <T>(items: T[], index: number, changes: Partial<T>) =>
+    replaceIndex(items, index, { ...items[index], ...changes });
+
+export const updateItem = <T>(items: T[], item: T, changes: Partial<T>) => {
+    const index = items.indexOf(item);
+    if (index === -1) return items;
+    return updateIndex(items, index, changes);
+};
+
+export const removeIndex = <T>(items: T[], index: number) => {
+    items.splice(index, 1);
+    return items;
+};
+
+export const removeItem = <T>(items: T[], item: T) => {
+    const index = items.indexOf(item);
+    if (index === -1) return items;
+    return removeIndex(items, index);
 };
 
 export const sort = <T = any>(items: T[], prop: (item: T) => string | number | Date = toStr) =>

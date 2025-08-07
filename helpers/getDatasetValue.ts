@@ -1,7 +1,7 @@
-const getDatasetValue = (e: null|HTMLElement|React.MouseEvent, name: string): string|null => {
+const getDatasetValue = (e: null|HTMLElement|MouseEvent, name: string): string|null => {
     let el = e instanceof HTMLElement ? e : null;
     if (!el) {
-        const currentTarget = e && (e as React.MouseEvent).currentTarget;
+        const currentTarget = e && (e as MouseEvent).currentTarget;
         if (currentTarget instanceof HTMLElement) el = currentTarget;
     }
     while (el) {

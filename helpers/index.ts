@@ -31,7 +31,6 @@ export * from "./priceFormat";
 export * from "./priceToHtml";
 export * from "./rand";
 export * from "./req";
-export * from "./resizeImage";
 export * from "./responsive";
 export * from "./router";
 export * from "./str";
