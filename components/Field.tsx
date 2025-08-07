@@ -169,12 +169,6 @@ const getMediaField = (_mimetypes: string[]): FieldComp => {
     }
 }
 
-const getDateField = (_type: 'date'|'datetime'|'time'): FieldComp => {
-    return ({ cls, name, required, value, onChange, fieldProps }) => (
-        <input class={cls} type="date" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
-    )
-}
-
 const compByType: Record<FieldType, FieldComp> = {
     email: ({ cls, name, required, value, onChange, fieldProps }) => (
         <input class={cls} type="email" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
@@ -234,9 +228,15 @@ const compByType: Record<FieldType, FieldComp> = {
     },
     image: getMediaField(['image/png', 'image/jpeg', 'image/svg+xml', 'application/pdf']),
     doc: getMediaField(['application/pdf']),
-    date: getDateField('date'),
-    datetime: getDateField('datetime'),
-    time: getDateField('time'),
+    date: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <input class={cls} type="date" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+    ),
+    datetime: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <input class={cls} type="date" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+    ),
+    time: ({ cls, name, required, value, onChange, fieldProps }) => (
+        <input class={cls} type="time" step="1" name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props} />
+    ),
 };
 
 export const Field = (props: FieldProps) => {
