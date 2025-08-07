@@ -39,6 +39,9 @@ export interface TableContentModel extends ContentModel {
 
 export interface HtmlContentModel extends ContentModel {
     type: "html";
+    data: {
+        html: string;
+    }
 }
 
 export interface PlaylistEntry {
