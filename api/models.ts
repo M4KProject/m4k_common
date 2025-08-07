@@ -17,17 +17,43 @@ export * from './_models.generated';
 
 export interface ContentModel extends _ContentModel {}
 
+export interface EmptyContentModel extends ContentModel {
+    type: "empty";
+}
+
 export interface FormContentModel extends ContentModel {
+    type: "form";
     data: {
-        fields: FieldInfo[],
-        values: { [prop: string]: any },
-    }
+        fields: FieldInfo[];
+        values: { [prop: string]: any };
+    };
 }
 
 export interface TableContentModel extends ContentModel {
+    type: "table";
     data: {
-        fields: FieldInfo[],
-        items: { [prop: string]: any }[],
+        fields: FieldInfo[];
+        items: { [prop: string]: any }[];
+    }
+}
+
+export interface HtmlContentModel extends ContentModel {
+    type: "html";
+}
+
+export interface PlaylistEntry {
+    title: string;
+    duration?: number;
+    startTime?: string;
+    endTime?: string;
+    language?: string;
+    media?: string;
+}
+
+export interface PlaylistContentModel extends ContentModel {
+    type: "playlist";
+    data: {
+        items: PlaylistEntry[];
     }
 }
 
