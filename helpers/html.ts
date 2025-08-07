@@ -333,9 +333,11 @@ const cssFunMap = {
 }
 
 type CssFunMap = typeof cssFunMap
-export type CssRecord = JSX.CSSProperties & {
+export type CssRecord = JSX.CSSProperties | {
     [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0]
-}
+} | (JSX.CSSProperties & {
+    [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0]
+})
 export type Css = null|string|string[]|Record<string, CssRecord>;
 
 const _cssMap: { [key: string]: [HTMLElement, Css] } = {};
