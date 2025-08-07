@@ -291,6 +291,13 @@ export class Coll<T extends ModelBase> {
     return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(r => r.items[0]||null);
   }
 
+  findKey(key: string, o?: CollOptions<T>): Promise<T|null> {
+    return this.findOne({ key } as CollWhere<T>, { ...o }).then((result) => {
+      if (!result) return this.get(key);
+      return result;
+    });
+  }
+
   count(where: CollWhere<T>, o?: CollOptions<T>) {
     return this.findPage(where, { page: 1, perPage: 1, ...o }).then(r => r.totalItems);
   }
