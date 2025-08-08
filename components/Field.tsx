@@ -7,6 +7,7 @@ import { toNbr } from "../helpers/cast";
 import { Div, DivProps } from "./Div";
 import { Tr } from "./Tr";
 import { Select } from "./Select";
+import { Picker } from "./Picker";
 import { toErr } from "../helpers/err";
 // import { useMsg } from "../hooks/useMsg";
 // import { groupId$ } from "../api/repos";
@@ -118,7 +119,7 @@ export type FieldComp<T = any> = (props: {
     fieldProps: FieldProps<T>,
 }) => ComponentChildren;
 
-export type FieldType = 'email'|'password'|'text'|'multiline'|'html'|'color'|'number'|'select'|'switch'|'image'|'doc'|'date'|'datetime'|'time';
+export type FieldType = 'email'|'password'|'text'|'multiline'|'html'|'color'|'number'|'select'|'picker'|'switch'|'image'|'doc'|'date'|'datetime'|'time';
 
 export interface FieldInfo<T = any> {
     row?: boolean;
@@ -214,6 +215,13 @@ const compByType: Record<FieldType, FieldComp> = {
     // ),
     select: ({ fieldProps, ...props }) => (
         <Select
+            {...props}
+            items={fieldProps.items}
+            {...fieldProps.props}
+        />
+    ),
+    picker: ({ fieldProps, ...props }) => (
+        <Picker
             {...props}
             items={fieldProps.items}
             {...fieldProps.props}
