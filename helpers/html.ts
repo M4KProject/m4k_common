@@ -260,6 +260,8 @@ const t = (v: Em) => `top:${em(v)};`;
 const r = (v: Em) => `right:${em(v)};`;
 const b = (v: Em) => `bottom:${em(v)};`;
 
+const inset = (v: Em) => t(v) + r(v) + b(v) + l(v);
+
 const x = l;
 const y = t;
 const xy = (v: Em) => x(v) + y(v);
@@ -268,29 +270,29 @@ const w = (v: Em) => `width:${em(v)};`;
 const h = (v: Em) => `height:${em(v)};`;
 const wh = (v: Em) => w(v) + h(v);
 
-const wMax = (v: Em) => `max-width:${em(v)};`;
-const hMax = (v: Em) => `max-height:${em(v)};`;
+const wMax = (v: Em) => `max-${w(v)};`;
+const hMax = (v: Em) => `max-${h(v)};`;
 const whMax = (v: Em) => wMax(v) + hMax(v);
 
-const wMin = (v: Em) => `min-width:${em(v)};`;
-const hMin = (v: Em) => `min-height:${em(v)};`;
+const wMin = (v: Em) => `min-${w(v)};`;
+const hMin = (v: Em) => `min-${h(v)};`;
 const whMin = (v: Em) => wMin(v) + hMin(v);
 
 const fontSize = (v: Em) => `font-size:${em(v)};`;
 
 const m = (v: Em) => `margin:${em(v)};`;
-const mt = (v: Em) => `margin-top:${em(v)};`;
-const mb = (v: Em) => `margin-bottom:${em(v)};`;
-const ml = (v: Em) => `margin-left:${em(v)};`;
-const mr = (v: Em) => `margin-right:${em(v)};`;
+const mt = (v: Em) => `margin-${t(v)};`;
+const mb = (v: Em) => `margin-${b(v)};`;
+const ml = (v: Em) => `margin-${l(v)};`;
+const mr = (v: Em) => `margin-${r(v)};`;
 const mx = (v: Em) => ml(v) + mr(v);
 const my = (v: Em) => mt(v) + mb(v);
 
 const p = (v: Em) => `padding:${em(v)};`;
-const pt = (v: Em) => `padding-top:${em(v)};`;
-const pb = (v: Em) => `padding-bottom:${em(v)};`;
-const pl = (v: Em) => `padding-left:${em(v)};`;
-const pr = (v: Em) => `padding-right:${em(v)};`;
+const pt = (v: Em) => `padding-${t(v)};`;
+const pb = (v: Em) => `padding-${b(v)};`;
+const pl = (v: Em) => `padding-${l(v)};`;
+const pr = (v: Em) => `padding-${r(v)};`;
 const px = (v: Em) => pl(v) + pr(v);
 const py = (v: Em) => pt(v) + pb(v);
 
@@ -339,7 +341,7 @@ const cssFunMap = {
     elevation: (v: number) => `box-shadow:${em(v*.1)} ${em(v*.2)} ${em(v*.25)} 0px ${_colors.shadow||'#000000AA'};`,
     rounded: (v: number) => `border-radius:${em(v*.2)};`,
 
-    inset: (v: string|number) => `top:${em(v)};right:${em(v)};bottom:${em(v)};left:${em(v)};`,
+    inset,
 
     bg: (v: string) => `background-color:${_colors[v]||v};`,
     fg: (v: string) => `color:${_colors[v]||v};`,
