@@ -32,6 +32,7 @@ export const AuthForm = () => {
 
     const emailField = (
         <Field
+            name="username"
             type="email"
             value={email}
             onValue={setEmail}
@@ -47,6 +48,7 @@ export const AuthForm = () => {
                 <>
                     {emailField}
                     <Field
+                        name="password"
                         type="password"
                         value={password}
                         onValue={setPassword}
@@ -75,6 +77,7 @@ export const AuthForm = () => {
                 <>
                     {emailField}
                     <Field
+                        name="password"
                         type="password"
                         value={password}
                         onValue={setPassword}

@@ -248,7 +248,7 @@ const compByType: Record<FieldType, FieldComp> = {
 };
 
 export const Field = (props: FieldProps) => {
-    const { cls, row, type, name, label, helper, error, readonly, required, msg, value, cast, castType, onValue, delay, items, ...divProps } = props;
+    const { cls, row, type, name, label, helper, error, readonly, required, msg, value, cast, castType, onValue, delay, items, props: propsProps, ...divProps } = props;
     const c = useCss('Field', css);
 
     const valDelay = delay || type === 'switch' ? 0 : delay;
