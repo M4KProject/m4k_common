@@ -8,8 +8,18 @@ import { isArray } from "../helpers/check";
 
 const css: Css = {
     '&': {
-        ...flexRow({ gap: 0.5, wrap: 'wrap' }),
+        ...flexRow({ align: 'center', justify: 'center', wrap: 'wrap' }),
         w: '100%',
+        p: 0,
+    },
+    '& .Button': {
+        m: 0,
+        p: 0,
+        hMin: '1em',
+    },
+    '& .Button .ButtonIcon': {
+        wh: '1em',
+        bg: 'transparent',
     },
 };
 
@@ -56,9 +66,9 @@ export const Picker = ({
                     key={key}
                     icon={icon}
                     selected={key === value}
-                    color={key === value ? "primary" : "secondary"}
+                    color={key === value ? "primary" : undefined}
                     onClick={() => handleIconClick(key)}
-                    title={key} // Tooltip showing the key/value
+                    // title={key} // Tooltip showing the key/value
                 />
             ))}
         </Div>
