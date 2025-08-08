@@ -54,8 +54,7 @@ export const formatTime = (date?: any): string => {
     const hours = pad(d.getHours(), 2);
     const minutes = pad(d.getMinutes(), 2);
     const secondes = pad(d.getSeconds(), 2);
-
-    return `${hours}:${minutes}:${secondes}`;
+    return secondes === '00' ? `${hours}:${minutes}` : `${hours}:${minutes}:${secondes}`;
 };
 
 /**
