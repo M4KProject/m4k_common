@@ -11,6 +11,7 @@ const css: Css = {
         ...flexRow({ align: 'center', justify: 'center', wrap: 'wrap' }),
         w: '100%',
         p: 0,
+        border: 0,
     },
     '& .Button': {
         m: 0,
