@@ -127,7 +127,7 @@ export const parseDate = (str: string): Date | null => {
  * @returns Nombre de secondes depuis minuit
  */
 export const dateToSeconds = (date?: any): number => {
-    const d = toDate(date) || new Date();
+    const d = toDate(date);
     const hours = d.getHours();
     const minutes = d.getMinutes();
     const seconds = d.getSeconds();
