@@ -120,14 +120,14 @@ export type FieldComp<T = any> = (props: {
 
 export type FieldType = 'email'|'password'|'text'|'multiline'|'html'|'color'|'number'|'select'|'switch'|'image'|'doc'|'date'|'datetime'|'time';
 
-export interface FieldInfo {
+export interface FieldInfo<T = any> {
     row?: boolean;
     type?: FieldType;
     name?: string;
     label?: ComponentChildren;
     helper?: ComponentChildren;
     error?: ComponentChildren;
-    items?: ([string, ComponentChildren]|false|null|undefined)[];
+    items?: ([T, ComponentChildren]|false|null|undefined)[];
     required?: boolean;
     readonly?: boolean;
     castType?: string;
