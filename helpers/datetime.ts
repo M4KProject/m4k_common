@@ -120,3 +120,66 @@ export const parseDate = (str: string): Date | null => {
 
     return result;
 };
+
+/**
+ * Convertit une date en nombre de secondes depuis minuit (0h00)
+ * @param date Date à convertir (par défaut, la date actuelle)
+ * @returns Nombre de secondes depuis minuit
+ */
+export const dateToSeconds = (date?: any): number => {
+    const d = toDate(date) || new Date();
+    const hours = d.getHours();
+    const minutes = d.getMinutes();
+    const seconds = d.getSeconds();
+    return hours * 3600 + minutes * 60 + seconds;
+};
+
+/**
+ * Convertit un nombre de secondes depuis minuit en format HH:MM:SS
+ * Compatible avec formatTime en créant une date du jour avec ce temps
+ * @param seconds Nombre de secondes depuis minuit
+ * @returns Chaîne au format HH:MM:SS ou HH:MM si secondes = 0
+ */
+export const secondsToTimeString = (seconds: number): string => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Minuit du jour
+    today.setSeconds(seconds); // Ajouter les secondes
+    return formatTime(today);
+};
+
+/**
+ * Parse une chaîne de temps ou un nombre en secondes depuis minuit
+ * @param value Chaîne au format HH:MM:SS, HH/MM/YYYY HH:MM:SS, ou nombre de secondes
+ * @returns Nombre de secondes depuis minuit ou null si invalide
+ */
+export const parseToSeconds = (value: string | number): number | null => {
+    if (typeof value === 'number') {
+        // Si c'est déjà un nombre, on assume que c'est des secondes depuis minuit
+        return value >= 0 && value <= 86400 ? value : null;
+    }
+    
+    if (typeof value === 'string') {
+        // Essaie d'abord de parser comme une date complète
+        const parsedDate = parseDate(value);
+        if (parsedDate) {
+            return dateToSeconds(parsedDate);
+        }
+        
+        // Sinon essaie de parser comme un temps simple HH:MM:SS
+        const timeMatch = value.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+        if (!timeMatch) return null;
+        
+        const h = parseInt(timeMatch[1], 10);
+        const m = parseInt(timeMatch[2], 10);
+        const s = parseInt(timeMatch[3] || "0", 10);
+        
+        // Validation
+        if (h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59) {
+            return null;
+        }
+        
+        return h * 3600 + m * 60 + s;
+    }
+    
+    return null;
+};

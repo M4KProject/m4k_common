@@ -47,8 +47,8 @@ export interface HtmlContentModel extends ContentModel {
 export interface PlaylistEntry {
     title: string;
     duration?: number;
-    startTime?: string;
-    endTime?: string;
+    startTime?: number; // Seconds since midnight
+    endTime?: number; // Seconds since midnight
     language?: string;
     media?: string;
 }
