@@ -255,8 +255,13 @@ const transformProp = (prop: string) => (value: number|string, ctx: CssContext) 
     return '';
 }
 
-const x = (v: Em) => `left:${em(v)};`;
-const y = (v: Em) => `top:${em(v)};`;
+const l = (v: Em) => `left:${em(v)};`;
+const t = (v: Em) => `top:${em(v)};`;
+const r = (v: Em) => `right:${em(v)};`;
+const b = (v: Em) => `bottom:${em(v)};`;
+
+const x = l;
+const y = t;
 const xy = (v: Em) => x(v) + y(v);
 
 const w = (v: Em) => `width:${em(v)};`;
@@ -295,6 +300,11 @@ const cssFunMap = {
     x,
     y,
     xy,
+
+    l,
+    t,
+    r,
+    b,
 
     w,
     h,
