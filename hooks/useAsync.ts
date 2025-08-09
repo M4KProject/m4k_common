@@ -22,7 +22,10 @@ export const useAsync = <T>(initValue: T, load: () => T|Promise<T>, storedKey?: 
     }
 
     useEffect(() => {
-        reload();
+        reload().catch(err => {
+            console.error('useAsync load', storedKey, err);
+            if (!storedKey) throw err
+        });
     }, _deps);
 
     const value = useMsg(msg);
