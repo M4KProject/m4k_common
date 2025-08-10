@@ -5,6 +5,7 @@ export * from "./Msg";
 export * from "./addFont";
 export * from "./array";
 export * from "./async";
+export * from "./autoHide";
 export * from "./b64toBlob";
 export * from "./bEdit";
 export * from "./by";
