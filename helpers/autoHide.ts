@@ -63,10 +63,10 @@ const resetHideTimer = () => {
  * Initialise le système auto-hide global
  * À appeler une fois au démarrage de l'application
  */
-export const addAutoHideListener = (options: { hideTimeout?: number } = {}) => {
+export const addAutoHideListener = () => {
   if (isInitialized) return;
   
-  hideTimeout = options.hideTimeout || 10000;
+  hideTimeout = 10000;
   isInitialized = true;
   
   console.debug('AutoHide: Initializing with timeout', hideTimeout);
