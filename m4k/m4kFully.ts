@@ -4,8 +4,9 @@ import { pathJoin } from "../helpers/pathJoin";
 import { apiUrl$ } from "../api";
 import { M4K_METHODS } from "./m4kBridge";
 import { M4Kiosk } from "./m4kInterface";
+import { Fully } from "./fullyInterfaces";
 
-export const m4kFully = (m4k: M4Kiosk) => {
+export const m4kFully = (m4k: M4Kiosk, fully: Fully) => {
     const m = m4k as any;
 
     for (const key in M4K_METHODS) {
