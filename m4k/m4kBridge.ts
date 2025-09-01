@@ -1,72 +1,5 @@
 import { M4Kiosk } from "./m4kInterface";
-
-export const M4K_METHODS: Partial<Record<keyof M4Kiosk, string[]>> = {
-    pressKey: ['key'],
-    tap: ['x', 'y'],
-    swipe: ['x', 'y', 'xEnd', 'yEnd', 'ms'],
-    move: ['x', 'y'],
-    down: ['x', 'y'],
-    up: ['x', 'y'],
-    inputText: ['text'],
-
-    loadJs: ['path'],
-    eval: ['script'],
-    js: ['script'],
-    su: ['cmd'],
-    sh: ['cmd'],
-
-    save: [],
-    load: [],
-    data: [],
-    get: ['key'],
-    set: ['key', 'value'],
-    keys: [],
-    merge: ['changes'],
-    replace: ['values'],
-    clear: [],
-
-    fileInfo: ['path'],
-    absolutePath: ['path'],
-    mkdir: ['path'],
-    ls: ['path', 'recursive'],
-    cp: ['path', 'dest'],
-    mv: ['path', 'dest'],
-    rm: ['path'],
-    zip: ['path', 'dest', 'uncompressed'],
-    unzip: ['path', 'dest'],
-
-    download: ['url', 'dest'],
-    
-    pdfToImages: ['path', 'options'],
-    resize: ['path', 'options'],
-    capture: ['options'],
-    
-    read: ['path', 'encoding'],
-    write: ['path', 'content', 'encoding', 'append'],
-    url: ['path'],
-    reboot: [],
-    restart: [],
-    reload: [],
-    exit: [],
-    info: [],
-
-    log: ['level', 'message', 'data', 'source', 'line'],
-    // popLogs: ['count'],
-
-    // wvKey: [],
-    // wvList: [],
-    // wvConfig: ['options'],
-
-    installedPackages: [],
-    packageInfo: ['name'],
-    startIntent: ['options'],
-
-    installApk: ['path'],
-
-    openAutoStart: [],
-
-    showMessage: ['message'],
-}
+import { m4kMethods } from "./m4kMethods";
 
 export const m4kBridge = (m4k: M4Kiosk) => {
     const m = m4k as any;
@@ -75,7 +8,7 @@ export const m4kBridge = (m4k: M4Kiosk) => {
     let count = 0
     const newCb = (name: string) => 'cb_' + name + (count++)
     
-    Object.entries(M4K_METHODS).map(([method, argKeys]) => {
+    Object.entries(m4kMethods).map(([method, argKeys]) => {
         // logDebug('add method', method, argKeys)
         m[method] = (...args: any[]) => new Promise<any>((resolve, reject) => {
             const cb = newCb(method)

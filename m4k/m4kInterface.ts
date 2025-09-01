@@ -27,88 +27,124 @@ export interface M4kLog {
     line?: number;
 }
 
-export type PlaylistItem = M4kFileInfo & {
-    waitMs?: number
-}
+// export type PlaylistItem = M4kFileInfo & {
+//     waitMs?: number
+// }
+
+// export interface M4kSettings {
+//     // kioskPassword?: string;
+//     // deviceEmail?: string;
+//     // devicePassword?: string;
+//     // isKioskOn?: boolean;
+//     // isScreenOn?: boolean;
+//     // screenOrientation?: "landscape" | "portrait" | "reverse_landscape" | "reverse_portrait";
+//     // injectJs?: string;
+//     // url?: string;
+//     // backColor?: string;
+//     // initialScale?: number;
+//     // // isDebugging?: boolean
+//     // // isSupportZoom?: boolean
+//     // // hasDomStorage?: boolean
+//     // // isOverviewMode?: boolean
+//     // // isUseViewPort?: boolean
+//     // // hasContentAccess?: boolean
+//     // // hasFileAccess?: boolean
+//     // // hasZoomControls?: boolean
+//     // // displayZoomControls?: boolean
+//     // // hasMediaPlaybackRequiresUserGesture?: boolean
+//     // textZoom?: number;
+//     // mixedContent?: "never" | "compatible" | "always";
+//     // readTimeout?: number;
+//     // itemAnim?: 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
+//     // itemDurationMs?: number;
+//     // itemFit?: 'contain' | 'cover' | 'fill';
+//     // hasVideoMuted?: boolean;
+//     // views?: {
+//     //     [key: string]: M4kViewConfig;
+//     // };
+// }
 
 export interface M4kConfig {
-    name?: string;
-    copyDir?: string;
-    password?: string;
-    playlist?: {
-        items?: PlaylistItem[];
-    };
-    test?: any;
+    ///// URL /////
+    startUrl?: string;
+    zipUrl?: string;
 
-    auth_email?: string;
-    auth_password?: string;
+    ///// Device /////
+    deviceUsername?: string;
+    devicePassword?: string;
 
-    isKioskOn?: boolean;
-    isScreenOn?: boolean;
-    screenOrientation?: "landscape" | "portrait" | "reverse_landscape" | "reverse_portrait";
-    injectJs?: string;
-    url?: string;
-    backColor?: string;
+    ///// Cache /////
+    deleteCacheOnReload?: boolean;
+    deleteHistoryOnReload?: boolean;
+    deleteStorageOnReload?: boolean;
+    deleteCookiesOnReload?: boolean;
+    syncM4kStorage?: boolean;
 
+    ///// App /////
+    restartOnCrash?: boolean;
+    restartHours?: number; // 22h30 -> 22,5
+    rebootHours?: number; // 22h30 -> 22,5
+    reloadIdle?: number;
+    appToRunOnStart?: string;
+
+    ///// Screen /////
+
+    /** Screen orientation (0=portrait, 1=landscape, etc.) */
+    screenOrientation?: number;
+    keepScreenOn?: boolean;
+    screenStartHours?: string; // 22h30 -> 22,5
+    screenEndHours?: string; // 22h30 -> 22,5
+
+    ///// Kiosk //////
+    showActionBar?: boolean;
+    showStatusBar?: boolean;
+    launchOnBoot?: boolean;
+    kioskPin?: string;
+    kioskMode?: string;
+    forceImmersive?: boolean;
+    hideKeyboard?: boolean;
+    allowTextSelection?: boolean;
+    confirmExit?: boolean;
+
+    ///// Server /////
+    enableLocalhost?: boolean;
+
+    ///// WiFi /////
+    resetWifiOnDisconnection?: boolean;
+    resetWifiEachSeconds?: number;
+    wifiType?: string;
+    wifiName?: string;
+    wifiPass?: string;
+
+    ///// Idle /////
+    reloadEachSeconds?: number;
+
+    ///// Zoom /////
     initialScale?: number;
-
-    // isDebugging?: boolean
-    // isSupportZoom?: boolean
-    // hasDomStorage?: boolean
-    // isOverviewMode?: boolean
-    // isUseViewPort?: boolean
-    // hasContentAccess?: boolean
-    // hasFileAccess?: boolean
-    // hasZoomControls?: boolean
-    // displayZoomControls?: boolean
-    // hasMediaPlaybackRequiresUserGesture?: boolean
-    
     textZoom?: number;
-    mixedContent?: "never" | "compatible" | "always";
+    enableZoom?: boolean;
+    resetZoom?: number;
+    resetZoomMs?: number;
+    builtInZoomControls?: boolean;
+    displayZoomControls?: boolean;
 
-    readTimeout?: number;
+    ///// InjectJs /////
+    injectSh?: string;
+    injectJs?: string;
 
-    itemAnim?: 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
-    itemDurationMs?: number;
-    itemFit?: 'contain' | 'cover' | 'fill';
-    hasVideoMuted?: boolean;
-
-    views?: {
-        [key: string]: M4kViewConfig;
-    };
-}
-
-export interface M4kViewConfig {
-    remove?: boolean;
-
-    x?: number;
-    y?: number;
-    z?: number;
-    w?: number;
-    h?: number;
-
-    show?: boolean;
-
-    webConfig?: {
-        startUrl?: string;
-        injectJs?: string;
-        initialScale?: number;
-
-        debuggingEnabled?: boolean;
-        supportZoom?: boolean;
-        domStorageEnabled?: boolean;
-        loadWithOverviewMode?: boolean;
-        useWideViewPort?: boolean;
-        allowContentAccess?: boolean;
-        allowFileAccess?: boolean;
-        textZoom?: number;
-        builtInZoomControls?: boolean;
-        displayZoomControls?: boolean;
-        mediaPlaybackRequiresUserGesture?: boolean;
-        mixedContentMode?: 'never'|'compatible'|'always';
-    };
-    url?: string;
-    reset?: boolean;
+    ///// WebView //////
+    debuggingEnabled?: boolean;
+    domStorageEnabled?: boolean;
+    loadWithOverviewMode?: boolean;
+    useWideViewPort?: boolean;
+    allowContentAccess?: boolean;
+    allowFileAccess?: boolean;
+    mediaPlaybackRequiresUserGesture?: boolean;
+    mixedContentMode?: 'never'|'compatible'|'always';
+    webviewMixedContent?: number; // TODO
+    desktopMode?: boolean;
+    customUserAgent?: string;
+    autoplayVideo?: boolean;
 }
 
 // interface BridgeConfig {
@@ -237,21 +273,13 @@ export type _M4kEvent =
 export type M4kEvent = _M4kEvent & { id: string };
 export type M4kSignalEvent = _M4kEvent & { id?: string };
 
+// TODO update on apk
 export type M4kResizeOptions = {
     dest?: M4kPath,
-    scale?: number,
     quality?: number,
     format?: 'jpeg'|'png',
-
-    w?: number,
-    wMin?: number,
-    wMax?: number,
-    h?: number,
-    hMin?: number,
-    hMax?: number,
-    min?: number,
-    max?: number,
-
+    min?: number|[number, number], // widthHeight | [width, height]
+    max?: number|[number, number], // widthHeight | [width, height]
     // transform?: '90deg'|'180deg'|'270deg'|'flipX'|'flipY',
 };
 
@@ -272,16 +300,12 @@ export interface M4Kiosk {
     su(cmd: string): Promise<M4kExecResult>;
     sh(cmd: string): Promise<M4kExecResult>;
 
-    save(): Promise<void>;
-    load(): Promise<void>;
-    data(): Promise<M4kConfig>;
-    get<K extends keyof M4kConfig>(key: K): Promise<M4kConfig[K]>;
-    set<K extends keyof M4kConfig>(key: K, value: M4kConfig[K]): Promise<void>;
-    keys(): Promise<(keyof M4kConfig)[]>;
-    merge(changes: Partial<M4kConfig>): Promise<void>;
-    replace(values: M4kConfig): Promise<void>;
-    clear(): Promise<void>;
+    setStorage(json: string): Promise<void>;
+    getStorage(): Promise<string>;
 
+    setConfig(config: M4kConfig): Promise<void>;
+    getConfig(): Promise<M4kConfig>;
+    
     fileInfo(path: M4kPath): Promise<M4kFileInfo>;
     absolutePath(path: M4kPath): Promise<string>;
     mkdir(path: M4kPath): Promise<void>;
@@ -328,3 +352,4 @@ export interface M4Kiosk {
     subscribe(listener?: (event: M4kEvent) => void): () => void;
     signal(event: M4kSignalEvent): void;
 }
+

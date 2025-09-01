@@ -1,14 +1,16 @@
 import { removeItem } from "../helpers/array";
 import { m4kBridge } from "./m4kBridge";
 import { m4kFully } from "./m4kFully";
-import { m4kBrowser } from "./m4kBrowser";
+import { m4kBase } from "./m4kBase";
 import type { M4Kiosk, M4kEvent, M4kSignalEvent } from "./m4kInterface"
 import { global } from '../helpers/global';
 import type { Fully } from "./fullyInterfaces";
 
 export const m4k = (() => {
     const w = global;
+    
     const _m4k = w._m4k;
+    const fully = w.fully as Fully|undefined;
     
     console.debug('init m4k', typeof _m4k);
     
@@ -16,8 +18,7 @@ export const m4k = (() => {
     const m4k: M4Kiosk = m
     w.m4k = m4k
 
-    const fully = w.fully as Fully|undefined;
-    _m4k ? m4kBridge(m4k) : fully ? m4kFully(m4k, fully) : m4kBrowser(m4k);
+    _m4k ? m4kBridge(m4k) : fully ? m4kFully(m4k, fully) : m4kBase(m4k);
     
     const listeners: ((event: M4kEvent) => void)[] = []
     

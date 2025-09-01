@@ -1,9 +1,9 @@
 import { removeItem } from "./array";
 import { debounce, throttle } from "./async";
-import { toNull, toVoid } from "./cast";
+import { toVoid } from "./cast";
 import { isFunction, isNotNull } from "./check";
-import { parse, stringify } from "./json";
 import { global } from '../helpers/global';
+import { getStored, setStored } from "./storage";
 
 export type IMsgHandler<T> = (value: T, oldValue: T) => void;
 export type IMsgFilter<T> = (value: T) => boolean;
@@ -47,9 +47,6 @@ export interface IMsg<T> extends IMsgReadonly<T>, IMsgSet<T> {
 const _msgs: Record<string, Msg> = global.m4kMsgs || (global.m4kMsgs = {});
 
 export class Msg<T = any> implements IMsg<T> {
-  static keyPrefix = "m4k_";
-  static storage = global.localStorage || { clear: toVoid, getItem: toNull, setItem: toVoid, removeItem: toVoid, key: toNull, length: 0 };
-
   static from<T>(sourceOn: (target: IMsg<T>) => () => void, initValue: T): Msg<T>;
   static from<T>(sourceOn: (target: IMsg<T | undefined>) => () => void): Msg<T | undefined>;
   static from<T>(
@@ -84,15 +81,8 @@ export class Msg<T = any> implements IMsg<T> {
     this.key = key;
     if (key) _msgs[key] = this;
     if (isStored && key) {
-      const k = Msg.keyPrefix + key;
-      const storedJson = Msg.storage.getItem(k);
-      let storedValue = storedJson ? parse(storedJson) : undefined;
-      if (storedValue !== undefined && storedCheck && !storedCheck(storedValue)) {
-        console.warn('error stored value', key, storedValue);
-        storedValue = undefined;
-      }
-      this.v = storedValue !== undefined ? storedValue : initValue;
-      this.on((next) => Msg.storage.setItem(k, stringify(next)));
+      this.v = getStored(key, initValue, storedCheck);
+      this.on((next) => setStored(key, next));
     }
   }
 

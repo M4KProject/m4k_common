@@ -19,11 +19,9 @@ export const isNotNull = <T>(value: T): value is NonNullable<T> =>
 
 export const isNumber = (value: any): value is number => typeof value === 'number';
 
-export const isObject = (value: unknown): value is Record<string | number | symbol, unknown> =>
-    typeof value === "object" && value !== null;
+export const isObject = <T extends {}>(value: unknown): value is T => typeof value === "object" && value !== null;
 
-export const isRecord = (value: any): value is Record<string | number | symbol, unknown> =>
-    isObject(value) && !isArray(value);
+export const isRecord = <T extends {}>(value: any): value is T => isObject(value) && !isArray(value);
 
 export const isString = (value: any): value is string => typeof value === 'string';
 
