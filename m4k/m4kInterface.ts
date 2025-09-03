@@ -331,6 +331,8 @@ export interface M4Kiosk {
     reload(): Promise<void>;
     exit(): Promise<void>;
     info(): Promise<M4kDeviceInfo>;
+    setKioskOn(val: boolean): Promise<void>;
+    setScreenOn(val: boolean): Promise<void>;
     
     log(level: string, message: string, data?: any, source?: string, line?: number): Promise<void>;
     // popLogs(count?: number): Promise<M4kLog[]>;

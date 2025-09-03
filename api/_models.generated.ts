@@ -78,8 +78,8 @@ export interface _DeviceModel extends ModelBase {
     version?: number;
     width?: number;
     height?: number;
-    action?: ""|"reload"|"restart"|"reboot"|"capture"|"exit"|"info"|"ping"|"js"|"sh"|"su"|"set"|"kiosk_on"|"screen_on";
-    status?: ""|"started"|"updated"|"action_started"|"action_ended";
+    action?: string;
+    status?: string;
     info?: any;
     input?: any;
     result?: any;
