@@ -20,7 +20,7 @@ export const toTime = (date: any) => toDate(date).getTime();
 
 export const groupId$ = new Msg<string>("", "groupId", true, isString);
 
-const defaultUrl = (location.port ? location.origin.replace(location.port, "8090") : location.origin) + "/api/";
+const defaultUrl = "https://i.m4k.fr/api/";// (location.port ? location.origin.replace(location.port, "8090") : location.origin) + "/api/";
 
 export const getApiUrl = () => apiUrl$.v || defaultUrl;
 export const getAuthId = () => auth$.v?.id || "";
