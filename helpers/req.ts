@@ -165,7 +165,16 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
             method: ctx.method,
         });
 
-        if (ctx.timeout) fetchRequest.signal = AbortSignal.timeout(ctx.timeout);
+        if (ctx.timeout) {
+            if (!AbortSignal.timeout) {
+                AbortSignal.timeout = function(milliseconds: number): AbortSignal {
+                    const controller = new AbortController();
+                    setTimeout(() => controller.abort(), milliseconds);
+                    return controller.signal;
+                };
+            }
+            fetchRequest.signal = AbortSignal.timeout(ctx.timeout);
+        }
 
         if (o.before) await o.before(ctx);
 
