@@ -205,17 +205,16 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 
 export const apiReq = (baseUrl: string) => (
   createReq({
-    fetch: true,
-    // xhr: false,
     baseUrl: pathJoin(getApiUrl(), baseUrl),
     timeout: 10000,
     base: (options) => {
       const auth = auth$.v;
       if (auth) {
         options.headers = {
-          Authorization: auth.token, // `Bearer ${auth.token}`,
+          Authorization: `Bearer ${auth.token}`,
+          'X-Auth-Token': auth.token, // For Android WebView
           ...options.headers,
-        }
+        };
       }
     },
   })
