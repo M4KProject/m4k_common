@@ -23,6 +23,10 @@ export const isObject = <T extends {}>(value: unknown): value is T => typeof val
 
 export const isRecord = <T extends {}>(value: any): value is T => isObject(value) && !isArray(value);
 
+export const isArrayOf = <T>(v: any, is: (c: any) => c is T): v is T[] => isArray(v) && v.every(is);
+
+export const isArrayOfRecords = <T extends {}>(v: any): v is T[] => isArrayOf(v, isRecord);
+
 export const isString = (v: any): v is string => typeof v === 'string';
 
 export const isStringNotEmpty = (v: any): v is string => isString(v) && v.length > 0;
