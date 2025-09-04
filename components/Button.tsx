@@ -18,6 +18,9 @@ const css: Css = {
         fg: 'fg',
         hMin: 2.5,
     },
+    '&Row': {
+        ...flexRow({ align: 'center', justify: 'around' }),
+    },
     '&-icon': {
         m: 0,
     },
@@ -150,8 +153,8 @@ export const UploadButton = ({ onClick, onFiles, accept, multiple, ...props }: U
     )
 }
 
-export interface ButtonGroupProps extends DivProps {};
-export const ButtonGroup = (props: ButtonGroupProps) => {
-    const c = useCss('Button', css)
-    return <Div {...props} cls={[`${c}Group`, props.cls]} />;
+export interface ButtonRowProps extends DivProps {};
+export const ButtonRow = (props: ButtonRowProps) => {
+    const c = useCss('Button', css);
+    return <Div {...props} cls={[`${c}Row`, props.cls]} />;
 }

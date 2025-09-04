@@ -82,7 +82,7 @@ export class Msg<T = any> implements IMsg<T> {
     if (key) _msgs[key] = this;
     if (isStored && key) {
       this.v = getStored(key, initValue, storedCheck);
-      this.on((next) => setStored(key, next));
+      this.on((next) => setStored(key, next === initValue ? undefined : next));
     }
   }
 
@@ -204,3 +204,10 @@ export class Msg<T = any> implements IMsg<T> {
     return this._s || (this._s = (next: T) => this.set(next));
   }
 }
+
+export const newMsg = <T = any>(
+  initValue: T,
+  key?: string,
+  isStored?: boolean,
+  storedCheck?: (value: T) => boolean
+) => new Msg<T>(initValue, key, isStored, storedCheck);

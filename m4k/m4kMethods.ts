@@ -17,9 +17,8 @@ export const m4kMethods: Record<keyof M4Kiosk, string[]> = {
     su: ['cmd'],
     sh: ['cmd'],
 
-    setStorage: ['json'],
-    getStorage: [],
-
+    // setStorage: ['json'],
+    // getStorage: [],
     setConfig: [],
     getConfig: [],
 
@@ -70,4 +69,7 @@ export const m4kMethods: Record<keyof M4Kiosk, string[]> = {
 
     subscribe: ['listener'],
     signal: ['event'],
+
+    setKioskOn: ['on'],
+    setScreenOn: ['on'],
 }

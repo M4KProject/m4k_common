@@ -5,7 +5,7 @@ import { useCss } from '../hooks/useCss';
 import { login, passwordReset, signUp } from '../api';
 import { Loading } from './Loading';
 import { Field } from './Field';
-import { Button, ButtonGroup } from './Button';
+import { Button, ButtonRow } from './Button';
 import { Form } from './Form';
 import { toErr } from '@common/helpers/err';
 import { addTranslates } from '@common/hooks';
@@ -56,7 +56,7 @@ export const AuthForm = () => {
                         props={{ autoComplete: "current-password" }}
                         error={passwordError}
                     />
-                    <ButtonGroup>
+                    <ButtonRow>
                         <Button onClick={async () => {
                             setPage('');
                             try {
@@ -70,7 +70,7 @@ export const AuthForm = () => {
                         }} color="primary">Se connecter</Button>
                         <Button onClick={() => setPage('forgot-password')}>Mot de passe oublié ?</Button>
                         <Button onClick={() => setPage('sign-up')}>Vous n'avez pas de compte ?<br />Inscrivez-vous</Button>
-                    </ButtonGroup>
+                    </ButtonRow>
                 </>
             ) :
             page === 'sign-up' ? (
@@ -84,20 +84,20 @@ export const AuthForm = () => {
                         label="Votre mot de passe"
                         props={{ autoComplete: "new-password" }}
                     />
-                    <ButtonGroup>
+                    <ButtonRow>
                         <Button onClick={async () => {
                             setPage('');
                             await signUp(email, password);
                             setPage('sign-in');
                         }} color="primary">S'inscrire</Button>
                         <Button onClick={() => setPage('sign-in')}>Vous avez déjà un compte ?<br />Connectez-vous</Button>
-                    </ButtonGroup>
+                    </ButtonRow>
                 </>
             ) :
             page === 'forgot-password' ? (
                 <>
                     {emailField}
-                    <ButtonGroup>
+                    <ButtonRow>
                         <Button onClick={async () => {
                             setPage('');
                             await passwordReset(email);
@@ -105,17 +105,17 @@ export const AuthForm = () => {
                             // setPage('code');
                         }} color="primary">Réinitialiser le mot de passe par email.</Button>
                         <Button onClick={() => setPage('sign-in')}>Vous avez déjà un compte ?<br />Connectez-vous.</Button>
-                    </ButtonGroup>
+                    </ButtonRow>
                 </>
             ) :
             page === 'code' ? (
                 <>
                     {emailField}
                     <Field value={password} onValue={setPassword} label="Le CODE reçu par email" />
-                    <ButtonGroup>
+                    <ButtonRow>
                         <Button onClick={() => { /* signWithCode(email, password) */ }} color="primary">Connexion avec le CODE</Button>
                         <Button onClick={() => setPage('sign-in')}>Vous avez déjà un compte ?<br />Connectez-vous</Button>
-                    </ButtonGroup>
+                    </ButtonRow>
                 </>
             ) : <Loading />}
         </Form>

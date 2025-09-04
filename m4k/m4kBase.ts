@@ -1,8 +1,8 @@
-import { parse, stringify } from "@common/helpers/json";
 import { toErr } from "../helpers/err";
 import { M4Kiosk } from "./m4kInterface";
-import { getStoredData, onStored, replaceStoredData } from "@common/helpers/storage";
 import { m4kMethods } from "./m4kMethods";
+import { global } from '../helpers/global';
+import { isFunction } from "@common/helpers";
 
 type MethodAsyncOrSync<T> = T extends (...args: infer A) => Promise<infer R>
   ? (...args: A) => Promise<R> | R
@@ -18,13 +18,23 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
     if (!methods.js) {
         methods.js = async (script: string) => {
             try {
-                const result = await m4k.global.eval(script);
+                console.debug('eval', script);
+                let result = await m4k.global.eval(script);
+                if (isFunction(result)) result = await result(m4k);
                 return { success: true, value: result };
             }
             catch (e) {
                 return { success: false, error: String(toErr(e)) };
             }
         }
+    }
+
+    if (!methods.reload) {
+        methods.reload = () => location.reload();
+    }
+
+    if (!methods.restart) {
+        methods.restart = () => location.reload();
     }
 
     if (!methods.info) {
@@ -57,16 +67,17 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
         };
     }
 
-    // sync storage
-    (async () => {
-        onStored(() => {
-            const data = getStoredData();
-            const json = stringify(data);
-            m4k.setStorage(json);
-        });
-        
-        const json = await m4k.getStorage();
-        const data = parse(json);
-        if (data) replaceStoredData(data);
-    })();
+    m4k.global = global;
+
+    // // sync storage
+    // (async () => {
+    //     onStored(() => {
+    //         const data = getStoredData();
+    //         const json = stringify(data);
+    //         m4k.setStorage(json);
+    //     });
+    //     const json = await m4k.getStorage();
+    //     const data = parse(json);
+    //     if (data) replaceStoredData(data);
+    // })();
 };

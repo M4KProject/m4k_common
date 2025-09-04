@@ -300,8 +300,8 @@ export interface M4Kiosk {
     su(cmd: string): Promise<M4kExecResult>;
     sh(cmd: string): Promise<M4kExecResult>;
 
-    setStorage(json: string): Promise<void>;
-    getStorage(): Promise<string>;
+    // setStorage(json: string): Promise<void>;
+    // getStorage(): Promise<string>;
 
     setConfig(config: M4kConfig): Promise<void>;
     getConfig(): Promise<M4kConfig>;
