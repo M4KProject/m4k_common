@@ -44,7 +44,7 @@ export interface IMsg<T> extends IMsgReadonly<T>, IMsgSet<T> {
   next(value: T | ((value: T) => T)): IMsg<T>;
 }
 
-const _msgs: Record<string, Msg> = global.m4kMsgs || (global.m4kMsgs = {});
+export const msgs: Record<string, Msg> = global.m4kMsgs || (global.m4kMsgs = {});
 
 export class Msg<T = any> implements IMsg<T> {
   static from<T>(sourceOn: (target: IMsg<T>) => () => void, initValue: T): Msg<T>;
@@ -60,7 +60,7 @@ export class Msg<T = any> implements IMsg<T> {
   }
   
   static get<T>(key: string): Msg<T> {
-    return _msgs[key]
+    return msgs[key]
   }
 
   public key?: string;
@@ -79,7 +79,7 @@ export class Msg<T = any> implements IMsg<T> {
   constructor(initValue: T, key?: string, isStored?: boolean, storedCheck?: (value: T) => boolean) {
     this.v = initValue;
     this.key = key;
-    if (key) _msgs[key] = this;
+    if (key) msgs[key] = this;
     if (isStored && key) {
       this.v = getStored(key, initValue, storedCheck);
       this.on((next) => setStored(key, next === initValue ? undefined : next));

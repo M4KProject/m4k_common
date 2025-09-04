@@ -5,6 +5,7 @@ import { m4kBase } from "./m4kBase";
 import type { M4Kiosk, M4kEvent, M4kSignalEvent } from "./m4kInterface"
 import { global } from '../helpers/global';
 import type { Fully } from "./fullyInterfaces";
+import { msgs } from "@common/helpers/Msg";
 
 export const m4k = (() => {
     const w = global;
@@ -14,7 +15,7 @@ export const m4k = (() => {
     
     console.debug('init m4k', typeof _m4k);
     
-    const m: any = { global: w }
+    const m: any = { global: w, msgs }
     const m4k: M4Kiosk = m
     w.m4k = m4k
 
