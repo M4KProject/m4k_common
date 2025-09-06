@@ -2,7 +2,7 @@ import { Css } from '../helpers/html';
 import { useCss } from '../hooks/useCss';
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
-import { FcSynchronize } from 'react-icons/fc';
+import { RotateCcw } from 'lucide-react';
 import { flexCenter } from '../helpers/flexBox';
 import { addTranslates } from '../hooks/useTr';
 
@@ -37,7 +37,7 @@ export const Loading = ({ cls, content, children, ...props }: DivProps & { conte
   const c = useCss('Loading', css);
   return (
     <Div {...props} cls={[c, cls]}>
-      <FcSynchronize />
+      <RotateCcw />
       {content !== '' && (
         <Div cls={`${c}Content`}>
           <Tr>{content || 'loading'}</Tr>

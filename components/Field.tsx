@@ -13,7 +13,7 @@ import { toErr } from '../helpers/err';
 // import { groupId$ } from "../api/repos";
 // import { medias$ } from "../api/storage";
 // import { by } from "../helpers/by";
-import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
+import { Eye, EyeOff } from 'lucide-react';
 import { Button } from './Button';
 import { Msg } from '../helpers/Msg';
 import { useMsg } from '../hooks';
@@ -222,7 +222,7 @@ const compByType: Record<FieldType, FieldComp> = {
             e.preventDefault();
             setShow((s) => !s);
           }}
-          icon={show ? <IoMdEyeOff /> : <IoMdEye />}
+          icon={show ? <EyeOff /> : <Eye />}
         />
       </>
     );

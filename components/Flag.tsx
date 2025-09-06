@@ -70,7 +70,7 @@ const ISO_MAPPING: Record<string, string> = {
   uk: 'en', // United Kingdom -> English flag
 };
 
-export const FlagSVG = ({ cls, iso, title, size, variant = '4x3' }: FlagSVGProps) => {
+export const Flag = ({ cls, iso, title, size, variant = '4x3' }: FlagSVGProps) => {
   const c = useCss('Flag', css);
 
   // Normalize ISO code

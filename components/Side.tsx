@@ -6,7 +6,7 @@ import { Div, DivProps } from './Div';
 import { Button, ButtonProps } from './Button';
 import { createContext } from 'preact';
 import { useContext, useState } from 'preact/hooks';
-import { MdMenu } from 'react-icons/md';
+import { Menu } from 'lucide-react';
 
 const css: Css = {
   '&': {
@@ -107,7 +107,7 @@ export const Side = ({ cls, children, page$, ...props }: SideProps) => {
       <Div {...props} cls={[c, open && `${c}-open`, cls]}>
         <Div cls={`${c}Mask`}>
           <Div cls={`${c}Content`}>
-            <Button icon={<MdMenu />} onClick={toggleOpen}>
+            <Button icon={<Menu />} onClick={toggleOpen}>
               Ouvrir
             </Button>
             {children}
