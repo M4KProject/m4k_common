@@ -2,12 +2,13 @@ import { addItem, removeItem } from "./list";
 import { throttle } from "./async";
 import { isBool, isItem, isList, isNbr, isStr } from "./check";
 import { global } from "./global";
+import { len } from "./obj";
 
 const newStorage = (): typeof localStorage => {
     const r = {
         _d: {} as Record<string, string>,
         _r: () => {
-            r.length = Object.keys(r._d).length;
+            r.length = len(r._d);
         },
         clear: () => {
             r._d = {};

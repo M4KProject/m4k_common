@@ -1,4 +1,4 @@
-import { isDef, isItem, isList, isNil, isObj, isUndef, Item, List } from "./check";
+import { isDef, isItem, isList, isNil, isObj, isStr, isUndef, Item, List } from "./check";
 import { toList } from "./cast";
 import { last, sort, uniq } from "./list";
 import { nbrMax } from "./nbr";
@@ -113,3 +113,10 @@ export const merge = (a: any, b: any): any => {
 export const mergeAll = (
     (...args: any[]): any => args.reduce(merge)
 );
+
+export const len = (v: any): number => (
+  isList(v) ? v.length :
+  isItem(v) ? Object.keys(v).length :
+  isStr(v) ? v.length :
+  0
+)
