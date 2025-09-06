@@ -46,7 +46,7 @@ const startUpload = (item: UploadItem) =>
       const media = await mediaColl.create(
         {
           name: String(file.name),
-          file,
+          source: file,
           group: needGroupId(),
         },
         {
