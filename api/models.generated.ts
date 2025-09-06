@@ -1,4 +1,4 @@
-// GENERATED : 2025-09-06T17:37:26.829Z
+// GENERATED : 2025-09-06T17:38:37.574Z
 
 import { AuthModelBase, ModelBase } from './models.base';
 
@@ -18,7 +18,7 @@ export interface _ContentModel extends ModelBase {
   public?: boolean;
   key?: string;
   title?: string;
-  type?: "" | "empty" | "form" | "table" | "html" | "playlist" | "hiboutik" | "odoo";
+  type?: '' | 'empty' | 'form' | 'table' | 'html' | 'playlist' | 'hiboutik' | 'odoo';
   data?: any;
   files?: File | Blob | string;
   medias?: string[];
@@ -45,14 +45,14 @@ export interface _GroupModel extends ModelBase {
   id: string;
   key?: string;
   name?: string;
-  plugins?: "" | "hiboutik";
+  plugins?: '' | 'hiboutik';
   user?: string;
 }
 
 export interface _JobModel extends ModelBase {
   id: string;
-  action?: "" | "test" | "hiboutik" | "odoo";
-  status?: "" | "pending" | "processing" | "finished" | "failed" | "deleted";
+  action?: '' | 'test' | 'hiboutik' | 'odoo';
+  status?: '' | 'pending' | 'processing' | 'finished' | 'failed' | 'deleted';
   progress?: number;
   error?: string;
   input?: any;
@@ -87,7 +87,7 @@ export interface _MemberModel extends ModelBase {
 
 export interface _ConvertModel extends ModelBase {
   id: string;
-  status?: "" | "pending" | "processing" | "waiting" | "finished" | "failed" | "deleted";
+  status?: '' | 'pending' | 'processing' | 'waiting' | 'finished' | 'failed' | 'deleted';
   type?: string;
   size?: number;
   width?: number;
