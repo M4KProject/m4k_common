@@ -68,6 +68,21 @@ export interface M4kConfig {
     ///// URL /////
     startUrl?: string;
     zipUrl?: string;
+    url?: string;
+
+    ///// Authentication /////
+    password?: string;
+
+    ///// Playlist /////
+    copyDir?: string;
+    itemDurationMs?: number;
+    itemFit?: 'contain'|'cover'|'fill';
+    itemAnim?: 'rightToLeft'|'topToBottom'|'fade'|'zoom';
+    hasVideoMuted?: boolean;
+    playlist?: any[];
+
+    ///// UI /////
+    backColor?: string;
 
     ///// Device /////
     deviceUsername?: string;
