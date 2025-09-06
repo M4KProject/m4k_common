@@ -1,25 +1,26 @@
-import { isArray, isDate, isNil, isNumber, isRecord, isString } from "./check";
+import { isList, isDate, isNil, isStr, isNbr, isItem, Item } from "./check";
 
 export const me = <T = any>(value: T): T => value;
 
-interface ToArray {
+interface ToList {
     <T = any>(v: T[] | T | null | undefined): T[];
     <T = any>(v: any, def: T[]): T[];
 }
-export const toArray = (<T = any>(v: any, def: T[] = []): T[] =>
-    isNil(v) ? def : isArray(v) ? v : [v]) as ToArray;
+export const toList = (
+    <T = any>(v: any, def: T[] = []): T[] => isNil(v) ? def : isList(v) ? v : [v]
+) as ToList;
 
-interface ToBoolean {
+interface ToBool {
     (v: boolean | string | number): boolean;
     (v: any): boolean | undefined;
     <T>(v: any, defVal: T): boolean | T;
 }
-export const toBool = (<T = boolean>(v: any, defVal?: T | boolean): boolean | T | undefined =>
-    isString(v)
-        ? ['true', 'ok', 'on', '1'].indexOf(String(v).toLowerCase()) !== -1
-        : isNil(v)
-            ? defVal
-            : !!v) as ToBoolean;
+export const toBool = (
+    <T = boolean>(v: any, defVal?: T | boolean): boolean | T | undefined => (
+        isStr(v) ? ['true', 'ok', 'on', '1'].indexOf(String(v).toLowerCase()) !== -1 :
+        isNil(v) ? defVal : !!v
+    )
+) as ToBool;
 
 export const toClassName = (obj: any): string => {
     if (!obj) return '';
@@ -33,14 +34,13 @@ interface ToDate {
     <TDef>(v: any, defVal: TDef): Date | TDef;
     <TDef>(v: any, defVal?: TDef): Date | TDef | undefined;
 }
-export const toDate = (<TDef>(v: any, defVal?: TDef): Date | TDef | undefined =>
-    isDate(v)
-        ? v
-        : isString(v) || isNumber(v)
-            ? new Date(v)
-            : isNil(v)
-                ? new Date()
-                : defVal) as ToDate;
+export const toDate = (
+    <TDef>(v: any, defVal?: TDef): Date | TDef | undefined => (
+        isDate(v) ? v :
+        isStr(v) || isNbr(v) ? new Date(v) :
+        isNil(v) ? new Date() : defVal
+    )
+) as ToDate;
 
 export const toNull = () => null;
 
@@ -49,21 +49,29 @@ interface ToNumber {
     (v: any): number | undefined;
     <D>(v: any, nanVal: D): number | D;
 }
-export const toNbr = (<D>(v: any, nanVal?: D): number | D | undefined => {
-    const clean = isString(v) ? v.replace(/,/g, '.').replace(/[^0-9\-\.]/g, '') : String(v);
-    const nbr = clean !== '' ? Number(clean) : Number.NaN;
-    return Number.isNaN(nbr) || !Number.isFinite(nbr) ? nanVal : nbr;
-}) as ToNumber;
+export const toNbr = (
+    <D>(v: any, nanVal?: D): number | D | undefined => {
+        const clean = isStr(v) ? v.replace(/,/g, '.').replace(/[^0-9\-\.]/g, '') : String(v);
+        const nbr = clean !== '' ? Number(clean) : Number.NaN;
+        return Number.isNaN(nbr) || !Number.isFinite(nbr) ? nanVal : nbr;
+    }
+) as ToNumber;
 
-interface ToRecord {
-    <T = any>(v: T): T;
-    <T = any>(v: T | null | undefined): T | undefined;
-    <T = any, U = any>(v: T | null | undefined, def: U): T | U;
+interface ToItem {
+    <T = any>(value?: T | null | undefined): T&{};
+    <T = any, U = any>(value: T | null | undefined, defaultValue: U): T&U&{};
 }
-export const toRecord = (<T = any>(v: any, def: T = {} as any): T =>
-    isRecord(v) ? (v as any) : def) as ToRecord;
+export const toItem = (
+    (v: any, d: any) => isItem(v) ? v : isItem(d) ? d : {}
+) as ToItem;
 
-export const toStr = (v: any, def: string = ''): string => (isNil(v) ? def : String(v));
+interface ToStr {
+    (value: any): string;
+    <T = any>(value: any, defaultValue: T): string | T;
+}
+export const toStr = (
+    (v: any, d: any) => isNil(v) ? d : String(v)
+) as ToStr;
 
 export const toVoid = () => {};
 

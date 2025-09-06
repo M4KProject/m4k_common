@@ -1,79 +1,76 @@
-export class Err extends Error {
-  data: any;
-  // error: any;
-  // args: any[];
-  // [key: string]: any;
+import { isEmpty, isErr, isItem, isItemEmpty, isStrEmpty, isStrValid, Item } from "./check";
 
-  constructor(public error: any, data?: any) {
+export interface ErrorInfo {
+  name: string;
+  message: string;
+  stack?: string;
+  data?: { [name: string]: any };
+}
+
+export const getErrorInfo = (source: any, overrides?: Item): ErrorInfo => {
+  let { name, message, stack, ...data } = Object.assign(
+    {},
+    typeof source === "object" ? source : {},
+    overrides,
+  );
+  if (isErr(source)) {
+    if (!name) name = source.name;
+    if (!message) message = source.message;
+    if (!stack) stack = source.stack;
+  } else {
+    if (!name) name = typeof source;
+    if (!message) message = String(source);
+  }
+  const info: ErrorInfo = { name, message, stack, data };
+  if (!isEmpty(stack)) info.stack = stack;
+  if (!isEmpty(data)) info.data = data;
+  return info;
+}
+
+export class Err extends Error {
+  data?: { [name: string]: any };
+
+  constructor(public source: any, overrides?: Record<string, any>) {
     super('');
-    if (error instanceof Error) {
-      this.name = error.name;
-      this.message = error.message;
-    } else {
-      this.name = 'Err';
-      this.message = String(error);
-    }
-    this.init(data);
+    const info = getErrorInfo(source, overrides);
+    Object.assign(this, info);
   }
 
-  init(data: any) {
-    this.data = data;
-    if (typeof data === 'object') {
-      if (typeof data.name === 'string') this.name = data.name;
-      if (typeof data.message === 'string') this.message = data.message;
-    }
+  merge({ name, message, stack, data }: Partial<ErrorInfo>) {
+    if (name) this.name = name;
+    if (message) this.message = message;
+    if (stack) this.stack = stack;
+    if (data) this.data = { ...this.data, ...data };
     return this;
   }
-
-  // constructor(...args: any[]) {
-  //   super('');
-  //   this.name = 'Err';
-  //   this.args = args;
-
-  //   const sb: string[] = [];
-  //   for (const e of args) {
-  //     if (e instanceof Error) {
-  //       this.error = e;
-  //       this.name = e.name;
-  //       for (const p of Object.getOwnPropertyNames(e)) {
-  //         this[p] = (e as any)[p];
-  //       }
-  //       break;
-  //     } else if (typeof e === "string") {
-  //       sb.push(e);
-  //     } else if (typeof e === "number") {
-  //       sb.push(e.toString());
-  //     } else if (typeof e === "object") {
-  //       if (e.message) sb.push(e.message);
-  //       for (const p in e) {
-  //         this[p] = (e as any)[p];
-  //       }
-  //     }
-  //   }
-  //   this.message = sb.join(' ');
-  // }
   
   toJSON() {
-    return {
-      name: this.name,
-      message: this.message,
-      data: this.data,
-    };
+    const r: ErrorInfo = { name: this.name, message: this.message };
+    if (this.stack) r.stack = this.stack;
+    if (this.data) {
+      try {
+        r.data = JSON.parse(JSON.stringify(this.data));
+      }
+      catch (e) {
+        r.data = getErrorInfo(e);
+      }
+    }
+    return r;
   }
 
   override toString() {
-    return `${this.name}: ${this.message}`;
+    const j = this.toJSON();
+    return `${j.name}: ${j.message}\n${JSON.stringify(j.data, null, 2)}\n${j.stack}`;
   }
 }
 
-export const toErr = (error: any, data?: any) => error instanceof Err ? error.init(data) : new Err(error, data);
-
-export const throwErr = (error: any, data?: any) => {
-  throw toErr(error, data);
+export const toErr = (e: any, info?: Partial<ErrorInfo>) => (e instanceof Err ? e : new Err(e)).merge(info);
+export const throwErr = (e: any, info?: Partial<ErrorInfo>) => {
+  throw toErr(e, info);
 }
 
 export const throwIf = <T>(value: T, check: (value: T) => any, error?: any) => {
-  if (check(value)) throwErr(error, { value });
+  if (check(value)) throwErr(error, { data: { value } });
   return value;
 }
 

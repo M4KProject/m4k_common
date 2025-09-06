@@ -1,25 +1,14 @@
-import { uniq } from "./array";
-import { isArray, isObject } from "./check";
-
-export const merge = <T extends Record<string, any>>(target: T, changes: Partial<T>): T => {
-    const keys = Object.keys(changes);
-    for (const key of keys) {
-      const v = (changes as any)[key];
-      if (v === undefined) {
-        delete (target as any)[key];
-        continue;
-      }
-      (target as any)[key] = merge((target as any)[key], v);
-    }
-    return target;
-  };
+import { isDef, isItem, isList, isNil, isObj, isUndef, Item, List } from "./check";
+import { toList } from "./cast";
+import { last, sort, uniq } from "./list";
+import { nbrMax } from "./nbr";
 
 export const sortKey = <T extends Record<any, any>>(record: T): T =>
-  Object.fromEntries(Object.entries(record).sort((a, b) => a[0].localeCompare(b[0]))) as T;
+  Object.fromEntries(sort(Object.entries(record))) as T;
 
 export const getChanges = (source: any, target: any): any => {
   if (source === target) return undefined;
-  if (!isObject(source) || !isObject(target) || isArray(source) || isArray(target)) return target;
+  if (!isObj(source) || !isObj(target) || isList(source) || isList(target)) return target;
   const result: any = {};
   const allKeys = uniq([...Object.keys(source), ...Object.keys(target)]);
   if (allKeys.length === 0) return undefined;
@@ -37,6 +26,13 @@ export const getChanges = (source: any, target: any): any => {
   }
   return result;
 };
+
+export const fisrtKey = (v: Item): string|null => {
+  for (const k in v) return k;
+  return null;
+}
+
+export const lastKey = (v: Item): string|null => last(Object.keys(v));
 
 export const setKey = <T, K extends keyof T>(record: T, key: K, value: T[K]): T => {
   record[key] = value;
@@ -72,3 +68,48 @@ export const deepClone = <T>(obj: T): T => {
   }
   return c as T;
 };
+
+export const deleteUndef = <T>(v: T): T => {
+  if (isItem(v)) {
+    for (const k in v) {
+      if (isUndef(v[k])) {
+        delete v[k];
+      }
+    }
+  }
+  else if (isList(v)) {
+    return (v as any[]).filter(isDef) as any;
+  }
+  return v;
+}
+
+export const merge = (a: any, b: any): any => {
+    if (isItem(b)) {
+      if (b.$set) return b.$set;
+      if (b.$push) return [...toList(a), ...b.$push];
+      if (b.$fun) return b.$fun(a, b);
+      if (b.$delete) return undefined;
+    }
+    if (isNil(a) || isNil(b) || typeof a !== typeof b) return b;
+    if (isItem(a) && isItem(b)) {
+        const r: Item = { ...a };
+        for (const k in b) {
+          r[k] = merge(r[k], b[k]);
+          if (isUndef(r[k])) delete r[k];
+        }
+        return r;
+    }
+    if (isList(a) && isList(b)) {
+        const l = nbrMax(a.length, b.length);
+        const r: List = [];
+        for (let i=0; i<l; i++) {
+            r[i] = isDef(b[i]) ? merge(a[i], b[i]) : a[i];
+        }
+        return r;
+    }
+    return b;
+};
+
+export const mergeAll = (
+    (...args: any[]): any => args.reduce(merge)
+);

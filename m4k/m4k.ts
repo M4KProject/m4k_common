@@ -1,4 +1,4 @@
-import { removeItem } from "../helpers/array";
+import { removeItem } from "../helpers/list";
 import { m4kBridge } from "./m4kBridge";
 import { m4kFully } from "./m4kFully";
 import { m4kBase } from "./m4kBase";

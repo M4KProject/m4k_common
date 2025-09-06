@@ -1,7 +1,7 @@
-import { removeItem } from "./array";
+import { removeItem } from "./list";
 import { debounce, throttle } from "./async";
 import { toVoid } from "./cast";
-import { isFunction, isNotNull } from "./check";
+import { isDef, isFun } from "./check";
 import { global } from '../helpers/global';
 import { getStored, setStored } from "./storage";
 
@@ -100,7 +100,7 @@ export class Msg<T = any> implements IMsg<T> {
   }
 
   next(value: T | ((value: T) => T), ignoreEqual?: boolean) {
-    return this.set(isFunction(value) ? value(this.v) : value, ignoreEqual);
+    return this.set(isFun(value) ? value(this.v) : value, ignoreEqual);
   }
 
   signal() {
@@ -183,7 +183,7 @@ export class Msg<T = any> implements IMsg<T> {
     );
   }
 
-  toPromise(filter: IMsgFilter<T> = isNotNull) {
+  toPromise(filter: IMsgFilter<T> = isDef) {
     return new Promise<T>((resolve) => {
       if (filter(this.v)) return resolve(this.v);
       const off = this.on((val) => {

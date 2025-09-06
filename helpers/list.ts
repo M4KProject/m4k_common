@@ -1,8 +1,8 @@
 import { toStr } from "./cast";
-import { isString } from "./check";
+import { isStr } from "./check";
 import { stringify } from "./json";
 
-export const compact = (value: any) => value.filter(Boolean) as (string | number | object | Date)[];
+export const compact = <T>(value: T[]) => value.filter(Boolean) as T[];
 
 export const first = <T>(items: T[]) => items[0];
 
@@ -66,14 +66,15 @@ export const removeItem = <T>(items: T[], item: T) => {
     return removeIndex(items, index);
 };
 
-export const sort = <T = any>(items: T[], prop: (item: T) => string | number | Date = toStr) =>
+export const sort = <T = any>(items: T[], prop: (item: T) => string | number | Date = toStr) => (
     items.sort((a, b) => {
         const pA = prop(a);
         const pB = prop(b);
-        return isString(pA) || isString(pB)
+        return isStr(pA) || isStr(pB)
             ? String(pA).localeCompare(String(pB))
             : Number(pA) - Number(pB);
-    });
+    })
+);
 
 export const sum = (list: number[], margin?: number) => {
     let r = 0;

@@ -1,13 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
 import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from "./_models.generated";
-import { Req, ReqOptions, ReqParams, createReq } from "../helpers/req";
-import { Err } from "../helpers/err";
-import { parse, stringify } from "../helpers/json";
-import { pathJoin } from "../helpers/pathJoin";
-import { removeItem } from "../helpers/array";
+import { Err, Req, ReqOptions, ReqParams, createReq, parse, stringify, pathJoin, removeItem, isList } from "../helpers";
 import { auth$, getApiUrl } from "./messages";
 import { realtime } from "./realtime";
-import { isArray } from "../helpers/check";
 
 export type CollOperator = 
   | '=' // Equal
@@ -47,7 +42,7 @@ export interface CollOptions<T extends ModelBase> {
 }
 
 const stringifyFilter = (key: string, propFilter: CollFilter) => {
-  const [ operator, operand ] = isArray(propFilter) ? propFilter : [ '=', propFilter ];
+  const [ operator, operand ] = isList(propFilter) ? propFilter : [ '=', propFilter ];
 
   const operandString =
     typeof operand === 'string' ? `"${operand}"` :
@@ -60,7 +55,7 @@ const stringifyFilter = (key: string, propFilter: CollFilter) => {
 const stringifyWhere = <T extends ModelBase>(where: CollWhere<T>[] | CollWhere<T> | undefined): string|undefined => {
   if (!where) return undefined;
   
-  if (isArray(where)) {
+  if (isList(where)) {
     const orList = where.map(stringifyWhere).filter(f => f);
     if (orList.length === 0) return undefined;
     return `(${orList.join(" || ")})`;

@@ -1,6 +1,6 @@
-import { addItem, removeItem } from "./array";
+import { addItem, removeItem } from "./list";
 import { throttle } from "./async";
-import { isArray, isBool, isDefined, isNumber, isObject, isString } from "./check";
+import { isBool, isItem, isList, isNbr, isRealNbr, isStr } from "./check";
 import { global } from "./global";
 
 const newStorage = (): typeof localStorage => {
@@ -58,11 +58,11 @@ export const getStored = <T = any, U = T>(key: string, initValue?: U, check?: (v
         let value = json ? JSON.parse(json) : undefined;
         if (!check) {
             check =
-                isString(initValue) ? isString :
-                isNumber(initValue) ? isNumber :
+                isStr(initValue) ? isStr :
+                isNbr(initValue) ? isNbr :
                 isBool(initValue) ? isBool :
-                isArray(initValue) ? isArray :
-                isObject(initValue) ? isObject :
+                isList(initValue) ? isList :
+                isItem(initValue) ? isItem :
                 () => true
         }
         if (value !== undefined && !check(value)) {

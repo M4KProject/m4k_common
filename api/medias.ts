@@ -4,7 +4,7 @@ import { retry, sleep } from '../helpers/async';
 import { mediaColl } from './collections';
 import { needGroupId } from './messages';
 import { MediaModel } from './models';
-import { deleteKey } from '../helpers/object';
+import { deleteKey } from '../helpers/obj';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 const MAX_RETRY = 3;
