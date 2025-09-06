@@ -5,10 +5,10 @@ import { useMsg } from "./useMsg";
 export const useAsync = <T>(initValue: T, load: () => T|Promise<T>, storedKey?: string|null, deps?: any[]): [T, () => void, Msg<T>] => {
     const _deps = deps ? [...deps, storedKey] : [storedKey];
     
-    // import { isArray, isDefined } from "@common/helpers/check";
+    // import { isList, isDefined } from "@common/helpers/check";
     // const msg = useMemo(() => {
     //     const msg = new Msg<T>(initValue, storedKey, !!storedKey);
-    //     if (isDefined(initValue) && (typeof msg.v !== typeof initValue || isArray(msg.v) !== isArray(initValue))) {
+    //     if (isDefined(initValue) && (typeof msg.v !== typeof initValue || isList(msg.v) !== isList(initValue))) {
     //         msg.set(initValue);
     //     }
     //     return msg;

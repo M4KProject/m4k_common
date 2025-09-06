@@ -73,7 +73,7 @@ export const toFormData = (form: FormDataObject | FormData | null | undefined, b
     Object.entries(form).forEach(([prop, val]) => {
         if (val === undefined) return;
         if (typeof val === 'object') {
-            if (Array.isArray(val) && (val[0] instanceof File || val[0] instanceof Blob)) {
+            if (isList(val) && (val[0] instanceof File || val[0] instanceof Blob)) {
                 for (const file of val) {
                     if (file instanceof File || file instanceof Blob) {
                         r.append(prop, file);

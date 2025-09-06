@@ -53,7 +53,7 @@ export const deleteKey = ((record: any, ...keys: string[]): any => {
 export const deepClone = <T>(obj: T): T => {
   if (typeof obj !== 'object' || obj === null) return obj;
   let c: any;
-  if (Array.isArray(obj)) {
+  if (isList(obj)) {
     c = [];
     for (let i = 0, l = obj.length; i < l; i++) {
       c[i] = deepClone(obj[i]);

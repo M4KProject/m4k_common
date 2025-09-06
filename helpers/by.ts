@@ -1,4 +1,4 @@
-import { isRecord, isArray, isFunction, isNil } from './check';
+import { isItem, isList, isFun, isNil } from './check';
 
 export type ArRecKey<T> = undefined | null | keyof T | ((item: T, index: number) => any);
 export type ArRecVal<T, U> = undefined | null | keyof T | ((item: T, index: number) => U);
@@ -27,14 +27,14 @@ interface ById {
 }
 
 const _groupBy = (items: any, key: any, val: any, add: any) => {
-  const getK: (item: any, index: any) => any = isFunction(key) ? key : isNil(key) ? (i: any) => i : (i: any) => i[key];
-  const getV: (item: any, index: any) => any = isFunction(val) ? val : isNil(val) ? (i: any) => i : (i: any) => i[val];
-  if (isArray(items)) {
+  const getK: (item: any, index: any) => any = isFun(key) ? key : isNil(key) ? (i: any) => i : (i: any) => i[key];
+  const getV: (item: any, index: any) => any = isFun(val) ? val : isNil(val) ? (i: any) => i : (i: any) => i[val];
+  if (isList(items)) {
     items.forEach((item, index) => {
       add(getK(item, index), getV(item, index));
     });
   }
-  if (isRecord(items)) {
+  if (isItem(items)) {
     Object.entries(items).forEach(([key, val]) => {
       add(getK(val, key), getV(val, key));
     });
@@ -44,11 +44,11 @@ const _groupBy = (items: any, key: any, val: any, add: any) => {
 /**
  * @example
  * var a = { x:5 }, b = { x:6 }, c = { x:6 };
- * isEqual( groupBy([ 5, 6, 6 ], v => v), { 5: [5], 6: [6, 6] } );
- * isEqual( groupBy([ 5, 6, 6 ], v => v, (v, i) => i), { 5: [0], 6: [1, 2] } );
- * isEqual( groupBy([ a, b, c ], v => v.x), { 5: [a], 6: [b, c] } );
- * isEqual( groupBy({ a, b, c }, null, v => v.x), { a: [5], b: [6], c: [6] } );
- * isEqual( groupBy([ a, b, c ]), groupBy({ 0:a, 1:b, 2:c }) );
+ * isEq( groupBy([ 5, 6, 6 ], v => v), { 5: [5], 6: [6, 6] } );
+ * isEq( groupBy([ 5, 6, 6 ], v => v, (v, i) => i), { 5: [0], 6: [1, 2] } );
+ * isEq( groupBy([ a, b, c ], v => v.x), { 5: [a], 6: [b, c] } );
+ * isEq( groupBy({ a, b, c }, null, v => v.x), { a: [5], b: [6], c: [6] } );
+ * isEq( groupBy([ a, b, c ]), groupBy({ 0:a, 1:b, 2:c }) );
  */
 export const groupBy = ((items: any, key: any, val?: any): Record<string, any[]> => {
   const r: Record<string, any[]> = {};
@@ -61,11 +61,11 @@ export const groupBy = ((items: any, key: any, val?: any): Record<string, any[]>
 /**
  * @example
  * var a = { x:5 }, b = { x:6 }, c = { x:6 };
- * isEqual( by([ 5, 6, 6 ], v => v), { 5: 5, 6: 6 } );
- * isEqual( by([ 5, 6, 6 ], v => v, (v, i) => i), { 5: 0, 6: 2 } );
- * isEqual( by([ a, b, c ], v => v.x), { 5: a, 6: b } );
- * isEqual( by({ a, b, c }, null, v => v.x), { a: 5, b: 6, c: 6 } );
- * isEqual( by([ a, b, c ]), valueBy({ 0:a, 1:b, 2:c }) );
+ * isEq( by([ 5, 6, 6 ], v => v), { 5: 5, 6: 6 } );
+ * isEq( by([ 5, 6, 6 ], v => v, (v, i) => i), { 5: 0, 6: 2 } );
+ * isEq( by([ a, b, c ], v => v.x), { 5: a, 6: b } );
+ * isEq( by({ a, b, c }, null, v => v.x), { a: 5, b: 6, c: 6 } );
+ * isEq( by([ a, b, c ]), valueBy({ 0:a, 1:b, 2:c }) );
  */
 export const by = ((items: any, key: any, val?: any): Record<string, any> => {
   const r: Record<string, any> = {};

@@ -1,9 +1,9 @@
 /// <reference lib="dom" />
 import { D, DCall, DRoot, DStyle } from './D';
 import { Msg } from './Msg';
-import { isEqual } from './check';
+import { isEq } from './check';
 import { clone } from './json';
-import { toArray, toNbr, toRecord } from './cast';
+import { toList, toNbr, toItem } from './cast';
 import { setAttrs, addJsFile, addCssFile, Cls, setCls, createEl } from './html';
 import addFont from './addFont';
 import router from './router';
@@ -28,7 +28,7 @@ export type RenderProp = (el: BElement, value: any, b: B) => void;
 const styleProp = (responsive?: Responsive) => {
   return (el: BElement, style: CSSStyleDeclaration) => {
     if (responsive && responsive$.v !== responsive) return;
-    Object.assign(el.style, toRecord(style));
+    Object.assign(el.style, toItem(style));
   };
 }
 
@@ -48,9 +48,9 @@ const props: Partial<Record<keyof D, RenderProp>> = {
   hide: (el, v) => (v ? el.classList.add('hide') : el.classList.remove('hide')),
   stock: (el, v) => (v === 0 ? el.classList.add('out') : el.classList.remove('out')),
   attrs: (el, v) => setAttrs(el, v),
-  jsFs: (_, v) => toArray(v).map((f) => addJsFile(B.url(f))),
-  cssFs: (_, v) => toArray(v).map((f) => addCssFile(B.url(f))),
-  fonts: (_, v) => toArray(v).map((f) => addFont(f)),
+  jsFs: (_, v) => toList(v).map((f) => addJsFile(B.url(f))),
+  cssFs: (_, v) => toList(v).map((f) => addCssFile(B.url(f))),
+  fonts: (_, v) => toList(v).map((f) => addFont(f)),
   bgImg: (el, v) => (el.style.backgroundImage = `url(${B.url(v)})`),
   src: (el, v) => ((el as HTMLImageElement).src = B.url(v)),
   alt: (el, v) => el.setAttribute('alt', v),
@@ -228,11 +228,11 @@ export default class B {
     },
     tPrices: (el: BElement) => {
       el.classList.add('tPrices');
-      el.innerHTML = toArray(el._d!.tPrices, []).map(tPriceToHtml).join('');
+      el.innerHTML = toList(el._d!.tPrices, []).map(tPriceToHtml).join('');
     },
     prices: (el: BElement) => {
       el.classList.add('prices');
-      el.innerHTML = toArray(el._d!.prices, []).map(priceToHtml).join('');
+      el.innerHTML = toList(el._d!.prices, []).map(priceToHtml).join('');
     },
     lang: (el: BElement, b: B) => {
       const lang = b.d.lang;
@@ -408,7 +408,7 @@ export default class B {
   _id = (_idGen++).toString(16);
 
   protected constructor(d: D, parent?: B) {
-    this.d = d = toRecord(d, {});
+    this.d = d = toItem(d, {});
     this.el = this.reset(d.hTag || B.hTag);
     this.parent = parent;
     this.children = d.children ? d.children.map((d) => new B(d, this)) : [];
@@ -426,7 +426,7 @@ export default class B {
 
   setData(d: D) {
     this.dispose();
-    this.d = toRecord(d, {});
+    this.d = toItem(d, {});
     const parent = this.parent;
     if (parent) {
       const index = parent.children.indexOf(this);
@@ -593,11 +593,11 @@ export default class B {
 
   find(cb: string|((b: B) => any)): B | undefined {
     if (typeof cb !== 'function') {
-      const o: any = toRecord(cb, { id: cb });
+      const o: any = toItem(cb, { id: cb });
       cb = (b: B) => {
         const d = b.d as any;
         for (const prop in o) {
-          if (!isEqual(d[prop], o[prop])) return false;
+          if (!isEq(d[prop], o[prop])) return false;
         }
         return true;
       };

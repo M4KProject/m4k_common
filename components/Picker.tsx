@@ -4,7 +4,7 @@ import { Css } from "../helpers/html";
 import { flexRow } from "../helpers/flexBox";
 import { Div } from "./Div";
 import { Button } from "./Button";
-import { isArray } from "../helpers/check";
+import { isList } from "../helpers/check";
 
 const css: Css = {
     '&': {
@@ -45,7 +45,7 @@ export const Picker = ({
 }: PickerProps) => {
     const c = useCss('Picker', css);
 
-    const validItems = items.filter(item => isArray(item)) as [string, ComponentChildren][];
+    const validItems = items.filter(item => isList(item)) as [string, ComponentChildren][];
 
     const handleIconClick = (iconValue: string) => {
         onChange?.(iconValue);

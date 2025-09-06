@@ -139,7 +139,7 @@ export const toRgb = (c: any): RgbColor => {
         if (typeof c.h === 'number') { // Handle { h, s, l, a? } object
             return hslToRgb(c);
         }
-        if (Array.isArray(c)) { // Handle array format [r, g, b] or [r, g, b, a]
+        if (isList(c)) { // Handle array format [r, g, b] or [r, g, b, a]
             return rgbColor(c[0], c[1], c[2], c.length >= 4 ? c[3] : 1);
         }
         throw new Error('toRgb object' + JSON.stringify(c))
@@ -245,46 +245,46 @@ export const toHex = (color: any): string => {
 
 export const addRgb = (color: any, values: Partial<RgbColor>) => {
     color = toRgb(color)
-    if (isNumber(values.r)) color.r += values.r
-    if (isNumber(values.g)) color.g += values.g
-    if (isNumber(values.b)) color.b += values.b
-    if (isNumber(values.a)) color.a += values.a
+    if (isNbr(values.r)) color.r += values.r
+    if (isNbr(values.g)) color.g += values.g
+    if (isNbr(values.b)) color.b += values.b
+    if (isNbr(values.a)) color.a += values.a
     return toHex(color)
 }
 
 export const addHsl = (color: any, values: Partial<HslColor>) => {
     color = toHsl(color);
-    if (isNumber(values.h)) color.h += values.h;
-    if (isNumber(values.s)) color.s += values.s;
-    if (isNumber(values.l)) color.l += values.l;
-    if (isNumber(values.a)) color.a += values.a;
+    if (isNbr(values.h)) color.h += values.h;
+    if (isNbr(values.s)) color.s += values.s;
+    if (isNbr(values.l)) color.l += values.l;
+    if (isNbr(values.a)) color.a += values.a;
     return toHex(color);
 }
 
 export const mulHsl = (color: any, values: Partial<HslColor>) => {
     color = toHsl(color);
-    if (isNumber(values.h)) color.h *= values.h;
-    if (isNumber(values.s)) color.s *= values.s;
-    if (isNumber(values.l)) color.l *= values.l;
-    if (isNumber(values.a)) color.a *= values.a;
+    if (isNbr(values.h)) color.h *= values.h;
+    if (isNbr(values.s)) color.s *= values.s;
+    if (isNbr(values.l)) color.l *= values.l;
+    if (isNbr(values.a)) color.a *= values.a;
     return toHex(color);
 }
 
 export const setRgb = (color: any, values: Partial<RgbColor>) => {
     color = toRgb(color);
-    if (isNumber(values.r)) color.r = values.r;
-    if (isNumber(values.g)) color.g = values.g;
-    if (isNumber(values.b)) color.b = values.b;
-    if (isNumber(values.a)) color.a = values.a;
+    if (isNbr(values.r)) color.r = values.r;
+    if (isNbr(values.g)) color.g = values.g;
+    if (isNbr(values.b)) color.b = values.b;
+    if (isNbr(values.a)) color.a = values.a;
     return toHex(color);
 }
 
 export const setHsl = (color: any, values: Partial<HslColor>) => {
     color = toHsl(color);
-    if (isNumber(values.h)) color.h = values.h;
-    if (isNumber(values.s)) color.s = values.s;
-    if (isNumber(values.l)) color.l = values.l;
-    if (isNumber(values.a)) color.a = values.a;
+    if (isNbr(values.h)) color.h = values.h;
+    if (isNbr(values.s)) color.s = values.s;
+    if (isNbr(values.l)) color.l = values.l;
+    if (isNbr(values.a)) color.a = values.a;
     return toHex(color);
 }
 

@@ -1,4 +1,4 @@
-import { toArray } from "./cast";
+import { toList } from "./cast";
 import { clamp } from "./nbr";
 import { toImg } from "./toImg";
 
@@ -17,8 +17,8 @@ export const imgResize = async (
     if (!ctx) throw new Error('no ctx');
     
     // Convertir en tableaux [width, height]
-    const min = toArray(minSize) as [number, number];
-    const max = toArray(maxSize) as [number, number];
+    const min = toList(minSize) as [number, number];
+    const max = toList(maxSize) as [number, number];
 
     const wMin = min[0];
     const hMin = min.length !== 2 ? min[0] : min[1];

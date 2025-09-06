@@ -1,5 +1,5 @@
 import { JSX } from "preact";
-import { isEqual, isNumber } from "./check";
+import { isEq, isNbr } from "./check";
 // import { round } from "./nbr";
 
 export type Style = Partial<CSSStyleDeclaration>;
@@ -184,7 +184,7 @@ export const clsx = (...classNames: any[]) => {
     for (const c of classNames) {
         if (c) {
             if (typeof c === 'string') sb.push(c);
-            else if (Array.isArray(c)) {
+            else if (isList(c)) {
                 const cls = clsx(...c);
                 if (cls) sb.push(cls);
             }
@@ -221,10 +221,10 @@ const transformToCss = (transform: CssTransform) => {
     if (typeof transform === 'string') return transform;
     const { rotate: r, scale: s, translateX: x, translateY: y } = transform;
     let css = '';
-    if (r) css += `rotate(${isNumber(r) ? `${r}deg` : r});`;
+    if (r) css += `rotate(${isNbr(r) ? `${r}deg` : r});`;
     if (s) css += `scale(${s});`;
-    if (x) css += `translateX(${isNumber(x) ? `${x}%` : x});`;
-    if (y) css += `translateY(${isNumber(y) ? `${y}%` : y});`;
+    if (x) css += `translateX(${isNbr(x) ? `${x}%` : x});`;
+    if (y) css += `translateY(${isNbr(y) ? `${y}%` : y});`;
     return css;
 }
 
@@ -387,7 +387,7 @@ const _cssMap: { [key: string]: [HTMLElement, Css] } = {};
 export const setCss = (key: string, css?: Css) => {
     const old = _cssMap[key];
     if (old) {
-        if (isEqual(old[1], css)) return key;
+        if (isEq(old[1], css)) return key;
         old[0].remove();
         delete _cssMap[key];
     }
@@ -395,7 +395,7 @@ export const setCss = (key: string, css?: Css) => {
         const el = createEl('style');
         let content = '';
         if (typeof css === 'object') {
-            if (Array.isArray(css)) {
+            if (isList(css)) {
                 content = css.join('\n');
             }
             else {

@@ -4,7 +4,7 @@ export type Obj = Item|List;
 
 ///// Type /////
 export const isObj = <T extends Obj>(v: unknown): v is T => typeof v === "object" && v !== null;
-export const isList = Array.isArray;
+export const isList = (v: any): v is any[] => Array.isArray(v);
 export const isItem = <T extends Item>(v: any): v is T => isObj(v) && !isList(v);
 export const isBool = (v: any): v is boolean => v === true || v === false;
 export const isDate = (v: any): v is Date => v instanceof Date;
@@ -26,7 +26,7 @@ export const isInt = (v: any): v is number => isNbrReal(v) && Number.isInteger(v
 ///// String /////
 export const isStr = (v: any): v is string => typeof v === 'string';
 export const isStrEmpty = (v: any): v is string => isStr(v) && v.trim() === "";
-export const isStrValid = (v: any): v is string => isStr(v) && v.trim() !== "";
+export const isStrNotEmpty = (v: any): v is string => isStr(v) && v.trim() !== "";
 export const isUuid = (v: any): v is string => {
     const code = String(v).replace(/[a-fA-F0-9]+/g, (a) => '' + a.length);
     return code === '8-4-4-4-12' || code === '32';

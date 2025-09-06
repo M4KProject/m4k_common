@@ -8,7 +8,7 @@ const cache = async <T>(key: string, expiredMs: number, load: () => Promise<T>):
     const lastJson = localStorage.getItem(key);
     if (lastJson) {
       const last = parse(lastJson) as Cache<T>;
-      if (Array.isArray(last) && last[0] === 'CACHE') {
+      if (isList(last) && last[0] === 'CACHE') {
         const expired = last[1] + expiredMs;
         const isExpired = expired < Date.now();
         console.debug('cache loaded', key, last, expired, isExpired ? 'expired' : 'ok');

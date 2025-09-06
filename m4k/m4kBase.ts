@@ -2,7 +2,7 @@ import { toErr } from "../helpers/err";
 import { M4Kiosk } from "./m4kInterface";
 import { m4kMethods } from "./m4kMethods";
 import { global } from '../helpers/global';
-import { isFunction } from "@common/helpers";
+import { isFun } from "@common/helpers";
 
 type MethodAsyncOrSync<T> = T extends (...args: infer A) => Promise<infer R>
   ? (...args: A) => Promise<R> | R
@@ -20,7 +20,7 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
             try {
                 console.debug('eval', script);
                 let result = await m4k.global.eval(script);
-                if (isFunction(result)) result = await result(m4k);
+                if (isFun(result)) result = await result(m4k);
                 return { success: true, value: result };
             }
             catch (e) {

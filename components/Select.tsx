@@ -4,7 +4,7 @@ import { Css } from "../helpers/html";
 import { useCss } from "../hooks/useCss";
 import { flexCenter, flexColumn, flexRow } from "../helpers/flexBox";
 import { Div } from "./Div";
-import { isArray } from "../helpers/check";
+import { isList } from "../helpers/check";
 import { isSearched } from "../helpers/str";
 
 const css: Css = {
@@ -120,7 +120,7 @@ export const Select = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const validItems = items.filter(item => isArray(item)) as [string, ComponentChildren][];
+    const validItems = items.filter(item => isList(item)) as [string, ComponentChildren][];
     
     const filteredItems = searchable && search
         ? validItems.filter(([key, label]) => 

@@ -205,7 +205,7 @@ const compByType: Record<FieldType, FieldComp> = {
     //     <select class={cls} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props}>
     //         {/* <option value=""></option> */}
     //         {fieldProps.items?.map(kv => (
-    //             isArray(kv) ? (
+    //             isList(kv) ? (
     //                 <option key={kv[0]} value={kv[0]} class={kv[0] === value ? `${cls}Selected` : undefined}>
     //                     {kv[1]}
     //                 </option>
