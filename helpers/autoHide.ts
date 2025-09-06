@@ -27,8 +27,8 @@ const showAutoHide = () => {
     '&': {
       opacity: 1,
       pointerEvents: 'auto',
-      transition: 'opacity 0.3s ease-in-out'
-    }
+      transition: 'opacity 0.3s ease-in-out',
+    },
   });
 };
 
@@ -40,8 +40,8 @@ const hideAutoHide = () => {
     '&': {
       opacity: 0,
       pointerEvents: 'none',
-      transition: 'opacity 0.3s ease-in-out'
-    }
+      transition: 'opacity 0.3s ease-in-out',
+    },
   });
 };
 
@@ -52,7 +52,7 @@ const resetHideTimer = () => {
   if (hideTimeoutId) {
     clearTimeout(hideTimeoutId);
   }
-  
+
   hideTimeoutId = setTimeout(() => {
     hideAutoHide();
     hideTimeoutId = null;
@@ -65,20 +65,20 @@ const resetHideTimer = () => {
  */
 export const addAutoHideListener = () => {
   if (isInitialized) return;
-  
+
   hideTimeout = 10000;
   isInitialized = true;
-  
+
   console.debug('AutoHide: Initializing with timeout', hideTimeout);
-  
+
   // Ajoute les event listeners
-  INTERACTION_EVENTS.forEach(eventType => {
+  INTERACTION_EVENTS.forEach((eventType) => {
     document.addEventListener(eventType, handleUserInteraction, { passive: true });
   });
-  
+
   // État initial
   hideAutoHide();
-  
+
   console.debug('AutoHide: Initialized successfully');
 };
 
@@ -106,19 +106,19 @@ export const hideAutoHideElements = () => {
  */
 export const removeAutoHideListener = () => {
   if (!isInitialized) return;
-  
-  INTERACTION_EVENTS.forEach(eventType => {
+
+  INTERACTION_EVENTS.forEach((eventType) => {
     document.removeEventListener(eventType, handleUserInteraction);
   });
-  
+
   if (hideTimeoutId) {
     clearTimeout(hideTimeoutId);
     hideTimeoutId = null;
   }
-  
+
   // Supprime le CSS
   setCss('autoHide', null);
-  
+
   isInitialized = false;
   console.debug('AutoHide: Destroyed');
 };

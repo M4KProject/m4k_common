@@ -1,10 +1,21 @@
 // deno-lint-ignore-file no-explicit-any
-import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from "./_models.generated";
-import { Err, Req, ReqOptions, ReqParams, createReq, parse, stringify, pathJoin, removeItem, isList } from "../helpers";
-import { auth$, getApiUrl } from "./messages";
-import { realtime } from "./realtime";
+import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from './_models.generated';
+import {
+  Err,
+  Req,
+  ReqOptions,
+  ReqParams,
+  createReq,
+  parse,
+  stringify,
+  pathJoin,
+  removeItem,
+  isList,
+} from '../helpers';
+import { auth$, getApiUrl } from './messages';
+import { realtime } from './realtime';
 
-export type CollOperator = 
+export type CollOperator =
   | '=' // Equal
   | '!=' // NOT equal
   | '>' // Greater than
@@ -20,7 +31,7 @@ export type CollOperator =
   | '?<' // Any/At least one of Less than
   | '?<=' // Any/At least one of Less than or equal
   | '?~' // Any/At least one of Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-  | '?!~' // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+  | '?!~'; // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
 
 export type CollOperand = string | number | null | boolean | Date;
 
@@ -29,7 +40,7 @@ export type CollFilter = CollOperand | [CollOperator, CollOperand];
 export type CollWhere<T extends ModelBase> = { [P in keyof T]?: CollFilter };
 
 export interface CollOptions<T extends ModelBase> {
-  select?: (Keys<T>)[];
+  select?: Keys<T>[];
   where?: CollWhere<T>;
   orderBy?: (Keys<T> | `-${Keys<T>}`)[];
   expand?: string;
@@ -42,34 +53,40 @@ export interface CollOptions<T extends ModelBase> {
 }
 
 const stringifyFilter = (key: string, propFilter: CollFilter) => {
-  const [ operator, operand ] = isList(propFilter) ? propFilter : [ '=', propFilter ];
+  const [operator, operand] = isList(propFilter) ? propFilter : ['=', propFilter];
 
   const operandString =
-    typeof operand === 'string' ? `"${operand}"` :
-    operand instanceof Date ? stringify(operand) :
-    operand;
+    typeof operand === 'string'
+      ? `"${operand}"`
+      : operand instanceof Date
+        ? stringify(operand)
+        : operand;
 
   return `${key} ${operator} ${operandString}`;
-}
+};
 
-const stringifyWhere = <T extends ModelBase>(where: CollWhere<T>[] | CollWhere<T> | undefined): string|undefined => {
+const stringifyWhere = <T extends ModelBase>(
+  where: CollWhere<T>[] | CollWhere<T> | undefined
+): string | undefined => {
   if (!where) return undefined;
-  
+
   if (isList(where)) {
-    const orList = where.map(stringifyWhere).filter(f => f);
+    const orList = where.map(stringifyWhere).filter((f) => f);
     if (orList.length === 0) return undefined;
-    return `(${orList.join(" || ")})`;
+    return `(${orList.join(' || ')})`;
   }
 
-  const filters = Object.entries(where||{}).map(([k, f]) => f ? stringifyFilter(k, f) : '').filter(f => f);
+  const filters = Object.entries(where || {})
+    .map(([k, f]) => (f ? stringifyFilter(k, f) : ''))
+    .filter((f) => f);
   if (filters.length === 0) return undefined;
-  
-  return `(${filters.join(" && ")})`;
-}
+
+  return `(${filters.join(' && ')})`;
+};
 
 export const getParams = (o?: CollOptions<any>): ReqParams => {
   if (!o) return {};
-  
+
   const { select, where, orderBy, expand, page, perPage, skipTotal } = o;
 
   const r: ReqParams = {};
@@ -85,7 +102,7 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
   if (filter) r.filter = filter;
 
   return r;
-}
+};
 
 // class Realtime {
 //   connected = false;
@@ -100,7 +117,7 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 //     console.debug('Realtime.connect');
 //     let sse = this._sse;
 //     if (sse) this.disconnect();
-    
+
 //     sse = new EventSource(this.url);
 //     this._sse = sse;
 
@@ -137,7 +154,7 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 //       this.connect();
 //       return;
 //     }
-    
+
 //     Object.entries(this._subscriptions).forEach(([key, cb]) => {
 //       const topic = key.split('?')[0];
 //       const coll = topic.split('/')[0];
@@ -151,7 +168,7 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 //       sse.addEventListener(topic, this._listeners[key]);
 //       sse.addEventListener(coll, this._listeners[key]);
 //     });
-    
+
 //     const result = await ky.post(this.url, {
 //       json: {
 //         clientId: this._clientId,
@@ -198,7 +215,7 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 //   }
 // }
 
-export const apiReq = (baseUrl: string) => (
+export const apiReq = (baseUrl: string) =>
   createReq({
     baseUrl: pathJoin(getApiUrl(), baseUrl),
     timeout: 10000,
@@ -212,13 +229,12 @@ export const apiReq = (baseUrl: string) => (
         };
       }
     },
-  })
-);
+  });
 
 export class Coll<T extends ModelBase> {
   unsubscribes: (() => void)[] = [];
   r: Req;
-  
+
   constructor(public coll: string) {
     this.r = apiReq(`collections/${this.coll}/`);
   }
@@ -249,7 +265,7 @@ export class Coll<T extends ModelBase> {
     console.debug('Coll', this.coll, ...args);
   }
 
-  get(id: string, o?: CollOptions<T>): Promise<T|null> {
+  get(id: string, o?: CollOptions<T>): Promise<T | null> {
     this.log('get', id, o);
     if (!id) return Promise.resolve(null);
     const reqOptions: ReqOptions = o?.req || {};
@@ -266,11 +282,11 @@ export class Coll<T extends ModelBase> {
     // this.log('findPage', where, o);
     const reqOptions: ReqOptions = o?.req || {};
     return this.r<{
-      items: T[],
-      page: number,
-      perPage: number,
-      totalItems: number,
-      totalPages: number,
+      items: T[];
+      page: number;
+      perPage: number;
+      totalItems: number;
+      totalPages: number;
     }>('GET', `records`, {
       ...reqOptions,
       params: getParams({ where, ...o } as CollOptions<T>),
@@ -278,14 +294,18 @@ export class Coll<T extends ModelBase> {
   }
 
   find(where: CollWhere<T>, o?: CollOptions<T>) {
-    return this.findPage(where, { page: 1, perPage: 1000, skipTotal: true, ...o }).then(r => r.items);
+    return this.findPage(where, { page: 1, perPage: 1000, skipTotal: true, ...o }).then(
+      (r) => r.items
+    );
   }
 
-  findOne(where: CollWhere<T>, o?: CollOptions<T>): Promise<T|null> {
-    return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(r => r.items[0]||null);
+  findOne(where: CollWhere<T>, o?: CollOptions<T>): Promise<T | null> {
+    return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(
+      (r) => r.items[0] || null
+    );
   }
 
-  findKey(key: string, o?: CollOptions<T>): Promise<T|null> {
+  findKey(key: string, o?: CollOptions<T>): Promise<T | null> {
     return this.findOne({ key } as CollWhere<T>, { ...o }).then((result) => {
       if (!result) return this.get(key);
       return result;
@@ -293,7 +313,7 @@ export class Coll<T extends ModelBase> {
   }
 
   count(where: CollWhere<T>, o?: CollOptions<T>) {
-    return this.findPage(where, { page: 1, perPage: 1, ...o }).then(r => r.totalItems);
+    return this.findPage(where, { page: 1, perPage: 1, ...o }).then((r) => r.totalItems);
   }
 
   create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
@@ -302,15 +322,19 @@ export class Coll<T extends ModelBase> {
     return this.r('POST', `records`, {
       ...reqOptions,
       params: getParams(o),
-      form: item
+      form: item,
     });
   }
-  
-  update(id: string|CollWhere<T>, changes: ModelUpdate<T>, o?: CollOptions<T>): Promise<T|null> {
+
+  update(
+    id: string | CollWhere<T>,
+    changes: ModelUpdate<T>,
+    o?: CollOptions<T>
+  ): Promise<T | null> {
     this.log('update', id, changes, o);
     if (!id) throw new Err('no id');
     if (typeof id === 'object') {
-      return this.findOne(id, { ...o, select: ['id' as Keys<T>] }).then(item => {
+      return this.findOne(id, { ...o, select: ['id' as Keys<T>] }).then((item) => {
         if (!item) return null;
         return this.update(item.id, changes, o);
       });
@@ -319,7 +343,7 @@ export class Coll<T extends ModelBase> {
     return this.r('PATCH', `records/${id}`, {
       ...reqOptions,
       params: getParams(o),
-      form: changes
+      form: changes,
     });
   }
 
@@ -336,10 +360,11 @@ export class Coll<T extends ModelBase> {
 
   upsert(where: CollWhere<T>, changes: ModelUpsert<T>, o?: CollOptions<T>) {
     this.log('upsert', where, changes, o);
-    return this.findOne(where, { select: ['id'] as Keys<T>[] })
-      .then(item => item ? this.update(item.id, changes, o) as Promise<T> : this.create(changes, o));
+    return this.findOne(where, { select: ['id'] as Keys<T>[] }).then((item) =>
+      item ? (this.update(item.id, changes, o) as Promise<T>) : this.create(changes, o)
+    );
   }
-  
+
   getUrl(id?: string, filename?: any) {
     if (!id || !filename) return '';
     return pathJoin(getApiUrl(), `files/${this.coll}/${id}/${filename}`);
@@ -352,15 +377,21 @@ export class Coll<T extends ModelBase> {
     return `${url}?thumb=${w}x${h}`;
   }
 
-  async subscribe(topic: string, cb: (item: T, action: 'update'|'create'|'delete') => void, o?: CollOptions<T>) {
+  async subscribe(
+    topic: string,
+    cb: (item: T, action: 'update' | 'create' | 'delete') => void,
+    o?: CollOptions<T>
+  ) {
     console.debug('subscribe', this.coll, topic, o);
     // 'devices/8e2mu4rr32b0glf?options={"headers": {"x-token": "..."}}'
 
     const p = getParams(o);
-    const keyOptions = encodeURIComponent(stringify({
-      query: p.query,
-      headers: p.headers,
-    }));
+    const keyOptions = encodeURIComponent(
+      stringify({
+        query: p.query,
+        headers: p.headers,
+      })
+    );
     let key = `${this.coll}/${topic}`;
     if (p.query || p.headers) key += `?options=${keyOptions}`;
 
@@ -372,7 +403,7 @@ export class Coll<T extends ModelBase> {
       console.debug('subscribe listener payload', this.coll, key, payload);
       cb(payload.record, payload.action);
     };
-    
+
     const subscriptions = realtime.subscriptions;
     const listeners = subscriptions[key] || (subscriptions[key] = []);
     listeners.push(listener);
@@ -380,12 +411,11 @@ export class Coll<T extends ModelBase> {
     await realtime.update(this.r);
 
     return async () => {
-      const listeners = subscriptions[key] || (subscriptions[key] || []);
+      const listeners = subscriptions[key] || subscriptions[key] || [];
       removeItem(listeners, listener);
       await realtime.update(this.r);
     };
 
-    
     // let updated: Date | string = '';
 
     // const timer = setInterval(async () => {
@@ -489,7 +519,6 @@ export class Coll<T extends ModelBase> {
   //   }
   // }
 }
-
 
 // function toFindOptions<T extends ModelBase>(
 //   options?: FindOptions<T>

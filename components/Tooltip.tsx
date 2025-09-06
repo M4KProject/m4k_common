@@ -1,11 +1,11 @@
-import { ComponentChildren } from "preact";
-import { render } from "preact";
-import { Css, addListener } from "../helpers/html";
-import { useCss } from "../hooks/useCss";
-import { Div, DivProps } from "./Div";
-import { Tr } from "./Tr";
-import { addOverlay, removeOverlay } from "../helpers/overlay";
-import { flexCenter } from "../helpers/flexBox";
+import { ComponentChildren } from 'preact';
+import { render } from 'preact';
+import { Css, addListener } from '../helpers/html';
+import { useCss } from '../hooks/useCss';
+import { Div, DivProps } from './Div';
+import { Tr } from './Tr';
+import { addOverlay, removeOverlay } from '../helpers/overlay';
+import { flexCenter } from '../helpers/flexBox';
 
 // const css: Css = {
 //     '&': {
@@ -33,7 +33,7 @@ import { flexCenter } from "../helpers/flexBox";
 //         rounded: 1,
 //         zIndex: 1,
 //         textAlign: 'center',
-        
+
 //         visibility: 'hidden',
 //         opacity: 0,
 //         transition: 'opacity 0.5s ease',
@@ -52,7 +52,7 @@ import { flexCenter } from "../helpers/flexBox";
 //         top: '100%',
 //         left: '50%',
 //     },
-    
+
 //     '&-top &Title': { transform: 'translate(-50%, -100%)', top: '-0.5em', left: '50%' },
 //     '&-top &Title::after': { top: '100%', left: '50%' },
 
@@ -80,116 +80,117 @@ import { flexCenter } from "../helpers/flexBox";
 //     );
 // };
 
-
 const css: Css = {
-    '&': {
-        position: 'absolute',
-        userSelect: 'none',
-        pointerEvents: 'none',
-        zIndex: 9999,
-    },
-    '&Content': {
-        ...flexCenter(),
-        textAlign: 'center',
-        position: 'absolute',
-        p: 0.25,
-        fg: 'tooltipFg',
-        bg: 'tooltipBg',
-        rounded: 1,
-        fontFamily: 'Roboto',
-    },
-    '&Arrow': {
-        position: 'absolute',
-        m: -0.25,
-        w: 0.5,
-        h: 0.5,
-        fg: 'tooltipFg',
-        bg: 'tooltipBg',
-        rotate: '45deg',
-    },
+  '&': {
+    position: 'absolute',
+    userSelect: 'none',
+    pointerEvents: 'none',
+    zIndex: 9999,
+  },
+  '&Content': {
+    ...flexCenter(),
+    textAlign: 'center',
+    position: 'absolute',
+    p: 0.25,
+    fg: 'tooltipFg',
+    bg: 'tooltipBg',
+    rounded: 1,
+    fontFamily: 'Roboto',
+  },
+  '&Arrow': {
+    position: 'absolute',
+    m: -0.25,
+    w: 0.5,
+    h: 0.5,
+    fg: 'tooltipFg',
+    bg: 'tooltipBg',
+    rotate: '45deg',
+  },
 
-    '&-top &Content': { top: '-0.5em', x: '50%', translate: '-50%, -100%' },
-    '&-top &Arrow': { top: '-0.5em', x: '50%' },
+  '&-top &Content': { top: '-0.5em', x: '50%', translate: '-50%, -100%' },
+  '&-top &Arrow': { top: '-0.5em', x: '50%' },
 
-    '&-bottom &Content': { bottom: '-0.5em', x: '50%', translate: '-50%, 100%' },
-    '&-bottom &Arrow': { bottom: '-0.5em', x: '50%' },
-}
+  '&-bottom &Content': { bottom: '-0.5em', x: '50%', translate: '-50%, 100%' },
+  '&-bottom &Arrow': { bottom: '-0.5em', x: '50%' },
+};
 
 export interface TooltipProps extends Omit<DivProps, 'title'> {
-    target: HTMLElement,
-    children: ComponentChildren,
+  target: HTMLElement;
+  children: ComponentChildren;
 }
 export const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
-    const c = useCss('Tooltip', css);
-    const { top, left, width, height } = target.getBoundingClientRect();
+  const c = useCss('Tooltip', css);
+  const { top, left, width, height } = target.getBoundingClientRect();
 
-    console.debug('top', top);
+  console.debug('top', top);
 
-    const pos: string = top > 40 ? 'top' : 'bottom';
-    return (
-        <Div cls={[`${c} ${c}-${pos}`, cls]} {...props} style={{
-            top,
-            left,
-            width,
-            height,
-        }}>
-            <Div cls={`${c}Arrow`} />
-            <Div cls={`${c}Content`}>
-                <Tr>{children}</Tr>
-            </Div>
-        </Div>
-    );
+  const pos: string = top > 40 ? 'top' : 'bottom';
+  return (
+    <Div
+      cls={[`${c} ${c}-${pos}`, cls]}
+      {...props}
+      style={{
+        top,
+        left,
+        width,
+        height,
+      }}
+    >
+      <Div cls={`${c}Arrow`} />
+      <Div cls={`${c}Content`}>
+        <Tr>{children}</Tr>
+      </Div>
+    </Div>
+  );
 };
 // , pos?: 'top'|'bottom'|'left'|'right'
 
-export const tooltip = (content: ComponentChildren|(() => ComponentChildren)) => {
-    let intervalRef: any;
-    let overlay: HTMLDivElement|null = null;
-    let root: any = null;
-    let removeLeaveListener: (() => void)|null = null;
-    let removeClickListener: (() => void)|null = null;
-    const remove = async () => {
-        clearInterval(intervalRef);
-        if (removeLeaveListener) {
-            removeLeaveListener();
-            removeLeaveListener = null;
-        }
-        if (removeClickListener) {
-            removeClickListener();
-            removeClickListener = null;
-        }
-        if (overlay) {
-            await removeOverlay(overlay);
-            overlay = null;
-        }
-        if (root) {
-            root.unmount();
-            root = null;
-        }
+export const tooltip = (content: ComponentChildren | (() => ComponentChildren)) => {
+  let intervalRef: any;
+  let overlay: HTMLDivElement | null = null;
+  let root: any = null;
+  let removeLeaveListener: (() => void) | null = null;
+  let removeClickListener: (() => void) | null = null;
+  const remove = async () => {
+    clearInterval(intervalRef);
+    if (removeLeaveListener) {
+      removeLeaveListener();
+      removeLeaveListener = null;
     }
-    return {
-        onMouseOver: (event: any) => {
-            const target = (event.currentTarget || event.target) as HTMLElement;
-
-            clearInterval(intervalRef);
-            intervalRef = setInterval(() => {
-                if (!target.isConnected) remove();
-            }, 500);
-
-            if (removeLeaveListener) removeLeaveListener();
-            removeLeaveListener = addListener(target, 'mouseleave', remove);
-
-            if (removeClickListener) removeClickListener();
-            removeClickListener = addListener(0, 'click', remove);
-
-            if (!overlay) overlay = addOverlay();
-            
-            render(
-                <Tooltip target={target}>
-                    {typeof content === 'function' ? content() : content}
-                </Tooltip>,
-                overlay
-            );
-        },
+    if (removeClickListener) {
+      removeClickListener();
+      removeClickListener = null;
     }
-}
+    if (overlay) {
+      await removeOverlay(overlay);
+      overlay = null;
+    }
+    if (root) {
+      root.unmount();
+      root = null;
+    }
+  };
+  return {
+    onMouseOver: (event: any) => {
+      const target = (event.currentTarget || event.target) as HTMLElement;
+
+      clearInterval(intervalRef);
+      intervalRef = setInterval(() => {
+        if (!target.isConnected) remove();
+      }, 500);
+
+      if (removeLeaveListener) removeLeaveListener();
+      removeLeaveListener = addListener(target, 'mouseleave', remove);
+
+      if (removeClickListener) removeClickListener();
+      removeClickListener = addListener(0, 'click', remove);
+
+      if (!overlay) overlay = addOverlay();
+
+      render(
+        <Tooltip target={target}>{typeof content === 'function' ? content() : content}</Tooltip>,
+        overlay
+      );
+    },
+  };
+};

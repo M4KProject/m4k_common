@@ -1,17 +1,17 @@
-const getDatasetValue = (e: null|HTMLElement|MouseEvent, name: string): string|null => {
-    let el = e instanceof HTMLElement ? e : null;
-    if (!el) {
-        const currentTarget = e && (e as MouseEvent).currentTarget;
-        if (currentTarget instanceof HTMLElement) el = currentTarget;
+const getDatasetValue = (e: null | HTMLElement | MouseEvent, name: string): string | null => {
+  let el = e instanceof HTMLElement ? e : null;
+  if (!el) {
+    const currentTarget = e && (e as MouseEvent).currentTarget;
+    if (currentTarget instanceof HTMLElement) el = currentTarget;
+  }
+  while (el) {
+    const value = el.dataset[name];
+    if (value !== undefined) {
+      return value;
     }
-    while (el) {
-        const value = el.dataset[name];
-        if (value !== undefined) {
-            return value;
-        }
-        el = el.parentElement;
-    }
-    return null;
-}
+    el = el.parentElement;
+  }
+  return null;
+};
 
 export default getDatasetValue;

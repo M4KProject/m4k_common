@@ -1,36 +1,41 @@
-import { useMemo, useEffect } from "preact/hooks";
-import { Msg } from "../helpers/Msg";
-import { useMsg } from "./useMsg";
-import { toErr } from "@common/helpers";
+import { useMemo, useEffect } from 'preact/hooks';
+import { Msg } from '../helpers/Msg';
+import { useMsg } from './useMsg';
+import { toErr } from '@common/helpers';
 
-export const useAsync = <T>(initValue: T, load: () => T|Promise<T>, storedKey?: string|null, deps?: any[]): [T, () => void, Msg<T>] => {
-    const _deps = deps ? [...deps, storedKey] : [storedKey];
-    
-    // import { isList, isDefined } from "@common/helpers/check";
-    // const msg = useMemo(() => {
-    //     const msg = new Msg<T>(initValue, storedKey, !!storedKey);
-    //     if (isDefined(initValue) && (typeof msg.v !== typeof initValue || isList(msg.v) !== isList(initValue))) {
-    //         msg.set(initValue);
-    //     }
-    //     return msg;
-    // }, _deps);
+export const useAsync = <T>(
+  initValue: T,
+  load: () => T | Promise<T>,
+  storedKey?: string | null,
+  deps?: any[]
+): [T, () => void, Msg<T>] => {
+  const _deps = deps ? [...deps, storedKey] : [storedKey];
 
-    const msg = useMemo(() => new Msg<T>(initValue, storedKey||undefined, !!storedKey), _deps);
+  // import { isList, isDefined } from "@common/helpers/check";
+  // const msg = useMemo(() => {
+  //     const msg = new Msg<T>(initValue, storedKey, !!storedKey);
+  //     if (isDefined(initValue) && (typeof msg.v !== typeof initValue || isList(msg.v) !== isList(initValue))) {
+  //         msg.set(initValue);
+  //     }
+  //     return msg;
+  // }, _deps);
 
-    const reload = async () => {
-        const value = await load();
-        msg.set(value);
-    }
+  const msg = useMemo(() => new Msg<T>(initValue, storedKey || undefined, !!storedKey), _deps);
 
-    useEffect(() => {
-        reload().catch(e => {
-            const error = toErr(e);
-            console.error('useAsync load', storedKey, error);
-            if (!storedKey) throw error
-        });
-    }, _deps);
+  const reload = async () => {
+    const value = await load();
+    msg.set(value);
+  };
 
-    const value = useMsg(msg);
+  useEffect(() => {
+    reload().catch((e) => {
+      const error = toErr(e);
+      console.error('useAsync load', storedKey, error);
+      if (!storedKey) throw error;
+    });
+  }, _deps);
 
-    return [value, reload, msg];
-}
+  const value = useMsg(msg);
+
+  return [value, reload, msg];
+};

@@ -1,21 +1,21 @@
 const b64toBlob = (b64Data: string, contentType = '', sliceSize = 512) => {
-    const byteCharacters = atob(b64Data);
-    const byteArrays: Uint8Array[] = [];
+  const byteCharacters = atob(b64Data);
+  const byteArrays: Uint8Array[] = [];
 
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        const slice = byteCharacters.slice(offset, offset + sliceSize);
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
 
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
     }
 
-    const blob = new Blob(byteArrays as BlobPart[], { type: contentType });
-    return blob;
-}
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
 
-export default b64toBlob
+  const blob = new Blob(byteArrays as BlobPart[], { type: contentType });
+  return blob;
+};
+
+export default b64toBlob;

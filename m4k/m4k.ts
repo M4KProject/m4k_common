@@ -1,61 +1,60 @@
-import { removeItem } from "../helpers/list";
-import { m4kBridge } from "./m4kBridge";
-import { m4kFully } from "./m4kFully";
-import { m4kBase } from "./m4kBase";
-import type { M4Kiosk, M4kEvent, M4kSignalEvent } from "./m4kInterface"
+import { removeItem } from '../helpers/list';
+import { m4kBridge } from './m4kBridge';
+import { m4kFully } from './m4kFully';
+import { m4kBase } from './m4kBase';
+import type { M4Kiosk, M4kEvent, M4kSignalEvent } from './m4kInterface';
 import { global } from '../helpers/global';
-import type { Fully } from "./fullyInterfaces";
-import { msgs } from "../helpers/Msg";
-import { toErr } from "@common/helpers";
+import type { Fully } from './fullyInterfaces';
+import { msgs } from '../helpers/Msg';
+import { toErr } from '@common/helpers';
 
 export const m4k = (() => {
-    const w = global;
-    
-    const _m4k = w._m4k;
-    const fully = w.fully as Fully|undefined;
-    
-    console.debug('init m4k', typeof _m4k);
-    
-    const m: any = { global: w, msgs }
-    const m4k: M4Kiosk = m
-    w.m4k = m4k
+  const w = global;
 
-    _m4k ? m4kBridge(m4k) : fully ? m4kFully(m4k, fully) : m4kBase(m4k);
-    
-    const listeners: ((event: M4kEvent) => void)[] = []
-    
-    m4k.subscribe = (listener: (event: M4kEvent) => void) => {
-        listeners.push(listener)
-        return () => removeItem(listeners, listener)
+  const _m4k = w._m4k;
+  const fully = w.fully as Fully | undefined;
+
+  console.debug('init m4k', typeof _m4k);
+
+  const m: any = { global: w, msgs };
+  const m4k: M4Kiosk = m;
+  w.m4k = m4k;
+
+  _m4k ? m4kBridge(m4k) : fully ? m4kFully(m4k, fully) : m4kBase(m4k);
+
+  const listeners: ((event: M4kEvent) => void)[] = [];
+
+  m4k.subscribe = (listener: (event: M4kEvent) => void) => {
+    listeners.push(listener);
+    return () => removeItem(listeners, listener);
+  };
+
+  let eventCount = 0;
+  m4k.signal = (event: M4kSignalEvent) => {
+    eventCount++;
+    if (!event.id) event.id = String(eventCount);
+    for (const listener of listeners) {
+      try {
+        listener(event as M4kEvent);
+      } catch (e) {
+        const error = toErr(e);
+        console.error('listener', event, error);
+      }
     }
-    
-    let eventCount = 0
-    m4k.signal = (event: M4kSignalEvent) => {
-        eventCount++
-        if (!event.id) event.id = String(eventCount)
-        for (const listener of listeners) {
-            try {
-                listener(event as M4kEvent)
-            }
-            catch (e) {
-                const error = toErr(e);
-                console.error('listener', event, error)
-            }
-        }
-    }
-    
-    const onM4k = w.onM4k
-    if (onM4k) onM4k(m4k)
-    
-    m4k.log('info', 'm4k ready')
+  };
 
-    // setTimeout(() => {
-    //     document.querySelectorAll('meta[name="viewport"]').forEach(meta => meta.remove())
-    //     const meta = document.createElement('meta')
-    //     meta.name = 'viewport'
-    //     meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
-    //     document.head.appendChild(meta)
-    // }, 10)
+  const onM4k = w.onM4k;
+  if (onM4k) onM4k(m4k);
 
-    return m4k;
-})()
+  m4k.log('info', 'm4k ready');
+
+  // setTimeout(() => {
+  //     document.querySelectorAll('meta[name="viewport"]').forEach(meta => meta.remove())
+  //     const meta = document.createElement('meta')
+  //     meta.name = 'viewport'
+  //     meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+  //     document.head.appendChild(meta)
+  // }, 10)
+
+  return m4k;
+})();

@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-window-prefix no-window
-import { Msg } from './Msg'
+import { Msg } from './Msg';
 
 const PLUS_EXP = /\+/g;
 const queryDecode = (s: string) => decodeURIComponent(s.replace(PLUS_EXP, ' '));
@@ -98,9 +98,9 @@ const forceRefresh = async () => {
     const result = await h(val);
     // console.debug('result', result);
     if (_lastResult === result) return;
-    (_lastResult?.unmount||(() => {}))();
+    (_lastResult?.unmount || (() => {}))();
     _lastResult = result;
-    (result?.mount||(() => {}))();
+    (result?.mount || (() => {}))();
   }
 };
 

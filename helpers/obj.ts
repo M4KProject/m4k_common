@@ -1,7 +1,7 @@
-import { isDef, isItem, isList, isNil, isObj, isStr, isUndef, Item, List } from "./check";
-import { toList } from "./cast";
-import { last, sort, uniq } from "./list";
-import { nbrMax } from "./nbr";
+import { isDef, isItem, isList, isNil, isObj, isStr, isUndef, Item, List } from './check';
+import { toList } from './cast';
+import { last, sort, uniq } from './list';
+import { nbrMax } from './nbr';
 
 export const sortKey = <T extends Record<any, any>>(record: T): T =>
   Object.fromEntries(sort(Object.entries(record))) as T;
@@ -27,12 +27,12 @@ export const getChanges = (source: any, target: any): any => {
   return result;
 };
 
-export const fisrtKey = (v: Item): string|null => {
+export const fisrtKey = (v: Item): string | null => {
   for (const k in v) return k;
   return null;
-}
+};
 
-export const lastKey = (v: Item): string|null => last(Object.keys(v));
+export const lastKey = (v: Item): string | null => last(Object.keys(v));
 
 export const setKey = <T, K extends keyof T>(record: T, key: K, value: T[K]): T => {
   record[key] = value;
@@ -42,7 +42,12 @@ export const setKey = <T, K extends keyof T>(record: T, key: K, value: T[K]): T 
 interface DeleteKey {
   <T, K1 extends keyof T>(record: T, k1: K1): Omit<T, K1>;
   <T, K1 extends keyof T, K2 extends keyof T>(record: T, k1: K1, k2: K2): Omit<Omit<T, K1>, K2>;
-  <T, K1 extends keyof T, K2 extends keyof T, K3 extends keyof T>(record: T, k1: K1, k2: K2, k3: K3): Omit<Omit<Omit<T, K1>, K2>, K3>;
+  <T, K1 extends keyof T, K2 extends keyof T, K3 extends keyof T>(
+    record: T,
+    k1: K1,
+    k2: K2,
+    k3: K3
+  ): Omit<Omit<Omit<T, K1>, K2>, K3>;
   <T>(record: Record<string, T>, ...keys: string[]): Record<string, T>;
 }
 export const deleteKey = ((record: any, ...keys: string[]): any => {
@@ -76,40 +81,37 @@ export const deleteUndef = <T>(v: T): T => {
         delete v[k];
       }
     }
-  }
-  else if (isList(v)) {
+  } else if (isList(v)) {
     return (v as any[]).filter(isDef) as any;
   }
   return v;
-}
-
-export const merge = (a: any, b: any): any => {
-    if (isItem(b)) {
-      if (b.$set) return b.$set;
-      if (b.$push) return [...toList(a), ...b.$push];
-      if (b.$fun) return b.$fun(a, b);
-      if (b.$delete) return undefined;
-    }
-    if (isNil(a) || isNil(b) || typeof a !== typeof b) return b;
-    if (isItem(a) && isItem(b)) {
-        const r: Item = { ...a };
-        for (const k in b) {
-          r[k] = merge(r[k], b[k]);
-          if (isUndef(r[k])) delete r[k];
-        }
-        return r;
-    }
-    if (isList(a) && isList(b)) {
-        const l = nbrMax(a.length, b.length);
-        const r: List = [];
-        for (let i=0; i<l; i++) {
-            r[i] = isDef(b[i]) ? merge(a[i], b[i]) : a[i];
-        }
-        return r;
-    }
-    return b;
 };
 
-export const mergeAll = (
-    (...args: any[]): any => args.reduce(merge)
-);
+export const merge = (a: any, b: any): any => {
+  if (isItem(b)) {
+    if (b.$set) return b.$set;
+    if (b.$push) return [...toList(a), ...b.$push];
+    if (b.$fun) return b.$fun(a, b);
+    if (b.$delete) return undefined;
+  }
+  if (isNil(a) || isNil(b) || typeof a !== typeof b) return b;
+  if (isItem(a) && isItem(b)) {
+    const r: Item = { ...a };
+    for (const k in b) {
+      r[k] = merge(r[k], b[k]);
+      if (isUndef(r[k])) delete r[k];
+    }
+    return r;
+  }
+  if (isList(a) && isList(b)) {
+    const l = nbrMax(a.length, b.length);
+    const r: List = [];
+    for (let i = 0; i < l; i++) {
+      r[i] = isDef(b[i]) ? merge(a[i], b[i]) : a[i];
+    }
+    return r;
+  }
+  return b;
+};
+
+export const mergeAll = (...args: any[]): any => args.reduce(merge);

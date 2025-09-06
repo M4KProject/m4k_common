@@ -1,4 +1,17 @@
-import { ContentModel, DeviceModel, MediaModel, GroupModel, JobModel, MemberModel, ModelBase, UserModel, CategoryModel, ProductModel, ModifierModel, SaleModel } from './models';
+import {
+  ContentModel,
+  DeviceModel,
+  MediaModel,
+  GroupModel,
+  JobModel,
+  MemberModel,
+  ModelBase,
+  UserModel,
+  CategoryModel,
+  ProductModel,
+  ModifierModel,
+  SaleModel,
+} from './models';
 import { Coll } from './Coll';
 import { global } from '../helpers/global';
 
@@ -12,10 +25,10 @@ export const jobColl = coll<JobModel>('jobs');
 export const memberColl = coll<MemberModel>('members');
 export const userColl = coll<UserModel>('users');
 
-export const categoryColl = coll<CategoryModel>("categories");
-export const productColl = coll<ProductModel>("products");
-export const modifierColl = coll<ModifierModel>("modifiers");
-export const saleColl = coll<SaleModel>("sales");
+export const categoryColl = coll<CategoryModel>('categories');
+export const productColl = coll<ProductModel>('products');
+export const modifierColl = coll<ModifierModel>('modifiers');
+export const saleColl = coll<SaleModel>('sales');
 
 global.contentColl = contentColl;
 global.deviceColl = deviceColl;

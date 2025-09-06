@@ -1,32 +1,32 @@
-import { createEl, setCss } from "./html";
+import { createEl, setCss } from './html';
 
-export type LogLevel = "debug" | "info" | "warn" | "error";
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type LogItem = [LogLevel, number, any[], HTMLDivElement | null];
-export type LogInfo = { level: LogLevel, logged: number, message: string };
+export type LogInfo = { level: LogLevel; logged: number; message: string };
 
-const firstLog: LogItem = ["info", Date.now(), ["init"], null];
+const firstLog: LogItem = ['info', Date.now(), ['init'], null];
 const logs: LogItem[] = [firstLog];
 let consoleEl: HTMLDivElement | null = null;
-let lastLogDisplayed: LogItem|undefined = undefined;
+let lastLogDisplayed: LogItem | undefined = undefined;
 let showIntervalId: any;
 let showTimeoutId: any;
 
 const argToStr = (arg: any) => {
   try {
-    if (typeof arg !== "object") return JSON.stringify(arg);
+    if (typeof arg !== 'object') return JSON.stringify(arg);
     if (arg instanceof Error) return `${arg.name}: ${arg.message}`;
     if (arg instanceof Date) return arg.toLocaleString();
     return JSON.stringify(arg);
   } catch (_e) {
     return `${arg}(${typeof arg})`;
   }
-}
+};
 
 const getLogMessage = (args: any[]) => {
   const sb: string[] = [];
   for (const a of args) sb.push(argToStr(a));
-  return sb.join(" ");
-}
+  return sb.join(' ');
+};
 
 const c = console as any;
 const nDebug = c.debug.bind(c);
@@ -34,17 +34,17 @@ const nInfo = c.info.bind(c);
 const nWarn = c.warn.bind(c);
 const nError = c.error.bind(c);
 
-const g = (type: LogLevel, nativeFun: any) => (
+const g =
+  (type: LogLevel, nativeFun: any) =>
   (...args: any[]) => {
     nativeFun(...args);
     log(type, ...args);
-  }
-)
+  };
 
-const debug = g("debug", nDebug);
-const info = g("info", nInfo);
-const warn = g("warn", nWarn);
-const error = g("error", nError);
+const debug = g('debug', nDebug);
+const info = g('info', nInfo);
+const warn = g('warn', nWarn);
+const error = g('error', nError);
 
 // window.onerror = (event: Event | string, source?: string, lineno?: number, colno?: number, err?: Error) => {
 //   error('onerror event', event);
@@ -68,15 +68,18 @@ const show = () => {
   clearTimeout(showTimeoutId);
   showTimeoutId = setTimeout(hide, 10000);
   if (consoleEl) return;
-  consoleEl = createEl("div");
-  consoleEl.id = "mLogs";
-  setCss('mLogs', `
+  consoleEl = createEl('div');
+  consoleEl.id = 'mLogs';
+  setCss(
+    'mLogs',
+    `
 #mLogs { display: block; position: fixed; left: 1%; top: 1%; width: 96%; height: 96%; overflow: auto; z-index: 999990; }
 #mLogs .error { color: red; font-size: 1.4em; font-weight: bold; }
 #mLogs .warn { color: orange;font-size: 1.2em; }
 #mLogs .info { color: blue; }
 #mLogs .debug { color: grey; font-size: 0.8em; }
-`);
+`
+  );
   document.body.appendChild(consoleEl);
   clearInterval(showIntervalId);
   showIntervalId = setInterval(() => {
@@ -84,17 +87,17 @@ const show = () => {
       clearInterval(showIntervalId);
       return;
     }
-    const lastLog = logs[logs.length-1];
+    const lastLog = logs[logs.length - 1];
     if (lastLogDisplayed === lastLog) return;
     const start = lastLogDisplayed ? logs.indexOf(lastLogDisplayed) : -1;
     lastLogDisplayed = lastLog;
-    for(let i=start+1; i<logs.length; i++) {
+    for (let i = start + 1; i < logs.length; i++) {
       const log = logs[i];
       if (log[3]) {
         consoleEl.appendChild(log[3]);
         continue;
       }
-      const el = createEl("div");
+      const el = createEl('div');
       const type = log[0].toLowerCase();
       el.className = type;
       el.innerText = getLogMessage(log[2]);
@@ -114,7 +117,7 @@ const hide = () => {
 const log = (type: LogLevel, ...args: any[]) => {
   try {
     const item: LogItem = [type, Date.now(), args, null];
-    if (type === "error") show();
+    if (type === 'error') show();
     logs.push(item);
     if (logs.length > 300) {
       logs.splice(0, 10);
@@ -168,7 +171,6 @@ const log = (type: LogLevel, ...args: any[]) => {
 //       // });
 //   }, 5000);
 // }
-
 
 export default {
   init,

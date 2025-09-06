@@ -1,59 +1,63 @@
 import { setCssColors } from './html';
 import { lighten, setHsl, addHsl } from './color';
 
-export const setTheme = (primary: string, secondary?: string, { colors }: { colors?: Record<string, string> } = {}) => {
-    if (!secondary) secondary = addHsl(primary, { h: 180 });
+export const setTheme = (
+  primary: string,
+  secondary?: string,
+  { colors }: { colors?: Record<string, string> } = {}
+) => {
+  if (!secondary) secondary = addHsl(primary, { h: 180 });
 
-    // const _lighten = isDark ? darken : lighten;
-    // const _setHsl = isDark ? (c: any, v: Partial<HslColor>) => {
-    //     if (v.l) v.l = 100 - v.l;
-    //     return setHsl(c, v);
-    // } : setHsl;
-    
-    // isDark ? lighten : darken
+  // const _lighten = isDark ? darken : lighten;
+  // const _setHsl = isDark ? (c: any, v: Partial<HslColor>) => {
+  //     if (v.l) v.l = 100 - v.l;
+  //     return setHsl(c, v);
+  // } : setHsl;
 
-    const grey = '#808080';
-    // const bg = lighten(grey, 40);
-    const fg = lighten(grey, -50);
+  // isDark ? lighten : darken
 
-    setCssColors({
-        primary,
-        secondary,
+  const grey = '#808080';
+  // const bg = lighten(grey, 40);
+  const fg = lighten(grey, -50);
 
-        bg: '#f4f7fe',
-        fg: '#9aaabd',
-        selectedFg: '#0a536f',
-        // selected: lighten(primary, 20),
+  setCssColors({
+    primary,
+    secondary,
 
-        // sideFg: '#f4f7fe',
-        // bg: _setHsl(primary, { l: 97 }),
-        // fg,
+    bg: '#f4f7fe',
+    fg: '#9aaabd',
+    selectedFg: '#0a536f',
+    // selected: lighten(primary, 20),
 
-        headerBg: 'transparent',
-        headerTitle: '#0a536f',
+    // sideFg: '#f4f7fe',
+    // bg: _setHsl(primary, { l: 97 }),
+    // fg,
 
-        tooltipBg: '#0a536f',
-        tooltipFg: '#ffffff',
+    headerBg: 'transparent',
+    headerTitle: '#0a536f',
 
-        btnBg: "transparent",
-        btnFg: fg,
+    tooltipBg: '#0a536f',
+    tooltipFg: '#ffffff',
 
-        labelFg: lighten(primary, -40),
+    btnBg: 'transparent',
+    btnFg: fg,
 
-        btnBgHover: "",
-        btnFgHover: "",
+    labelFg: lighten(primary, -40),
 
-        info: setHsl(primary, { h: 240 }),
-        success: setHsl(primary, { h: 120, l: 40 }),
-        error: setHsl(primary, { h: 0 }),
-        warn: setHsl(primary, { h: 30 }),
-        selected: '#0a536f',
+    btnBgHover: '',
+    btnFgHover: '',
 
-        shadow: "#11698a1c",
+    info: setHsl(primary, { h: 240 }),
+    success: setHsl(primary, { h: 120, l: 40 }),
+    error: setHsl(primary, { h: 0 }),
+    warn: setHsl(primary, { h: 30 }),
+    selected: '#0a536f',
 
-        ...colors,
-    });
-}
+    shadow: '#11698a1c',
+
+    ...colors,
+  });
+};
 
 // import Msg from "../helpers/Msg";
 // import { lighten, darken, setHsl, addHsl } from '../helpers/color';

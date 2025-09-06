@@ -31,7 +31,7 @@ const styleProp = (responsive?: Responsive) => {
     if (responsive && responsive$.v !== responsive) return;
     Object.assign(el.style, toItem(style));
   };
-}
+};
 
 const props: Partial<Record<keyof D, RenderProp>> = {
   id: (el, v) => (el.id = v),
@@ -203,7 +203,7 @@ export default class B {
       // const mp4Url = B.url(mediaId + '/video.mp4');
 
       // videoEl.style.backgroundImage = `url('${coverUrl}')`;
-      
+
       // const webm = createEl('source');
       // webm.src = webmUrl;
       // webm.type = 'video/webm';
@@ -305,7 +305,7 @@ export default class B {
       b.el.innerHTML = '';
       b.children.forEach((b) => b.dispose());
       b.children = list.map((b) => new B(b.d, b).render(true));
-    }
+    },
   };
 
   static readonly props = props;
@@ -322,16 +322,15 @@ export default class B {
           }
         }
       }
-    }
-    catch (e) {
+    } catch (e) {
       const error = toErr(e);
       console.error('dLang', d, lang, error);
     }
   }
 
   static url(key: string) {
-    console.debug('TODO url', key)
-    return ''
+    console.debug('TODO url', key);
+    return '';
     // if (!key || typeof key !== 'string') return '';
     // if (key.startsWith('http')) return key;
     // if (key.match(/^\d{1,5}\//)) {
@@ -345,7 +344,7 @@ export default class B {
     const root = clone(d);
     root.id = 'root';
     root.t = 'root';
-    
+
     const isPageHome = !B.page$.v || B.page$.v === B.home;
 
     B.templates = { ...defaultTemplates, ...root.templates };
@@ -355,7 +354,7 @@ export default class B {
     B.hasCart = root.hasCart;
     B.l = B.lSource = root.lang || lSource;
 
-    console.debug('isPageHome', isPageHome)
+    console.debug('isPageHome', isPageHome);
     if (isPageHome) B.page$.set(B.home);
 
     B.root.setData(root);
@@ -457,7 +456,7 @@ export default class B {
         }
         el.innerHTML = '';
         el.onclick = this._onClick;
-        el.ontouchend= this._onClick;
+        el.ontouchend = this._onClick;
         if (B.bCls) el.className = B.bCls;
         return el;
       }
@@ -465,7 +464,7 @@ export default class B {
     }
     el = createEl(hTag);
     el.onclick = this._onClick;
-    el.ontouchend= this._onClick;
+    el.ontouchend = this._onClick;
     // el.ontouchstart = this.onClick.bind(this);
     if (B.bCls) el.className = B.bCls;
     el._b = this;
@@ -555,7 +554,7 @@ export default class B {
   _onClick: typeof this.onClick;
 
   click?: DCall;
-  onClick(event?: MouseEvent|TouchEvent) {
+  onClick(event?: MouseEvent | TouchEvent) {
     console.debug('onClick', event);
     if (event) {
       event.preventDefault();
@@ -579,7 +578,7 @@ export default class B {
 
   call(el: BElement | null, script?: DCall) {
     try {
-      console.debug('TODO call', el, script)
+      console.debug('TODO call', el, script);
       // app.callEl = el || B.root.el;
       // getCallCb(script)(this, el || this.el, app);
     } catch (e) {
@@ -596,7 +595,7 @@ export default class B {
     this.children.length = 0;
   }
 
-  find(cb: string|((b: B) => any)): B | undefined {
+  find(cb: string | ((b: B) => any)): B | undefined {
     if (typeof cb !== 'function') {
       const o: any = toItem(cb, { id: cb });
       cb = (b: B) => {
@@ -649,7 +648,7 @@ export default class B {
   query(selector: string | ((b: B) => boolean), el?: HTMLElement | null) {
     const results: B[] = [];
     if (typeof selector === 'string') {
-      for (const childEl of (el || this.el as any).querySelectorAll(selector)) {
+      for (const childEl of (el || (this.el as any)).querySelectorAll(selector)) {
         const b = (childEl as BElement)._b;
         if (b) results.push(b);
       }
@@ -719,7 +718,7 @@ B.page$.on((newPage) => {
   if (siteKey) bodyClasses.push(siteKey);
   // bodyClasses.push('site');
 
-  newPage.split('+').forEach(page => bodyClasses.push('page-' + page));
+  newPage.split('+').forEach((page) => bodyClasses.push('page-' + page));
 
   bodyClasses.forEach((cls) => classList.add(cls));
 });

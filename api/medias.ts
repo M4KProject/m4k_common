@@ -17,85 +17,90 @@ export const FAILED = 'failed';
 export const SUCCESS = 'success';
 
 export interface UploadItem {
-    id: string,
-    file: File,
-    name: string,
-    status: 'pending'|'uploading'|'processing'|'failed'|'success',
-    media?: MediaModel,
-    progress?: number,
-    created?: number,
-    started?: number,
-    error?: any,
+  id: string;
+  file: File;
+  name: string;
+  status: 'pending' | 'uploading' | 'processing' | 'failed' | 'success';
+  media?: MediaModel;
+  progress?: number;
+  created?: number;
+  started?: number;
+  error?: any;
 }
 
 export const uploadItems$ = new Msg<Record<string, UploadItem>>({});
 
-const update = (id: string, changes: Partial<UploadItem>) => uploadItems$.merge({ [id]: { ...uploadItems$.v[id], ...changes } });
+const update = (id: string, changes: Partial<UploadItem>) =>
+  uploadItems$.merge({ [id]: { ...uploadItems$.v[id], ...changes } });
 
-const startUpload = (item: UploadItem) => retry(async () => {
+const startUpload = (item: UploadItem) =>
+  retry(async () => {
     const id = item.id;
 
     try {
-        const file = item.file;
-        if (!file) return;
+      const file = item.file;
+      if (!file) return;
 
-        update(id, { status: UPLOADING });
+      update(id, { status: UPLOADING });
 
-        const media = await mediaColl.create({
-            name: String(file.name),
-            file,
-            group: needGroupId(),
-        }, {
-            req: {
-                onProgress: (progress) => {
-                    update(id, { progress: progress * 100 });
-                }
-            }
-        });
+      const media = await mediaColl.create(
+        {
+          name: String(file.name),
+          file,
+          group: needGroupId(),
+        },
+        {
+          req: {
+            onProgress: (progress) => {
+              update(id, { progress: progress * 100 });
+            },
+          },
+        }
+      );
 
-        update(id, { media, status: SUCCESS });
-        
-        console.info('upload success', item, media);
-        return media;
+      update(id, { media, status: SUCCESS });
+
+      console.info('upload success', item, media);
+      return media;
     } catch (e) {
-        const error = toErr(e);
-        console.warn('upload failed, retrying in 5s', item, error);
-        update(id, { error });
-        await sleep(5000);
-        throw error;
+      const error = toErr(e);
+      console.warn('upload failed, retrying in 5s', item, error);
+      update(id, { error });
+      await sleep(5000);
+      throw error;
     }
-}, MAX_RETRY);
+  }, MAX_RETRY);
 
 const processQueue = async () => {
-    while (true) {
-        const items = Object.values(uploadItems$.v);
-        if (items.filter(i => i.status === UPLOADING).length >= MAX_CONCURRENT_UPLOADS) return;
+  while (true) {
+    const items = Object.values(uploadItems$.v);
+    if (items.filter((i) => i.status === UPLOADING).length >= MAX_CONCURRENT_UPLOADS) return;
 
-        const item = items.find(i => i.status === PENDING);
-        if (!item) return;
+    const item = items.find((i) => i.status === PENDING);
+    if (!item) return;
 
-        const id = item.id;
-        
-        try {
-            await startUpload(item);
-        } catch (e) {
-            const error = toErr(e);
-            console.error('upload failed', item, error);
-            update(item.id, { status: FAILED, error });
-        }
-        
-        setTimeout(() => uploadItems$.next(items => deleteKey({...items}, id)), 10000);
+    const id = item.id;
+
+    try {
+      await startUpload(item);
+    } catch (e) {
+      const error = toErr(e);
+      console.error('upload failed', item, error);
+      update(item.id, { status: FAILED, error });
     }
+
+    setTimeout(() => uploadItems$.next((items) => deleteKey({ ...items }, id)), 10000);
+  }
 };
 
 export const upload = (files: File[]): string[] => {
-    const ids = files.map(file => {
-        const id = uuid();
-        uploadItems$.merge({
-            [id]: { id, file, name: file.name, status: PENDING } as UploadItem
-        });
-        return id;
+  const ids = files.map((file) => {
+    const id = uuid();
+    uploadItems$.merge({
+      [id]: { id, file, name: file.name, status: PENDING } as UploadItem,
     });
-    processQueue();
-    return ids;
+    return id;
+  });
+  processQueue();
+  return ids;
 };

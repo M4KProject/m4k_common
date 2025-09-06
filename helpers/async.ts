@@ -1,5 +1,4 @@
-import { toErr } from "./err";
-
+import { toErr } from './err';
 
 export const retry = async <T>(createPromise: () => Promise<T>, retry = 2): Promise<T> => {
   let error: any;
@@ -23,14 +22,13 @@ export const withTimeout = <T>(promise: Promise<T>, timeoutMs = 5000): Promise<T
   });
 };
 
-
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /**
-* @example
-* a b c - - - d - - e - -
-* - - - - c - - - d - - e
-*/
+ * @example
+ * a b c - - - d - - e - -
+ * - - - - c - - - d - - e
+ */
 export const debounce = <A = unknown>(fn: (value: A) => unknown, ms: number) => {
   let timer: any, lastValue: A;
   const update = () => {
@@ -45,12 +43,12 @@ export const debounce = <A = unknown>(fn: (value: A) => unknown, ms: number) => 
 };
 
 /**
-* @example
-* a b c d - - - - e - f g - -
-* a - c - d - - - e - f - g - (2s)
-* a - - d - - - - e - - g - - (3s)
-* a - - - d - - - e - - - g - (4s)
-*/
+ * @example
+ * a b c d - - - - e - f g - -
+ * a - c - d - - - e - f - g - (2s)
+ * a - - d - - - - e - - g - - (3s)
+ * a - - - d - - - e - - - g - (4s)
+ */
 export const throttle = <A = unknown>(fn: (value: A) => unknown, ms: number) => {
   let lastTime = 0,
     lastValue: A,
@@ -68,4 +66,3 @@ export const throttle = <A = unknown>(fn: (value: A) => unknown, ms: number) => 
     else timer = setTimeout(update, nextCall);
   };
 };
-

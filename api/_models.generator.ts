@@ -1,11 +1,12 @@
 /// <reference types="@types/node" />
 
-import { stringify } from "../helpers/json";
-import { firstUpper } from "../helpers/str";
-import { _models } from "./_models";
-import { writeFile } from "fs/promises";
+import { stringify } from '../helpers/json';
+import { firstUpper } from '../helpers/str';
+import { _models } from './_models';
+import { writeFile } from 'fs/promises';
 
-const base = `// GENERATED : ${new Date().toISOString()}
+const base =
+  `// GENERATED : ${new Date().toISOString()}
 
 export interface ModelBase {
   // collectionId: string;
@@ -43,7 +44,9 @@ export type Keys<T> = { [K in keyof T]: K extends symbol ? never : K }[keyof T];
 export interface FindOptions<T extends ModelBase> {
   select?: Keys<T>[];
   where?: { [P in keyof T]?: string | number | Date };
-  orderBy?: (Keys<T> | ` + "`-${Keys<T>}`" + `)[];
+  orderBy?: (Keys<T> | ` +
+  '`-${Keys<T>}`' +
+  `)[];
   filter?: string;
   fields?: string;
   sort?: string;
@@ -58,7 +61,10 @@ const res = await fetch('http://127.0.0.1:8090/api/schema');
 // console.debug('res', res);
 const models: typeof _models = await res.json();
 // console.debug('models', models);
-await writeFile("_models", `/* generated : ${new Date()} */\n\nexport const _models = ${stringify(models, null, 2)};`);
+await writeFile(
+  '_models',
+  `/* generated : ${new Date()} */\n\nexport const _models = ${stringify(models, null, 2)};`
+);
 
 for (const model of models) {
   if (model.name.startsWith('_')) continue;
@@ -66,38 +72,38 @@ for (const model of models) {
   let name = model.name;
   name = name.substring(0, name.length - 1);
 
-  if (name === "categorie") name = "category";
+  if (name === 'categorie') name = 'category';
 
-  const interfaceName = "_" + firstUpper(name) + "Model";
+  const interfaceName = '_' + firstUpper(name) + 'Model';
 
   sb.push(
     `export interface ${interfaceName} extends ${
-      model.type === "auth" ? "AuthModelBase" : "ModelBase"
-    } {`,
+      model.type === 'auth' ? 'AuthModelBase' : 'ModelBase'
+    } {`
   );
   for (const prop of model.fields) {
     try {
       if (prop.name === 'created') continue;
       if (prop.name === 'updated') continue;
       let type = {
-        json: "any",
-        text: "string",
-        file: "File|Blob|string",
-        number: "number",
-        editor: "string",
-        date: "Date|string",
-        autodate: "Date|string",
-        bool: "boolean",
-        email: "string",
-        password: "string",
+        json: 'any',
+        text: 'string',
+        file: 'File|Blob|string',
+        number: 'number',
+        editor: 'string',
+        date: 'Date|string',
+        autodate: 'Date|string',
+        bool: 'boolean',
+        email: 'string',
+        password: 'string',
       }[prop.type];
       if (!type) {
-        if (prop.type === "select") {
-          type = '""|' + (prop as any).values.map((v: string) => `"${v}"`).join("|");
-        } else if (prop.type === "relation") {
-          type = (prop as any).maxSelect === 1 ? "string" : "string[]";
+        if (prop.type === 'select') {
+          type = '""|' + (prop as any).values.map((v: string) => `"${v}"`).join('|');
+        } else if (prop.type === 'relation') {
+          type = (prop as any).maxSelect === 1 ? 'string' : 'string[]';
         } else {
-          throw new Error("type unknown");
+          throw new Error('type unknown');
         }
       }
       if (prop.required) {
@@ -106,12 +112,12 @@ for (const model of models) {
         sb.push(`    ${prop.name}?: ${type};`);
       }
     } catch (error) {
-      console.error("prop", model.name, prop.name, prop.type, error, prop);
+      console.error('prop', model.name, prop.name, prop.type, error, prop);
     }
   }
   sb.push(`}`);
   sb.push(``);
 }
 
-const result = sb.join("\n");
-await writeFile("_models.generated", result);
+const result = sb.join('\n');
+await writeFile('_models.generated', result);

@@ -8,8 +8,8 @@ export type CallCb = (b: B, el: BElement, app: any) => any;
 // const _scriptCache: Record<string, CallCb> = { '': _nullCb };
 
 export default function getCallCb(script: string = '', noReturn?: boolean): CallCb {
-  console.warn('not implemented getCallCb', script, noReturn)
-  return {} as any
+  console.warn('not implemented getCallCb', script, noReturn);
+  return {} as any;
   // let cb = _scriptCache[script];
   // if (!cb) {
   //   try {

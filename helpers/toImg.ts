@@ -1,10 +1,10 @@
 /**
  * Converts a string (URL or base64), Blob, or HTMLImageElement to a new HTMLImageElement.
- * 
+ *
  * - If `value` is a `string`, it is treated as an image URL or base64-encoded image.
  * - If `value` is a `Blob`, it is converted to an object URL before loading.
  * - If `value` is an `HTMLImageElement`, a *copy* is returned (new instance with same source).
- * 
+ *
  * @param value - The source of the image (string, Blob, or HTMLImageElement).
  * @returns A promise that resolves to a loaded `HTMLImageElement`.
  */

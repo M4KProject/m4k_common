@@ -1,258 +1,271 @@
-import { JSX } from "preact";
-import { isEq, isList, isNbr } from "./check";
+import { JSX } from 'preact';
+import { isEq, isList, isNbr } from './check';
 
 export type Style = Partial<CSSStyleDeclaration>;
 
 export type HTMLAllElement = HTMLDivElement &
-    HTMLInputElement &
-    HTMLVideoElement &
-    HTMLImageElement &
-    HTMLHeadingElement;
+  HTMLInputElement &
+  HTMLVideoElement &
+  HTMLImageElement &
+  HTMLHeadingElement;
 
 export type Drag = {
-    e?: DragEvent;
-    el: HTMLElement;
-    x0: number;
-    y0: number;
-    x: number;
-    y: number;
-    dX0: number;
-    dY0: number;
-    dX: number;
-    dY: number;
-    dispose: () => void;
+  e?: DragEvent;
+  el: HTMLElement;
+  x0: number;
+  y0: number;
+  x: number;
+  y: number;
+  dX0: number;
+  dY0: number;
+  dX: number;
+  dY: number;
+  dispose: () => void;
 };
 
 export const createEl: typeof document.createElement = document.createElement.bind(document);
 
 const _cssFiles: Record<string, HTMLLinkElement> = {};
 export const addCssFile = (url: string): HTMLLinkElement => {
-    if (_cssFiles[url]) return _cssFiles[url];
-    const el = createEl('link');
-    el.rel = 'stylesheet';
-    el.type = 'text/css';
-    el.href = url;
-    _cssFiles[url] = document.head.appendChild(el);
-    return el;
+  if (_cssFiles[url]) return _cssFiles[url];
+  const el = createEl('link');
+  el.rel = 'stylesheet';
+  el.type = 'text/css';
+  el.href = url;
+  _cssFiles[url] = document.head.appendChild(el);
+  return el;
 };
 
 const _jsFiles: Record<string, HTMLScriptElement> = {};
 export const addJsFile = (url: string): HTMLScriptElement => {
-    if (_jsFiles[url]) return _jsFiles[url];
-    const el = createEl('script');
-    el.type = 'text/javascript';
-    el.async = true;
-    el.src = url;
-    _jsFiles[url] = document.head.appendChild(el);
-    return el;
+  if (_jsFiles[url]) return _jsFiles[url];
+  const el = createEl('script');
+  el.type = 'text/javascript';
+  el.async = true;
+  el.src = url;
+  _jsFiles[url] = document.head.appendChild(el);
+  return el;
 };
 
 export const waitScriptLoaded = (el: HTMLScriptElement): Promise<HTMLScriptElement> => {
-    if ((el as any)._loaded) return (el as any)._loaded;
+  if ((el as any)._loaded) return (el as any)._loaded;
 
-    (el as any)._loaded = new Promise<HTMLScriptElement>((resolve, reject) => {
-        const state = (el as any).readyState;
-        if (state === 'complete' || state === 'loaded') {
-            resolve(el);
-            return;
-        }
+  (el as any)._loaded = new Promise<HTMLScriptElement>((resolve, reject) => {
+    const state = (el as any).readyState;
+    if (state === 'complete' || state === 'loaded') {
+      resolve(el);
+      return;
+    }
 
-        const timer = setTimeout(() => {
-            reject(new Error(`Loading script ${el.src} timed out after 60s`));
-        }, 60000);
+    const timer = setTimeout(() => {
+      reject(new Error(`Loading script ${el.src} timed out after 60s`));
+    }, 60000);
 
-        el.addEventListener('load', () => {
-            clearTimeout(timer);
-            resolve(el);
-        }, { once: true });
+    el.addEventListener(
+      'load',
+      () => {
+        clearTimeout(timer);
+        resolve(el);
+      },
+      { once: true }
+    );
 
-        el.addEventListener('error', (err) => {
-            clearTimeout(timer);
-            reject(err);
-        }, { once: true });
-    });
+    el.addEventListener(
+      'error',
+      (err) => {
+        clearTimeout(timer);
+        reject(err);
+      },
+      { once: true }
+    );
+  });
 
-    return (el as any)._loaded;
+  return (el as any)._loaded;
 };
 
 export const addJsFileAsync = (url: string) => waitScriptLoaded(addJsFile(url));
 
-export const addListener = <K extends keyof HTMLElementEventMap, T extends HTMLElement = HTMLElement>(
-    element: T | 0,
-    type: K,
-    listener: (this: T, ev: HTMLElementEventMap[K]) => any,
-    options?: boolean | AddEventListenerOptions,
+export const addListener = <
+  K extends keyof HTMLElementEventMap,
+  T extends HTMLElement = HTMLElement,
+>(
+  element: T | 0,
+  type: K,
+  listener: (this: T, ev: HTMLElementEventMap[K]) => any,
+  options?: boolean | AddEventListenerOptions
 ): (() => void) => {
-    const el = element === 0 ? document.body : element
-    const handler = listener as (this: HTMLElement, ev: HTMLElementEventMap[K]) => any
-    el.addEventListener(type, handler, options);
-    return () => el.removeEventListener(type, handler, options);
+  const el = element === 0 ? document.body : element;
+  const handler = listener as (this: HTMLElement, ev: HTMLElementEventMap[K]) => any;
+  el.addEventListener(type, handler, options);
+  return () => el.removeEventListener(type, handler, options);
 };
 
 export const addListeners = <K extends keyof HTMLElementEventMap>(
-    element: HTMLElement | 0,
-    listeners: Record<K, (this: HTMLElement, ev: HTMLElementEventMap[K]) => any>,
-    optionsMap?: Record<K, boolean | AddEventListenerOptions>,
+  element: HTMLElement | 0,
+  listeners: Record<K, (this: HTMLElement, ev: HTMLElementEventMap[K]) => any>,
+  optionsMap?: Record<K, boolean | AddEventListenerOptions>
 ): (() => void) => {
-    const el = element === 0 ? document.body : element;
+  const el = element === 0 ? document.body : element;
+  for (const type in listeners) {
+    el.addEventListener(type, listeners[type], optionsMap ? optionsMap[type] : undefined);
+  }
+  return () => {
     for (const type in listeners) {
-        el.addEventListener(type, listeners[type], optionsMap ? optionsMap[type] : undefined);
+      el.removeEventListener(type, listeners[type]);
     }
-    return () => {
-        for (const type in listeners) {
-            el.removeEventListener(type, listeners[type]);
-        }
-    }
+  };
 };
 
-export const autoScrollEnd = (el?: HTMLElement|null) => {
-    if (!el) return
-    let lastUserScroll = 0
-    let isAutoScrolling = false;
-    const timer = setInterval(() => {
-        const isUserScroll = lastUserScroll + 5000 > Date.now()
-        const scrollTopMax = el.scrollHeight - el.clientHeight
-        const isAtBottom = Math.abs(el.scrollTop - scrollTopMax) < 2
-        if (isUserScroll || isAtBottom) {
-            isAutoScrolling = false
-            return
-        }
-        isAutoScrolling = true
-        el.scrollTop = scrollTopMax
-        el.scrollLeft = 0
-    }, 200)
-    const unsubscribe = addListener(el, 'scroll', () => {
-        if (isAutoScrolling) return
-        const scrollTopMax = el.scrollHeight - el.clientHeight
-        const isAtBottom = Math.abs(el.scrollTop - scrollTopMax) < 5
-        lastUserScroll = isAtBottom ? 0 : Date.now()
-    })
-    return () => {
-        clearInterval(timer)
-        unsubscribe()
+export const autoScrollEnd = (el?: HTMLElement | null) => {
+  if (!el) return;
+  let lastUserScroll = 0;
+  let isAutoScrolling = false;
+  const timer = setInterval(() => {
+    const isUserScroll = lastUserScroll + 5000 > Date.now();
+    const scrollTopMax = el.scrollHeight - el.clientHeight;
+    const isAtBottom = Math.abs(el.scrollTop - scrollTopMax) < 2;
+    if (isUserScroll || isAtBottom) {
+      isAutoScrolling = false;
+      return;
     }
-}
+    isAutoScrolling = true;
+    el.scrollTop = scrollTopMax;
+    el.scrollLeft = 0;
+  }, 200);
+  const unsubscribe = addListener(el, 'scroll', () => {
+    if (isAutoScrolling) return;
+    const scrollTopMax = el.scrollHeight - el.clientHeight;
+    const isAtBottom = Math.abs(el.scrollTop - scrollTopMax) < 5;
+    lastUserScroll = isAtBottom ? 0 : Date.now();
+  });
+  return () => {
+    clearInterval(timer);
+    unsubscribe();
+  };
+};
 
 export interface EventXY {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
 }
 
 export const eventStop = (e: any) => {
-    if (e) {
-        if (e.preventDefault) e.preventDefault()
-        if (e.stopPropagation) e.stopPropagation()
-    }
-}
+  if (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+  }
+};
 
 export const eventXY = (ev: MouseEvent | TouchEvent | Touch): EventXY => {
-    const e = ev instanceof TouchEvent ? ev.touches[0] : ev;
-    return e ? { x: e.clientX, y: e.clientY } : { x: 0, y: 0 };
+  const e = ev instanceof TouchEvent ? ev.touches[0] : ev;
+  return e ? { x: e.clientX, y: e.clientY } : { x: 0, y: 0 };
 };
-
 
 export const getAttrs = (el: Element) =>
-    Object.fromEntries(el.getAttributeNames().map((name) => [name, el.getAttribute(name)]));
+  Object.fromEntries(el.getAttributeNames().map((name) => [name, el.getAttribute(name)]));
 
 export const setAttrs = (el: Element, attrs: Record<string, any>, update?: boolean) => {
-    if (!update) for (const a of Array.from(el.attributes)) el.removeAttribute(a.name);
-    for (const n in attrs) el.setAttribute(n, attrs[n]);
+  if (!update) for (const a of Array.from(el.attributes)) el.removeAttribute(a.name);
+  for (const n in attrs) el.setAttribute(n, attrs[n]);
 };
-
 
 export type Cls = Record<string, boolean | number | undefined | null>;
 
 export const getCls = (el: Element): Cls =>
-    Object.fromEntries(el.className.split(' ').map((k) => [k, true]));
+  Object.fromEntries(el.className.split(' ').map((k) => [k, true]));
 
 export const setCls = (el: Element, cls: Cls | string, replace?: boolean) => {
-    if (typeof cls === 'string') {
-        el.className = cls;
-        return;
-    }
-    if (replace) el.className = '';
-    const list = el.classList;
-    for (const name in cls) {
-        const isAdd = cls[name];
-        isAdd ? list.add(name) : list.remove(name);
-    }
+  if (typeof cls === 'string') {
+    el.className = cls;
+    return;
+  }
+  if (replace) el.className = '';
+  const list = el.classList;
+  for (const name in cls) {
+    const isAdd = cls[name];
+    isAdd ? list.add(name) : list.remove(name);
+  }
 };
 
 export const clsx = (...classNames: any[]) => {
-    const sb: string[] = [];
-    for (const c of classNames) {
-        if (c) {
-            if (typeof c === 'string') sb.push(c);
-            else if (isList(c)) {
-                const cls = clsx(...c);
-                if (cls) sb.push(cls);
-            }
-        }
+  const sb: string[] = [];
+  for (const c of classNames) {
+    if (c) {
+      if (typeof c === 'string') sb.push(c);
+      else if (isList(c)) {
+        const cls = clsx(...c);
+        if (cls) sb.push(cls);
+      }
     }
-    return sb.join(' ') || undefined;
-}
+  }
+  return sb.join(' ') || undefined;
+};
 
 let _colors: Record<string, string> = {};
 
-type CssTransform = string|{
-    rotate?: string|number, // 0deg
-    scale?: string|number,
-    translateX?: string|number,
-    translateY?: string|number,
-}
+type CssTransform =
+  | string
+  | {
+      rotate?: string | number; // 0deg
+      scale?: string | number;
+      translateX?: string | number;
+      translateY?: string | number;
+    };
 
-type AnimValue = string|{
-    name?: string,
-    count?: JSX.CSSProperties['animationIterationCount'],
-    timing?: JSX.CSSProperties['animationTimingFunction'],
-    duration?: JSX.CSSProperties['animationDuration'],
-    keyframes?: Record<'from'|'to'|string, { transform: CssTransform }>;
-}
+type AnimValue =
+  | string
+  | {
+      name?: string;
+      count?: JSX.CSSProperties['animationIterationCount'];
+      timing?: JSX.CSSProperties['animationTimingFunction'];
+      duration?: JSX.CSSProperties['animationDuration'];
+      keyframes?: Record<'from' | 'to' | string, { transform: CssTransform }>;
+    };
 
 interface CssContext {
-    key: string,
-    css: Record<string, CssRecord>,
-    t?: string[],
-    a?: string[],
+  key: string;
+  css: Record<string, CssRecord>;
+  t?: string[];
+  a?: string[];
 }
 
 const transformToCss = (transform: CssTransform) => {
-    if (typeof transform === 'string') return transform;
-    const { rotate: r, scale: s, translateX: x, translateY: y } = transform;
-    let css = '';
-    if (r) css += `rotate(${isNbr(r) ? `${r}deg` : r});`;
-    if (s) css += `scale(${s});`;
-    if (x) css += `translateX(${isNbr(x) ? `${x}%` : x});`;
-    if (y) css += `translateY(${isNbr(y) ? `${y}%` : y});`;
-    return css;
-}
+  if (typeof transform === 'string') return transform;
+  const { rotate: r, scale: s, translateX: x, translateY: y } = transform;
+  let css = '';
+  if (r) css += `rotate(${isNbr(r) ? `${r}deg` : r});`;
+  if (s) css += `scale(${s});`;
+  if (x) css += `translateX(${isNbr(x) ? `${x}%` : x});`;
+  if (y) css += `translateY(${isNbr(y) ? `${y}%` : y});`;
+  return css;
+};
 
-let animId = 0; 
+let animId = 0;
 
 const animToCss = (value: AnimValue, ctx: CssContext) => {
-    if (typeof value === 'string') return `animation:${value};`;
-    const { keyframes, duration, count, timing } = value;
-    let { name } = value;
-    if (!name) name = `m4kAnim${animId++}`;
-    const sb = ctx.a || (ctx.a = []);
-    sb.push(`@keyframes ${name} {`);
-    for (const key in keyframes) {
-        const { transform } = keyframes[key];
-        sb.push(`  ${key} { transform: ${transformToCss(transform)}; }`);
-    }
-    sb.push(`}`);
-    let css = `animation-name:${name};`;
-    if (duration) css += `animation-duration:${duration};`;
-    if (count) css += `animation-iteration-count:${count};`;
-    if (timing) css += `animation-timing-function:${timing};`;
-    return css;
-}
+  if (typeof value === 'string') return `animation:${value};`;
+  const { keyframes, duration, count, timing } = value;
+  let { name } = value;
+  if (!name) name = `m4kAnim${animId++}`;
+  const sb = ctx.a || (ctx.a = []);
+  sb.push(`@keyframes ${name} {`);
+  for (const key in keyframes) {
+    const { transform } = keyframes[key];
+    sb.push(`  ${key} { transform: ${transformToCss(transform)}; }`);
+  }
+  sb.push(`}`);
+  let css = `animation-name:${name};`;
+  if (duration) css += `animation-duration:${duration};`;
+  if (count) css += `animation-iteration-count:${count};`;
+  if (timing) css += `animation-timing-function:${timing};`;
+  return css;
+};
 
-const transformProp = (prop: string) => (value: number|string, ctx: CssContext) => {
-    const sb = ctx.t || (ctx.t = []);
-    sb.push(`${prop}(${value})`);
-    return '';
-}
+const transformProp = (prop: string) => (value: number | string, ctx: CssContext) => {
+  const sb = ctx.t || (ctx.t = []);
+  sb.push(`${prop}(${value})`);
+  return '';
+};
 
 const l = (v: Em) => `left:${em(v)};`;
 const t = (v: Em) => `top:${em(v)};`;
@@ -295,204 +308,215 @@ const pr = (v: Em) => `padding-${r(v)};`;
 const px = (v: Em) => pl(v) + pr(v);
 const py = (v: Em) => pt(v) + pb(v);
 
-type Em = number|string|(number|string)[];
-const em = (v: Em): string => typeof v === 'number' ? v + 'rem' : typeof v === 'string' ? v : v.map(em).join(' ');
+type Em = number | string | (number | string)[];
+const em = (v: Em): string =>
+  typeof v === 'number' ? v + 'rem' : typeof v === 'string' ? v : v.map(em).join(' ');
 const cssFunMap = {
-    x,
-    y,
-    xy,
+  x,
+  y,
+  xy,
 
-    l,
-    t,
-    r,
-    b,
+  l,
+  t,
+  r,
+  b,
 
-    w,
-    h,
-    wh,
+  w,
+  h,
+  wh,
 
-    wMax,
-    hMax,
-    whMax,
+  wMax,
+  hMax,
+  whMax,
 
-    wMin,
-    hMin,
-    whMin,
+  wMin,
+  hMin,
+  whMin,
 
-    fontSize,
+  fontSize,
 
-    m,
-    mt,
-    mb,
-    ml,
-    mr,
-    mx,
-    my,
+  m,
+  mt,
+  mb,
+  ml,
+  mr,
+  mx,
+  my,
 
-    p,
-    pt,
-    pb,
-    pl,
-    pr,
-    px,
-    py,
+  p,
+  pt,
+  pb,
+  pl,
+  pr,
+  px,
+  py,
 
-    elevation: (v: number) => `box-shadow:${em(v*.1)} ${em(v*.2)} ${em(v*.25)} 0px ${_colors.shadow||'#000000AA'};`,
-    rounded: (v: number) => `border-radius:${em(v*.2)};`,
+  elevation: (v: number) =>
+    `box-shadow:${em(v * 0.1)} ${em(v * 0.2)} ${em(v * 0.25)} 0px ${_colors.shadow || '#000000AA'};`,
+  rounded: (v: number) => `border-radius:${em(v * 0.2)};`,
 
-    inset,
+  inset,
 
-    bg: (v: string) => `background-color:${_colors[v]||v};`,
-    fg: (v: string) => `color:${_colors[v]||v};`,
-    border: (v: number|string) => `border:${_colors[v] ? `${_colors[v]} 1px solid` : v};`,
-    bgUrl: (v: string) => `background-image: url("${v}");`,
-    bgMode: (v: 'contain'|'cover'|'fill') => `background-repeat:no-repeat;background-position:center;background-size:${v === 'fill' ? '100% 100%' : v};`,
+  bg: (v: string) => `background-color:${_colors[v] || v};`,
+  fg: (v: string) => `color:${_colors[v] || v};`,
+  border: (v: number | string) => `border:${_colors[v] ? `${_colors[v]} 1px solid` : v};`,
+  bgUrl: (v: string) => `background-image: url("${v}");`,
+  bgMode: (v: 'contain' | 'cover' | 'fill') =>
+    `background-repeat:no-repeat;background-position:center;background-size:${v === 'fill' ? '100% 100%' : v};`,
 
-    itemFit: (v: 'contain'|'cover'|'fill') => 
-        v === 'contain' ? `object-fit:contain;max-width:100%;max-height:100%;` :
-        v === 'cover' ? `object-fit:cover;min-width:100%;min-height:100%;` :
-        v === 'fill' ? `object-fit:fill;min-width:100%;min-height:100%;` :
-        '',
-    
-    anim: animToCss,
-    transition: (v: number|string|boolean) => (
-        typeof v === 'number' ? `transition:all ${v}s ease;` :
-        typeof v === 'string' ? `transition:${v};` :
-        v === true ? 'transition:all 0.3s ease;' :
-        ''
-    ),
+  itemFit: (v: 'contain' | 'cover' | 'fill') =>
+    v === 'contain'
+      ? `object-fit:contain;max-width:100%;max-height:100%;`
+      : v === 'cover'
+        ? `object-fit:cover;min-width:100%;min-height:100%;`
+        : v === 'fill'
+          ? `object-fit:fill;min-width:100%;min-height:100%;`
+          : '',
 
-    rotate: transformProp('rotate'),
+  anim: animToCss,
+  transition: (v: number | string | boolean) =>
+    typeof v === 'number'
+      ? `transition:all ${v}s ease;`
+      : typeof v === 'string'
+        ? `transition:${v};`
+        : v === true
+          ? 'transition:all 0.3s ease;'
+          : '',
 
-    scale: transformProp('scale'),
-    scaleX: transformProp('scaleX'),
-    scaleY: transformProp('scaleY'),
+  rotate: transformProp('rotate'),
 
-    translate: transformProp('translate'),
-    translateX: transformProp('translateX'),
-    translateY: transformProp('translateY'),
-}
+  scale: transformProp('scale'),
+  scaleX: transformProp('scaleX'),
+  scaleY: transformProp('scaleY'),
 
-type CssFunMap = typeof cssFunMap
-export type CssRecord = JSX.CSSProperties | {
-    [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0]
-} | (JSX.CSSProperties & {
-    [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0]
-})
-export type Css = null|string|string[]|Record<string, CssRecord>;
+  translate: transformProp('translate'),
+  translateX: transformProp('translateX'),
+  translateY: transformProp('translateY'),
+};
+
+type CssFunMap = typeof cssFunMap;
+export type CssRecord =
+  | JSX.CSSProperties
+  | {
+      [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0];
+    }
+  | (JSX.CSSProperties & {
+      [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0];
+    });
+export type Css = null | string | string[] | Record<string, CssRecord>;
 
 const _cssMap: { [key: string]: [HTMLElement, Css] } = {};
 
 export const setCss = (key: string, css?: Css) => {
-    const old = _cssMap[key];
-    if (old) {
-        if (isEq(old[1], css)) return key;
-        old[0].remove();
-        delete _cssMap[key];
-    }
-    if (css) {
-        const el = createEl('style');
-        let content = '';
-        if (typeof css === 'object') {
-            if (isList(css)) {
-                content = css.join('\n');
+  const old = _cssMap[key];
+  if (old) {
+    if (isEq(old[1], css)) return key;
+    old[0].remove();
+    delete _cssMap[key];
+  }
+  if (css) {
+    const el = createEl('style');
+    let content = '';
+    if (typeof css === 'object') {
+      if (isList(css)) {
+        content = css.join('\n');
+      } else {
+        const sb: string[] = [];
+        const kPrefix = '.' + key;
+        for (const k in css) {
+          const ctx: CssContext = { key, css };
+          sb.push(`${k.replace(/&/g, kPrefix)} {`);
+          const props = css[k];
+          for (const prop in props) {
+            const value = (props as any)[prop];
+            if (prop in cssFunMap) {
+              sb.push('  ' + (cssFunMap as any)[prop](value, ctx));
+            } else {
+              const name = prop.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+              sb.push(`  ${name}:${value};`);
             }
-            else {
-                const sb: string[] = [];
-                const kPrefix = '.' + key;
-                for (const k in css) {
-                    const ctx: CssContext = { key, css };
-                    sb.push(`${k.replace(/&/g, kPrefix)} {`);
-                    const props = css[k];
-                    for (const prop in props) {
-                        const value = (props as any)[prop];
-                        if (prop in cssFunMap) {
-                            sb.push('  ' + (cssFunMap as any)[prop](value, ctx));
-                        } else {
-                            const name = prop.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
-                            sb.push(`  ${name}:${value};`);
-                        }
-                    }
-                    if (ctx.t) sb.push(`  transform: ${ctx.t.join(' ')};`);
-                    sb.push('}');
-                    if (ctx.a) sb.push(...ctx.a);
-                }
-                content = sb.join('\n');
-            }
-        } else {
-            content = String(css);
+          }
+          if (ctx.t) sb.push(`  transform: ${ctx.t.join(' ')};`);
+          sb.push('}');
+          if (ctx.a) sb.push(...ctx.a);
         }
-        el.textContent = content;
-        document.head.appendChild(el);
-        _cssMap[key] = [el, css];
+        content = sb.join('\n');
+      }
+    } else {
+      content = String(css);
     }
-    return key
+    el.textContent = content;
+    document.head.appendChild(el);
+    _cssMap[key] = [el, css];
+  }
+  return key;
 };
 
 export const refreshCss = () => {
-    const map = _cssMap;
-    for (const key in map) setCss(key, null);
-    for (const key in map) setCss(key, map[key][1]);
-}
+  const map = _cssMap;
+  for (const key in map) setCss(key, null);
+  for (const key in map) setCss(key, map[key][1]);
+};
 
 export const setCssColors = (colors: Record<string, string>) => {
-    _colors = colors;
-    refreshCss();
-}
+  _colors = colors;
+  refreshCss();
+};
 
 export const htmlToEl = (html: string) => {
-    const el = createEl('div');
-    el.innerHTML = html;
-    return el.children[0];
+  const el = createEl('div');
+  el.innerHTML = html;
+  return el.children[0];
 };
 
 export const setStyle = (el: HTMLElement, style: Style | string, update?: boolean) => {
-    if (typeof style === 'string') return setAttrs(el, { style }, true);
-    if (!update) setAttrs(el, { style: '' }, true);
-    Object.assign(el.style, style);
+  if (typeof style === 'string') return setAttrs(el, { style }, true);
+  if (!update) setAttrs(el, { style: '' }, true);
+  Object.assign(el.style, style);
 };
 
 export type ElOptions = Omit<Omit<Partial<HTMLAllElement>, 'children'>, 'style'> & {
-    readonly reset?: boolean;
-    readonly cls?: Cls;
-    readonly style?: Style;
-    readonly attrs?: Record<string, any>;
-    readonly children?: HTMLElement[];
-    readonly ctn?: string;
-    readonly parent?: 'body'|HTMLElement;
+  readonly reset?: boolean;
+  readonly cls?: Cls;
+  readonly style?: Style;
+  readonly attrs?: Record<string, any>;
+  readonly children?: HTMLElement[];
+  readonly ctn?: string;
+  readonly parent?: 'body' | HTMLElement;
 };
 
-export const El = (el: HTMLElement|keyof HTMLElementTagNameMap, o?: ElOptions) => {
-    const id = o?.id;
-    const last = id && document.getElementById(id);
-    el = typeof el === 'string' ? last || createEl(el) : el;
-    if (id) el.id = id;
-    
-    if (!o) return el;
+export const El = (el: HTMLElement | keyof HTMLElementTagNameMap, o?: ElOptions) => {
+  const id = o?.id;
+  const last = id && document.getElementById(id);
+  el = typeof el === 'string' ? last || createEl(el) : el;
+  if (id) el.id = id;
 
-    const { reset, attrs, style, cls, children, ctn, parent, ...rest } = o;
+  if (!o) return el;
 
-    if (reset) setAttrs(el, {});
-    if (attrs) setAttrs(el, attrs, true);
-    if (style) setStyle(el, style, true);
-    if (cls) setCls(el, cls, true);
-    if (ctn) el.innerHTML = ctn;
-    if (parent) (parent === 'body' ? document.body : parent).appendChild(el);
+  const { reset, attrs, style, cls, children, ctn, parent, ...rest } = o;
 
-    Object.assign(el, rest);
+  if (reset) setAttrs(el, {});
+  if (attrs) setAttrs(el, attrs, true);
+  if (style) setStyle(el, style, true);
+  if (cls) setCls(el, cls, true);
+  if (ctn) el.innerHTML = ctn;
+  if (parent) (parent === 'body' ? document.body : parent).appendChild(el);
 
-    if (children) for (const childEl of children) el.appendChild(childEl);
+  Object.assign(el, rest);
 
-    return el;
+  if (children) for (const childEl of children) el.appendChild(childEl);
+
+  return el;
 };
 
 export const setEl = (el: HTMLElement, options?: ElOptions) => El(el, options);
-export const addEl = (tag: keyof HTMLElementTagNameMap = 'div', options?: ElOptions) => El(tag, options);
+export const addEl = (tag: keyof HTMLElementTagNameMap = 'div', options?: ElOptions) =>
+  El(tag, options);
 
-    // for (const el of els) el && containerEl.appendChild(el);
-    //     const el =  as HTMLElement;
-    //     return ;
-    // };
+// for (const el of els) el && containerEl.appendChild(el);
+//     const el =  as HTMLElement;
+//     return ;
+// };
 
 // export const newDialog = (options: ElOptions = {}) => {
 //     setCss('mDialog', '.mDialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999999;' +
@@ -543,8 +567,7 @@ export const addEl = (tag: keyof HTMLElementTagNameMap = 'div', options?: ElOpti
 // }
 
 export const setSiteTitle = (title: string) => {
-    const titleEl = document.getElementsByTagName('title')[0];
-    if (titleEl) titleEl.innerText = title;
-    document.title = title;
+  const titleEl = document.getElementsByTagName('title')[0];
+  if (titleEl) titleEl.innerText = title;
+  document.title = title;
 };
-

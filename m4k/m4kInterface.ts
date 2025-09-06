@@ -1,30 +1,30 @@
 export interface M4kExecResult {
-    cmd: string,
-    out: string,
-    err: string,
-    code: number,
+  cmd: string;
+  out: string;
+  err: string;
+  code: number;
 }
 
 export interface M4kFileInfo {
-    type: 'file'|'dir'|'';
-    path: string;
-    mimeType: string;
-    size: number;
-    accessed: number;
-    modified: number;
-    created: number;
-    url: string;
-    width?: number;
-    height?: number;
+  type: 'file' | 'dir' | '';
+  path: string;
+  mimeType: string;
+  size: number;
+  accessed: number;
+  modified: number;
+  created: number;
+  url: string;
+  width?: number;
+  height?: number;
 }
 
 export interface M4kLog {
-    tag?: string;
-    level: string;
-    message: string;
-    data?: any;
-    source?: string;
-    line?: number;
+  tag?: string;
+  level: string;
+  message: string;
+  data?: any;
+  source?: string;
+  line?: number;
 }
 
 // export type PlaylistItem = M4kFileInfo & {
@@ -65,101 +65,101 @@ export interface M4kLog {
 // }
 
 export interface M4kConfig {
-    ///// URL /////
-    startUrl?: string;
-    zipUrl?: string;
-    url?: string;
+  ///// URL /////
+  startUrl?: string;
+  zipUrl?: string;
+  url?: string;
 
-    ///// Authentication /////
-    password?: string;
+  ///// Authentication /////
+  password?: string;
 
-    ///// Playlist /////
-    copyDir?: string;
-    itemDurationMs?: number;
-    itemFit?: 'contain'|'cover'|'fill';
-    itemAnim?: 'rightToLeft'|'topToBottom'|'fade'|'zoom';
-    hasVideoMuted?: boolean;
-    playlist?: any[];
+  ///// Playlist /////
+  copyDir?: string;
+  itemDurationMs?: number;
+  itemFit?: 'contain' | 'cover' | 'fill';
+  itemAnim?: 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
+  hasVideoMuted?: boolean;
+  playlist?: any[];
 
-    ///// UI /////
-    backColor?: string;
+  ///// UI /////
+  backColor?: string;
 
-    ///// Device /////
-    deviceUsername?: string;
-    devicePassword?: string;
+  ///// Device /////
+  deviceUsername?: string;
+  devicePassword?: string;
 
-    ///// Cache /////
-    deleteCacheOnReload?: boolean;
-    deleteHistoryOnReload?: boolean;
-    deleteStorageOnReload?: boolean;
-    deleteCookiesOnReload?: boolean;
-    syncM4kStorage?: boolean;
+  ///// Cache /////
+  deleteCacheOnReload?: boolean;
+  deleteHistoryOnReload?: boolean;
+  deleteStorageOnReload?: boolean;
+  deleteCookiesOnReload?: boolean;
+  syncM4kStorage?: boolean;
 
-    ///// App /////
-    restartOnCrash?: boolean;
-    restartHours?: number; // 22h30 -> 22,5
-    rebootHours?: number; // 22h30 -> 22,5
-    reloadIdle?: number;
-    appToRunOnStart?: string;
+  ///// App /////
+  restartOnCrash?: boolean;
+  restartHours?: number; // 22h30 -> 22,5
+  rebootHours?: number; // 22h30 -> 22,5
+  reloadIdle?: number;
+  appToRunOnStart?: string;
 
-    ///// Screen /////
+  ///// Screen /////
 
-    /** Screen orientation (0=portrait, 1=landscape, etc.) */
-    screenOrientation?: number;
-    keepScreenOn?: boolean;
-    screenStartHours?: string; // 22h30 -> 22,5
-    screenEndHours?: string; // 22h30 -> 22,5
+  /** Screen orientation (0=portrait, 1=landscape, etc.) */
+  screenOrientation?: number;
+  keepScreenOn?: boolean;
+  screenStartHours?: string; // 22h30 -> 22,5
+  screenEndHours?: string; // 22h30 -> 22,5
 
-    ///// Kiosk //////
-    showActionBar?: boolean;
-    showStatusBar?: boolean;
-    launchOnBoot?: boolean;
-    kioskPin?: string;
-    kioskMode?: string;
-    forceImmersive?: boolean;
-    hideKeyboard?: boolean;
-    allowTextSelection?: boolean;
-    confirmExit?: boolean;
+  ///// Kiosk //////
+  showActionBar?: boolean;
+  showStatusBar?: boolean;
+  launchOnBoot?: boolean;
+  kioskPin?: string;
+  kioskMode?: string;
+  forceImmersive?: boolean;
+  hideKeyboard?: boolean;
+  allowTextSelection?: boolean;
+  confirmExit?: boolean;
 
-    ///// Server /////
-    enableLocalhost?: boolean;
+  ///// Server /////
+  enableLocalhost?: boolean;
 
-    ///// WiFi /////
-    resetWifiOnDisconnection?: boolean;
-    resetWifiEachSeconds?: number;
-    wifiType?: string;
-    wifiName?: string;
-    wifiPass?: string;
+  ///// WiFi /////
+  resetWifiOnDisconnection?: boolean;
+  resetWifiEachSeconds?: number;
+  wifiType?: string;
+  wifiName?: string;
+  wifiPass?: string;
 
-    ///// Idle /////
-    reloadEachSeconds?: number;
+  ///// Idle /////
+  reloadEachSeconds?: number;
 
-    ///// Zoom /////
-    initialScale?: number;
-    textZoom?: number;
-    enableZoom?: boolean;
-    resetZoom?: number;
-    resetZoomMs?: number;
-    builtInZoomControls?: boolean;
-    displayZoomControls?: boolean;
+  ///// Zoom /////
+  initialScale?: number;
+  textZoom?: number;
+  enableZoom?: boolean;
+  resetZoom?: number;
+  resetZoomMs?: number;
+  builtInZoomControls?: boolean;
+  displayZoomControls?: boolean;
 
-    ///// InjectJs /////
-    injectSh?: string;
-    injectJs?: string;
+  ///// InjectJs /////
+  injectSh?: string;
+  injectJs?: string;
 
-    ///// WebView //////
-    debuggingEnabled?: boolean;
-    domStorageEnabled?: boolean;
-    loadWithOverviewMode?: boolean;
-    useWideViewPort?: boolean;
-    allowContentAccess?: boolean;
-    allowFileAccess?: boolean;
-    mediaPlaybackRequiresUserGesture?: boolean;
-    mixedContentMode?: 'never'|'compatible'|'always';
-    webviewMixedContent?: number; // TODO
-    desktopMode?: boolean;
-    customUserAgent?: string;
-    autoplayVideo?: boolean;
+  ///// WebView //////
+  debuggingEnabled?: boolean;
+  domStorageEnabled?: boolean;
+  loadWithOverviewMode?: boolean;
+  useWideViewPort?: boolean;
+  allowContentAccess?: boolean;
+  allowFileAccess?: boolean;
+  mediaPlaybackRequiresUserGesture?: boolean;
+  mixedContentMode?: 'never' | 'compatible' | 'always';
+  webviewMixedContent?: number; // TODO
+  desktopMode?: boolean;
+  customUserAgent?: string;
+  autoplayVideo?: boolean;
 }
 
 // interface BridgeConfig {
@@ -176,197 +176,211 @@ export interface M4kConfig {
 // }
 
 export interface M4kDeviceInfo {
-    webview?: string;
-    type?: string;
-    os?: string;
-    ip?: string;
-    width?: number;
-    height?: number;
-    storage?: string;
-    model?: string;
-    architecture?: string;
+  webview?: string;
+  type?: string;
+  os?: string;
+  ip?: string;
+  width?: number;
+  height?: number;
+  storage?: string;
+  model?: string;
+  architecture?: string;
 }
 
 export interface M4kPackageInfo {
-    packageName: string;
-    appName: string;
-    category: number;
-    flags: number;
-    dataDir: string;
-    enabled: boolean;
+  packageName: string;
+  appName: string;
+  category: number;
+  flags: number;
+  dataDir: string;
+  enabled: boolean;
 
-    versionName?: string;
-    versionCode?: number;
-    
-    isSystemApp: boolean;
-    isUpdatedSystemApp: boolean;
-    
-    permissions?: string[];
-    
-    activities?: {
-        package: string;
-        name: string;
-        exported: boolean;
+  versionName?: string;
+  versionCode?: number;
+
+  isSystemApp: boolean;
+  isUpdatedSystemApp: boolean;
+
+  permissions?: string[];
+
+  activities?: {
+    package: string;
+    name: string;
+    exported: boolean;
+  }[];
+
+  mainActivities?: {
+    package: string;
+    name: string;
+    exported: boolean;
+  }[];
+
+  intentFilters?: {
+    activity: string;
+    filters: {
+      actions?: string[];
+      categories?: string[];
+      schemes?: string[];
+      authorities?: {
+        host: string;
+        port: number;
+      }[];
+      paths?: string[];
     }[];
-    
-    mainActivities?: {
-        package: string;
-        name: string;
-        exported: boolean;
-    }[];
-    
-    intentFilters?: {
-        activity: string;
-        filters: {
-            actions?: string[];
-            categories?: string[];
-            schemes?: string[];
-            authorities?: {
-                host: string;
-                port: number;
-            }[];
-            paths?: string[];
-        }[];
-    }[];
+  }[];
 }
 
-export type M4kFlag = 
-    "broughtToFront"|
-    "clearTask"|
-    "clearTop"|
-    "clearWhenTaskReset"|
-    "excludeFromRecents"|
-    "forwardResult"|
-    "launchedFromHistory"|
-    "launchAdjacent"|
-    "matchExternal"|
-    "multipleTask"|
-    "newDocument"|
-    "newTask"|
-    "noAnimation"|
-    "noHistory"|
-    "noUserAction"|
-    "previousIsTop"|
-    "reorderToFront"|
-    "requireDefault"|
-    "requireNonBrowser"|
-    "resetTaskIfNeeded"|
-    "retainInRecents"|
-    "singleTop"|
-    "taskOnHome"|
-    "debugLogResolution"|
-    "directBootAuto"|
-    "excludeStoppedPackages"|
-    "fromBackground"|
-    "grantPersistableUriPermission"|
-    "grantPrefixUriPermission"|
-    "grantReadUriPermission"|
-    "grantWriteUriPermission"|
-    "includeStoppedPackages"|
-    "receiverForeground"|
-    "receiverNoAbort"|
-    "receiverRegisteredOnly"|
-    "receiverReplacePending"|
-    "receiverVisibleToInstantApps"
+export type M4kFlag =
+  | 'broughtToFront'
+  | 'clearTask'
+  | 'clearTop'
+  | 'clearWhenTaskReset'
+  | 'excludeFromRecents'
+  | 'forwardResult'
+  | 'launchedFromHistory'
+  | 'launchAdjacent'
+  | 'matchExternal'
+  | 'multipleTask'
+  | 'newDocument'
+  | 'newTask'
+  | 'noAnimation'
+  | 'noHistory'
+  | 'noUserAction'
+  | 'previousIsTop'
+  | 'reorderToFront'
+  | 'requireDefault'
+  | 'requireNonBrowser'
+  | 'resetTaskIfNeeded'
+  | 'retainInRecents'
+  | 'singleTop'
+  | 'taskOnHome'
+  | 'debugLogResolution'
+  | 'directBootAuto'
+  | 'excludeStoppedPackages'
+  | 'fromBackground'
+  | 'grantPersistableUriPermission'
+  | 'grantPrefixUriPermission'
+  | 'grantReadUriPermission'
+  | 'grantWriteUriPermission'
+  | 'includeStoppedPackages'
+  | 'receiverForeground'
+  | 'receiverNoAbort'
+  | 'receiverRegisteredOnly'
+  | 'receiverReplacePending'
+  | 'receiverVisibleToInstantApps';
 
 export interface M4kIntentOptions {
-    uri?: string;
-    action?: string;
-    type?: string;
-    package?: string;
-    component?: string;
-    flags?: M4kFlag[]|number;
-    categories?: string[];
-    extras?: Record<string, any>;
+  uri?: string;
+  action?: string;
+  type?: string;
+  package?: string;
+  component?: string;
+  flags?: M4kFlag[] | number;
+  categories?: string[];
+  extras?: Record<string, any>;
 }
 
-export type M4kPath = string|string[];
+export type M4kPath = string | string[];
 export type _M4kEvent =
-    { type: 'touch', action: 'up'|'down'|'move', x: number, y: number, xRatio: number, yRatio: number }|
-    { type: 'storage', action: "mounted"|"removed"|"unmounted"|"eject", path: 'string' }|
-    { type: 'test' };
+  | {
+      type: 'touch';
+      action: 'up' | 'down' | 'move';
+      x: number;
+      y: number;
+      xRatio: number;
+      yRatio: number;
+    }
+  | { type: 'storage'; action: 'mounted' | 'removed' | 'unmounted' | 'eject'; path: 'string' }
+  | { type: 'test' };
 export type M4kEvent = _M4kEvent & { id: string };
 export type M4kSignalEvent = _M4kEvent & { id?: string };
 
 // TODO update on apk
 export type M4kResizeOptions = {
-    dest?: M4kPath,
-    quality?: number,
-    format?: 'jpeg'|'png',
-    min?: number|[number, number], // widthHeight | [width, height]
-    max?: number|[number, number], // widthHeight | [width, height]
-    // transform?: '90deg'|'180deg'|'270deg'|'flipX'|'flipY',
+  dest?: M4kPath;
+  quality?: number;
+  format?: 'jpeg' | 'png';
+  min?: number | [number, number]; // widthHeight | [width, height]
+  max?: number | [number, number]; // widthHeight | [width, height]
+  // transform?: '90deg'|'180deg'|'270deg'|'flipX'|'flipY',
 };
 
 export interface M4Kiosk {
-    global: any;
+  global: any;
 
-    pressKey(key: string): Promise<void>;
-    tap(x: number, y:number): Promise<void>;
-    swipe(x: number, y:number, xEnd: number, yEnd:number, ms:number): Promise<void>;
-    move(x: number, y:number): Promise<void>;
-    down(x: number, y:number): Promise<void>;
-    up(x: number, y:number): Promise<void>;
-    inputText(text: string): Promise<void>;
+  pressKey(key: string): Promise<void>;
+  tap(x: number, y: number): Promise<void>;
+  swipe(x: number, y: number, xEnd: number, yEnd: number, ms: number): Promise<void>;
+  move(x: number, y: number): Promise<void>;
+  down(x: number, y: number): Promise<void>;
+  up(x: number, y: number): Promise<void>;
+  inputText(text: string): Promise<void>;
 
-    loadJs(path: string): Promise<any>;
-    eval(script: string): Promise<null|string|number>;
-    js(script: string): Promise<{ success: boolean, value?: any, error?: string }>;
-    su(cmd: string): Promise<M4kExecResult>;
-    sh(cmd: string): Promise<M4kExecResult>;
+  loadJs(path: string): Promise<any>;
+  eval(script: string): Promise<null | string | number>;
+  js(script: string): Promise<{ success: boolean; value?: any; error?: string }>;
+  su(cmd: string): Promise<M4kExecResult>;
+  sh(cmd: string): Promise<M4kExecResult>;
 
-    // setStorage(json: string): Promise<void>;
-    // getStorage(): Promise<string>;
+  // setStorage(json: string): Promise<void>;
+  // getStorage(): Promise<string>;
 
-    setConfig(config: M4kConfig): Promise<void>;
-    getConfig(): Promise<M4kConfig>;
-    
-    fileInfo(path: M4kPath): Promise<M4kFileInfo>;
-    absolutePath(path: M4kPath): Promise<string>;
-    mkdir(path: M4kPath): Promise<void>;
-    ls(path: M4kPath, recursive?: boolean): Promise<string[]>;
-    cp(path: M4kPath, dest: M4kPath): Promise<void>;
-    mv(path: M4kPath, dest: M4kPath): Promise<void>;
-    rm(path: M4kPath): Promise<void>;
-    zip(path: M4kPath, dest?: M4kPath, uncompressed?: boolean): Promise<void>;
-    unzip(path: M4kPath, dest?: M4kPath): Promise<void>;
+  setConfig(config: M4kConfig): Promise<void>;
+  getConfig(): Promise<M4kConfig>;
 
-    download(url: string, dest?: M4kPath): Promise<void>;
+  fileInfo(path: M4kPath): Promise<M4kFileInfo>;
+  absolutePath(path: M4kPath): Promise<string>;
+  mkdir(path: M4kPath): Promise<void>;
+  ls(path: M4kPath, recursive?: boolean): Promise<string[]>;
+  cp(path: M4kPath, dest: M4kPath): Promise<void>;
+  mv(path: M4kPath, dest: M4kPath): Promise<void>;
+  rm(path: M4kPath): Promise<void>;
+  zip(path: M4kPath, dest?: M4kPath, uncompressed?: boolean): Promise<void>;
+  unzip(path: M4kPath, dest?: M4kPath): Promise<void>;
 
-    pdfToImages(path: M4kPath, options?: M4kResizeOptions & { pages?: number[] }): Promise<M4kFileInfo[]>;
-    resize(path: M4kPath, options?: M4kResizeOptions): Promise<string>;
-    capture(options?: M4kResizeOptions): Promise<string>;
+  download(url: string, dest?: M4kPath): Promise<void>;
 
-    readAsset(path: string, encoding?: 'utf8'|'base64'): Promise<string|undefined>;
-    read(path: string, encoding?: 'utf8'|'base64'): Promise<string|undefined>;
-    write(path: string, content: string, encoding?: 'utf8'|'base64', append?: boolean): Promise<void>;
-    url(path: string): Promise<string>;
-    reboot(): Promise<void>;
-    restart(): Promise<void>;
-    reload(): Promise<void>;
-    exit(): Promise<void>;
-    info(): Promise<M4kDeviceInfo>;
-    setKioskOn(val: boolean): Promise<void>;
-    setScreenOn(val: boolean): Promise<void>;
-    
-    log(level: string, message: string, data?: any, source?: string, line?: number): Promise<void>;
-    // popLogs(count?: number): Promise<M4kLog[]>;
-    
-    // wvKey(): Promise<string>;
-    // wvList(): Promise<Record<string, M4kWebViewConfig>>;
-    // wvConfig(options: { reset?: boolean, [key: string]: M4kWebViewConfig|boolean|undefined }): Promise<void>;
+  pdfToImages(
+    path: M4kPath,
+    options?: M4kResizeOptions & { pages?: number[] }
+  ): Promise<M4kFileInfo[]>;
+  resize(path: M4kPath, options?: M4kResizeOptions): Promise<string>;
+  capture(options?: M4kResizeOptions): Promise<string>;
 
-    installedPackages(): Promise<String[]>;
-    packageInfo(name: String): Promise<M4kPackageInfo>;
-    startIntent(options: M4kIntentOptions|string): Promise<void>;
+  readAsset(path: string, encoding?: 'utf8' | 'base64'): Promise<string | undefined>;
+  read(path: string, encoding?: 'utf8' | 'base64'): Promise<string | undefined>;
+  write(
+    path: string,
+    content: string,
+    encoding?: 'utf8' | 'base64',
+    append?: boolean
+  ): Promise<void>;
+  url(path: string): Promise<string>;
+  reboot(): Promise<void>;
+  restart(): Promise<void>;
+  reload(): Promise<void>;
+  exit(): Promise<void>;
+  info(): Promise<M4kDeviceInfo>;
+  setKioskOn(val: boolean): Promise<void>;
+  setScreenOn(val: boolean): Promise<void>;
 
-    installApk(path?: M4kPath): Promise<void>;
+  log(level: string, message: string, data?: any, source?: string, line?: number): Promise<void>;
+  // popLogs(count?: number): Promise<M4kLog[]>;
 
-    openAutoStart(): Promise<void>;
+  // wvKey(): Promise<string>;
+  // wvList(): Promise<Record<string, M4kWebViewConfig>>;
+  // wvConfig(options: { reset?: boolean, [key: string]: M4kWebViewConfig|boolean|undefined }): Promise<void>;
 
-    showMessage(message: string): Promise<void>;
+  installedPackages(): Promise<String[]>;
+  packageInfo(name: String): Promise<M4kPackageInfo>;
+  startIntent(options: M4kIntentOptions | string): Promise<void>;
 
-    subscribe(listener?: (event: M4kEvent) => void): () => void;
-    signal(event: M4kSignalEvent): void;
+  installApk(path?: M4kPath): Promise<void>;
+
+  openAutoStart(): Promise<void>;
+
+  showMessage(message: string): Promise<void>;
+
+  subscribe(listener?: (event: M4kEvent) => void): () => void;
+  signal(event: M4kSignalEvent): void;
 }
-

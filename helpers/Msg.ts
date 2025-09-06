@@ -1,9 +1,9 @@
-import { removeItem } from "./list";
-import { debounce, throttle } from "./async";
-import { toVoid } from "./cast";
-import { isDef, isFun } from "./check";
+import { removeItem } from './list';
+import { debounce, throttle } from './async';
+import { toVoid } from './cast';
+import { isDef, isFun } from './check';
 import { global } from '../helpers/global';
-import { getStored, setStored } from "./storage";
+import { getStored, setStored } from './storage';
 
 export type IMsgHandler<T> = (value: T, oldValue: T) => void;
 export type IMsgFilter<T> = (value: T) => boolean;
@@ -51,16 +51,16 @@ export class Msg<T = any> implements IMsg<T> {
   static from<T>(sourceOn: (target: IMsg<T | undefined>) => () => void): Msg<T | undefined>;
   static from<T>(
     sourceOn: (target: IMsg<T | undefined>) => () => void,
-    initValue?: T | undefined,
+    initValue?: T | undefined
   ): Msg<T | undefined> {
     const target = new Msg<T | undefined>(initValue);
     target.sOn = () => sourceOn(target);
     target.sHandler = toVoid;
     return target;
   }
-  
+
   static get<T>(key: string): Msg<T> {
-    return msgs[key]
+    return msgs[key];
   }
 
   public key?: string;
@@ -108,9 +108,9 @@ export class Msg<T = any> implements IMsg<T> {
     return this;
   }
 
-  merge(changes: Record<string,any>&Partial<T>) {
-    const prev = (this.v as any) || {}
-    this.set({ ...prev, ...changes } as any)
+  merge(changes: Record<string, any> & Partial<T>) {
+    const prev = (this.v as any) || {};
+    this.set({ ...prev, ...changes } as any);
   }
 
   subscribe(handler: (next: T) => void): IMsgSubscription {
@@ -139,11 +139,11 @@ export class Msg<T = any> implements IMsg<T> {
   map<U>(cb: (value: T) => U): IMsgReadonly<U>;
   map<U>(
     cb: (value: T) => U,
-    sourceHandler: (target: IMsg<U>) => IMsgHandler<any>,
+    sourceHandler: (target: IMsg<U>) => IMsgHandler<any>
   ): IMsgReadonly<U>;
   map<U>(
     cb: (value: T) => U,
-    sourceHandler?: (target: IMsg<U>) => IMsgHandler<any>,
+    sourceHandler?: (target: IMsg<U>) => IMsgHandler<any>
   ): IMsgReadonly<U> {
     const source = this as any;
     const target = new Msg<U>(cb(source.v));
@@ -157,13 +157,13 @@ export class Msg<T = any> implements IMsg<T> {
    * @example
    * a b c - - - d - - e - -
    * - - - - c - - - d - - e
-   * @param ms 
-   * @returns 
+   * @param ms
+   * @returns
    */
   debounce(ms: number): IMsgReadonly<T> {
     return this.map(
       () => this.v,
-      (target) => debounce((next) => target.set(next), ms),
+      (target) => debounce((next) => target.set(next), ms)
     );
   }
 
@@ -173,13 +173,13 @@ export class Msg<T = any> implements IMsg<T> {
    * a - c - d - - - e - f - g - (2s)
    * a - - d - - - - e - - g - - (3s)
    * a - - - d - - - e - - - g - (4s)
-   * @param ms 
-   * @returns 
+   * @param ms
+   * @returns
    */
   throttle(ms: number): IMsgReadonly<T> {
     return this.map(
       () => this.v,
-      (target) => throttle((next) => target.set(next), ms),
+      (target) => throttle((next) => target.set(next), ms)
     );
   }
 

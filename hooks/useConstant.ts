@@ -1,4 +1,4 @@
-import { useRef } from "preact/hooks";
+import { useRef } from 'preact/hooks';
 
 export const useConstant = <T>(fn: () => T): T => {
   const c = useRef<T[]>([]).current;

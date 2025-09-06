@@ -1,21 +1,21 @@
 /// <reference lib="dom" />
-import { Req } from "../helpers/req";
-import { parse } from "../helpers/json";
-import { pathJoin } from "../helpers/pathJoin";
-import { getApiUrl } from "./messages";
-import { toErr } from "@common/helpers";
+import { Req } from '../helpers/req';
+import { parse } from '../helpers/json';
+import { pathJoin } from '../helpers/pathJoin';
+import { getApiUrl } from './messages';
+import { toErr } from '@common/helpers';
 
 const initRealtime = () => {
-  let clientId: string = "";
-  let eventSource: EventSource|undefined = undefined;
-  let xhr: XMLHttpRequest|undefined = undefined;
+  let clientId: string = '';
+  let eventSource: EventSource | undefined = undefined;
+  let xhr: XMLHttpRequest | undefined = undefined;
   let intervalId: any;
-  let lastState = "";
+  let lastState = '';
   const subscriptions: Record<string, ((data: any) => void)[]> = {};
   const realtimeUrl = pathJoin(getApiUrl(), 'realtime');
 
   const isConnected = (): boolean => !!eventSource && !!clientId;
-  
+
   const addAllListeners = (eventSource: EventSource) => {
     console.debug('realtime addAllListeners', eventSource);
     for (const key in subscriptions) {
@@ -24,8 +24,8 @@ const initRealtime = () => {
         eventSource.addEventListener(key, listener);
       }
     }
-  }
-  
+  };
+
   const disconnect = () => {
     console.debug('realtime disconnect', !!xhr, !!eventSource, clientId);
     if (xhr) {
@@ -36,15 +36,15 @@ const initRealtime = () => {
       eventSource.close();
       eventSource = undefined;
     }
-    clientId = "";
-  }
-  
+    clientId = '';
+  };
+
   const connect = async () => {
-    console.debug('realtime connect', { realtimeUrl  });
+    console.debug('realtime connect', { realtimeUrl });
     await disconnect();
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       eventSource = new EventSource(realtimeUrl);
-      eventSource.addEventListener("PB_CONNECT", (e: MessageEvent) => {
+      eventSource.addEventListener('PB_CONNECT', (e: MessageEvent) => {
         console.debug('PB_CONNECT', e);
         if (!e) return console.warn('PB_CONNECT e');
         const id = (parse(e.data) || {}).clientId;
@@ -54,8 +54,8 @@ const initRealtime = () => {
       });
     });
     console.debug('realtime connected', { clientId });
-  }
-  
+  };
+
   const update = async (req: Req) => {
     try {
       console.debug('realtime update');
@@ -70,8 +70,7 @@ const initRealtime = () => {
       for (const key in subscriptions) {
         if (!subscriptions[key].length) {
           delete subscriptions[key];
-        }
-        else {
+        } else {
           subscriptionKeys.push(key);
         }
       }
@@ -80,17 +79,16 @@ const initRealtime = () => {
       if (!subscriptionKeys.length) return await disconnect();
       if (!isConnected()) await connect();
 
-
-//         await ky.post(this.getRealtimeUrl(), {
-//             json: {
-//                 clientId: this.clientId,
-//                 subscriptions: this.lastSentSubscriptions,
-//             },
-//             headers: {
-//                 Authorization: this.tokenRef.token,
-//             },
-//             signal: (this.cancel = new AbortController()).signal
-//         });
+      //         await ky.post(this.getRealtimeUrl(), {
+      //             json: {
+      //                 clientId: this.clientId,
+      //                 subscriptions: this.lastSentSubscriptions,
+      //             },
+      //             headers: {
+      //                 Authorization: this.tokenRef.token,
+      //             },
+      //             signal: (this.cancel = new AbortController()).signal
+      //         });
       await req('POST', realtimeUrl, {
         xhr: true,
         json: {
@@ -102,22 +100,21 @@ const initRealtime = () => {
         },
         before: (ctx) => {
           xhr = ctx.xhr;
-        }
+        },
       });
 
       xhr = undefined;
       if (eventSource) addAllListeners(eventSource);
-    }
-    catch (e) {
+    } catch (e) {
       const error = toErr(e);
       console.error('realtime update', error);
     }
-  }
+  };
 
   return {
     subscriptions,
     update,
-  }
-}
+  };
+};
 
 export const realtime = initRealtime();

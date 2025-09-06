@@ -1,4 +1,13 @@
-import { isEmpty, isErr, isItem, isItemEmpty, isNotEmpty, isStrEmpty, isStrNotEmpty, Item } from "./check";
+import {
+  isEmpty,
+  isErr,
+  isItem,
+  isItemEmpty,
+  isNotEmpty,
+  isStrEmpty,
+  isStrNotEmpty,
+  Item,
+} from './check';
 
 export interface ErrorInfo {
   name: string;
@@ -10,8 +19,8 @@ export interface ErrorInfo {
 export const getErrorInfo = (source: any, overrides?: Item): ErrorInfo => {
   let { name, message, stack, ...data } = Object.assign(
     {},
-    typeof source === "object" ? source : {},
-    overrides,
+    typeof source === 'object' ? source : {},
+    overrides
   );
   if (isErr(source)) {
     if (!name) name = source.name;
@@ -25,12 +34,15 @@ export const getErrorInfo = (source: any, overrides?: Item): ErrorInfo => {
   if (!isEmpty(stack)) info.stack = stack;
   if (!isEmpty(data)) info.data = data;
   return info;
-}
+};
 
 export class Err extends Error {
   data?: { [name: string]: any };
 
-  constructor(public source: any, overrides?: Record<string, any>) {
+  constructor(
+    public source: any,
+    overrides?: Record<string, any>
+  ) {
     super('');
     const info = getErrorInfo(source, overrides);
     Object.assign(this, info);
@@ -40,15 +52,14 @@ export class Err extends Error {
     if (data) this.data = this.data ? { ...this.data, ...data } : data;
     return this;
   }
-  
+
   toJSON() {
     const r: ErrorInfo = { name: this.name, message: this.message };
     if (this.stack) r.stack = this.stack;
     if (isNotEmpty(this.data)) {
       try {
         r.data = JSON.parse(JSON.stringify(this.data));
-      }
-      catch (e) {
+      } catch (e) {
         r.data = getErrorInfo(e);
       }
     }
@@ -67,12 +78,12 @@ export class Err extends Error {
 export const toErr = (e: any, data?: Item) => (e instanceof Err ? e : new Err(e)).merge(data);
 export const throwErr = (e: any, data?: Item) => {
   throw toErr(e, data);
-}
+};
 
 export const throwIf = <T>(value: T, check: (value: T) => any, error?: any) => {
   if (check(value)) throwErr(error, { data: { value } });
   return value;
-}
+};
 
 // export const toErr = (...args: any[]) => args[0] instanceof Err ? args[0] : new Err(...args);
 
@@ -84,15 +95,18 @@ export type Fun = (...args: any[]) => any;
 
 interface Catcher {
   <F extends Fun>(fun: F): (...args: Parameters<F>) => ReturnType<F> | undefined;
-  <F extends Fun, T>(fun: F, errHandler: T|((e: Err) => T)): (...args: Parameters<F>) => ReturnType<F> | T;
+  <F extends Fun, T>(
+    fun: F,
+    errHandler: T | ((e: Err) => T)
+  ): (...args: Parameters<F>) => ReturnType<F> | T;
 }
 
-export const catcher: Catcher = <T, F extends Fun>(fun: F, errHandler?: (e: Err) => T) => (
+export const catcher: Catcher =
+  <T, F extends Fun>(fun: F, errHandler?: (e: Err) => T) =>
   (...args: Parameters<F>): ReturnType<F> | T | undefined => {
     try {
       return fun(...args);
     } catch (error) {
       return typeof errHandler === 'function' ? errHandler(toErr(error)) : errHandler;
     }
-  }
-);
+  };
