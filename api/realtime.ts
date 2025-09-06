@@ -3,6 +3,7 @@ import { Req } from "../helpers/req";
 import { parse } from "../helpers/json";
 import { pathJoin } from "../helpers/pathJoin";
 import { getApiUrl } from "./messages";
+import { toErr } from "@common/helpers";
 
 const initRealtime = () => {
   let clientId: string = "";
@@ -107,7 +108,8 @@ const initRealtime = () => {
       xhr = undefined;
       if (eventSource) addAllListeners(eventSource);
     }
-    catch (error) {
+    catch (e) {
+      const error = toErr(e);
       console.error('realtime update', error);
     }
   }

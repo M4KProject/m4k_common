@@ -56,8 +56,11 @@ export class Err extends Error {
   }
 
   override toString() {
-    const j = this.toJSON();
-    return `${j.name}: ${j.message}\n${JSON.stringify(j.data, null, 2)}\n${j.stack}`;
+    const { name, message, data, stack } = this.toJSON();
+    let sb = `${name}: ${message}`;
+    if (data) sb += ' ' + JSON.stringify(data);
+    if (stack) sb += '\n' + stack;
+    return sb;
   }
 }
 

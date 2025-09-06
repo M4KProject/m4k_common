@@ -60,7 +60,8 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
                 canLog && console.debug('m4k', name, 'result', args, result);
                 return result;
             }
-            catch (error) {
+            catch (e) {
+                const error = toErr(e);
                 canLog && console.error('m4k', name, 'error', args, error);
                 throw error;
             }

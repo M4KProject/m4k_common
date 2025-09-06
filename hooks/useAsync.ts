@@ -1,6 +1,7 @@
 import { useMemo, useEffect } from "preact/hooks";
 import { Msg } from "../helpers/Msg";
 import { useMsg } from "./useMsg";
+import { toErr } from "@common/helpers";
 
 export const useAsync = <T>(initValue: T, load: () => T|Promise<T>, storedKey?: string|null, deps?: any[]): [T, () => void, Msg<T>] => {
     const _deps = deps ? [...deps, storedKey] : [storedKey];
@@ -22,9 +23,10 @@ export const useAsync = <T>(initValue: T, load: () => T|Promise<T>, storedKey?: 
     }
 
     useEffect(() => {
-        reload().catch(err => {
-            console.error('useAsync load', storedKey, err);
-            if (!storedKey) throw err
+        reload().catch(e => {
+            const error = toErr(e);
+            console.error('useAsync load', storedKey, error);
+            if (!storedKey) throw error
         });
     }, _deps);
 

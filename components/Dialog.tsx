@@ -29,7 +29,8 @@ export const showDialog = (title: string, content: (open$: Msg<boolean>) => Comp
     );
 }
 
-export const showError = (error: any) => {
+export const showError = (e: any) => {
+    const error = toErr(e);
     console.debug("showError", error);
     const err = toErr(error);
     showDialog(err.name, () => err.message, { variant: 'error' })

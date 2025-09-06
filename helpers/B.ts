@@ -11,6 +11,7 @@ import getCallCb from './getCallCb';
 import tPriceToHtml from './tPriceToHtml';
 import priceToHtml from './priceToHtml';
 import { responsive$, Responsive } from './responsive';
+import { toErr } from './err';
 
 const body = document.body;
 const bodyClass = body.classList;
@@ -322,7 +323,8 @@ export default class B {
         }
       }
     }
-    catch (error) {
+    catch (e) {
+      const error = toErr(e);
       console.error('dLang', d, lang, error);
     }
   }
@@ -543,7 +545,8 @@ export default class B {
         if (data.render) this.callRender(el, data.render);
         this.children.forEach((b) => this.el.appendChild(b.el));
       }
-    } catch (error) {
+    } catch (e) {
+      const error = toErr(e);
       console.error('render', this, error);
     }
     return this;
@@ -568,7 +571,8 @@ export default class B {
       const fun = B.renders[name];
       if (fun) return fun(el, el._b!);
       throw 'undefined';
-    } catch (error) {
+    } catch (e) {
+      const error = toErr(e);
       console.error('B.callRender', this, name, error);
     }
   }
@@ -578,7 +582,8 @@ export default class B {
       console.debug('TODO call', el, script)
       // app.callEl = el || B.root.el;
       // getCallCb(script)(this, el || this.el, app);
-    } catch (error) {
+    } catch (e) {
+      const error = toErr(e);
       console.error('B.call', this, script, error);
       return this;
     }

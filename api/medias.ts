@@ -5,6 +5,7 @@ import { mediaColl } from './collections';
 import { needGroupId } from './messages';
 import { MediaModel } from './models';
 import { deleteKey } from '../helpers/obj';
+import { toErr } from '@common/helpers';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 const MAX_RETRY = 3;
@@ -56,7 +57,8 @@ const startUpload = (item: UploadItem) => retry(async () => {
         
         console.info('upload success', item, media);
         return media;
-    } catch (error) {
+    } catch (e) {
+        const error = toErr(e);
         console.warn('upload failed, retrying in 5s', item, error);
         update(id, { error });
         await sleep(5000);
@@ -76,7 +78,8 @@ const processQueue = async () => {
         
         try {
             await startUpload(item);
-        } catch (error) {
+        } catch (e) {
+            const error = toErr(e);
             console.error('upload failed', item, error);
             update(item.id, { status: FAILED, error });
         }

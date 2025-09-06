@@ -67,12 +67,12 @@ export const getStored = <T = any, U = T>(key: string, initValue?: U, check?: (v
                 () => true
         }
         if (value !== undefined && !check(value)) {
-            throw toErr('check error', { key, check: check.toString(), value, initValue });
+            throw toErr('check error', { key, value, initValue });
         }
         return value !== undefined ? value : initValue;
     }
     catch (error) {
-        console.error('getStored error', key, error);
+        console.error('getStored error', key, toErr(error));
         return initValue;
     }
 }
@@ -93,7 +93,8 @@ export const setStored = <T = any>(key: string, value?: T): void => {
         storage.setItem(prefix + key, json);
         _signal();
     }
-    catch (error) {
+    catch (e) {
+        const error = toErr(e);
         console.error('setStored error', key, value, error);
     }
 }

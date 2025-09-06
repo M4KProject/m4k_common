@@ -1,3 +1,4 @@
+import { toErr } from './err';
 import { stringify, parse } from './json';
 
 export const clipboardCopy = async (value: any): Promise<void> => {
@@ -6,7 +7,8 @@ export const clipboardCopy = async (value: any): Promise<void> => {
   try {
     await navigator.clipboard.writeText(stringify(value) || '');
   }
-  catch (error) {
+  catch (e) {
+    const error = toErr(e);
     console.warn('clipboardCopy error', error);
   }
 };
@@ -18,7 +20,8 @@ export const clipboardPaste = async () => {
     if (typeof json === 'string') return parse(json) || json;
     return json;
   }
-  catch (error) {
+  catch (e) {
+    const error = toErr(e);
     console.warn('clipboardPaste error', error);
     return Promise.resolve(localStorage.getItem('__copy'));
   }

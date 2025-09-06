@@ -6,6 +6,7 @@ import type { M4Kiosk, M4kEvent, M4kSignalEvent } from "./m4kInterface"
 import { global } from '../helpers/global';
 import type { Fully } from "./fullyInterfaces";
 import { msgs } from "../helpers/Msg";
+import { toErr } from "@common/helpers";
 
 export const m4k = (() => {
     const w = global;
@@ -36,7 +37,8 @@ export const m4k = (() => {
             try {
                 listener(event as M4kEvent)
             }
-            catch (error) {
+            catch (e) {
+                const error = toErr(e);
                 console.error('listener', event, error)
             }
         }

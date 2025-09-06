@@ -32,7 +32,7 @@ export const signUp = async (email: string, password: string) => {
     await login(email, password);
     return user;
   } catch (error) {
-    console.warn("signUp error", error);
+    console.warn("signUp error", toErr(error));
   }
 };
 
@@ -59,7 +59,7 @@ export const authRefresh = (): Promise<UserModel|null> => (
     auth$.set({ ...result.record, token: result.token });
     return auth$.v;
   }).catch((error) => {
-    console.warn("authRefresh error", error);
+    console.warn("authRefresh error", toErr(error));
     throw error;
   }) : Promise.resolve(null)
 );
