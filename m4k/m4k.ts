@@ -5,7 +5,7 @@ import { m4kBase } from "./m4kBase";
 import type { M4Kiosk, M4kEvent, M4kSignalEvent } from "./m4kInterface"
 import { global } from '../helpers/global';
 import type { Fully } from "./fullyInterfaces";
-import { msgs } from "@common/helpers/Msg";
+import { msgs } from "../helpers/Msg";
 
 export const m4k = (() => {
     const w = global;

@@ -2,8 +2,8 @@ import { Css } from "../helpers/html";
 import { Div, DivProps } from "./Div";
 import { useCss } from "../hooks/useCss";
 import { clamp, round } from "../helpers/nbr";
-import { toNbr } from "@common/helpers";
-import { flexCenter } from "@common/helpers";
+import { toNbr } from "../helpers";
+import { flexCenter } from "../helpers";
 import { ComponentChildren } from "preact";
 
 const css: Css = {

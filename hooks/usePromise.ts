@@ -1,4 +1,4 @@
-import { toVoid } from "@common/helpers";
+import { toVoid } from "../helpers";
 import { useEffect, useState } from "preact/hooks";
 
 export interface IPromise<T> {

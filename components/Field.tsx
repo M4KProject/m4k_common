@@ -16,7 +16,7 @@ import { toErr } from "../helpers/err";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Button } from "./Button";
 import { Msg } from "../helpers/Msg";
-import { useMsg } from "@common/hooks";
+import { useMsg } from "../hooks";
 
 const css: Css = {
     '&': {

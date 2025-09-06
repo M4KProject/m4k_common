@@ -1,4 +1,5 @@
 import { parse, stringify } from "./json";
+import { isList } from "./check";
 
 type Cache<T> = ['CACHE', number, T];
 

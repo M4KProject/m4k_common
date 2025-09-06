@@ -8,8 +8,8 @@ import { Div, DivProps } from "./Div";
 import { Tr } from "./Tr";
 import { portal } from "./Portal";
 import { useEffect, useState } from "preact/hooks";
-import { toErr } from "@common/helpers/err";
-import { addTranslates } from "@common/hooks/useTr";
+import { toErr } from "../helpers/err";
+import { addTranslates } from "../hooks/useTr";
 
 addTranslates({
     Error: "Erreur",
