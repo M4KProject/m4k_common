@@ -15,18 +15,17 @@ export interface AuthModelBase extends ModelBase {
   verified?: boolean;
 }
 
-export type ModelReplace<T extends ModelBase> =
-  & Omit<
-    T,
-    "collectionId" | "collectionName" | "created" | "updated"
-  >
-  & Partial<ModelBase>;
+export type ModelReplace<T extends ModelBase> = Omit<
+  T,
+  'collectionId' | 'collectionName' | 'created' | 'updated'
+> &
+  Partial<ModelBase>;
 
-export type ModelCreate<T extends ModelBase> = Omit<ModelReplace<T>, "id"> & {
+export type ModelCreate<T extends ModelBase> = Omit<ModelReplace<T>, 'id'> & {
   id?: string;
 };
 
-export type ModelUpsert<T extends ModelBase> = Omit<ModelReplace<T>, "id">;
+export type ModelUpsert<T extends ModelBase> = Omit<ModelReplace<T>, 'id'>;
 
 export type ModelUpdate<T extends ModelBase> = Partial<ModelUpsert<T>>;
 
