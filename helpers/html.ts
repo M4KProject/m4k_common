@@ -1,6 +1,5 @@
 import { JSX } from "preact";
-import { isEq, isNbr } from "./check";
-// import { round } from "./nbr";
+import { isEq, isList, isNbr } from "./check";
 
 export type Style = Partial<CSSStyleDeclaration>;
 

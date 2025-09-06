@@ -1,6 +1,6 @@
 import { addItem, removeItem } from "./list";
 import { throttle } from "./async";
-import { isBool, isItem, isList, isNbr, isRealNbr, isStr } from "./check";
+import { isBool, isItem, isList, isNbr, isStr } from "./check";
 import { global } from "./global";
 
 const newStorage = (): typeof localStorage => {
