@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from './_models.generated';
+import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from './models.generated';
 import {
   Err,
   Req,

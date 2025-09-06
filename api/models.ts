@@ -1,4 +1,4 @@
-import type { FieldInfo } from '../components/Field.tsx';
+import type { FieldInfo } from '../components/Field';
 import {
   _ContentModel,
   _DeviceModel,
@@ -7,13 +7,10 @@ import {
   _JobModel,
   _MemberModel,
   _UserModel,
-  _CategoryModel,
-  _ProductModel,
-  _ModifierModel,
-  _SaleModel,
-} from './_models.generated';
+} from './models.generated';
 
-export * from './_models.generated';
+export * from './models.base';
+export * from './models.generated';
 
 export interface ContentModel extends _ContentModel {}
 
@@ -128,20 +125,4 @@ export interface DeviceModel extends _DeviceModel {
   //     error?: { name?: string; message: string };
   //     value?: any;
   // };
-}
-
-export interface CategoryModel extends _CategoryModel {
-  remote: Partial<CategoryModel>;
-}
-
-export interface ProductModel extends _ProductModel {
-  remote: Partial<ProductModel>;
-}
-
-export interface ModifierModel extends _ModifierModel {
-  remote: Partial<ModifierModel>;
-}
-
-export interface SaleModel extends _SaleModel {
-  remote: Partial<SaleModel>;
 }
