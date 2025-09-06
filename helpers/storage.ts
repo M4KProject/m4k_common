@@ -1,8 +1,8 @@
 import { addItem, removeItem } from "./list";
 import { throttle } from "./async";
-import { isBool, isItem, isList, isNbr, isStr } from "./check";
+import { isBool, isItem, isList, isNbr, isStr, len } from "./check";
 import { global } from "./global";
-import { len } from "./obj";
+import { toErr } from "./err";
 
 const newStorage = (): typeof localStorage => {
     const r = {
@@ -67,7 +67,7 @@ export const getStored = <T = any, U = T>(key: string, initValue?: U, check?: (v
                 () => true
         }
         if (value !== undefined && !check(value)) {
-            throw 'check error';
+            throw toErr('check error', { key, check: check.toString(), value, initValue });
         }
         return value !== undefined ? value : initValue;
     }

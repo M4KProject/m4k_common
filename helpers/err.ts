@@ -4,7 +4,7 @@ export interface ErrorInfo {
   name: string;
   message: string;
   stack?: string;
-  data?: { [name: string]: any };
+  data?: Item;
 }
 
 export const getErrorInfo = (source: any, overrides?: Item): ErrorInfo => {
@@ -36,11 +36,8 @@ export class Err extends Error {
     Object.assign(this, info);
   }
 
-  merge({ name, message, stack, data }: Partial<ErrorInfo>) {
-    if (name) this.name = name;
-    if (message) this.message = message;
-    if (stack) this.stack = stack;
-    if (data) this.data = { ...this.data, ...data };
+  merge(data: Item) {
+    if (data) this.data = this.data ? { ...this.data, ...data } : data;
     return this;
   }
   
@@ -64,9 +61,9 @@ export class Err extends Error {
   }
 }
 
-export const toErr = (e: any, info?: Partial<ErrorInfo>) => (e instanceof Err ? e : new Err(e)).merge(info);
-export const throwErr = (e: any, info?: Partial<ErrorInfo>) => {
-  throw toErr(e, info);
+export const toErr = (e: any, data?: Item) => (e instanceof Err ? e : new Err(e)).merge(data);
+export const throwErr = (e: any, data?: Item) => {
+  throw toErr(e, data);
 }
 
 export const throwIf = <T>(value: T, check: (value: T) => any, error?: any) => {

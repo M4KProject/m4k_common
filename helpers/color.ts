@@ -1,4 +1,4 @@
-import { isNumber } from "./check";
+import { isList, isNbr } from "./check";
 import { clamp, round } from "./nbr";
 
 const pInt16 = (hex: string) => parseInt(hex, 16);

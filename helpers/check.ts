@@ -46,6 +46,14 @@ export const isEmpty = (v: any): boolean => isNil(v) || isStrEmpty(v) || isObjEm
 export const isNotEmpty = isNot(isEmpty);
 
 ///// DeepEqual /////
+export const len = (v: any): number => (
+    isObj(v) ? (
+        isList(v) ? v.length :
+        Object.keys(v).length
+    ) :
+    isStr(v) ? v.length :
+    0
+);
 export const isEq = (a: any, b: any): boolean => {
     if (a === b) return true;
     if (typeof a !== typeof b) return false;
@@ -57,7 +65,7 @@ export const isEq = (a: any, b: any): boolean => {
         return true;
     }
     if (isItem(a)) {
-        if (Object.keys(a).length !== Object.keys(b).length) return false;
+        if (len(a) !== len(b)) return false;
         for (const p in a)
             if (!isEq(a[p], b[p]))
                 return false;

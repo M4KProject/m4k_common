@@ -113,10 +113,3 @@ export const merge = (a: any, b: any): any => {
 export const mergeAll = (
     (...args: any[]): any => args.reduce(merge)
 );
-
-export const len = (v: any): number => (
-  isList(v) ? v.length :
-  isItem(v) ? Object.keys(v).length :
-  isStr(v) ? v.length :
-  0
-)
