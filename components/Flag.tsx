@@ -1,6 +1,5 @@
 import { useCss } from '../hooks/useCss';
 import { Css } from '../helpers/html';
-import 'flag-icons/css/flag-icons.min.css';
 
 const css: Css = {
   '&': {
@@ -17,38 +16,78 @@ const css: Css = {
   },
 };
 
-export interface FlagProps {
+export interface FlagSVGProps {
   cls?: string;
-  iso: string; // ISO 3166-1 alpha-2 country code
+  iso: string; // ISO codes: fr, en, de, es, it
   title?: string;
   size?: string | number;
   variant?: '4x3' | '1x1'; // 4x3 (rectangle) or 1x1 (square)
 }
 
-// Mapping pour les codes alternatifs
-const ISO_MAPPING: Record<string, string> = {
-  en: 'gb', // English -> Great Britain
-  uk: 'gb', // United Kingdom -> Great Britain
+// SVG flags for the 5 required languages
+const FLAGS: Record<string, any> = {
+  fr: (
+    <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+      <rect width="300" height="600" fill="#002654" />
+      <rect x="300" width="300" height="600" fill="#ffffff" />
+      <rect x="600" width="300" height="600" fill="#ce1126" />
+    </svg>
+  ),
+  en: (
+    <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="600" fill="#012169" />
+      <path d="M0,0 L1200,600 M1200,0 L0,600" stroke="#ffffff" strokeWidth="80" />
+      <path d="M0,0 L1200,600 M1200,0 L0,600" stroke="#c8102e" strokeWidth="48" />
+      <path d="M600,0 V600 M0,300 H1200" stroke="#ffffff" strokeWidth="100" />
+      <path d="M600,0 V600 M0,300 H1200" stroke="#c8102e" strokeWidth="60" />
+    </svg>
+  ),
+  de: (
+    <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="200" fill="#000000" />
+      <rect y="200" width="900" height="200" fill="#dd0000" />
+      <rect y="400" width="900" height="200" fill="#ffce00" />
+    </svg>
+  ),
+  es: (
+    <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="600" fill="#aa151b" />
+      <rect y="150" width="900" height="300" fill="#f1bf00" />
+    </svg>
+  ),
+  it: (
+    <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+      <rect width="300" height="600" fill="#009246" />
+      <rect x="300" width="300" height="600" fill="#ffffff" />
+      <rect x="600" width="300" height="600" fill="#ce2b37" />
+    </svg>
+  ),
 };
 
-export const Flag = ({ cls, iso, title, size, variant = '4x3' }: FlagProps) => {
+// Mapping for alternative codes
+const ISO_MAPPING: Record<string, string> = {
+  gb: 'en', // Great Britain -> English flag
+  uk: 'en', // United Kingdom -> English flag
+};
+
+export const FlagSVG = ({ cls, iso, title, size, variant = '4x3' }: FlagSVGProps) => {
   const c = useCss('Flag', css);
 
-  // Normalize ISO code to lowercase
+  // Normalize ISO code
   let normalizedIso = iso?.toLowerCase() || '';
-
-  // Apply mapping for alternative codes
   if (normalizedIso in ISO_MAPPING) {
     normalizedIso = ISO_MAPPING[normalizedIso];
   }
 
+  // Get flag SVG or fallback
+  const flagSVG = FLAGS[normalizedIso] || FLAGS['en']; // fallback to English
+
   // Determine title
   const flagTitle = title || `Flag of ${iso?.toUpperCase() || 'Unknown'}`;
 
-  // Build flag-icons classes
-  const flagClass = `fi fi-${normalizedIso}`;
+  // Build classes
   const variantClass = variant === '1x1' ? `${c}-square` : '';
-  const classes = `${c} ${flagClass} ${variantClass} ${cls || ''}`.trim();
+  const classes = `${c} ${variantClass} ${cls || ''}`.trim();
 
   const style: any = {};
   if (size) {
@@ -57,90 +96,9 @@ export const Flag = ({ cls, iso, title, size, variant = '4x3' }: FlagProps) => {
     style.height = sizeValue;
   }
 
-  return <span className={classes} title={flagTitle} style={style} />;
+  return (
+    <span className={classes} title={flagTitle} style={style}>
+      {flagSVG}
+    </span>
+  );
 };
-
-/**
- * Utilitaire pour obtenir la classe CSS d'un drapeau
- * @param iso Code ISO 3166-1 alpha-2
- * @returns Classe CSS flag-icons
- */
-export const getFlagClass = (iso: string): string => {
-  let normalizedIso = iso?.toLowerCase() || '';
-
-  // Apply mapping for alternative codes
-  if (normalizedIso in ISO_MAPPING) {
-    normalizedIso = ISO_MAPPING[normalizedIso];
-  }
-
-  return `fi fi-${normalizedIso}`;
-};
-
-/**
- * Utilitaire pour vérifier si un code ISO est supporté par flag-icons
- * @param iso Code ISO 3166-1 alpha-2
- * @returns true si le drapeau est disponible
- * Note: flag-icons supporte la plupart des codes ISO 3166-1 alpha-2
- */
-export const isFlagSupported = (iso: string): boolean => {
-  const normalizedIso = iso?.toLowerCase() || '';
-  // flag-icons supporte presque tous les codes ISO valides
-  // On peut faire une vérification basique sur la longueur
-  return /^[a-z]{2}$/.test(normalizedIso) || normalizedIso in ISO_MAPPING;
-};
-
-/**
- * Liste des codes ISO les plus couramment utilisés
- */
-export const COMMON_COUNTRIES = [
-  'fr',
-  'en',
-  'gb',
-  'de',
-  'es',
-  'it',
-  'pt',
-  'nl',
-  'be',
-  'ch',
-  'at',
-  'se',
-  'no',
-  'dk',
-  'fi',
-  'pl',
-  'cz',
-  'hu',
-  'gr',
-  'ro',
-  'us',
-  'ca',
-  'mx',
-  'br',
-  'ar',
-  'cl',
-  'co',
-  'pe',
-  've',
-  'uy',
-  'cn',
-  'jp',
-  'kr',
-  'in',
-  'th',
-  'vn',
-  'sg',
-  'my',
-  'id',
-  'ph',
-  'au',
-  'nz',
-  'za',
-  'ng',
-  'eg',
-  'ma',
-  'ae',
-  'sa',
-  'il',
-  'tr',
-] as const;
