@@ -1,4 +1,4 @@
-import { isEmpty, isErr, isItem, isItemEmpty, isStrEmpty, isStrNotEmpty, Item } from "./check";
+import { isEmpty, isErr, isItem, isItemEmpty, isNotEmpty, isStrEmpty, isStrNotEmpty, Item } from "./check";
 
 export interface ErrorInfo {
   name: string;
@@ -44,7 +44,7 @@ export class Err extends Error {
   toJSON() {
     const r: ErrorInfo = { name: this.name, message: this.message };
     if (this.stack) r.stack = this.stack;
-    if (this.data) {
+    if (isNotEmpty(this.data)) {
       try {
         r.data = JSON.parse(JSON.stringify(this.data));
       }

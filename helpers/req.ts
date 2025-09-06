@@ -1,3 +1,4 @@
+import { isList } from "./check";
 import { Err, toErr } from "./err";
 import { parse, stringify } from "./json";
 import { pathJoin } from "./pathJoin";
