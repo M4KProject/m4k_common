@@ -4,12 +4,18 @@ import { userColl } from './collections';
 import { auth$ } from './messages';
 import { UserModel } from './models';
 
+let _authColl = userColl;
+
+export const setAuthColl = (coll: typeof userColl) => {
+  _authColl = coll;
+}
+
 export const login = (
   identity: string,
   password: string,
   o?: CollOptions<UserModel>
 ): Promise<UserModel> =>
-  userColl
+  _authColl
     .r('POST', `auth-with-password`, {
       params: getParams(o),
       form: { identity, password },
@@ -24,7 +30,7 @@ export const login = (
 export const signUp = async (email: string, password: string) => {
   try {
     console.debug('signUp email', email);
-    const user = await userColl.create(
+    const user = await _authColl.create(
       {
         email,
         password,
@@ -43,7 +49,7 @@ export const signUp = async (email: string, password: string) => {
 export const logout = () => auth$.set(null);
 
 export const passwordReset = (email: string, o?: CollOptions<UserModel>) =>
-  userColl
+  _authColl
     .r('POST', `request-password-reset`, {
       params: getParams(o),
       form: { email },
@@ -55,7 +61,7 @@ export const passwordReset = (email: string, o?: CollOptions<UserModel>) =>
 
 export const authRefresh = (): Promise<UserModel | null> =>
   auth$.v
-    ? userColl
+    ? _authColl
         .r('POST', `auth-refresh`, {})
         .then((result) => {
           console.debug('authRefresh result', result);

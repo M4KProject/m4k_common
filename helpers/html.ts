@@ -23,7 +23,7 @@ export type Drag = {
   dispose: () => void;
 };
 
-export const createEl: typeof document.createElement = document.createElement.bind(document);
+export const createEl: typeof document.createElement = (tagName, options) => document.createElement(tagName, options);
 
 const _cssFiles: Record<string, HTMLLinkElement> = {};
 export const addCssFile = (url: string): HTMLLinkElement => {
