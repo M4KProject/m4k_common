@@ -1,13 +1,4 @@
-import {
-  isEmpty,
-  isErr,
-  isItem,
-  isItemEmpty,
-  isNotEmpty,
-  isStrEmpty,
-  isStrNotEmpty,
-  Item,
-} from './check';
+import { isEmpty, isErr, isNotEmpty, Item } from './check';
 
 export interface ErrorInfo {
   name: string;
