@@ -265,7 +265,7 @@ export class Coll<T extends ModelBase> {
     console.debug('subscribe key', this.coll, key);
 
     const listener = (event: MessageEvent) => {
-      console.debug('subscribe listener', this.coll, key, event);
+      // console.debug('subscribe listener', this.coll, key, event);
       const payload = parse(event.data);
       const record = (payload ? payload.record : null) || payload;
       const id = (record ? record.id : null) || record;
