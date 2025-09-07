@@ -1,4 +1,4 @@
-// GENERATED : 2025-09-07T06:20:12.526Z
+// GENERATED : 2025-09-07T12:01:43.493Z
 
 import { AuthModelBase, ModelBase } from './models.base';
 
@@ -36,9 +36,9 @@ export interface _DeviceModel extends ModelBase {
   result?: any;
   capture?: File | Blob | string;
   files?: File | Blob | string;
+  media?: string;
   user?: string;
   group?: string;
-  content?: string;
 }
 
 export interface _GroupModel extends ModelBase {
@@ -65,15 +65,20 @@ export interface _JobModel extends ModelBase {
 
 export interface _MediaModel extends ModelBase {
   id: string;
-  name?: string;
+  generated?: Date | string;
+  key?: string;
+  title?: string;
   desc?: string;
   type?: string;
   bytes?: number;
+  width?: number;
+  height?: number;
+  seconds?: number;
   progress?: number;
-  source?: File | Blob | string;
-  variants?: File | Blob | string;
-  meta?: any;
-  vmeta?: any;
+  data?: any;
+  file?: File | Blob | string;
+  parent?: string;
+  user?: string;
   group?: string;
 }
 
@@ -85,40 +90,10 @@ export interface _MemberModel extends ModelBase {
   group?: string;
 }
 
-export interface _ConvertModel extends ModelBase {
-  id: string;
-  status?: '' | 'pending' | 'processing' | 'waiting' | 'finished' | 'failed' | 'deleted';
-  type?: string;
-  size?: number;
-  width?: number;
-  height?: number;
-  ms?: number;
-  file?: File | Blob | string;
-  info?: any;
-  media?: string;
-  group?: string;
-}
-
 export interface _ApplicationModel extends ModelBase {
   id: string;
   name?: string;
   version?: string;
   active?: boolean;
   file?: File | Blob | string;
-}
-
-export interface _LogModel extends ModelBase {
-  id: string;
-  booted?: Date | string;
-  serial?: string;
-  cmd?: string;
-  result?: string;
-  error?: string;
-  logs?: string;
-  files?: File | Blob | string;
-}
-
-export interface _TestModel extends ModelBase {
-  id: string;
-  name?: string;
 }
