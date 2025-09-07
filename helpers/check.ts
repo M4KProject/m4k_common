@@ -39,11 +39,12 @@ export const isListOfItem = <T extends Item>(v: any): v is T[] => isListOf(v, is
 
 export const isListEmpty = (v: any): boolean => isList(v) && v.length === 0;
 export const isItemEmpty = (v: any): boolean => {
-  if (isItem(v)) for (const _ in v) return false;
+  if (!isItem(v)) return false;
+  for (const _ in v) return false;
   return true;
 };
 export const isObjEmpty = (v: Obj): boolean => isListEmpty(v) || isItemEmpty(v);
-export const isEmpty = (v: any): boolean => isNil(v) || isStrEmpty(v) || isObjEmpty(v);
+export const isEmpty = (v: any): boolean => isStr(v) ? isStrEmpty(v) : isObjEmpty(v);
 export const isNotEmpty = isNot(isEmpty);
 
 ///// DeepEqual /////

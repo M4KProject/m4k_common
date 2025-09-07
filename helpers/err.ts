@@ -72,7 +72,7 @@ export const throwErr = (e: any, data?: Item) => {
 };
 
 export const throwIf = <T>(value: T, check: (value: T) => any, error?: any) => {
-  if (check(value)) throwErr(error, { data: { value } });
+  if (check(value)) throw toErr(error, { data: { value } });
   return value;
 };
 

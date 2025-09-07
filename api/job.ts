@@ -7,10 +7,12 @@ import { Msg } from '../helpers/Msg';
 
 export const addJob = async (action: JobModel['action'], input: JobModel['input']) => {
   console.debug('addJob', action, input);
+  const group = needGroupId();
+  console.debug('job pending', action, input, group);
   return await jobColl.create({
     action,
     input,
-    group: needGroupId(),
+    group,
     status: 'pending',
   });
 };
