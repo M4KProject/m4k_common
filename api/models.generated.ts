@@ -1,4 +1,4 @@
-// GENERATED : 2025-09-07T12:01:43.493Z
+// GENERATED : 2025-09-07T12:07:11.766Z
 
 import { AuthModelBase, ModelBase } from './models.base';
 
@@ -51,7 +51,7 @@ export interface _GroupModel extends ModelBase {
 
 export interface _JobModel extends ModelBase {
   id: string;
-  action?: '' | 'test' | 'hiboutik' | 'odoo';
+  action?: '' | 'test' | 'add_member';
   status?: '' | 'pending' | 'processing' | 'finished' | 'failed' | 'deleted';
   progress?: number;
   error?: string;
