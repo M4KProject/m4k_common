@@ -1,4 +1,4 @@
-// GENERATED : 2025-09-06T17:38:37.574Z
+// GENERATED : 2025-09-07T06:20:12.526Z
 
 import { AuthModelBase, ModelBase } from './models.base';
 
