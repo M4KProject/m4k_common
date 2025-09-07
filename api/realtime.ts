@@ -67,7 +67,7 @@ const initRealtime = () => {
   };
 
   const connect = async () => {
-    console.debug('realtime connect', { realtimeUrl });
+    console.debug('realtime connecting', realtimeUrl);
     disconnect();
     await new Promise<void>((resolve) => {
       eventSource = new EventSource(realtimeUrl);
@@ -81,7 +81,7 @@ const initRealtime = () => {
         resolve();
       });
     });
-    console.debug('realtime connected', { clientId });
+    console.debug('realtime connected', clientId);
   };
 
   const update = async (req: Req) => {
@@ -90,7 +90,7 @@ const initRealtime = () => {
       clearInterval(intervalId);
       intervalId = setInterval(() => update(req), 10000);
 
-      const state = Object.keys(subscriptions).join(',') + isConnected();
+      const state = (isConnected() ? 'ok' : 'ko') + Object.keys(subscriptions).join(',');
       if (state === lastState) return;
       lastState = state;
 
@@ -102,7 +102,7 @@ const initRealtime = () => {
           subscriptionKeys.push(key);
         }
       }
-      console.debug('realtime update keys', subscriptionKeys);
+      console.debug('realtime update state', state);
 
       if (!subscriptionKeys.length) return disconnect();
       if (!isConnected()) await connect();
