@@ -193,8 +193,13 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
           ctx.data = (await response.blob()) as T;
           break;
         case 'json': {
-          const obj: any = (await response.json()) as any;
-          ctx.data = typeof obj === 'string' ? parse(obj) || obj : obj;
+          // Handle 204 No Content responses that have no body to parse
+          if (response.status === 204) {
+            ctx.data = null as T;
+          } else {
+            const obj: any = (await response.json()) as any;
+            ctx.data = typeof obj === 'string' ? parse(obj) || obj : obj;
+          }
           break;
         }
         case 'text':
