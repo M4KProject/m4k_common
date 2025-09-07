@@ -25,7 +25,7 @@ const initRealtime = () => {
   );
 
   const addAllListeners = (eventSource: EventSource) => {
-    console.debug('realtime addAllListeners', eventSource);
+    // console.debug('realtime addAllListeners', eventSource);
     
     // Remove old listeners first to prevent duplication
     for (const key in wrappedListeners) {
@@ -47,7 +47,7 @@ const initRealtime = () => {
   };
 
   const disconnect = () => {
-    console.debug('realtime disconnect', !!xhr, !!eventSource, clientId);
+    console.debug('realtime disconnect');
     if (xhr) {
       xhr.abort();
       xhr = undefined;
@@ -67,12 +67,12 @@ const initRealtime = () => {
   };
 
   const connect = async () => {
-    console.debug('realtime connecting', realtimeUrl);
+    // console.debug('realtime connecting', realtimeUrl);
     disconnect();
     await new Promise<void>((resolve) => {
       eventSource = new EventSource(realtimeUrl);
       eventSource.addEventListener('PB_CONNECT', (e: MessageEvent) => {
-        console.debug('PB_CONNECT', e);
+        // console.debug('PB_CONNECT', e);
         if (!e) return console.warn('PB_CONNECT e');
         const id = (parse(e.data) || {}).clientId;
         if (!id) return console.warn('PB_CONNECT id');
