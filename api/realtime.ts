@@ -14,14 +14,23 @@ const initRealtime = () => {
   const subscriptions: Record<string, ((data: any) => void)[]> = {};
   const realtimeUrl = pathJoin(getApiUrl(), 'realtime');
 
-  const isConnected = (): boolean => !!eventSource && !!clientId;
+  let lastHeartbeat = 0;
+  const isConnected = (): boolean => (
+    !!eventSource &&
+    !!clientId &&
+    eventSource.readyState === EventSource.OPEN &&
+    (Date.now() - lastHeartbeat) < 30000
+  );
 
   const addAllListeners = (eventSource: EventSource) => {
     console.debug('realtime addAllListeners', eventSource);
     for (const key in subscriptions) {
       const listeners = subscriptions[key];
       for (const listener of listeners) {
-        eventSource.addEventListener(key, listener);
+        eventSource.addEventListener(key, event => {
+          lastHeartbeat = Date.now();
+          listener(event);
+        });
       }
     }
   };
@@ -50,6 +59,7 @@ const initRealtime = () => {
         const id = (parse(e.data) || {}).clientId;
         if (!id) return console.warn('PB_CONNECT id');
         clientId = id;
+        lastHeartbeat = Date.now();
         resolve();
       });
     });
@@ -58,7 +68,7 @@ const initRealtime = () => {
 
   const update = async (req: Req) => {
     try {
-      console.debug('realtime update');
+      // console.debug('realtime update');
       clearInterval(intervalId);
       intervalId = setInterval(() => update(req), 10000);
 
@@ -79,16 +89,6 @@ const initRealtime = () => {
       if (!subscriptionKeys.length) return await disconnect();
       if (!isConnected()) await connect();
 
-      //         await ky.post(this.getRealtimeUrl(), {
-      //             json: {
-      //                 clientId: this.clientId,
-      //                 subscriptions: this.lastSentSubscriptions,
-      //             },
-      //             headers: {
-      //                 Authorization: this.tokenRef.token,
-      //             },
-      //             signal: (this.cancel = new AbortController()).signal
-      //         });
       await req('POST', realtimeUrl, {
         xhr: true,
         json: {
