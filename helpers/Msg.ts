@@ -54,8 +54,8 @@ export class Msg<T = any> implements IMsg<T> {
     initValue?: T | undefined
   ): Msg<T | undefined> {
     const target = new Msg<T | undefined>(initValue);
-    target.sOn = () => sourceOn(target);
-    target.sHandler = toVoid;
+    target.o = () => sourceOn(target);
+    target.u = toVoid;
     return target;
   }
 
@@ -63,22 +63,37 @@ export class Msg<T = any> implements IMsg<T> {
     return msgs[key];
   }
 
-  public key?: string;
+  /** k = key */
+  public k?: string;
 
-  /** Value */
+  /** v = value */
   public v: T;
 
-  /** Handlers */
+  /** h = handlers */
   private h: IMsgHandler<T>[] = [];
 
   /** map and debounce */
-  private sOn?: (handler: IMsgHandler<any>) => () => void;
-  private sOff?: () => void;
-  private sHandler?: IMsgHandler<any>;
+  
+  /** upstream lazy: o = onUpstream */
+  private o?: (handler: IMsgHandler<any>) => () => void;
+  /** upstream lazy: k = offUpstream */
+  private c?: () => void;
+  /** upstream lazy: u = handlerUpstream */
+  private u?: IMsgHandler<any>;
+
+  /** t = targets */
+  private t?: Msg[];
+  /** p = parent (source) */
+  private p?: Msg;
+
+  /** g = getter */
+  private g?: () => T;
+  /** s = setter */
+  private s?: (next: T) => void;
 
   constructor(initValue: T, key?: string, isStored?: boolean, storedCheck?: (value: T) => boolean) {
     this.v = initValue;
-    this.key = key;
+    this.k = key;
     if (key) msgs[key] = this;
     if (isStored && key) {
       this.v = getStored(key, initValue, storedCheck);
@@ -124,32 +139,36 @@ export class Msg<T = any> implements IMsg<T> {
 
   on(handler: IMsgHandler<T>) {
     this.h.push(handler);
-    if (!this.sOff && this.sOn && this.sHandler) this.sOff = this.sOn(this.sHandler);
+    if (!this.c && this.o && this.u) this.c = this.o(this.u);
     return () => this.off(handler);
   }
 
   off(handler: IMsgHandler<T>) {
     removeItem(this.h, handler);
-    if (this.sOff && this.h.length === 0) {
-      this.sOff();
-      if (this.sOn && this.sHandler) delete this.sOff;
+    if (this.c && this.h.length === 0) {
+      this.c();
+      if (this.o && this.u) delete this.c;
     }
   }
 
   map<U>(cb: (value: T) => U): IMsgReadonly<U>;
   map<U>(
     cb: (value: T) => U,
-    sourceHandler: (target: IMsg<U>) => IMsgHandler<any>
+    handler?: (target: IMsg<U>) => IMsgHandler<any>
   ): IMsgReadonly<U>;
   map<U>(
     cb: (value: T) => U,
-    sourceHandler?: (target: IMsg<U>) => IMsgHandler<any>
+    handler?: (target: IMsg<U>) => IMsgHandler<any>
   ): IMsgReadonly<U> {
-    const source = this as any;
+    const source = this;
     const target = new Msg<U>(cb(source.v));
-    target.sOn = (h) => source.on(h);
-    target.sHandler =
-      (sourceHandler && sourceHandler(target)) || ((value: any) => target.set(value));
+    
+    target.o = (h) => source.on(h);
+    target.u = (handler && handler(target)) || ((value: any) => target.set(value));
+    
+    target.p = source;
+    (source.t || (source.t = [])).push(target);
+    
     return target;
   }
 
@@ -194,14 +213,35 @@ export class Msg<T = any> implements IMsg<T> {
     });
   }
 
-  private _g?: () => T;
   getter() {
-    return this._g || (this._g = () => this.get());
+    return this.g || (this.g = () => this.get());
   }
 
-  private _s?: (next: T) => void;
   setter() {
-    return this._s || (this._s = (next: T) => this.set(next));
+    return this.s || (this.s = (next: T) => this.set(next));
+  }
+
+  dispose() {
+    this.h.length = 0;
+
+    if (this.c) this.c();
+
+    if (this.t) {
+      for (const target of this.t) target.dispose();
+      delete this.t;
+    }
+
+    if (this.p && this.p.t) removeItem(this.p.t, this);
+
+    delete this.o;
+    delete this.c;
+    delete this.u;
+    delete this.g;
+    delete this.s;
+    delete this.p;
+    delete this.t;
+
+    if (this.k) delete msgs[this.k];
   }
 }
 
