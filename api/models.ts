@@ -7,6 +7,7 @@ import {
   _JobModel,
   _MemberModel,
   _UserModel,
+  _LockModel,
 } from './models.generated';
 
 export * from './models.base';
@@ -126,3 +127,5 @@ export interface DeviceModel extends _DeviceModel {
   //     value?: any;
   // };
 }
+
+export interface LockModel extends _LockModel {}

@@ -11,6 +11,7 @@ import {
   pathJoin,
   removeItem,
   isList,
+  isDef,
 } from '../helpers';
 import { auth$, getApiUrl } from './messages';
 import { realtime } from './realtime';
@@ -77,7 +78,7 @@ const stringifyWhere = <T extends ModelBase>(
   }
 
   const filters = Object.entries(where || {})
-    .map(([k, f]) => (f ? stringifyFilter(k, f) : ''))
+    .map(([k, f]) => (isDef(f) ? stringifyFilter(k, f) : ''))
     .filter((f) => f);
   if (filters.length === 0) return undefined;
 

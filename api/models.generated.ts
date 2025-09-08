@@ -1,4 +1,4 @@
-// GENERATED : 2025-09-07T12:07:11.766Z
+// GENERATED : 2025-09-08T00:57:15.652Z
 
 import { AuthModelBase, ModelBase } from './models.base';
 
@@ -52,7 +52,7 @@ export interface _GroupModel extends ModelBase {
 export interface _JobModel extends ModelBase {
   id: string;
   action?: '' | 'test' | 'add_member';
-  status?: '' | 'pending' | 'processing' | 'finished' | 'failed' | 'deleted';
+  status?: '' | 'pending' | 'processing' | 'finished' | 'failed' | 'deleted' | 'claimed' | 'created';
   progress?: number;
   error?: string;
   input?: any;
@@ -96,4 +96,9 @@ export interface _ApplicationModel extends ModelBase {
   version?: string;
   active?: boolean;
   file?: File | Blob | string;
+}
+
+export interface _LockModel extends ModelBase {
+  id: string;
+  key?: string;
 }
