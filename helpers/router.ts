@@ -46,7 +46,7 @@ const add = (match: string, handler?: RouterHandler | null, params?: RouterParam
 };
 
 const resolve = (path: string): RouterValue => {
-  let host = location.host;
+  let host = typeof location !== 'undefined' ? location.host : '';
 
   const queryIndex = path.indexOf('?');
   const query = queryIndex === -1 ? '' : path.substring(queryIndex + 1);
@@ -91,6 +91,7 @@ const resolve = (path: string): RouterValue => {
 let _lastResult: any = null;
 const forceRefresh = async () => {
   // console.debug('router.forceRefresh');
+  if (typeof location === 'undefined') return;
   const val = resolve(location.href);
   updated$.set(val);
   const h = val.handler;
@@ -107,19 +108,24 @@ const forceRefresh = async () => {
 const refresh = (_event?: Event | string) => {
   // const type = event ? (typeof event === 'string' ? event : event.type) : '';
   // console.debug('router.refresh', type, location.href);
+  if (typeof location === 'undefined') return;
   if (updated$.v.path === location.href) return;
   forceRefresh();
 };
 
 const push = (route: string | URL) => {
   console.debug('router.push', route);
-  history.pushState({}, '', route);
+  if (typeof history !== 'undefined') {
+    history.pushState({}, '', route);
+  }
   forceRefresh();
 };
 
 const back = () => {
   console.debug('router.back');
-  history.back();
+  if (typeof history !== 'undefined') {
+    history.back();
+  }
   forceRefresh();
 };
 
@@ -140,23 +146,32 @@ const keyToId = (key?: string | null) => {
   return String(key || '').split('__')[0] || '';
 };
 
-window.addEventListener('locationchange', refresh);
-window.addEventListener('hashchange', refresh);
-window.addEventListener('popstate', refresh);
-setInterval(refresh, 2000);
+let _initialized = false;
 
-const _history = (type: string) => {
-  const fun = (history as any)[type];
-  (history as any)[type] = function () {
-    const r = fun.apply(history, arguments);
-    refresh('history_' + type);
-    return r;
+const routerInit = () => {
+  if (_initialized || typeof window === 'undefined') return;
+  _initialized = true;
+
+  window.addEventListener('locationchange', refresh);
+  window.addEventListener('hashchange', refresh);
+  window.addEventListener('popstate', refresh);
+  setInterval(refresh, 2000);
+
+  const _history = (type: string) => {
+    const fun = (history as any)[type];
+    (history as any)[type] = function () {
+      const r = fun.apply(history, arguments);
+      refresh('history_' + type);
+      return r;
+    };
   };
-};
 
-_history('pushState');
-_history('replaceState');
-_history('back');
+  _history('pushState');
+  _history('replaceState');
+  _history('back');
+
+  forceRefresh();
+};
 
 export const router = {
   updated$,
@@ -170,11 +185,15 @@ export const router = {
   forceRefresh,
   idToKey,
   keyToId,
+  init: routerInit,
 };
 
 updated$.on((val) => (router.current = val));
 
-forceRefresh();
+// Auto-init in browser environment
+if (typeof window !== 'undefined') {
+  routerInit();
+}
 
 export default router;
 

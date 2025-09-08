@@ -1,23 +1,14 @@
 #!/bin/bash
-# chmod +x index.generator.sh
-# ./index.generator.sh
 
-# Vider le fichier s'il existe déjà
-echo "" > "index"
+INDEX_TS="$(dirname "$0")/index.ts"
 
-# Boucle sur tous les fichiers .ts sauf ceux exclus
-for file in ./*.ts; do
+echo "" > "$INDEX_TS"
 
-  # Exclusion des fichiers index.ts, *.spec.ts et index.generator.sh
-  if [[ "$file" != "./index" && "$file" != "./index.generator.sh" && "$file" != *.spec.ts ]]; then
-
-    # Enlever le ./ et le .ts pour obtenir le nom du module
-    module_name="${file#./}"
-    module_name="${module_name%.ts}"
-    echo "export * from \"./$module_name\";" >> "index"
-
+for file in "$(dirname "$0")"/*.ts; do
+  filename=$(basename "$file")
+  
+  if [[ "$filename" != "index.ts" && "$filename" != *.spec.ts ]]; then
+    module_name="${filename%.ts}"
+    echo "export * from './$module_name';" >> "$INDEX_TS"
   fi
-
 done
-
-echo "Fichier 'index' généré avec succès."
