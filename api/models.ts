@@ -1,3 +1,4 @@
+import { Item } from '../helpers/check';
 import type { FieldInfo } from '../components/Field';
 import {
   _ContentModel,
@@ -64,7 +65,14 @@ export interface MediaModel extends _MediaModel {}
 
 export interface GroupModel extends _GroupModel {}
 
-export interface JobModel extends _JobModel {}
+export interface JobModel extends _JobModel {
+  input: Item;
+}
+
+export interface AddMemberJobModel extends JobModel {
+  action: 'addMember',
+  input: { email: string };
+}
 
 export enum Role {
   viewer = 10,
