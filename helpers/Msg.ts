@@ -38,6 +38,7 @@ export interface IMsgReadonly<T> extends IMsgGet<T>, IMsgSubscribe<T> {
   pipe(target: IMsgSet<T>): () => void;
 
   toPromise(filter?: IMsgFilter<T>): Promise<T>;
+  dispose(): void;
 }
 
 export interface IMsg<T> extends IMsgReadonly<T>, IMsgSet<T> {
@@ -147,7 +148,7 @@ export class Msg<T = any> implements IMsg<T> {
     removeItem(this.h, handler);
     if (this.c && this.h.length === 0) {
       this.c();
-      if (this.o && this.u) delete this.c;
+      this.c = undefined;
     }
   }
 
@@ -222,26 +223,34 @@ export class Msg<T = any> implements IMsg<T> {
   }
 
   dispose() {
+    if (this.h.length === 0 && !this.t && !this.c) return;
+
     this.h.length = 0;
 
-    if (this.c) this.c();
+    if (this.c) {
+      this.c();
+      this.c = undefined;
+    }
 
     if (this.t) {
       for (const target of this.t) target.dispose();
-      delete this.t;
+      this.t = undefined;
     }
 
-    if (this.p && this.p.t) removeItem(this.p.t, this);
+    if (this.p?.t) {
+      removeItem(this.p.t, this);
+      this.p = undefined;
+    }
 
-    delete this.o;
-    delete this.c;
-    delete this.u;
-    delete this.g;
-    delete this.s;
-    delete this.p;
-    delete this.t;
+    this.o = undefined;
+    this.u = undefined;
+    this.g = undefined;
+    this.s = undefined;
 
-    if (this.k) delete msgs[this.k];
+    if (this.k) {
+      delete msgs[this.k];
+      this.k = undefined;
+    }
   }
 }
 
