@@ -70,7 +70,7 @@ export interface JobModel extends _JobModel {
 }
 
 export interface AddMemberJobModel extends JobModel {
-  action: 'addMember',
+  action: 'addMember';
   input: { email: string };
 }
 
