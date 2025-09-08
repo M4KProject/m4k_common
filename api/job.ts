@@ -1,38 +1,51 @@
-import { sleep } from '../helpers/async';
 import { toErr } from '../helpers/err';
 import { JobModel } from './models';
 import { jobColl } from './collections';
 import { needGroupId } from './messages';
-import { Msg } from '../helpers/Msg';
 
-export const addJob = async (action: JobModel['action'], input: JobModel['input']) => {
+const jobEndedStatus: Partial<Record<JobModel['status'], 1>> = {
+  deleted: 1,
+  failed: 1,
+  finished: 1,
+};
+
+export const addJob = async <J extends JobModel = JobModel>(
+  action: J['action'],
+  input: J['input'],
+  onProgress?: (job: J) => void,
+  timeout?: number,
+) => {
   console.debug('addJob', action, input);
   const group = needGroupId();
   console.debug('job pending', action, input, group);
-  return await jobColl.create({
+  const job = await jobColl.create({
     action,
     input,
     group,
     status: 'pending',
   });
-};
+  onProgress(job as J);
+  return await new Promise(async (resolve, reject) => {
+    let lastJob = job as J;
 
-const _msgById: Record<string, Msg<JobModel | null>> = {};
-const jobProgress = (job: JobModel) =>
-  _msgById[job.id] || (_msgById[job.id] = new Msg<JobModel | null>(job));
-
-const _waitJob = async (job: JobModel) => {
-  const job$ = jobProgress(job);
-  while (true) {
-    const next = await jobColl.get(job.id);
-    job$.set(next);
-    if (next) {
-      if (next.error) throw toErr(next.error, { job: next });
-      if (next.status === 'finished') return next;
+    const onUpdate = (job: J, action: "update" | "create" | "delete") => {
+      lastJob = job;
+      onProgress(job as J);
+      if (jobEndedStatus[job.status] || action === "delete") {
+        unsubscribe();
+        clearInterval(intervalRef);
+        clearTimeout(timeoutRef);
+        resolve(job);
+      }
     }
-    await sleep(3000);
-  }
-};
 
-const _waitById: Record<string, Promise<JobModel>> = {};
-export const waitJob = (job: JobModel) => _waitById[job.id] || (_waitById[job.id] = _waitJob(job));
+    const unsubscribe = await jobColl.subscribe(job.id, onUpdate);
+
+    const intervalRef = setInterval(onUpdate, 10 * 1000);
+
+    const timeoutRef = setTimeout(() => {
+      reject(toErr('job timeout'));
+      onUpdate(lastJob, "delete");
+    }, timeout || 300 * 1000);
+  })
+};
