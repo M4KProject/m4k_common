@@ -173,6 +173,10 @@ export class Coll<T extends ModelBase> {
     );
   }
 
+  findId(where: CollWhere<T>, o?: CollOptions<T>): Promise<string | null> {
+    return this.findOne(where, { ...o, select: ['id' as Keys<T>] }).then(r => r?.id);
+  }
+
   findKey(key: string, o?: CollOptions<T>): Promise<T | null> {
     return this.findOne({ key } as CollWhere<T>, { ...o }).then((result) => {
       if (!result) return this.get(key);
@@ -202,10 +206,9 @@ export class Coll<T extends ModelBase> {
     this.log('update', id, changes, o);
     if (!id) throw new Err('no id');
     if (typeof id === 'object') {
-      return this.findOne(id, { ...o, select: ['id' as Keys<T>] }).then((item) => {
-        if (!item) return null;
-        return this.update(item.id, changes, o);
-      });
+      return this.findId(id, o).then(id => (
+        id ? this.update(id, changes, o) : null
+      ));
     }
     const reqOptions: ReqOptions = o?.req || {};
     return this.r('PATCH', `records/${id}`, {
@@ -213,6 +216,10 @@ export class Coll<T extends ModelBase> {
       params: getParams(o),
       form: changes,
     });
+  }
+
+  up(id: string | CollWhere<T>, changes: ModelUpdate<T>, o?: CollOptions<T>) {
+    return this.update(id, changes, { ...o, select: [] }).then(Boolean);
   }
 
   delete(id: string, o?: CollOptions<T>): Promise<void> {
@@ -228,9 +235,9 @@ export class Coll<T extends ModelBase> {
 
   upsert(where: CollWhere<T>, changes: ModelUpsert<T>, o?: CollOptions<T>) {
     this.log('upsert', where, changes, o);
-    return this.findOne(where, { select: ['id'] as Keys<T>[] }).then((item) =>
-      item ? (this.update(item.id, changes, o) as Promise<T>) : this.create(changes, o)
-    );
+    return this.findId(where).then(id => (
+      id ? (this.update(id, changes, o) as Promise<T>) : this.create(changes, o)
+    ));
   }
 
   getUrl(id?: string, filename?: any) {
