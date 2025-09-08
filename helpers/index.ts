@@ -1,12 +1,9 @@
 
-export * from './B';
-export * from './D';
 export * from './Msg';
 export * from './addFont';
 export * from './async';
 export * from './autoHide';
 export * from './b64toBlob';
-export * from './bEdit';
 export * from './by';
 export * from './cache';
 export * from './cast';
