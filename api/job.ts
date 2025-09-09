@@ -2,6 +2,7 @@ import { toErr } from '../helpers/err';
 import { JobModel } from './models';
 import { jobColl } from './collections';
 import { needGroupId } from './messages';
+import { isExpired, toVoid } from '@common/helpers';
 
 const jobEndedStatus: Partial<Record<JobModel['status'], 1>> = {
   deleted: 1,
@@ -12,40 +13,44 @@ const jobEndedStatus: Partial<Record<JobModel['status'], 1>> = {
 export const addJob = async <J extends JobModel = JobModel>(
   action: J['action'],
   input: J['input'],
-  onProgress?: (job: J) => void,
-  timeout?: number,
+  onProgress: (job: J) => void = toVoid,
 ) => {
   console.debug('addJob', action, input);
   const group = needGroupId();
-  console.debug('job pending', action, input, group);
-  const job = await jobColl.create({
-    action,
-    input,
-    group,
-    status: 'pending',
-  });
-  onProgress(job as J);
-  return await new Promise(async (resolve, reject) => {
-    let lastJob = job as J;
 
-    const onUpdate = (job: J, action: "update" | "create" | "delete") => {
-      lastJob = job;
+  console.debug('job pending', action, input, group);
+  let job = await jobColl.create({ action, input, group });
+
+  onProgress(job as J);
+  
+  await new Promise<void>(async (resolve, reject) => {
+    const onUpdate = (next: JobModel|null, action: "update" | "create" | "delete") => {
+      console.debug('addJob onUpdate', job, action);
+      if (next) job = next;
+
+      if (action === "delete") job.status = 'deleted';
+
+      if (isExpired(job.updated, 10000)) {
+        job.status = 'failed';
+        job.error = 'timeout';
+      }
+
       onProgress(job as J);
-      if (jobEndedStatus[job.status] || action === "delete") {
+      
+      if (jobEndedStatus[job.status]) {
         unsubscribe();
         clearInterval(intervalRef);
-        clearTimeout(timeoutRef);
-        resolve(job);
+        resolve();
       }
     }
 
     const unsubscribe = await jobColl.subscribe(job.id, onUpdate);
 
-    const intervalRef = setInterval(onUpdate, 10 * 1000);
-
-    const timeoutRef = setTimeout(() => {
-      reject(toErr('job timeout'));
-      onUpdate(lastJob, "delete");
-    }, timeout || 300 * 1000);
+    const intervalRef = setInterval(async () => {
+      const next = await jobColl.get(job.id);
+      onUpdate(next, next ? "update" : "delete");
+    }, 10 * 1000);
   })
+
+  return job as J;
 };

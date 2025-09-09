@@ -10,7 +10,7 @@ export * from './cast';
 export * from './check';
 export * from './clipboard';
 export * from './color';
-export * from './datetime';
+export * from './date';
 export * from './err';
 export * from './flexBox';
 export * from './getCallCb';
