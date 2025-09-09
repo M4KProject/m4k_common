@@ -1,4 +1,5 @@
 import { createEl, setCss } from './html';
+import { logArgsToStr } from './log';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type LogItem = [LogLevel, number, any[], HTMLDivElement | null];
@@ -11,22 +12,6 @@ let lastLogDisplayed: LogItem | undefined = undefined;
 let showIntervalId: any;
 let showTimeoutId: any;
 
-const argToStr = (arg: any) => {
-  try {
-    if (typeof arg !== 'object') return JSON.stringify(arg);
-    if (arg instanceof Error) return `${arg.name}: ${arg.message}`;
-    if (arg instanceof Date) return arg.toLocaleString();
-    return JSON.stringify(arg);
-  } catch (_e) {
-    return `${arg}(${typeof arg})`;
-  }
-};
-
-const getLogMessage = (args: any[]) => {
-  const sb: string[] = [];
-  for (const a of args) sb.push(argToStr(a));
-  return sb.join(' ');
-};
 
 const c = console as any;
 const nDebug = c.debug.bind(c);
@@ -100,7 +85,7 @@ const show = () => {
       const el = createEl('div');
       const type = log[0].toLowerCase();
       el.className = type;
-      el.innerText = getLogMessage(log[2]);
+      el.innerText = logArgsToStr(log[2]);
       log[3] = el;
       consoleEl.appendChild(el);
     }

@@ -20,6 +20,7 @@ export * from './html';
 export * from './imgResize';
 export * from './json';
 export * from './list';
+export * from './log';
 export * from './logger';
 export * from './nbr';
 export * from './obj';
