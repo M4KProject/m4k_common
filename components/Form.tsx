@@ -29,10 +29,18 @@ export interface FormProps extends Omit<FormHTMLProps, 'style'> {
   style?: string | JSX.CSSProperties | undefined;
 }
 
-export const Form = ({ cls, style, className, children, title, ...props }: FormProps) => {
+export const Form = ({ cls, style, className, children, title, onSubmit, ...props }: FormProps) => {
   const c = useCss('Form', css);
   return (
-    <form {...props} style={getStyle(style)} class={clsx(c, cls, className)}>
+    <form
+      {...props}
+      style={getStyle(style)}
+      class={clsx(c, cls, className)}
+      onSubmit={e => {
+        e.preventDefault();
+        if (onSubmit) onSubmit(e);
+      }} 
+    >
       {title && <Div cls={`${c}Title`}>{title}</Div>}
       {children}
     </form>
