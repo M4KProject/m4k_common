@@ -1,4 +1,4 @@
-// GENERATED : 2025-09-08T13:47:58.435Z
+// GENERATED : 2025-09-10T19:38:13.480Z
 
 import { AuthModelBase, ModelBase } from './models.base';
 
@@ -86,6 +86,7 @@ export interface _MemberModel extends ModelBase {
   id: string;
   role?: number;
   desc?: string;
+  email?: string;
   user?: string;
   group?: string;
 }
