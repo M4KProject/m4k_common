@@ -75,7 +75,7 @@ const css: Css = {
   '&-error:hover &Icon': { bg: 'error', fg: 'white' },
 };
 
-export interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   cls?: any;
   color?: 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
