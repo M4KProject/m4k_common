@@ -12,8 +12,14 @@ export type ReqBody = Document | XMLHttpRequestBodyInit | File | null | undefine
 export type ReqResponseType = '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
 
 export class ReqError<T=any> extends Error {
+  status: number;
+  res?: Response;
+  data?: T;
   constructor(message: string, public ctx: Partial<ReqContext<T>>) {
     super(message);
+    this.status = ctx.status||0;
+    this.res = ctx.res;
+    this.data = ctx.data;
   }
 }
 
@@ -28,7 +34,7 @@ export interface ReqOptions<T = any> {
   body?: ReqBody | null;
   json?: ReqData;
   form?: FormDataObject | FormData | null;
-  responseType?: ReqResponseType | null;
+  resType?: ReqResponseType | null;
   noCache?: boolean | null;
   xhr?: boolean | XMLHttpRequest | null;
   fetch?: boolean | ((input: URL, init?: RequestInit) => Promise<Response>) | null;
@@ -48,7 +54,7 @@ export interface ReqContext<T = any> {
   options: ReqOptions<T>;
   url: URL;
   method: ReqMethod;
-  responseType: ReqResponseType;
+  resType: ReqResponseType;
   params: ReqParams;
   headers: ReqHeaders;
   body: ReqBody;
@@ -59,7 +65,7 @@ export interface ReqContext<T = any> {
   data?: T | null;
   error?: any;
   xhr?: XMLHttpRequest;
-  response?: Response;
+  res?: Response;
   fetchInit?: RequestInit;
 }
 
@@ -107,7 +113,7 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
     const xhr: XMLHttpRequest = ctx.xhr || (ctx.xhr = new XMLHttpRequest());
 
     xhr.timeout = ctx.timeout || 20000;
-    const responseType = (xhr.responseType = ctx.responseType || 'json');
+    const responseType = (xhr.responseType = ctx.resType || 'json');
 
     if (o.cors) xhr.withCredentials = true;
 
@@ -143,7 +149,7 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
         else if (responseType === 'json')
           data = typeof data === 'string' ? parse(data) || data : data;
         ctx.data = data;
-        ctx.response = xhr.response;
+        ctx.res = xhr.response;
         ctx.status = xhr.status;
         ctx.headers = {};
         resolve();
@@ -183,7 +189,7 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
     if (log) console.debug('fetch', ctx.url, fetchRequest);
 
     const response = await (typeof o.fetch === 'function' ? o.fetch : fetch)(ctx.url, fetchRequest);
-    ctx.response = response;
+    ctx.res = response;
     ctx.status = response.status;
     ctx.ok = response.ok;
 
@@ -191,7 +197,7 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
       ctx.data = await o.cast(ctx);
       return;
     } else {
-      switch (ctx.responseType) {
+      switch (ctx.resType) {
         case 'blob':
           ctx.data = (await response.blob()) as T;
           break;
@@ -228,7 +234,7 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
 
   const headers: ReqHeaders = {};
   const params = o.params || {};
-  const responseType = o.responseType || 'json';
+  const resType = o.resType || 'json';
   const json = o.json;
   const baseUrl = o.baseUrl || location.protocol + '//' + location.host;
 
@@ -251,20 +257,12 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     headers.Pragma = 'no-cache';
     params.noCache = Date.now();
   }
-
-  // if (formData) headers['Content-Type'] = headers['Process-Data'] = 'multipart/form-data';
-
-  headers.Accept = acceptMap[responseType] || acceptJson;
+  
+  headers.Accept = acceptMap[resType] || acceptJson;
 
   const body =
     o.body || (json ? (formData ? toFormData(json, formData) : stringify(json)) : formData);
-  // if (typeof body === 'object') {
-  //     if (body instanceof FormData || body instanceof File || body instanceof Blob) {
-  //         // ❌ NE PAS définir 'Content-Type' ici
-  //     } else {
-  //         addJsonHeader();
-  //     }
-  // }
+
   if (json) headers['Content-Type'] = 'application/json';
 
   const oHeaders = o.headers;
@@ -279,7 +277,7 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     options: o,
     url,
     method,
-    responseType,
+    resType,
     params,
     headers,
     body,
