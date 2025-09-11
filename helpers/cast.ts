@@ -36,6 +36,8 @@ interface ToDate {
 export const toDate = (<TDef>(v: any, defVal?: TDef): Date | TDef | undefined =>
   isDate(v) ? v : isStr(v) || isNbr(v) ? new Date(v) : isNil(v) ? new Date() : defVal) as ToDate;
 
+export const toTime = (v: any) => toDate(v).getTime();
+
 export const toNull = () => null;
 
 interface ToNumber {
