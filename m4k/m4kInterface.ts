@@ -185,7 +185,7 @@ export interface M4kDeviceInfo {
   storage?: string;
   model?: string;
   architecture?: string;
-  started?: string;
+  started?: string | Date;
 }
 
 export interface M4kPackageInfo {
