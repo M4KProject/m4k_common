@@ -20,8 +20,7 @@ export const isNil = (v: any): v is null | undefined => v === null || v === unde
 export const isNotNil = <T>(v: T | null | undefined): v is NonNullable<T> => !isNil(v);
 
 ///// Number /////
-export const isReal = (v: any): v is number =>
-  isNbr(v) && !Number.isNaN(v) && Number.isFinite(v);
+export const isReal = (v: any): v is number => isNbr(v) && !Number.isNaN(v) && Number.isFinite(v);
 export const isInt = (v: any): v is number => isReal(v) && Number.isInteger(v);
 export const isBetween = (v: number, min?: number, max?: number): boolean =>
   isNbr(min) && v < min ? false : isNbr(max) && v > max ? false : true;
@@ -46,7 +45,7 @@ export const isItemEmpty = (v: any): boolean => {
   return true;
 };
 export const isObjEmpty = (v: Obj): boolean => isListEmpty(v) || isItemEmpty(v);
-export const isEmpty = (v: any): boolean => isStr(v) ? isStrEmpty(v) : isObjEmpty(v);
+export const isEmpty = (v: any): boolean => (isStr(v) ? isStrEmpty(v) : isObjEmpty(v));
 export const isNotEmpty = isNot(isEmpty);
 
 ///// DeepEqual /////

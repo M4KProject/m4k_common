@@ -12,7 +12,6 @@ let lastLogDisplayed: LogItem | undefined = undefined;
 let showIntervalId: any;
 let showTimeoutId: any;
 
-
 const c = console as any;
 const nDebug = c.debug.bind(c);
 const nInfo = c.info.bind(c);

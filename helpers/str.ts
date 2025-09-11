@@ -76,10 +76,10 @@ export const replace = (val: string, replaceBySearch: Record<string, any>): stri
 export const setTemplate = (template: string, replaceByKey: Record<string, any>): string =>
   template.replace(/\{(\w+)\}/g, (s, k) => replaceByKey[k] || s);
 
-export const randStr = (count: number, chars: string = "abcdefghjkmnpqrstuvwxyz23456789") => {
+export const randStr = (count: number, chars: string = 'abcdefghjkmnpqrstuvwxyz23456789') => {
   const charset = chars.split('');
   let result = '';
-  
+
   if (typeof crypto === 'object' && crypto.getRandomValues) {
     const buff = new Uint32Array(count);
     crypto.getRandomValues(buff);
@@ -91,12 +91,13 @@ export const randStr = (count: number, chars: string = "abcdefghjkmnpqrstuvwxyz2
       result += charset[Math.floor(Math.random() * charset.length)];
     }
   }
-  
-  return result;
-}
 
-export const randPass = (count: number) => randStr(count, "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789_@#()[]:;,?!=+");
-export const randHex = (count: number) => randStr(count, "0123456789abcdef");
+  return result;
+};
+
+export const randPass = (count: number) =>
+  randStr(count, 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789_@#()[]:;,?!=+');
+export const randHex = (count: number) => randStr(count, '0123456789abcdef');
 
 export const uuid = (): string => {
   if (typeof crypto === 'object' && crypto.randomUUID) {

@@ -74,7 +74,7 @@ export class Msg<T = any> implements IMsg<T> {
   private h: IMsgHandler<T>[] = [];
 
   /** map and debounce */
-  
+
   /** upstream lazy: o = onUpstream */
   private o?: (handler: IMsgHandler<any>) => () => void;
   /** upstream lazy: k = offUpstream */
@@ -153,23 +153,17 @@ export class Msg<T = any> implements IMsg<T> {
   }
 
   map<U>(cb: (value: T) => U): IMsgReadonly<U>;
-  map<U>(
-    cb: (value: T) => U,
-    handler?: (target: IMsg<U>) => IMsgHandler<any>
-  ): IMsgReadonly<U>;
-  map<U>(
-    cb: (value: T) => U,
-    handler?: (target: IMsg<U>) => IMsgHandler<any>
-  ): IMsgReadonly<U> {
+  map<U>(cb: (value: T) => U, handler?: (target: IMsg<U>) => IMsgHandler<any>): IMsgReadonly<U>;
+  map<U>(cb: (value: T) => U, handler?: (target: IMsg<U>) => IMsgHandler<any>): IMsgReadonly<U> {
     const source = this;
     const target = new Msg<U>(cb(source.v));
-    
+
     target.o = (h) => source.on(h);
     target.u = (handler && handler(target)) || ((value: any) => target.set(value));
-    
+
     target.p = source;
     (source.t || (source.t = [])).push(target);
-    
+
     return target;
   }
 

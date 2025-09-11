@@ -142,4 +142,3 @@ export const isExpired = (date: any, delayMs: number = 0): boolean => {
   if (!d) return true;
   return d.getTime() + delayMs < Date.now();
 };
-

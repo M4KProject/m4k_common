@@ -8,7 +8,7 @@ let _authColl = userColl;
 
 export const setAuthColl = (coll: typeof userColl) => {
   _authColl = coll;
-}
+};
 
 export const login = (
   identity: string,

@@ -17,29 +17,28 @@ const initRealtime = () => {
   let lastHeartbeat = 0;
   const wrappedListeners: Record<string, (event: any) => void> = {};
 
-  const isConnected = (): boolean => (
+  const isConnected = (): boolean =>
     !!eventSource &&
     !!clientId &&
     eventSource.readyState === EventSource.OPEN &&
-    (Date.now() - lastHeartbeat) < 30000
-  );
+    Date.now() - lastHeartbeat < 30000;
 
   const addAllListeners = (eventSource: EventSource) => {
     // console.debug('realtime addAllListeners', eventSource);
-    
+
     // Remove old listeners first to prevent duplication
     for (const key in wrappedListeners) {
       eventSource.removeEventListener(key, wrappedListeners[key]);
       delete wrappedListeners[key];
     }
-    
+
     // Add new listeners
     for (const key in subscriptions) {
       const listeners = subscriptions[key];
       if (listeners.length > 0) {
         wrappedListeners[key] = (event: any) => {
           lastHeartbeat = Date.now();
-          listeners.forEach(listener => listener(event));
+          listeners.forEach((listener) => listener(event));
         };
         eventSource.addEventListener(key, wrappedListeners[key]);
       }

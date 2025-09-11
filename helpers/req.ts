@@ -11,13 +11,16 @@ export type ReqHeaders = Record<string, string>;
 export type ReqBody = Document | XMLHttpRequestBodyInit | File | null | undefined;
 export type ReqResponseType = '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
 
-export class ReqError<T=any> extends Error {
+export class ReqError<T = any> extends Error {
   status: number;
   res?: Response;
   data?: T;
-  constructor(message: string, public ctx: Partial<ReqContext<T>>) {
+  constructor(
+    message: string,
+    public ctx: Partial<ReqContext<T>>
+  ) {
     super(message);
-    this.status = ctx.status||0;
+    this.status = ctx.status || 0;
     this.res = ctx.res;
     this.data = ctx.data;
   }
@@ -257,7 +260,7 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     headers.Pragma = 'no-cache';
     params.noCache = Date.now();
   }
-  
+
   headers.Accept = acceptMap[resType] || acceptJson;
 
   const body =
