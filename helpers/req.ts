@@ -1,5 +1,4 @@
-import { isList } from './check';
-import { Err, toErr } from './err';
+import { isBetween, isList, isStr } from './check';
 import { parse, stringify } from './json';
 import { pathJoin } from './pathJoin';
 
@@ -11,6 +10,12 @@ export type ReqData = any;
 export type ReqHeaders = Record<string, string>;
 export type ReqBody = Document | XMLHttpRequestBodyInit | File | null | undefined;
 export type ReqResponseType = '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
+
+export class ReqError<T=any> extends Error {
+  constructor(message: string, public ctx: Partial<ReqContext<T>>) {
+    super(message);
+  }
+}
 
 export interface ReqOptions<T = any> {
   url?: ReqURL;
@@ -141,8 +146,6 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
         ctx.response = xhr.response;
         ctx.status = xhr.status;
         ctx.headers = {};
-        ctx.ok = xhr.status < 400;
-        if (!ctx.ok) ctx.error = new Error(xhr.statusText);
         resolve();
       };
       xhr.onloadend = xhr.onerror = xhr.ontimeout = xhr.onabort = cb;
@@ -221,7 +224,7 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
   const log = o.log === true;
 
   if (o.base) o.base(o);
-  if (!o.url) throw new Err('no-url', { options: o });
+  if (!o.url) throw new ReqError<T>('no-url', { options });
 
   const headers: ReqHeaders = {};
   const params = o.params || {};
@@ -295,14 +298,17 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
   } catch (error) {
     if (log) console.debug('req error', o.url, error);
     ctx.error = error;
-    ctx.ok = false;
+  }
+
+  if (!isBetween(ctx.status, 200, 299)) {
+    ctx.error = String(ctx.status);
   }
 
   const error = ctx.error;
-  if (error) {
-    const err = toErr(error, { ...ctx, ...ctx.data });
-    if (log) console.warn('req throw error', err.toJSON());
-    throw err;
+  if (error || !ctx.ok) {
+    const message = isStr(ctx.error) ? ctx.error : ctx.error.message;
+    if (log) console.warn('req error', message, ctx);
+    throw new ReqError<T>(message, ctx);
   }
 
   return ctx.data as T;
