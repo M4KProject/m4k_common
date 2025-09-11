@@ -1,5 +1,5 @@
 import { Msg, toDate } from "@common/helpers";
-import { apiGet } from "./functions";
+import { apiGet } from "./call";
 
 export const getServerTime = () => apiGet('now').then(d => toDate(d).getTime());
 
