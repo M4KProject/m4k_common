@@ -230,7 +230,7 @@ export class Coll<T extends ModelBase> {
     return this.r('DELETE', `records/${id}`, {
       ...reqOptions,
       params: getParams(o),
-      responseType: 'text',
+      resType: 'text',
     });
   }
 
