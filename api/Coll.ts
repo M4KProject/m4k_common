@@ -109,6 +109,7 @@ export const apiReq = (baseUrl: string) =>
   createReq({
     baseUrl: pathJoin(getApiUrl(), baseUrl),
     timeout: 10000,
+    // log: true,
     base: (options) => {
       const auth = auth$.v;
       if (auth) {
