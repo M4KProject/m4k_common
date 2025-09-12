@@ -1,4 +1,4 @@
-import { isBetween, isList, isStr } from './check';
+import { isBetween, isDate, isDef, isFileOrBlob, isList, isObj, isStr } from './check';
 import { parse, stringify } from './json';
 import { pathJoin } from './pathJoin';
 
@@ -85,29 +85,21 @@ export const toFormData = (form: FormDataObject | FormData | null | undefined, b
   if (!form) return;
   if (form instanceof FormData) return form;
   const r = base || new FormData();
-  Object.entries(form).forEach(([prop, val]) => {
-    if (val === undefined) return;
-    if (typeof val === 'object') {
-      if (isList(val) && (val[0] instanceof File || val[0] instanceof Blob)) {
-        for (const file of val) {
-          if (file instanceof File || file instanceof Blob) {
-            r.append(prop, file);
-          }
-        }
-        return;
-      } else if (val instanceof File || val instanceof Blob) {
-        //
-      } else {
-        val = stringify(val);
-        if (isStr(val) && val.startsWith('"')) val = parse(val);
+  for (const k in form) {
+    let v = form[k];
+    if (isObj(v)) {
+      if (isList(v)) {
+        for (const child of v) r.append(k, child);
+        v = undefined
       }
-    } else {
-      val = String(val);
+      else if (isFileOrBlob(v)) {}
+      else if (isDate(v)) v = v.toISOString();
+      else v = stringify(v);
     }
-    r.append(prop, val);
-  });
+    if (isDef(v)) r.append(k, v);
+  }
   return r;
-};
+}
 
 export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
   try {
