@@ -16,18 +16,23 @@ export const login = (
   o?: CollOptions<UserModel>
 ): Promise<UserModel> =>
   _authColl
-    .r('POST', `auth-with-password`, {
+    .r<{ token: string; record: UserModel }>('POST', `auth-with-password`, {
       params: getParams(o),
       form: { identity, password },
+      after: (ctx) => {
+        if (!ctx.data.token) {
+          ctx.error = 'no token';
+          return;
+        }
+      },
     })
     .then((result) => {
       console.debug('login result', result);
-      if (!result.token) throw toErr(result.message, result);
       auth$.set({ ...result.record, token: result.token });
       return result.record;
     });
 
-export const signUp = async (email: string, password: string) => {
+export const signUp = async (email: string, password: string, isLogin = true) => {
   try {
     console.debug('signUp email', email);
     const user = await _authColl.create(
@@ -39,7 +44,7 @@ export const signUp = async (email: string, password: string) => {
       { select: ['id'] }
     );
     console.debug('signUp user', user);
-    await login(email, password);
+    if (isLogin) await login(email, password);
     return user;
   } catch (error) {
     console.warn('signUp error', toErr(error));
