@@ -1,4 +1,5 @@
 import { toDate } from './cast';
+import { isDate } from './check';
 import { floor } from './nbr';
 import { pad } from './str';
 
@@ -26,7 +27,8 @@ export const formatMs = (ms: number): string => {
 
 /** Format date as DD/MM/YYYY */
 export const formatDate = (date?: any): string => {
-  const d = toDate(date) || new Date();
+  const d = toDate(date);
+  if (!isDate(d)) return '';
   const day = pad(d.getDate(), 2);
   const month = pad(d.getMonth() + 1, 2);
   const year = d.getFullYear();
@@ -36,7 +38,8 @@ export const formatDate = (date?: any): string => {
 
 /** Format time as HH:MM:SS */
 export const formatTime = (date?: any): string => {
-  const d = toDate(date) || new Date();
+  const d = toDate(date);
+  if (!isDate(d)) return '';
   const hours = pad(d.getHours(), 2);
   const minutes = pad(d.getMinutes(), 2);
   const secondes = pad(d.getSeconds(), 2);
@@ -44,7 +47,11 @@ export const formatTime = (date?: any): string => {
 };
 
 /** Format date and time as DD/MM/YYYY HH:MM:SS */
-export const formatDateTime = (date: any): string => `${formatDate(date)} ${formatTime(date)}`;
+export const formatDateTime = (date: any): string => {
+  const d = toDate(date);
+  if (!isDate(d)) return '';
+  return `${formatDate(d)} ${formatTime(d)}`
+};
 
 /** Parse flexible date/time string: DD/MM, DD/MM/YY, DD/MM/YYYY HH:MM:SS, HH:MM, etc. */
 export const parseDate = (str: string): Date | null => {

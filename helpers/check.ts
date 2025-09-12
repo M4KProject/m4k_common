@@ -24,6 +24,8 @@ export const isNotNil = <T>(v: T | null | undefined): v is NonNullable<T> => !is
 
 ///// Number /////
 export const isReal = (v: any): v is number => isNbr(v) && !Number.isNaN(v) && Number.isFinite(v);
+export const isPositive = (v: any): v is number => isReal(v) && v > 0;
+export const isNegative = (v: any): v is number => isReal(v) && v < 0;
 export const isInt = (v: any): v is number => isReal(v) && Number.isInteger(v);
 export const isBetween = (v: number, min?: number, max?: number): boolean =>
   isNbr(min) && v < min ? false : isNbr(max) && v > max ? false : true;
