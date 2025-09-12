@@ -98,7 +98,8 @@ export const toFormData = (form: FormDataObject | FormData | null | undefined, b
       } else if (val instanceof File || val instanceof Blob) {
         //
       } else {
-        val = JSON.stringify(val);
+        val = stringify(val);
+        if (isStr(val) && val.startsWith('"')) val = parse(val);
       }
     } else {
       val = String(val);
