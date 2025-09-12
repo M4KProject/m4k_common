@@ -95,8 +95,8 @@ export const randStr = (count: number, chars: string = 'abcdefghjkmnpqrstuvwxyz2
   return result;
 };
 
-export const randPass = (count: number) =>
-  randStr(count, 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789_@#()[]:;,?!=+');
+export const randKey = (count: number) =>
+  randStr(count, 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789');
 export const randHex = (count: number) => randStr(count, '0123456789abcdef');
 
 export const uuid = (): string => {
