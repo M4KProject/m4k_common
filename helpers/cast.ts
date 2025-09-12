@@ -36,7 +36,7 @@ interface ToDate {
 export const toDate = (<TDef>(v: any, defVal?: TDef): Date | TDef | undefined =>
   isDate(v) ? v : isStr(v) || isNbr(v) ? new Date(v) : isNil(v) ? new Date() : defVal) as ToDate;
 
-export const toTime = (v: any): number => isReal(v = toDate(v).getTime()) ? v : 0;
+export const toTime = (v: any): number => (isReal((v = toDate(v).getTime())) ? v : 0);
 
 export const toNull = () => null;
 
@@ -64,3 +64,4 @@ interface ToStr {
 export const toStr = ((v: any, d: any) => (isNil(v) ? d : String(v))) as ToStr;
 
 export const toVoid = () => {};
+export const toVoidAsync = () => Promise.resolve();
