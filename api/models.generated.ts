@@ -93,7 +93,15 @@ export interface _GroupModel extends ModelBase {
 export interface _JobModel extends ModelBase {
   id: string;
   action?: '' | 'test' | 'test2' | 'addMember';
-  status?: '' | 'pending' | 'processing' | 'finished' | 'failed' | 'deleted' | 'claimed' | 'created';
+  status?:
+    | ''
+    | 'pending'
+    | 'processing'
+    | 'finished'
+    | 'failed'
+    | 'deleted'
+    | 'claimed'
+    | 'created';
   progress?: number;
   error?: string;
   input?: any;
