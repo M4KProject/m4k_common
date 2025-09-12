@@ -5,7 +5,6 @@ import {
   Req,
   ReqOptions,
   ReqParams,
-  createReq,
   parse,
   stringify,
   pathJoin,
@@ -13,8 +12,9 @@ import {
   isList,
   isDef,
 } from '../helpers';
-import { auth$, getApiUrl } from './messages';
+import { getApiUrl } from './messages';
 import { realtime } from './realtime';
+import { newApiReq } from './call';
 
 export type CollOperator =
   | '=' // Equal
@@ -105,29 +105,12 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
   return r;
 };
 
-export const apiReq = (baseUrl: string) =>
-  createReq({
-    baseUrl: pathJoin(getApiUrl(), baseUrl),
-    timeout: 10000,
-    // log: true,
-    base: (options) => {
-      const auth = auth$.v;
-      if (auth) {
-        options.headers = {
-          Authorization: `Bearer ${auth.token}`,
-          'X-Auth-Token': auth.token, // For Android WebView
-          ...options.headers,
-        };
-      }
-    },
-  });
-
 export class Coll<T extends ModelBase> {
   unsubscribes: (() => void)[] = [];
   r: Req;
 
   constructor(public coll: string) {
-    this.r = apiReq(`collections/${this.coll}/`);
+    this.r = newApiReq(`collections/${this.coll}/`);
   }
 
   log(...args: any[]) {
