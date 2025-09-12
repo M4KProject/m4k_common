@@ -115,3 +115,41 @@ export const merge = (a: any, b: any): any => {
 };
 
 export const mergeAll = (...args: any[]): any => args.reduce(merge);
+
+export const deepForEach = (
+  obj: any,
+  cb: (v: any, k: string | number | null, parent: any) => void
+): void => {
+  const walk = (v: any, k: string | number | null, parent: any) => {
+    if (isObj(v)) {
+      if (isList(v)) {
+        for (let i = 0, l = v.length; i < l; i++) walk(v[i], i, v);
+      } else {
+        for (const k in v) walk(v[k], k, v);
+      }
+    }
+    cb(v, k, parent);
+  };
+  walk(obj, null, null);
+};
+
+export const deepMap = (
+  obj: any,
+  replace: (v: any, k: string | number | null, parent: any) => any
+): any => {
+  const walk = (v: any, k: string | number | null, parent: any) => {
+    if (isObj(v)) {
+      if (isList(v)) {
+        for (let i = 0, l = v.length; i < l; i++) {
+          v[i] = walk(v[i], i, v);
+        }
+      } else {
+        for (const k in v) {
+          v[k] = walk(v[k], k, v);
+        }
+      }
+    }
+    return replace(v, k, parent);
+  };
+  return walk(obj, null, null);
+};
