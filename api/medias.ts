@@ -2,7 +2,7 @@ import { Msg } from '../helpers/Msg';
 import { uuid } from '../helpers/str';
 import { retry, sleep } from '../helpers/async';
 import { mediaColl } from './collections';
-import { needGroupId } from './messages';
+import { needAuthId, needGroupId } from './messages';
 import { MediaModel } from './models';
 import { deleteKey } from '../helpers/obj';
 import { toErr } from '@common/helpers';
@@ -48,6 +48,7 @@ const startUpload = (item: UploadItem) =>
           title: String(file.name),
           file,
           group: needGroupId(),
+          user: needAuthId(),
         },
         {
           req: {
@@ -58,7 +59,7 @@ const startUpload = (item: UploadItem) =>
         }
       );
 
-      update(id, { media, status: SUCCESS });
+      update(id, { media, progress: 100, status: SUCCESS });
 
       console.info('upload success', item, media);
       return media;

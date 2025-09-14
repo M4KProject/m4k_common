@@ -61,7 +61,10 @@ export interface PlaylistContentModel extends ContentModel {
 
 export interface DeviceModel extends _DeviceModel {}
 
-export interface MediaModel extends _MediaModel {}
+export interface MediaModel extends _MediaModel {
+  paths?: string[];
+  order?: string;
+}
 
 export interface GroupModel extends _GroupModel {}
 
