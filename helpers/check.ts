@@ -11,7 +11,7 @@ export const isDate = (v: any): v is Date => v instanceof Date;
 export const isErr = (v: any): v is Error => v instanceof Error;
 export const isFile = (v: any): v is File => v instanceof File;
 export const isBlob = (v: any): v is Blob => v instanceof Blob;
-export const isFileOrBlob = (v: any): v is File|Blob => isFile(v) || isBlob(v);
+export const isFileOrBlob = (v: any): v is File | Blob => isFile(v) || isBlob(v);
 export const isFun = (v: any): v is (...args: any[]) => any => typeof v === 'function';
 export const isNbr = (v: any): v is number => typeof v === 'number';
 export const isNot = (is: (v: any) => boolean) => (v: any) => !is(v);

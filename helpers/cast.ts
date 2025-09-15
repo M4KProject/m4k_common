@@ -33,13 +33,10 @@ interface ToDate {
   <TDef>(v: any, defVal: TDef): Date | TDef;
   <TDef>(v: any, defVal?: TDef): Date | TDef | undefined;
 }
-export const toDate = (<TDef>(v: any, defVal?: TDef): Date | TDef | undefined => (
-  isDate(v) ? v :
-  isPositive((v = new Date(v)).getTime()) ? v :
-  defVal
-)) as ToDate;
+export const toDate = (<TDef>(v: any, defVal?: TDef): Date | TDef | undefined =>
+  isDate(v) ? v : isPositive((v = new Date(v)).getTime()) ? v : defVal) as ToDate;
 
-export const toTime = (v: any): number => isDate(v = toDate(v)) ? v.getTime() : 0;
+export const toTime = (v: any): number => (isDate((v = toDate(v))) ? v.getTime() : 0);
 
 export const toNull = () => null;
 

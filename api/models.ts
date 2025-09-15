@@ -68,9 +68,7 @@ export interface MediaModel extends _MediaModel {
 
 export interface GroupModel extends _GroupModel {}
 
-export interface JobModel extends _JobModel {
-  input: Item;
-}
+export interface JobModel extends _JobModel {}
 
 export interface AddMemberJobModel extends JobModel {
   action: 'addMember';

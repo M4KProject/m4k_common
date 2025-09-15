@@ -50,7 +50,7 @@ export const formatTime = (date?: any): string => {
 export const formatDateTime = (date: any): string => {
   const d = toDate(date);
   if (!isDate(d)) return '';
-  return `${formatDate(d)} ${formatTime(d)}`
+  return `${formatDate(d)} ${formatTime(d)}`;
 };
 
 /** Parse flexible date/time string: DD/MM, DD/MM/YY, DD/MM/YYYY HH:MM:SS, HH:MM, etc. */

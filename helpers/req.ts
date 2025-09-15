@@ -90,16 +90,15 @@ export const toFormData = (form: FormDataObject | FormData | null | undefined, b
     if (isObj(v)) {
       if (isList(v)) {
         for (const child of v) r.append(k, child);
-        v = undefined
-      }
-      else if (isFileOrBlob(v)) {}
-      else if (isDate(v)) v = v.toISOString();
+        v = undefined;
+      } else if (isFileOrBlob(v)) {
+      } else if (isDate(v)) v = v.toISOString();
       else v = stringify(v);
     }
     if (isDef(v)) r.append(k, v);
   }
   return r;
-}
+};
 
 export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
   try {
