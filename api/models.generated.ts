@@ -112,14 +112,14 @@ export interface _MediaModel extends ModelBase {
   key?: string;
   title?: string;
   desc?: string;
-  type?: string;
+  mime?: string;
   bytes?: number;
   width?: number;
   height?: number;
   seconds?: number;
-  progress?: number;
   data?: any;
-  file?: File | Blob | string;
+  source?: File | Blob | string;
+  variants?: File | Blob | string;
   parent?: string;
   user?: string;
   group?: string;
