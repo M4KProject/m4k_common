@@ -52,6 +52,8 @@ export interface _UserModel extends AuthModelBase {
   verified?: boolean;
   name?: string;
   avatar?: File | Blob | string;
+  writers?: any;
+  readers?: any;
 }
 
 export interface _ContentModel extends ModelBase {
@@ -92,16 +94,8 @@ export interface _GroupModel extends ModelBase {
 
 export interface _JobModel extends ModelBase {
   id: string;
-  action?: '' | 'test' | 'test2' | 'addMember';
-  status?:
-    | ''
-    | 'pending'
-    | 'processing'
-    | 'finished'
-    | 'failed'
-    | 'deleted'
-    | 'claimed'
-    | 'created';
+  action?: '' | 'test' | 'test2' | 'addMember' | 'convert';
+  status?: '' | 'pending' | 'processing' | 'finished' | 'failed' | 'deleted' | 'claimed' | 'created';
   progress?: number;
   error?: string;
   input?: any;
@@ -153,5 +147,15 @@ export interface _LockModel extends ModelBase {
   id: string;
   seconds?: number;
   key?: string;
+  group?: string;
+}
+
+export interface _LogModel extends ModelBase {
+  id: string;
+  level?: '' | 'debug' | 'info' | 'warn' | 'error';
+  message?: string;
+  ip?: string;
+  data?: any;
+  user?: string;
   group?: string;
 }

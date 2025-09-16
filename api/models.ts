@@ -70,9 +70,9 @@ export interface GroupModel extends _GroupModel {}
 
 export interface JobModel extends _JobModel {}
 
-export interface AddMemberJobModel extends JobModel {
-  action: 'addMember';
-  input: { email: string };
+export interface ConvertJobModel extends JobModel {
+  action: 'convert';
+  input: {  };
 }
 
 export enum Role {
