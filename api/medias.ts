@@ -1,11 +1,11 @@
-import { Msg } from '../helpers/Msg';
-import { uuid } from '../helpers/str';
-import { retry, sleep } from '../helpers/async';
+import { Msg } from '../utils/Msg';
+import { uuid } from '../utils/str';
+import { retry, sleep } from '../utils/async';
 import { mediaColl } from './collections';
 import { needAuthId, needGroupId } from './messages';
 import { MediaModel } from './models';
-import { deleteKey } from '../helpers/obj';
-import { toErr } from '@common/helpers';
+import { deleteKey } from '../utils/obj';
+import { toError } from '../utils/cast';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 const MAX_RETRY = 3;
@@ -46,7 +46,7 @@ const startUpload = (item: UploadItem) =>
       const media = await mediaColl.create(
         {
           title: String(file.name),
-          file,
+          source: file,
           group: needGroupId(),
           user: needAuthId(),
         },
@@ -64,7 +64,7 @@ const startUpload = (item: UploadItem) =>
       console.info('upload success', item, media);
       return media;
     } catch (e) {
-      const error = toErr(e);
+      const error = toError(e);
       console.warn('upload failed, retrying in 5s', item, error);
       update(id, { error });
       await sleep(5000);
@@ -85,7 +85,7 @@ const processQueue = async () => {
     try {
       await startUpload(item);
     } catch (e) {
-      const error = toErr(e);
+      const error = toError(e);
       console.error('upload failed', item, error);
       update(item.id, { status: FAILED, error });
     }

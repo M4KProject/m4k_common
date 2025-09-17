@@ -1,9 +1,9 @@
 /// <reference lib="dom" />
-import { Req } from '../helpers/req';
-import { parse } from '../helpers/json';
-import { pathJoin } from '../helpers/pathJoin';
+import { Req } from '../utils/req';
+import { parse } from '../utils/json';
+import { pathJoin } from '../utils/pathJoin';
 import { getApiUrl } from './messages';
-import { toErr } from '@common/helpers';
+import { toError } from '../utils/cast';
 
 const initRealtime = () => {
   let clientId: string = '';
@@ -123,7 +123,7 @@ const initRealtime = () => {
       xhr = undefined;
       if (eventSource) addAllListeners(eventSource);
     } catch (e) {
-      const error = toErr(e);
+      const error = toError(e);
       console.error('realtime update', error);
     }
   };

@@ -1,6 +1,6 @@
-import { throwIf } from '../helpers/err';
-import { Msg } from '../helpers/Msg';
-import { isEmpty, isItem, isStr } from '../helpers/check';
+import { toError } from '../utils/cast';
+import { Msg } from '../utils/Msg';
+import { isItem, isStr, isStrNotEmpty } from '../utils/check';
 import { UserModel } from './models';
 
 // export const PB_URL_DEV = "http://127.0.0.1:8090/api/";
@@ -20,5 +20,14 @@ export const getApiUrl = () => apiUrl$.v || defaultUrl;
 export const getAuthId = () => auth$.v?.id || '';
 export const getGroupId = () => groupId$.v;
 
-export const needAuthId = () => throwIf(getAuthId(), isEmpty, 'no auth id');
-export const needGroupId = () => throwIf(getGroupId(), isEmpty, 'no group id');
+export const needAuthId = () => {
+  const id = getAuthId();
+  if (!isStrNotEmpty(id)) throw toError('no auth id');
+  return id;
+};
+
+export const needGroupId = () => {
+  const id = getGroupId();
+  if (!isStrNotEmpty(id)) throw toError('no group id');
+  return id;
+};

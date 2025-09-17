@@ -9,7 +9,7 @@ import {
   UserModel,
 } from './models';
 import { Coll } from './Coll';
-import { global } from '../helpers/global';
+import { global } from '../utils/global';
 
 export const coll = <T extends ModelBase>(name: string) => new Coll<T>(name);
 
