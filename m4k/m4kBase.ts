@@ -2,7 +2,7 @@ import { toErr } from '../utils/err';
 import { M4Kiosk } from './m4kInterface';
 import { m4kMethods } from './m4kMethods';
 import { global } from '../utils/global';
-import { isFun } from '../helpers';
+import { isFun } from '../utils/check';
 
 type MethodAsyncOrSync<T> = T extends (...args: infer A) => Promise<infer R>
   ? (...args: A) => Promise<R> | R

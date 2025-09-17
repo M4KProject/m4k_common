@@ -2,8 +2,8 @@ import { Css } from '../ui/html';
 import { Div, DivProps } from './Div';
 import { useCss } from '../hooks/useCss';
 import { clamp, round } from '../utils/nbr';
-import { toNbr } from '../helpers';
-import { flexCenter } from '../helpers';
+import { toNbr } from '../utils/cast';
+import { flexCenter } from '../ui/flexBox';
 import { ComponentChildren } from 'preact';
 
 const css: Css = {
