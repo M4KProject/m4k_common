@@ -1,4 +1,3 @@
-/// <reference lib="dom" />
 import { Req } from '@common/utils/req';
 import { parse } from '@common/utils/json';
 import { pathJoin } from '@common/utils/pathJoin';

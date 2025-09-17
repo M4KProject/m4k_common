@@ -13,6 +13,7 @@ const css: Css = {
     bg: 'white',
     border: 'primary',
     borderRadius: '0.2em',
+    w: '100%',
   },
   '&Bar': {
     position: 'absolute',

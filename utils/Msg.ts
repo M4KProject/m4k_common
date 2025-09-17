@@ -1,7 +1,7 @@
 import { removeItem } from './list';
 import { debounce, throttle } from './async';
-import { toVoid } from './cast';
-import { isDef, isFun } from './check';
+import { toError, toVoid } from './cast';
+import { isDef, isFun, isItem } from './check';
 import { global } from './global';
 import { getStored, setStored } from './storage';
 
@@ -124,9 +124,24 @@ export class Msg<T = any> implements IMsg<T> {
     return this;
   }
 
-  merge(changes: Record<string, any> & Partial<T>) {
-    const prev = (this.v as any) || {};
-    this.set({ ...prev, ...changes } as any);
+  apply(cb: (next: T) => void) {
+    const prev = this.v;
+    if (!isItem(prev)) throw toError('msg not item');
+    const next = { ...prev } as T;
+    cb(next);
+    this.set(next);
+  }
+
+  merge(changes: Partial<T>) {
+    this.apply(next => {
+      Object.assign(next, changes);
+    });
+  }
+
+  delete(id: string) {
+    this.apply(next => {
+      delete next[id];
+    });
   }
 
   subscribe(handler: (next: T) => void): IMsgSubscription {

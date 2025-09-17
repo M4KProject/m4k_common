@@ -2,13 +2,13 @@ import { useState } from 'preact/hooks';
 import { Css } from '@common/ui/html';
 import { flexColumn } from '@common/ui/flexBox';
 import { useCss } from '../hooks/useCss';
-import { login, passwordReset, signUp } from '../api';
+import { login, passwordReset, signUp } from '../api/auth';
 import { Loading } from './Loading';
 import { Field } from './Field';
 import { Button, ButtonRow } from './Button';
 import { Form } from './Form';
 import { toErr } from '@common/utils/err';
-import { addTranslates } from '../hooks';
+import { addTranslates } from '../hooks/useTr';
 
 addTranslates({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',

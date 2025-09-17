@@ -1,18 +1,17 @@
-import { Coll } from './Coll';
+import { coll, Coll } from './Coll';
 import { ModelBase, ModelCreate, ModelUpdate } from './models';
-import { IMsgReadonly, Msg } from '@common/utils/Msg';
-import { Dict, isEmpty, List } from '@common/utils/check';
-import { byId } from '@common/utils/by';
-import { first } from '@common/utils/list';
+import { IMsgReadonly, Msg } from '../utils/Msg';
+import { Dict, isEmpty, isEq, List } from '../utils/check';
+import { byId } from '../utils/by';
+import { first } from '../utils/list';
+import { ReqError } from '../utils/req';
+import { firstUpper, uuid } from '../utils/str';
+import { toError, toVoidAsync } from '../utils/cast';
 
 export interface Todo<T extends ModelBase> {
   id: string;
-  from?: T;
-  create?: ModelCreate<T>;
-  update?: ModelUpdate<T>;
-  delete?: boolean;
-  started?: number;
-  error?: Error;
+  prev: T|null;
+  next: T|null;
 }
 
 export class SyncColl<T extends ModelBase> {
@@ -24,223 +23,98 @@ export class SyncColl<T extends ModelBase> {
   private todo$: Msg<Record<string, Todo<T>>>;
   private isInit = false;
   private isFlush = false;
-  private interval?: any;
+  private unsubscribe = toVoidAsync;
 
-  constructor(collName: string, key?: string) {
-    this.coll = new Coll<T>(collName);
+  constructor(public collName: string, key?: string) {
+    this.coll = coll<T>(collName);
 
     this.dict$ = new Msg<Record<string, T>>({}, key, true);
     this.list$ = this.dict$.map(Object.values) as IMsgReadonly<T[]>;
 
     this.todo$ = new Msg<Record<string, Todo<T>>>({});
-    this.todo$.throttle(this.flush.bind(this));
-  }
+    this.todo$.throttle(500).on(this.flush.bind(this));
 
-  async load(): Promise<void> {
-    await this.flush();
-    const list = await this.coll.find({});
-    const dict = byId(list);
-    this.dict$.set(dict);
+    global['sync' + firstUpper(this.collName)] = this;
   }
 
   async flush(): Promise<void> {
     if (this.isFlush) return;
 
-    const todos = Object.values(this.todo$.v).filter((t) => !t.error && !t.started);
+    const todos = Object.values(this.todo$.v);
     if (isEmpty(todos)) return;
 
-    const todo = { ...first(todos), started: Date.now() };
-    this.todo$.merge({ [todo.id]: todo });
+    const todo = first(todos);
 
     try {
       this.isFlush = true;
-    } catch (error) {
-      todo.error = error;
+      this.todo$.delete(todo.id);
+      const { prev, next } = todo;
 
-      throw error;
+      if (prev && !next) {
+        await this.coll.delete(prev.id);
+      }
+      else if (!prev && next) {
+        const item = await this.coll.create({ ...next, id: undefined });
+        this.dict$.apply(dict => {
+          dict[item.id] = item;
+          delete dict[todo.id];
+        });
+      }
+      else {
+        const changes = { ...prev, ...next };
+        for (const key in changes) {
+          const vPrev = prev[key];
+          const vNext = next[key];
+          if (isEq(vPrev, vNext)) {
+            delete changes[key];
+            continue;
+          }
+        }
+        if (!isEmpty(changes)) {
+          await this.coll.update(prev.id, changes);
+        }
+      }
+    } catch (error) {
+      if (error instanceof ReqError) {
+        // if (!isBetween(error.status, 400, 499)) {
+        //   this.todo$.merge({ [todo.id]: todo });
+        //   return;
+        // }
+        console.error('sync flush error req', error.status, error);
+      } else {
+        console.error('sync flush error', error);
+      }
     } finally {
       this.isFlush = false;
     }
 
-    for (const id of todoDict) {
-      const todo = todoDict[id];
-
-      const created = await this.coll.create(curr as ModelCreate<T>);
-
-      // Mettre à jour l'état local
-      this.updateState(id, {
-        curr: created,
-        remote: created,
-      });
-    }
-
-    const states = this.items$.v;
-    const operations: Promise<void>[] = [];
-
-    for (const [id, state] of Object.entries(states)) {
-      const { curr, remote } = state;
-
-      try {
-        if (remote === null && curr !== null) {
-          // CREATE: item local sans équivalent distant
-          operations.push(this.handleCreate(id, curr, state));
-        } else if (curr === null && remote !== null) {
-          // DELETE: item distant sans équivalent local
-          operations.push(this.handleDelete(id, remote, state));
-        } else if (curr !== null && remote !== null && this.hasChanged(curr, remote)) {
-          // UPDATE: items différents entre local et distant
-          operations.push(this.handleUpdate(id, curr, remote, state));
-        }
-        // Si curr === remote, rien à faire
-      } catch (error) {
-        console.error(`SyncColl flush error for item ${id}:`, error);
-        // Continue avec les autres items même si un échoue
-      }
-    }
-
-    // Attendre toutes les opérations
-    await Promise.all(operations);
+    await this.flush();
   }
 
-  private async handleDelete(id: string, remote: T, state: SyncState<T>): Promise<void> {
-    console.debug('SyncColl DELETE:', id, remote);
-
-    // Supprimer l'item côté distant
-    await this.coll.delete(remote.id);
-
-    // Supprimer de l'état local
-    this.removeState(id);
-  }
-
-  private async handleUpdate(id: string, curr: T, remote: T, state: SyncState<T>): Promise<void> {
-    console.debug('SyncColl UPDATE:', id, curr, remote);
-
-    // Calculer les différences
-    const changes = this.getChanges(remote, curr);
-
-    if (Object.keys(changes).length > 0) {
-      // Appliquer les changements côté distant
-      const updated = await this.coll.update(remote.id, changes);
-
-      if (updated) {
-        // Mettre à jour l'état local
-        this.updateState(id, {
-          curr: updated,
-          remote: updated,
-        });
-      }
+  async load(): Promise<void> {
+    try {
+      await this.flush();
+      const list = await this.coll.find({});
+      const dict = byId(list);
+      this.dict$.set(dict);
+    }
+    catch(e) {
+      const error = toError(e);
+      console.error('sync load error', this.collName, error);
+      throw error;
     }
   }
 
-  /**
-   * Détermine si deux items ont des différences
-   */
-  private hasChanged(curr: T, remote: T): boolean {
-    // Comparaison simple par JSON - à améliorer selon les besoins
-    return JSON.stringify(curr) !== JSON.stringify(remote);
-  }
-
-  /**
-   * Calcule les différences entre remote et curr
-   */
-  private getChanges(remote: T, curr: T): ModelUpdate<T> {
-    const changes: any = {};
-
-    // Comparer chaque propriété
-    for (const key in curr) {
-      if (curr[key] !== remote[key]) {
-        changes[key] = curr[key];
-      }
-    }
-
-    return changes;
-  }
-
-  /**
-   * Met à jour un état spécifique
-   */
-  private updateState(id: string, newState: SyncState<T>): void {
-    const states = { ...this.items$.v };
-    states[id] = newState;
-    this.items$.set(states);
-  }
-
-  /**
-   * Supprime un état spécifique
-   */
-  private removeState(id: string): void {
-    const states = { ...this.items$.v };
-    delete states[id];
-    this.items$.set(states);
-  }
-
-  /**
-   * API de convenance pour modifier un item local
-   */
-  setLocal(id: string, item: T): void {
-    const states = this.items$.v;
-    const existingState = states[id];
-
-    this.updateState(id, {
-      curr: item,
-      remote: existingState?.remote || null,
-    });
-  }
-
-  /**
-   * API de convenance pour supprimer un item local
-   */
-  deleteLocal(id: string): void {
-    const states = this.items$.v;
-    const existingState = states[id];
-
-    if (existingState) {
-      this.updateState(id, {
-        curr: null,
-        remote: existingState.remote,
-      });
-    }
-  }
-
-  /**
-   * Obtient la liste des items actuels (version curr)
-   */
-  getCurrentItems(): T[] {
-    const states = this.items$.v;
-    return Object.values(states)
-      .map((state) => state.curr)
-      .filter((item) => item !== null) as T[];
-  }
-
-  /**
-   * Obtient la liste des items distants (version remote)
-   */
-  getRemoteItems(): T[] {
-    const states = this.items$.v;
-    return Object.values(states)
-      .map((state) => state.remote)
-      .filter((item) => item !== null) as T[];
-  }
-
-  /**
-   * Initialise la SyncColl avec l'écoute temps réel et charge toutes les données
-   * Ne fait rien si déjà initialisée
-   */
   async init(): Promise<void> {
     if (this.isInit) return;
 
-    console.debug('SyncColl init');
+    console.debug('sync init', this.collName);
 
     try {
       await this.load();
-      await this.coll.subscribe('*', this.onEvent.bind(this));
 
-      // Synchronisation automatique toutes les minutes
-      this.syncInterval = setInterval(() => {
-        this.flush().catch((error) => {
-          console.error('SyncColl auto-sync error:', error);
-        });
-      }, 60 * 1000);
+      this.unsubscribe();
+      this.unsubscribe = await this.coll.subscribe('*', this.onEvent.bind(this));
 
       this.isInit = true;
     } catch (error) {
@@ -249,58 +123,56 @@ export class SyncColl<T extends ModelBase> {
     }
   }
 
-  /**
-   * Gère les événements temps réel
-   */
+  get(id: string): T|undefined {
+    return this.dict$.v[id];
+  }
+
+  set(id: string, next: T|null): void {
+    this.dict$.apply(dict => {
+      const todo = { ...this.todo$.v[id], id, next };
+      if (!todo.prev) todo.prev = dict[id];
+
+      if (next) {
+        dict[id] = next;
+      }
+      else {
+        delete dict[id];
+      }
+
+      this.todo$.merge({ [id]: todo });
+    });
+  }
+
+  create(next: ModelCreate<T>): void {
+    const id = uuid();
+    this.set(id, { ...next, id } as T);
+  }
+
+  update(id: string, changes: ModelUpdate<T>): void {
+    this.set(id, { ...this.get(id), ...changes });
+  }
+
+  delete(id: string): void {
+    this.set(id, null);
+  }
+
   private onEvent(item: T, action: 'update' | 'create' | 'delete'): void {
-    const states = this.items$.v;
-    const id = item.id;
-    const existingState = states[id];
-
-    let newState: SyncState<T>;
-
-    switch (action) {
-      case 'create':
-      case 'update':
-        // Mettre à jour la version remote avec les données reçues
-        newState = {
-          curr: existingState?.curr || null,
-          remote: item,
-        };
-        break;
-
-      case 'delete':
-        // Marquer comme supprimé côté distant
-        newState = {
-          curr: existingState?.curr || null,
-          remote: null,
-        };
-        break;
-
-      default:
-        console.warn('SyncColl unknown realtime action:', action);
+    this.dict$.apply(next => {
+      if (action === 'delete') {
+        delete next[item.id];
         return;
-    }
-
-    this.updateState(id, newState);
+      }
+      if (action === 'create' || action === 'update') {
+        next[item.id] = item;
+        return;
+      }
+      console.warn('sync unknown action', action);
+    });
   }
 
-  /**
-   * Vide le cache local
-   */
-  clear(): void {
-    this.items$.set({});
-  }
-
-  /**
-   * Dispose la SyncColl (vide le cache et arrête la sync auto)
-   */
   dispose(): void {
-    if (this.syncInterval) {
-      clearInterval(this.syncInterval);
-      this.syncInterval = undefined;
-    }
-    this.clear();
-    this.isInit = false;
+    this.unsubscribe();
+    this.dict$.dispose();
+    this.todo$.dispose();
   }
 }
