@@ -1,6 +1,5 @@
-import { toList } from './cast';
-import { toErr } from './err';
-import { clamp } from './nbr';
+import { toError, toList } from '../utils/cast';
+import { clamp } from '../utils/nbr';
 import { toImg } from './toImg';
 
 export const imgResize = async (
@@ -61,7 +60,7 @@ export const imgResize = async (
     const dataUrl = canvas.toDataURL(`image/${format}`, quality);
     return dataUrl;
   } catch (e) {
-    const error = toErr(e);
+    const error = toError(e);
     console.error('imgResize', error);
     throw error;
   }

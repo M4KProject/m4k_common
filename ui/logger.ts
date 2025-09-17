@@ -1,5 +1,5 @@
 import { createEl, setCss } from './html';
-import { logArgsToStr } from './log';
+import { logArgsToStr } from '../utils/log';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type LogItem = [LogLevel, number, any[], HTMLDivElement | null];

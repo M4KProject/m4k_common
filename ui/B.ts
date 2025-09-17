@@ -1,17 +1,17 @@
 /// <reference lib="dom" />
 import { D, DCall, DRoot, DStyle } from './D';
-import { Msg } from './Msg';
-import { isEq } from './check';
-import { clone } from './json';
-import { toList, toNbr, toItem } from './cast';
+import { Msg } from '../utils/Msg';
+import { isEq } from '../utils/check';
+import { toList, toNbr, toItem } from '../utils/cast';
 import { setAttrs, addJsFile, addCssFile, Cls, setCls, createEl } from './html';
 import addFont from './addFont';
 import router from './router';
 import getCallCb from './getCallCb';
 import tPriceToHtml from './tPriceToHtml';
-import priceToHtml from './priceToHtml';
+import priceToHtml from '../utils/priceToHtml';
 import { responsive$, Responsive } from './responsive';
-import { toErr } from './err';
+import { toErr } from '../utils/err';
+import { deepClone } from '@common/utils';
 
 const body = document.body;
 const bodyClass = body.classList;
@@ -341,7 +341,7 @@ export default class B {
   }
 
   static importRoot(d: DRoot) {
-    const root = clone(d);
+    const root = deepClone(d);
     root.id = 'root';
     root.t = 'root';
 
@@ -534,7 +534,7 @@ export default class B {
         const el = this.reset(tpl.hTag || data.hTag || B.hTag);
         this.apply(el, tpl);
         this.apply(el, data);
-        this.applyTpl(el, tplName, clone(tpl.children));
+        this.applyTpl(el, tplName, deepClone(tpl.children));
         if (tpl.render) this.callRender(el, tpl.render);
         if (data.render) this.callRender(el, data.render);
         this.children.forEach((b) => (this.cEl || this.el).appendChild(b.el));

@@ -2,7 +2,7 @@ import { removeItem } from './list';
 import { debounce, throttle } from './async';
 import { toVoid } from './cast';
 import { isDef, isFun } from './check';
-import { global } from '../helpers/global';
+import { global } from './global';
 import { getStored, setStored } from './storage';
 
 export type IMsgHandler<T> = (value: T, oldValue: T) => void;

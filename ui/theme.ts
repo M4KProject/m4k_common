@@ -1,5 +1,5 @@
 import { setCssColors } from './html';
-import { lighten, setHsl, addHsl } from './color';
+import { lighten, setHsl, addHsl } from '../utils/color';
 
 export const setTheme = (
   primary: string,

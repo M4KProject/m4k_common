@@ -1,6 +1,6 @@
+import { deepClone } from '../utils/obj';
 import B, { BElement } from './B';
 import { D, DRoot, DStyle } from './D';
-import { clone } from './json';
 import { clipboardCopy, clipboardPaste } from './clipboard';
 
 function cleanD(d: D) {
@@ -133,7 +133,7 @@ export function rmStyleProp(b: B, prop: keyof DStyle) {
 
 export function exportData(b: B) {
   console.debug('exportData');
-  const d = clone(b.d);
+  const d = deepClone(b.d);
   cleanD(d);
   return d;
 }

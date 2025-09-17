@@ -1,5 +1,5 @@
 import { setCss } from './html';
-import { Msg } from './Msg';
+import { Msg } from '../utils/Msg';
 
 export type Responsive = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

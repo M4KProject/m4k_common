@@ -1,5 +1,5 @@
 import { randString } from './rand';
-import { global } from '../helpers/global';
+import { global } from './global';
 
 const timers: Record<string, any> = global.m4kTimers || (global.m4kTimers = {});
 
