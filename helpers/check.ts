@@ -50,7 +50,7 @@ export const isItemEmpty = (v: any): boolean => {
   return true;
 };
 export const isObjEmpty = (v: Obj): boolean => isListEmpty(v) || isItemEmpty(v);
-export const isEmpty = (v: any): boolean => (isStr(v) ? isStrEmpty(v) : isObjEmpty(v));
+export const isEmpty = (v: any): boolean => isNil(v) || (isStr(v) ? isStrEmpty(v) : isObjEmpty(v));
 export const isNotEmpty = isNot(isEmpty);
 
 ///// DeepEqual /////
