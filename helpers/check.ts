@@ -1,6 +1,6 @@
-export type Dict<T> = { [prop: string]: T };
-export type Item = { [prop: string]: any };
-export type List = any[];
+export type Dict<T = any> = { [prop: string]: T };
+export type List<T = any> = T[];
+export type Item = Dict<any>;
 export type Obj = Item | List;
 
 ///// Type /////

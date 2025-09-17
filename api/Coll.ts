@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { Keys, ModelBase, ModelCreate, ModelUpdate, ModelUpsert } from './models';
+import { Keys, ModelBase, ModelCreate, ModelUpdate } from './models';
 import {
   Err,
   Req,
@@ -150,7 +150,7 @@ export class Coll<T extends ModelBase> {
       (r) => r.items
     );
   }
-
+  
   findOne(where: CollWhere<T>, o?: CollOptions<T>): Promise<T | null> {
     return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(
       (r) => r.items[0] || null
@@ -215,7 +215,7 @@ export class Coll<T extends ModelBase> {
     });
   }
 
-  upsert(where: CollWhere<T>, changes: ModelUpsert<T>, o?: CollOptions<T>) {
+  upsert(where: CollWhere<T>, changes: ModelCreate<T>, o?: CollOptions<T>) {
     this.log('upsert', where, changes, o);
     return this.findId(where).then((id) =>
       id ? (this.update(id, changes, o) as Promise<T>) : this.create(changes, o)

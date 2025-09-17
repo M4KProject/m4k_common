@@ -1,9 +1,12 @@
-export interface ModelBase {
-  // collectionId: string;
-  // collectionName: string;
+export interface ModelId {
   id: string;
+}
+
+export interface ModelBase extends ModelId {
   created: Date;
   updated: Date;
+  // collectionId?: string;
+  // collectionName?: string;
 }
 
 export interface AuthModelBase extends ModelBase {
@@ -15,19 +18,8 @@ export interface AuthModelBase extends ModelBase {
   verified?: boolean;
 }
 
-export type ModelReplace<T extends ModelBase> = Omit<
-  T,
-  'collectionId' | 'collectionName' | 'created' | 'updated'
-> &
-  Partial<ModelBase>;
-
-export type ModelCreate<T extends ModelBase> = Omit<ModelReplace<T>, 'id'> & {
-  id?: string;
-};
-
-export type ModelUpsert<T extends ModelBase> = Omit<ModelReplace<T>, 'id'>;
-
-export type ModelUpdate<T extends ModelBase> = Partial<ModelUpsert<T>>;
+export type ModelCreate<T extends ModelBase> = Omit<T, 'created' | 'updated' | 'id'>;
+export type ModelUpdate<T extends ModelBase> = Partial<ModelCreate<T>>;
 
 export type Keys<T> = { [K in keyof T]: K extends symbol ? never : K }[keyof T];
 
