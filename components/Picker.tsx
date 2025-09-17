@@ -1,10 +1,10 @@
 import { ComponentChildren } from 'preact';
 import { useCss } from '../hooks/useCss';
-import { Css } from '../ui/html';
-import { flexRow } from '../ui/flexBox';
+import { Css } from '@common/ui/html';
+import { flexRow } from '@common/ui/flexBox';
 import { Div } from './Div';
 import { Button } from './Button';
-import { isList } from '../utils/check';
+import { isList } from '@common/utils/check';
 
 const css: Css = {
   '&': {

@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { El, ElOptions } from '../ui/html';
+import { El, ElOptions } from '@common/ui/html';
 import { ComponentChildren } from 'preact';
 
 export const portal = (content: ComponentChildren, o?: ElOptions) => {

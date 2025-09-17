@@ -1,11 +1,11 @@
-import { Msg } from '../utils/Msg';
-import { uuid } from '../utils/str';
-import { retry, sleep } from '../utils/async';
+import { Msg } from '@common/utils/Msg';
+import { uuid } from '@common/utils/str';
+import { retry, sleep } from '@common/utils/async';
 import { mediaColl } from './collections';
 import { needAuthId, needGroupId } from './messages';
 import { MediaModel } from './models';
-import { deleteKey } from '../utils/obj';
-import { toError } from '../utils/cast';
+import { deleteKey } from '@common/utils/obj';
+import { toError } from '@common/utils/cast';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 const MAX_RETRY = 3;

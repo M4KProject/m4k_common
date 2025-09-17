@@ -1,14 +1,14 @@
-import { flexCenter, flexColumn } from '../ui/flexBox';
+import { flexCenter, flexColumn } from '@common/ui/flexBox';
 import { useMsg } from '../hooks/useMsg';
-import { Css } from '../ui/html';
+import { Css } from '@common/ui/html';
 import { useCss } from '../hooks/useCss';
 import { ComponentChildren } from 'preact';
-import { Msg } from '../utils/Msg';
+import { Msg } from '@common/utils/Msg';
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';
-import { toErr } from '../utils/err';
+import { toErr } from '@common/utils/err';
 import { addTranslates } from '../hooks/useTr';
 
 addTranslates({

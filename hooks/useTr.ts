@@ -1,5 +1,5 @@
-import { setTemplate } from '../utils/str';
-import { Msg } from '../utils/Msg';
+import { setTemplate } from '@common/utils/str';
+import { Msg } from '@common/utils/Msg';
 import { useMsg } from './useMsg';
 
 export const translateByKey$ = new Msg<Record<string, string>>({});

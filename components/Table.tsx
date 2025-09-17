@@ -1,7 +1,7 @@
 import { JSX } from 'preact';
-import { Css, clsx } from '../ui/html';
+import { Css, clsx } from '@common/ui/html';
 import { useCss } from '../hooks/useCss';
-import { flexCenter, flexColumn, flexRow } from '../ui/flexBox';
+import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
 import { Div } from './Div';
 
 const css: Css = {

@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-window-prefix no-window
-import { Msg } from '../utils/Msg';
+import { Msg } from '@common/utils/Msg';
 
 const PLUS_EXP = /\+/g;
 const queryDecode = (s: string) => decodeURIComponent(s.replace(PLUS_EXP, ' '));

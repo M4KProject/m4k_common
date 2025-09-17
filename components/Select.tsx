@@ -1,11 +1,11 @@
 import { ComponentChildren } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
-import { Css } from '../ui/html';
+import { Css } from '@common/ui/html';
 import { useCss } from '../hooks/useCss';
-import { flexCenter, flexColumn, flexRow } from '../ui/flexBox';
+import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
 import { Div } from './Div';
-import { isList } from '../utils/check';
-import { isSearched } from '../utils/str';
+import { isList } from '@common/utils/check';
+import { isSearched } from '@common/utils/str';
 
 const css: Css = {
   '&': {

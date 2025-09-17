@@ -1,5 +1,5 @@
 import { setCssColors } from './html';
-import { lighten, setHsl, addHsl } from '../utils/color';
+import { lighten, setHsl, addHsl } from '@common/utils/color';
 
 export const setTheme = (
   primary: string,
@@ -59,9 +59,9 @@ export const setTheme = (
   });
 };
 
-// import Msg from "../utils/Msg";
-// import { lighten, darken, setHsl, addHsl } from '../utils/color';
-// import { CssRecord, setCss } from "../ui/html";
+// import Msg from "@common/utils/Msg";
+// import { lighten, darken, setHsl, addHsl } from '@common/utils/color';
+// import { CssRecord, setCss } from "@common/ui/html";
 
 // export interface ThemeItem {
 //     color: string,

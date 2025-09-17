@@ -1,12 +1,12 @@
-import { removeItem } from '../utils/list';
+import { removeItem } from '@common/utils/list';
 import { m4kBridge } from './m4kBridge';
 import { m4kFully } from './m4kFully';
 import { m4kBase } from './m4kBase';
 import type { M4Kiosk, M4kEvent, M4kSignalEvent } from './m4kInterface';
-import { global } from '../utils/global';
+import { global } from '@common/utils/global';
 import type { Fully } from './fullyInterfaces';
-import { msgs } from '../utils/Msg';
-import { toError } from '../utils/cast';
+import { msgs } from '@common/utils/Msg';
+import { toError } from '@common/utils/cast';
 
 export const m4k = (() => {
   const w = global;

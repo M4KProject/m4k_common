@@ -1,9 +1,9 @@
 import { Coll } from './Coll';
 import { ModelBase, ModelCreate, ModelUpdate } from './models';
-import { IMsgReadonly, Msg } from '../utils/Msg';
-import { Dict, isEmpty, List } from '../utils/check';
-import { byId } from '../utils/by';
-import { first } from '../utils/list';
+import { IMsgReadonly, Msg } from '@common/utils/Msg';
+import { Dict, isEmpty, List } from '@common/utils/check';
+import { byId } from '@common/utils/by';
+import { first } from '@common/utils/list';
 
 export interface Todo<T extends ModelBase> {
   id: string;

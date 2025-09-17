@@ -1,9 +1,9 @@
-import { Css } from '../ui/html';
+import { Css } from '@common/ui/html';
 import { Div, DivProps } from './Div';
 import { useCss } from '../hooks/useCss';
-import { clamp, round } from '../utils/nbr';
-import { toNbr } from '../utils/cast';
-import { flexCenter } from '../ui/flexBox';
+import { clamp, round } from '@common/utils/nbr';
+import { toNbr } from '@common/utils/cast';
+import { flexCenter } from '@common/ui/flexBox';
 import { ComponentChildren } from 'preact';
 
 const css: Css = {

@@ -1,6 +1,6 @@
-import { Msg } from '../utils/Msg';
+import { Msg } from '@common/utils/Msg';
 import { apiGet } from './call';
-import { toDate } from '../utils/cast';
+import { toDate } from '@common/utils/cast';
 
 export const getServerTime = () => apiGet('now').then((d) => toDate(d).getTime());
 

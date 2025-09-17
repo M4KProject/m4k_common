@@ -1,21 +1,21 @@
-import { Css } from '../ui/html';
+import { Css } from '@common/ui/html';
 import { useCss } from '../hooks/useCss';
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { flexCenter, flexColumn, flexRow } from '../ui/flexBox';
-import { toNbr } from '../utils/cast';
+import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
+import { toNbr } from '@common/utils/cast';
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
 import { Select } from './Select';
 import { Picker } from './Picker';
-import { toErr } from '../utils/err';
+import { toErr } from '@common/utils/err';
 // import { useMsg } from "../hooks/useMsg";
 // import { groupId$ } from "../api/repos";
 // import { medias$ } from "../api/storage";
-// import { by } from "../utils/by";
+// import { by } from "@common/utils/by";
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from './Button';
-import { Msg } from '../utils/Msg';
+import { Msg } from '@common/utils/Msg';
 import { useMsg } from '../hooks';
 
 const css: Css = {

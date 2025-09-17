@@ -1,13 +1,13 @@
 import { useState } from 'preact/hooks';
-import { Css } from '../ui/html';
-import { flexColumn } from '../ui/flexBox';
+import { Css } from '@common/ui/html';
+import { flexColumn } from '@common/ui/flexBox';
 import { useCss } from '../hooks/useCss';
 import { login, passwordReset, signUp } from '../api';
 import { Loading } from './Loading';
 import { Field } from './Field';
 import { Button, ButtonRow } from './Button';
 import { Form } from './Form';
-import { toErr } from '../utils/err';
+import { toErr } from '@common/utils/err';
 import { addTranslates } from '../hooks';
 
 addTranslates({

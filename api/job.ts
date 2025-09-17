@@ -1,8 +1,8 @@
 import { JobModel } from './models';
 import { jobColl } from './collections';
 import { needGroupId } from './messages';
-import { isExpired } from '../utils/date';
-import { toVoid } from '../utils/cast';
+import { isExpired } from '@common/utils/date';
+import { toVoid } from '@common/utils/cast';
 
 const jobEndedStatus: Partial<Record<JobModel['status'], 1>> = {
   deleted: 1,

@@ -1,4 +1,4 @@
-import { toErr } from '../utils/err';
+import { toErr } from '@common/utils/err';
 import { getParams, CollOptions } from './Coll';
 import { userColl } from './collections';
 import { auth$ } from './messages';

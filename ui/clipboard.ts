@@ -1,5 +1,5 @@
-import { toError } from '../utils/cast';
-import { stringify, parse } from '../utils/json';
+import { toError } from '@common/utils/cast';
+import { stringify, parse } from '@common/utils/json';
 
 export const clipboardCopy = async (value: any): Promise<void> => {
   console.debug('clipboardCopy');

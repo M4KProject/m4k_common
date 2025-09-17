@@ -1,9 +1,9 @@
 /// <reference lib="dom" />
-import { Req } from '../utils/req';
-import { parse } from '../utils/json';
-import { pathJoin } from '../utils/pathJoin';
+import { Req } from '@common/utils/req';
+import { parse } from '@common/utils/json';
+import { pathJoin } from '@common/utils/pathJoin';
 import { getApiUrl } from './messages';
-import { toError } from '../utils/cast';
+import { toError } from '@common/utils/cast';
 
 const initRealtime = () => {
   let clientId: string = '';

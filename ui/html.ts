@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { isEq, isList, isNbr } from '../utils/check';
+import { isEq, isList, isNbr } from '@common/utils/check';
 
 export type Style = Partial<CSSStyleDeclaration>;
 

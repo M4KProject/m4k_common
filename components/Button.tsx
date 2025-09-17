@@ -1,7 +1,7 @@
 import { ComponentChildren, JSX } from 'preact';
 import { useRef } from 'preact/hooks';
-import { flexCenter, flexRow } from '../ui/flexBox';
-import { Css, clsx } from '../ui/html';
+import { flexCenter, flexRow } from '@common/ui/flexBox';
+import { Css, clsx } from '@common/ui/html';
 import { useCss } from '../hooks/useCss';
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';

@@ -1,4 +1,4 @@
-import { Msg, IMsgReadonly } from '../utils/Msg';
+import { Msg, IMsgReadonly } from '@common/utils/Msg';
 import { useEffect, useState } from 'preact/hooks';
 
 interface UseMsg {

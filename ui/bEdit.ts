@@ -1,4 +1,4 @@
-import { deepClone } from '../utils/obj';
+import { deepClone } from '@common/utils/obj';
 import B, { BElement } from './B';
 import { D, DRoot, DStyle } from './D';
 import { clipboardCopy, clipboardPaste } from './clipboard';

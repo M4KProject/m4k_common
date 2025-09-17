@@ -1,16 +1,16 @@
 /// <reference lib="dom" />
 import { D, DCall, DRoot, DStyle } from './D';
-import { Msg } from '../utils/Msg';
-import { isEq } from '../utils/check';
-import { toList, toNbr, toItem } from '../utils/cast';
+import { Msg } from '@common/utils/Msg';
+import { isEq } from '@common/utils/check';
+import { toList, toNbr, toItem } from '@common/utils/cast';
 import { setAttrs, addJsFile, addCssFile, Cls, setCls, createEl } from './html';
 import addFont from './addFont';
 import router from './router';
 import getCallCb from './getCallCb';
 import tPriceToHtml from './tPriceToHtml';
-import priceToHtml from '../utils/priceToHtml';
+import priceToHtml from '@common/utils/priceToHtml';
 import { responsive$, Responsive } from './responsive';
-import { toErr } from '../utils/err';
+import { toErr } from '@common/utils/err';
 import { deepClone } from '@common/utils';
 
 const body = document.body;

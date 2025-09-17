@@ -1,11 +1,11 @@
 import { ComponentChildren } from 'preact';
 import { render } from 'preact';
-import { Css, addListener } from '../ui/html';
+import { Css, addListener } from '@common/ui/html';
 import { useCss } from '../hooks/useCss';
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
-import { addOverlay, removeOverlay } from '../ui/overlay';
-import { flexCenter } from '../ui/flexBox';
+import { addOverlay, removeOverlay } from '@common/ui/overlay';
+import { flexCenter } from '@common/ui/flexBox';
 
 // const css: Css = {
 //     '&': {

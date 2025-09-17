@@ -1,5 +1,5 @@
-import { toError, toList } from '../utils/cast';
-import { clamp } from '../utils/nbr';
+import { toError, toList } from '@common/utils/cast';
+import { clamp } from '@common/utils/nbr';
 import { toImg } from './toImg';
 
 export const imgResize = async (

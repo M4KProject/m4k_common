@@ -1,5 +1,5 @@
-import { pathJoin } from '../utils/pathJoin';
-import { createReq, Req, ReqMethod, ReqOptions } from '../utils/req';
+import { pathJoin } from '@common/utils/pathJoin';
+import { createReq, Req, ReqMethod, ReqOptions } from '@common/utils/req';
 import { auth$, getApiUrl } from './messages';
 
 export const newApiReq = (baseUrl: string = '', baseOptions: ReqOptions<any> = {}) =>

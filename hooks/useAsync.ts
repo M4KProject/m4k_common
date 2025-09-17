@@ -1,5 +1,5 @@
 import { useMemo, useEffect } from 'preact/hooks';
-import { Msg } from '../utils/Msg';
+import { Msg } from '@common/utils/Msg';
 import { useMsg } from './useMsg';
 import { toErr } from '@common/utils';
 

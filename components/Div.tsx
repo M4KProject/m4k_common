@@ -1,4 +1,4 @@
-import { clsx } from '../ui/html';
+import { clsx } from '@common/ui/html';
 import { JSX } from 'preact';
 
 type DivHTMLProps = JSX.HTMLAttributes<HTMLDivElement>;
