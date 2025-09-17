@@ -7,6 +7,7 @@ import { first } from '../utils/list';
 import { ReqError } from '../utils/req';
 import { firstUpper, uuid } from '../utils/str';
 import { toError, toVoidAsync } from '../utils/cast';
+import { global } from '../utils/global';
 
 export interface Todo<T extends ModelBase> {
   id: string;
