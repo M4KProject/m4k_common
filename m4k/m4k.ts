@@ -1,12 +1,12 @@
-import { removeItem } from '../helpers/list';
+import { removeItem } from '../utils/list';
 import { m4kBridge } from './m4kBridge';
 import { m4kFully } from './m4kFully';
 import { m4kBase } from './m4kBase';
 import type { M4Kiosk, M4kEvent, M4kSignalEvent } from './m4kInterface';
-import { global } from '../helpers/global';
+import { global } from '../utils/global';
 import type { Fully } from './fullyInterfaces';
-import { msgs } from '../helpers/Msg';
-import { toErr } from '@common/helpers';
+import { msgs } from '../utils/Msg';
+import { toError } from '../utils/cast';
 
 export const m4k = (() => {
   const w = global;
@@ -37,7 +37,7 @@ export const m4k = (() => {
       try {
         listener(event as M4kEvent);
       } catch (e) {
-        const error = toErr(e);
+        const error = toError(e);
         console.error('listener', event, error);
       }
     }
