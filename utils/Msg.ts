@@ -81,9 +81,6 @@ export class Msg<T = any> implements IMsg<T> {
   private c?: () => void;
   /** upstream lazy: u = handlerUpstream */
   private u?: IMsgHandler<any>;
-
-  /** t = targets */
-  private t?: Msg[];
   /** p = parent (source) */
   private p?: Msg;
 
@@ -177,7 +174,6 @@ export class Msg<T = any> implements IMsg<T> {
     target.u = (handler && handler(target)) || ((next: T) => target.set(cb(next)));
 
     target.p = source;
-    (source.t || (source.t = [])).push(target);
 
     return target;
   }
@@ -232,7 +228,7 @@ export class Msg<T = any> implements IMsg<T> {
   }
 
   dispose() {
-    if (this.h.length === 0 && !this.t && !this.c) return;
+    if (this.h.length === 0 && !this.c) return;
 
     this.h.length = 0;
 
@@ -241,16 +237,7 @@ export class Msg<T = any> implements IMsg<T> {
       this.c = undefined;
     }
 
-    if (this.t) {
-      for (const target of this.t) target.dispose();
-      this.t = undefined;
-    }
-
-    if (this.p?.t) {
-      removeItem(this.p.t, this);
-      this.p = undefined;
-    }
-
+    this.p = undefined;
     this.o = undefined;
     this.u = undefined;
     this.g = undefined;
