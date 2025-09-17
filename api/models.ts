@@ -78,7 +78,7 @@ export interface MediaModel extends _MediaModel {
     nbFrames?: number;
     pagesCount?: number;
     variants?: FileInfo[];
-  }
+  };
 }
 export type MediaType = MediaModel['type'];
 
@@ -88,7 +88,7 @@ export interface JobModel extends _JobModel {}
 
 export interface ConvertJobModel extends JobModel {
   action: 'convert';
-  input: {  };
+  input: {};
 }
 
 export enum Role {

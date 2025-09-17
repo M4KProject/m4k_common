@@ -41,12 +41,14 @@ export const isUuid = (v: any): v is string => {
 };
 
 ///// Empty /////
-export const isListOf = <T>(is: (v: any) => v is T) => (
-  (v: any): v is T[] => isList(v) && v.every(is)
-);
-export const isDictOf = <T>(is: (v: any) => v is T) => (
-  (v: any): v is Dict<T> => isItem(v) && Object.values(v).every(is)
-);
+export const isListOf =
+  <T>(is: (v: any) => v is T) =>
+  (v: any): v is T[] =>
+    isList(v) && v.every(is);
+export const isDictOf =
+  <T>(is: (v: any) => v is T) =>
+  (v: any): v is Dict<T> =>
+    isItem(v) && Object.values(v).every(is);
 export const isListOfItem = isListOf(isItem);
 export const isDictOfItem = isDictOf(isItem);
 

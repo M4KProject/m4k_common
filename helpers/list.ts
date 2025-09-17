@@ -67,10 +67,12 @@ export const removeItem = <T>(items: T[], item: T) => {
 };
 
 export const sort = <T = any>(items: T[], prop: (item: T) => string | number | Date = toStr) => {
-  const list = items.map(i => [prop(i), i]) as [string | number | Date, T][];
-  list.sort(([a], [b]) => isStr(a) || isStr(b) ? String(a).localeCompare(String(b)) : Number(a) - Number(b));
-  return list.map(i => i[1]);
-}
+  const list = items.map((i) => [prop(i), i]) as [string | number | Date, T][];
+  list.sort(([a], [b]) =>
+    isStr(a) || isStr(b) ? String(a).localeCompare(String(b)) : Number(a) - Number(b)
+  );
+  return list.map((i) => i[1]);
+};
 
 export const sum = (list: number[], margin?: number) => {
   let r = 0;

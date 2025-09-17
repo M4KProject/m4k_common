@@ -150,7 +150,7 @@ export class Coll<T extends ModelBase> {
       (r) => r.items
     );
   }
-  
+
   findOne(where: CollWhere<T>, o?: CollOptions<T>): Promise<T | null> {
     return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(
       (r) => r.items[0] || null

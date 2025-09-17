@@ -15,7 +15,7 @@ export interface Todo<T extends ModelBase> {
 
 export class SyncColl<T extends ModelBase> {
   public coll: Coll<T>;
-  
+
   public dict$: Msg<Dict<T>>;
   public list$: IMsgReadonly<List<T>>;
 
@@ -44,7 +44,7 @@ export class SyncColl<T extends ModelBase> {
   async flush(): Promise<void> {
     if (this.isFlush) return;
 
-    const todos = Object.values(this.todo$.v).filter(t => !t.error && !t.started);
+    const todos = Object.values(this.todo$.v).filter((t) => !t.error && !t.started);
     if (isEmpty(todos)) return;
 
     const todo = { ...first(todos), started: Date.now() };
@@ -52,41 +52,25 @@ export class SyncColl<T extends ModelBase> {
 
     try {
       this.isFlush = true;
-
-
-    }
-    catch (error) {
+    } catch (error) {
       todo.error = error;
 
       throw error;
-    }
-    finally {
+    } finally {
       this.isFlush = false;
     }
-    
-
-
-
-
 
     for (const id of todoDict) {
       const todo = todoDict[id];
 
-
-
-
       const created = await this.coll.create(curr as ModelCreate<T>);
-    
-    // Mettre à jour l'état local
-    this.updateState(id, {
-      curr: created,
-      remote: created
-    });
+
+      // Mettre à jour l'état local
+      this.updateState(id, {
+        curr: created,
+        remote: created,
+      });
     }
-
-
-
-
 
     const states = this.items$.v;
     const operations: Promise<void>[] = [];
@@ -98,17 +82,14 @@ export class SyncColl<T extends ModelBase> {
         if (remote === null && curr !== null) {
           // CREATE: item local sans équivalent distant
           operations.push(this.handleCreate(id, curr, state));
-          
         } else if (curr === null && remote !== null) {
           // DELETE: item distant sans équivalent local
           operations.push(this.handleDelete(id, remote, state));
-          
         } else if (curr !== null && remote !== null && this.hasChanged(curr, remote)) {
           // UPDATE: items différents entre local et distant
           operations.push(this.handleUpdate(id, curr, remote, state));
         }
         // Si curr === remote, rien à faire
-        
       } catch (error) {
         console.error(`SyncColl flush error for item ${id}:`, error);
         // Continue avec les autres items même si un échoue
@@ -121,29 +102,29 @@ export class SyncColl<T extends ModelBase> {
 
   private async handleDelete(id: string, remote: T, state: SyncState<T>): Promise<void> {
     console.debug('SyncColl DELETE:', id, remote);
-    
+
     // Supprimer l'item côté distant
     await this.coll.delete(remote.id);
-    
+
     // Supprimer de l'état local
     this.removeState(id);
   }
 
   private async handleUpdate(id: string, curr: T, remote: T, state: SyncState<T>): Promise<void> {
     console.debug('SyncColl UPDATE:', id, curr, remote);
-    
+
     // Calculer les différences
     const changes = this.getChanges(remote, curr);
-    
+
     if (Object.keys(changes).length > 0) {
       // Appliquer les changements côté distant
       const updated = await this.coll.update(remote.id, changes);
-      
+
       if (updated) {
         // Mettre à jour l'état local
         this.updateState(id, {
           curr: updated,
-          remote: updated
+          remote: updated,
         });
       }
     }
@@ -162,14 +143,14 @@ export class SyncColl<T extends ModelBase> {
    */
   private getChanges(remote: T, curr: T): ModelUpdate<T> {
     const changes: any = {};
-    
+
     // Comparer chaque propriété
     for (const key in curr) {
       if (curr[key] !== remote[key]) {
         changes[key] = curr[key];
       }
     }
-    
+
     return changes;
   }
 
@@ -197,10 +178,10 @@ export class SyncColl<T extends ModelBase> {
   setLocal(id: string, item: T): void {
     const states = this.items$.v;
     const existingState = states[id];
-    
+
     this.updateState(id, {
       curr: item,
-      remote: existingState?.remote || null
+      remote: existingState?.remote || null,
     });
   }
 
@@ -210,11 +191,11 @@ export class SyncColl<T extends ModelBase> {
   deleteLocal(id: string): void {
     const states = this.items$.v;
     const existingState = states[id];
-    
+
     if (existingState) {
       this.updateState(id, {
         curr: null,
-        remote: existingState.remote
+        remote: existingState.remote,
       });
     }
   }
@@ -225,8 +206,8 @@ export class SyncColl<T extends ModelBase> {
   getCurrentItems(): T[] {
     const states = this.items$.v;
     return Object.values(states)
-      .map(state => state.curr)
-      .filter(item => item !== null) as T[];
+      .map((state) => state.curr)
+      .filter((item) => item !== null) as T[];
   }
 
   /**
@@ -235,8 +216,8 @@ export class SyncColl<T extends ModelBase> {
   getRemoteItems(): T[] {
     const states = this.items$.v;
     return Object.values(states)
-      .map(state => state.remote)
-      .filter(item => item !== null) as T[];
+      .map((state) => state.remote)
+      .filter((item) => item !== null) as T[];
   }
 
   /**
@@ -245,20 +226,20 @@ export class SyncColl<T extends ModelBase> {
    */
   async init(): Promise<void> {
     if (this.isInit) return;
-    
+
     console.debug('SyncColl init');
-    
+
     try {
       await this.load();
       await this.coll.subscribe('*', this.onEvent.bind(this));
-      
+
       // Synchronisation automatique toutes les minutes
       this.syncInterval = setInterval(() => {
-        this.flush().catch(error => {
+        this.flush().catch((error) => {
           console.error('SyncColl auto-sync error:', error);
         });
       }, 60 * 1000);
-      
+
       this.isInit = true;
     } catch (error) {
       console.error('SyncColl init error:', error);
@@ -282,7 +263,7 @@ export class SyncColl<T extends ModelBase> {
         // Mettre à jour la version remote avec les données reçues
         newState = {
           curr: existingState?.curr || null,
-          remote: item
+          remote: item,
         };
         break;
 
@@ -290,7 +271,7 @@ export class SyncColl<T extends ModelBase> {
         // Marquer comme supprimé côté distant
         newState = {
           curr: existingState?.curr || null,
-          remote: null
+          remote: null,
         };
         break;
 
@@ -301,7 +282,6 @@ export class SyncColl<T extends ModelBase> {
 
     this.updateState(id, newState);
   }
-
 
   /**
    * Vide le cache local
