@@ -174,7 +174,7 @@ export class Msg<T = any> implements IMsg<T> {
     const target = new Msg<U>(cb(source.v));
 
     target.o = (h) => source.on(h);
-    target.u = (handler && handler(target)) || ((value: any) => target.set(value));
+    target.u = (handler && handler(target)) || ((next: T) => target.set(cb(next)));
 
     target.p = source;
     (source.t || (source.t = [])).push(target);

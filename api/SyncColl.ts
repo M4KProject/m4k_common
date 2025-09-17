@@ -33,7 +33,7 @@ export class SyncColl<T extends ModelBase> {
     this.coll = coll<T>(collName);
 
     this.dict$ = new Msg<Record<string, T>>({}, key, true);
-    this.list$ = this.dict$.map(Object.values) as IMsgReadonly<T[]>;
+    this.list$ = this.dict$.map(next => Object.values(next)) as IMsgReadonly<T[]>;
 
     this.todo$ = new Msg<Record<string, Todo<T>>>({});
     this.todo$.throttle(500).on(this.flush.bind(this));
@@ -122,6 +122,10 @@ export class SyncColl<T extends ModelBase> {
       console.error('SyncColl init error:', error);
       throw error;
     }
+  }
+
+  $(id: string) {
+    return this.dict$.map(next => next[id]);
   }
 
   get(id: string): T | undefined {
