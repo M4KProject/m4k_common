@@ -1,4 +1,4 @@
-import { ContentModel } from "./models";
-import { SyncColl } from "./SyncColl";
+import { ContentModel } from './models';
+import { SyncColl } from './SyncColl';
 
-export const syncContents = new SyncColl<ContentModel>("contents");
+export const syncContents = new SyncColl<ContentModel>('contents');

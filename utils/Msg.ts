@@ -133,13 +133,13 @@ export class Msg<T = any> implements IMsg<T> {
   }
 
   merge(changes: Partial<T>) {
-    this.apply(next => {
+    this.apply((next) => {
       Object.assign(next, changes);
     });
   }
 
   delete(id: string) {
-    this.apply(next => {
+    this.apply((next) => {
       delete next[id];
     });
   }

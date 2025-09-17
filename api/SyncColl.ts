@@ -10,8 +10,8 @@ import { toError, toVoidAsync } from '../utils/cast';
 
 export interface Todo<T extends ModelBase> {
   id: string;
-  prev: T|null;
-  next: T|null;
+  prev: T | null;
+  next: T | null;
 }
 
 export class SyncColl<T extends ModelBase> {
@@ -25,7 +25,10 @@ export class SyncColl<T extends ModelBase> {
   private isFlush = false;
   private unsubscribe = toVoidAsync;
 
-  constructor(public collName: string, key?: string) {
+  constructor(
+    public collName: string,
+    key?: string
+  ) {
     this.coll = coll<T>(collName);
 
     this.dict$ = new Msg<Record<string, T>>({}, key, true);
@@ -52,15 +55,13 @@ export class SyncColl<T extends ModelBase> {
 
       if (prev && !next) {
         await this.coll.delete(prev.id);
-      }
-      else if (!prev && next) {
+      } else if (!prev && next) {
         const item = await this.coll.create({ ...next, id: undefined });
-        this.dict$.apply(dict => {
+        this.dict$.apply((dict) => {
           dict[item.id] = item;
           delete dict[todo.id];
         });
-      }
-      else {
+      } else {
         const changes = { ...prev, ...next };
         for (const key in changes) {
           const vPrev = prev[key];
@@ -97,8 +98,7 @@ export class SyncColl<T extends ModelBase> {
       const list = await this.coll.find({});
       const dict = byId(list);
       this.dict$.set(dict);
-    }
-    catch(e) {
+    } catch (e) {
       const error = toError(e);
       console.error('sync load error', this.collName, error);
       throw error;
@@ -123,19 +123,18 @@ export class SyncColl<T extends ModelBase> {
     }
   }
 
-  get(id: string): T|undefined {
+  get(id: string): T | undefined {
     return this.dict$.v[id];
   }
 
-  set(id: string, next: T|null): void {
-    this.dict$.apply(dict => {
+  set(id: string, next: T | null): void {
+    this.dict$.apply((dict) => {
       const todo = { ...this.todo$.v[id], id, next };
       if (!todo.prev) todo.prev = dict[id];
 
       if (next) {
         dict[id] = next;
-      }
-      else {
+      } else {
         delete dict[id];
       }
 
@@ -157,7 +156,7 @@ export class SyncColl<T extends ModelBase> {
   }
 
   private onEvent(item: T, action: 'update' | 'create' | 'delete'): void {
-    this.dict$.apply(next => {
+    this.dict$.apply((next) => {
       if (action === 'delete') {
         delete next[item.id];
         return;

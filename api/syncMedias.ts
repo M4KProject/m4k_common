@@ -1,4 +1,4 @@
-import { MediaModel } from "./models";
-import { SyncColl } from "./SyncColl";
+import { MediaModel } from './models';
+import { SyncColl } from './SyncColl';
 
-export const syncMedias = new SyncColl<MediaModel>("medias");
+export const syncMedias = new SyncColl<MediaModel>('medias');

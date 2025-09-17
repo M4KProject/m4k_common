@@ -1,4 +1,4 @@
-import { MemberModel } from "./models";
-import { SyncColl } from "./SyncColl";
+import { MemberModel } from './models';
+import { SyncColl } from './SyncColl';
 
-export const syncMembers = new SyncColl<MemberModel>("members");
+export const syncMembers = new SyncColl<MemberModel>('members');
