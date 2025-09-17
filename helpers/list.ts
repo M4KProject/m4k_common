@@ -66,12 +66,11 @@ export const removeItem = <T>(items: T[], item: T) => {
   return removeIndex(items, index);
 };
 
-export const sort = <T = any>(items: T[], prop: (item: T) => string | number | Date = toStr) =>
-  items.sort((a, b) => {
-    const pA = prop(a);
-    const pB = prop(b);
-    return isStr(pA) || isStr(pB) ? String(pA).localeCompare(String(pB)) : Number(pA) - Number(pB);
-  });
+export const sort = <T = any>(items: T[], prop: (item: T) => string | number | Date = toStr) => {
+  const list = items.map(i => [prop(i), i]) as [string | number | Date, T][];
+  list.sort(([a], [b]) => isStr(a) || isStr(b) ? String(a).localeCompare(String(b)) : Number(a) - Number(b));
+  return list.map(i => i[1]);
+}
 
 export const sum = (list: number[], margin?: number) => {
   let r = 0;
