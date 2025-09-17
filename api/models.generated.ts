@@ -112,6 +112,7 @@ export interface _MediaModel extends ModelBase {
   key?: string;
   title?: string;
   desc?: string;
+  type?: '' | 'folder' | 'playlist' | 'pdf' | 'image' | 'video' | 'unknown';
   mime?: string;
   bytes?: number;
   width?: number;

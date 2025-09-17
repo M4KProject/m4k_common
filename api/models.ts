@@ -1,4 +1,3 @@
-import { Item } from '../helpers/check';
 import type { FieldInfo } from '../components/Field';
 import {
   _ContentModel,
@@ -61,10 +60,25 @@ export interface PlaylistContentModel extends ContentModel {
 
 export interface DeviceModel extends _DeviceModel {}
 
+export interface FileInfo {
+  mime: string;
+  type: MediaType;
+  bytes: number;
+  width?: number;
+  height?: number;
+  seconds?: number;
+  nbFrames?: number;
+  nbPages?: number;
+}
 export interface MediaModel extends _MediaModel {
   paths?: string[];
   order?: string;
+  data?: {
+    nbFrames?: number;
+    variants?: FileInfo[];
+  }
 }
+export type MediaType = MediaModel['type'];
 
 export interface GroupModel extends _GroupModel {}
 
