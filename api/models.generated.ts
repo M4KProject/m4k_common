@@ -120,7 +120,7 @@ export interface _MediaModel extends ModelBase {
   seconds?: number;
   data?: any;
   source?: File | Blob | string;
-  variants?: File | Blob | string;
+  variants?: (File | Blob | string)[];
   parent?: string;
   user?: string;
   group?: string;

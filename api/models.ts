@@ -68,7 +68,7 @@ export interface FileInfo {
   height?: number;
   seconds?: number;
   nbFrames?: number;
-  nbPages?: number;
+  pagesCount?: number;
 }
 export interface MediaModel extends _MediaModel {
   paths?: string[];
