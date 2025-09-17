@@ -1,7 +1,7 @@
-import { Css } from '../helpers/html';
+import { Css } from '../ui/html';
 import { Div, DivProps } from './Div';
 import { useCss } from '../hooks/useCss';
-import { clamp, round } from '../helpers/nbr';
+import { clamp, round } from '../utils/nbr';
 import { toNbr } from '../helpers';
 import { flexCenter } from '../helpers';
 import { ComponentChildren } from 'preact';
