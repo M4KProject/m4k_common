@@ -1,5 +1,5 @@
-import { flexColumn, flexRow } from '../helpers/flexBox';
-import { Css } from '../helpers/html';
+import { flexColumn, flexRow } from '../ui/flexBox';
+import { Css } from '../ui/html';
 import { useCss } from '../hooks/useCss';
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';

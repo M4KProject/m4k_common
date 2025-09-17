@@ -1,6 +1,6 @@
-import { clsx, Css } from '../helpers/html';
+import { clsx, Css } from '../ui/html';
 import { useCss } from '../hooks/useCss';
-import { flexColumn } from '../helpers/flexBox';
+import { flexColumn } from '../ui/flexBox';
 import { Div, getStyle } from './Div';
 import { JSX } from 'preact/jsx-runtime';
 

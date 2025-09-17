@@ -1,7 +1,7 @@
 import { useCss, useMsg } from '../hooks';
-import { Css } from '../helpers/html';
-import { Msg } from '../helpers/Msg';
-import { flexColumn } from '../helpers/flexBox';
+import { Css } from '../ui/html';
+import { Msg } from '../utils/Msg';
+import { flexColumn } from '../ui/flexBox';
 import { Div, DivProps } from './Div';
 import { Button, ButtonProps } from './Button';
 import { createContext } from 'preact';

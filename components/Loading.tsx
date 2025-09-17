@@ -1,9 +1,9 @@
-import { Css } from '../helpers/html';
+import { Css } from '../ui/html';
 import { useCss } from '../hooks/useCss';
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
 import { RotateCcw } from 'lucide-react';
-import { flexCenter } from '../helpers/flexBox';
+import { flexCenter } from '../ui/flexBox';
 import { addTranslates } from '../hooks/useTr';
 
 const css: Css = {

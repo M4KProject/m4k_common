@@ -59,9 +59,9 @@ export const setTheme = (
   });
 };
 
-// import Msg from "../helpers/Msg";
-// import { lighten, darken, setHsl, addHsl } from '../helpers/color';
-// import { CssRecord, setCss } from "../helpers/html";
+// import Msg from "../utils/Msg";
+// import { lighten, darken, setHsl, addHsl } from '../utils/color';
+// import { CssRecord, setCss } from "../ui/html";
 
 // export interface ThemeItem {
 //     color: string,

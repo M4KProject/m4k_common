@@ -1,5 +1,5 @@
 import { useCss } from '../hooks/useCss';
-import { Css } from '../helpers/html';
+import { Css } from '../ui/html';
 
 const css: Css = {
   '&': {

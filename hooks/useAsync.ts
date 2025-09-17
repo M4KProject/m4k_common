@@ -1,7 +1,7 @@
 import { useMemo, useEffect } from 'preact/hooks';
-import { Msg } from '../helpers/Msg';
+import { Msg } from '../utils/Msg';
 import { useMsg } from './useMsg';
-import { toErr } from '@common/helpers';
+import { toErr } from '@common/utils';
 
 export const useAsync = <T>(
   initValue: T,
@@ -11,7 +11,7 @@ export const useAsync = <T>(
 ): [T, () => void, Msg<T>] => {
   const _deps = deps ? [...deps, storedKey] : [storedKey];
 
-  // import { isList, isDefined } from "@common/helpers/check";
+  // import { isList, isDefined } from "@common/utils/check";
   // const msg = useMemo(() => {
   //     const msg = new Msg<T>(initValue, storedKey, !!storedKey);
   //     if (isDefined(initValue) && (typeof msg.v !== typeof initValue || isList(msg.v) !== isList(initValue))) {

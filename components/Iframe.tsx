@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { clsx, Css } from '../helpers/html';
+import { clsx, Css } from '../ui/html';
 import { useCss } from '../hooks/useCss';
 
 const css: Css = {

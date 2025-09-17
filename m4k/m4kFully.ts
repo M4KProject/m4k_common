@@ -1,7 +1,7 @@
 import { M4Kiosk, M4kResizeOptions } from './m4kInterface';
 import { Fully } from './fullyInterfaces';
 import { m4kBase } from './m4kBase';
-import { imgResize } from '../helpers/imgResize';
+import { imgResize } from '../ui/imgResize';
 
 export const m4kFully = (m4k: M4Kiosk, fully: Fully) => {
   m4kBase(m4k, {
