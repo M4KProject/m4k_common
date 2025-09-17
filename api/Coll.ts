@@ -1,20 +1,14 @@
 // deno-lint-ignore-file no-explicit-any
 import { Keys, ModelBase, ModelCreate, ModelUpdate } from './models';
-import {
-  Err,
-  Req,
-  ReqOptions,
-  ReqParams,
-  parse,
-  stringify,
-  pathJoin,
-  removeItem,
-  isList,
-  isDef,
-} from '../helpers';
+import { isList, isDef } from '../utils/check';
+import { removeItem } from '../utils/list';
+import { parse, stringify } from '../utils/json';
 import { getApiUrl } from './messages';
 import { realtime } from './realtime';
 import { newApiReq } from './call';
+import { Req, ReqOptions, ReqParams } from '../utils/req';
+import { pathJoin } from '../utils/pathJoin';
+import { toError } from '../utils/cast';
 
 export type CollOperator =
   | '=' // Equal
@@ -188,7 +182,7 @@ export class Coll<T extends ModelBase> {
     o?: CollOptions<T>
   ): Promise<T | null> {
     this.log('update', id, changes, o);
-    if (!id) throw new Err('no id');
+    if (!id) throw toError('no id');
     if (typeof id === 'object') {
       return this.findId(id, o).then((id) => (id ? this.update(id, changes, o) : null));
     }
@@ -206,7 +200,7 @@ export class Coll<T extends ModelBase> {
 
   delete(id: string, o?: CollOptions<T>): Promise<void> {
     this.log('delete', id, o);
-    if (!id) throw new Err('no id');
+    if (!id) throw toError('no id');
     const reqOptions: ReqOptions = o?.req || {};
     return this.r('DELETE', `records/${id}`, {
       ...reqOptions,
