@@ -1,8 +1,5 @@
-export * from './B';
-export * from './D';
 export * from './addFont';
 export * from './autoHide';
-export * from './bEdit';
 export * from './clipboard';
 export * from './flexBox';
 export * from './getCallCb';
@@ -12,7 +9,6 @@ export * from './imgResize';
 export * from './logger';
 export * from './overlay';
 export * from './responsive';
-export * from './router';
 export * from './swClear';
 export * from './tPriceToHtml';
 export * from './theme';
