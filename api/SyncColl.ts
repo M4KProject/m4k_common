@@ -38,7 +38,7 @@ export class SyncColl<T extends ModelBase> {
 
     global['sync' + firstUpper(this.collName)] = this;
   }
-  
+
   async flush(): Promise<void> {
     if (this.isFlush) return;
 
@@ -130,11 +130,11 @@ export class SyncColl<T extends ModelBase> {
     return this.byId$.map((next) => next[id]);
   }
 
-  get(id: string|T): T | undefined {
+  get(id: string | T): T | undefined {
     return this.byId$.v[isItem(id) ? id.id : id];
   }
 
-  set(id: string|T, next: T | null): void {
+  set(id: string | T, next: T | null): void {
     if (isItem(id)) id = id.id;
     this.byId$.apply((itemById) => {
       const todo = { ...this.todo$.v[id], id, next };
@@ -148,7 +148,7 @@ export class SyncColl<T extends ModelBase> {
       } else {
         delete itemById[id];
       }
-      
+
       this.todo$.merge({ [id]: todo });
     });
   }
@@ -158,11 +158,11 @@ export class SyncColl<T extends ModelBase> {
     this.set(id, { ...next, id } as T);
   }
 
-  update(id: string|T, changes: ModelUpdate<T>): void {
+  update(id: string | T, changes: ModelUpdate<T>): void {
     this.set(id, { ...this.get(id), ...changes });
   }
 
-  delete(id: string|T): void {
+  delete(id: string | T): void {
     this.set(id, null);
   }
 
