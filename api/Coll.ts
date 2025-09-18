@@ -231,7 +231,7 @@ export class Coll<T extends ModelBase> {
     return `${url}?thumb=${w}x${h}`;
   }
 
-  async subscribe(
+  subscribe(
     topic: string,
     cb: (item: T, action: 'update' | 'create' | 'delete') => void,
     o?: CollOptions<T>
@@ -264,12 +264,12 @@ export class Coll<T extends ModelBase> {
     const listeners = subscriptions[key] || (subscriptions[key] = []);
     listeners.push(listener);
 
-    await realtime.update(this.r);
+    realtime.update(this.r);
 
-    return async () => {
+    return () => {
       const listeners = subscriptions[key] || subscriptions[key] || [];
       removeItem(listeners, listener);
-      await realtime.update(this.r);
+      realtime.update(this.r);
     };
   }
 }

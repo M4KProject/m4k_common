@@ -17,6 +17,7 @@ const css: Css = {
     ...flexRow({ align: 'center', justify: 'around' }),
     bg: 'headerBg',
     mt: 1,
+    h: 3,
   },
   '&HeaderTitle': {
     ...flexRow({ align: 'center' }),

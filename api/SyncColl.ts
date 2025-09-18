@@ -1,12 +1,12 @@
 import { coll, Coll } from './Coll';
 import { ModelBase, ModelCreate, ModelUpdate } from './models';
 import { IMsgReadonly, Msg } from '../utils/Msg';
-import { Dict, isEmpty, isEq, List } from '../utils/check';
+import { Dict, isEmpty, isEq, isItem, List } from '../utils/check';
 import { byId } from '../utils/by';
 import { first } from '../utils/list';
 import { ReqError } from '../utils/req';
 import { firstUpper, uuid } from '../utils/str';
-import { toError, toVoidAsync } from '../utils/cast';
+import { toError, toVoid, toVoidAsync } from '../utils/cast';
 import { global } from '../utils/global';
 
 export interface Todo<T extends ModelBase> {
@@ -18,13 +18,12 @@ export interface Todo<T extends ModelBase> {
 export class SyncColl<T extends ModelBase> {
   public coll: Coll<T>;
 
-  public dict$: Msg<Dict<T>>;
-  public list$: IMsgReadonly<List<T>>;
+  public byId$: Msg<Dict<T>>;
 
   private todo$: Msg<Record<string, Todo<T>>>;
-  private isInit = false;
   private isFlush = false;
-  private unsubscribe = toVoidAsync;
+  private unsubscribe = toVoid;
+  private subscribeCount = 0;
 
   constructor(
     public collName: string,
@@ -32,15 +31,14 @@ export class SyncColl<T extends ModelBase> {
   ) {
     this.coll = coll<T>(collName);
 
-    this.dict$ = new Msg<Record<string, T>>({}, key, true);
-    this.list$ = this.dict$.map((next) => Object.values(next)) as IMsgReadonly<T[]>;
+    this.byId$ = new Msg<Record<string, T>>({}, key, true);
 
     this.todo$ = new Msg<Record<string, Todo<T>>>({});
     this.todo$.throttle(500).on(this.flush.bind(this));
 
     global['sync' + firstUpper(this.collName)] = this;
   }
-
+  
   async flush(): Promise<void> {
     if (this.isFlush) return;
 
@@ -58,7 +56,7 @@ export class SyncColl<T extends ModelBase> {
         await this.coll.delete(prev.id);
       } else if (!prev && next) {
         const item = await this.coll.create({ ...next, id: undefined });
-        this.dict$.apply((dict) => {
+        this.byId$.apply((dict) => {
           dict[item.id] = item;
           delete dict[todo.id];
         });
@@ -97,8 +95,7 @@ export class SyncColl<T extends ModelBase> {
     try {
       await this.flush();
       const list = await this.coll.find({});
-      const dict = byId(list);
-      this.dict$.set(dict);
+      this.byId$.set(byId(list));
     } catch (e) {
       const error = toError(e);
       console.error('sync load error', this.collName, error);
@@ -106,43 +103,52 @@ export class SyncColl<T extends ModelBase> {
     }
   }
 
-  async init(): Promise<void> {
-    if (this.isInit) return;
-
+  private _subscribe() {
     console.debug('sync init', this.collName);
-
     try {
-      await this.load();
-
+      this.load();
       this.unsubscribe();
-      this.unsubscribe = await this.coll.subscribe('*', this.onEvent.bind(this));
-
-      this.isInit = true;
+      this.unsubscribe = this.coll.subscribe('*', this.onEvent.bind(this));
     } catch (error) {
       console.error('SyncColl init error:', error);
       throw error;
     }
   }
 
+  subscribe() {
+    if (this.subscribeCount === 0) this._subscribe();
+    this.subscribeCount++;
+    return () => {
+      setTimeout(() => {
+        this.subscribeCount--;
+        if (this.subscribeCount === 0) this.unsubscribe();
+      }, 100);
+    };
+  }
+
   $(id: string) {
-    return this.dict$.map((next) => next[id]);
+    return this.byId$.map((next) => next[id]);
   }
 
-  get(id: string): T | undefined {
-    return this.dict$.v[id];
+  get(id: string|T): T | undefined {
+    return this.byId$.v[isItem(id) ? id.id : id];
   }
 
-  set(id: string, next: T | null): void {
-    this.dict$.apply((dict) => {
+  set(id: string|T, next: T | null): void {
+    if (isItem(id)) id = id.id;
+    this.byId$.apply((itemById) => {
       const todo = { ...this.todo$.v[id], id, next };
-      if (!todo.prev) todo.prev = dict[id];
 
-      if (next) {
-        dict[id] = next;
-      } else {
-        delete dict[id];
+      if (!todo.prev) {
+        todo.prev = itemById[id];
       }
 
+      if (next) {
+        itemById[id] = next;
+      } else {
+        delete itemById[id];
+      }
+      
       this.todo$.merge({ [id]: todo });
     });
   }
@@ -152,16 +158,16 @@ export class SyncColl<T extends ModelBase> {
     this.set(id, { ...next, id } as T);
   }
 
-  update(id: string, changes: ModelUpdate<T>): void {
+  update(id: string|T, changes: ModelUpdate<T>): void {
     this.set(id, { ...this.get(id), ...changes });
   }
 
-  delete(id: string): void {
+  delete(id: string|T): void {
     this.set(id, null);
   }
 
   private onEvent(item: T, action: 'update' | 'create' | 'delete'): void {
-    this.dict$.apply((next) => {
+    this.byId$.apply((next) => {
       if (action === 'delete') {
         delete next[item.id];
         return;
@@ -172,11 +178,5 @@ export class SyncColl<T extends ModelBase> {
       }
       console.warn('sync unknown action', action);
     });
-  }
-
-  dispose(): void {
-    this.unsubscribe();
-    this.dict$.dispose();
-    this.todo$.dispose();
   }
 }
