@@ -13,5 +13,6 @@ export * from './Portal';
 export * from './Progress';
 export * from './Side';
 export * from './Table';
+export * from './Toolbar';
 export * from './Tooltip';
 export * from './Tr';
