@@ -126,17 +126,17 @@ export class Msg<T = any> implements IMsg<T> {
     if (!isItem(prev)) throw toError('msg not item');
     const next = { ...prev } as T;
     cb(next);
-    this.set(next);
+    return this.set(next);
   }
 
   merge(changes: Partial<T>) {
-    this.apply((next) => {
+    return this.apply((next) => {
       Object.assign(next, changes);
     });
   }
 
   delete(id: string) {
-    this.apply((next) => {
+    return this.apply((next) => {
       delete next[id];
     });
   }
