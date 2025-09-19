@@ -33,16 +33,19 @@ export const useMsgState = (<T = any>(msg: Msg<T>): [T, (next: T) => void] => {
   return [state, (next) => msg && msg.set(next)];
 }) as UseMsgState;
 
-export const useMsgItem = <T=any>(
+export const useMsgItem = <T = any>(
   msg: NMsg<Dict<T>>,
-  key: string,
-): [T|undefined, (next: T) => void] => {
+  key: string
+): [T | undefined, (next: T) => void] => {
   const [state, setState] = useState(msg && msg.getItem(key));
   useEffect(() => {
     setState(msg && msg.getItem(key));
-    return msg && msg.on(() => {
-      setState(msg && msg.getItem(key));
-    });
+    return (
+      msg &&
+      msg.on(() => {
+        setState(msg && msg.getItem(key));
+      })
+    );
   }, [msg, key]);
   return [state, (next) => msg && msg.setItem(key, next)];
 };

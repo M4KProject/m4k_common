@@ -102,11 +102,11 @@ const css: Css = {
     bg: 'primary',
   },
   '&-check &Input svg': {
-    color: 'white', 
+    color: 'white',
     transition: 0.3,
     transform: 'scale(0)',
   },
-  '&-check &Input-selected svg': { 
+  '&-check &Input-selected svg': {
     transform: 'scale(1)',
   },
 
@@ -410,7 +410,7 @@ export const Field = (props: FieldProps) => {
   } = props;
   const c = useCss('Field', css);
 
-  const valDelay = delay || (type === 'switch' || type === 'check') ? 0 : delay;
+  const valDelay = delay || type === 'switch' || type === 'check' ? 0 : delay;
 
   const msgVal = useMsg(msg);
   const val = msg ? msgVal : value;

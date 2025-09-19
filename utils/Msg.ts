@@ -154,14 +154,14 @@ export class Msg<T = any> implements IMsg<T> {
     return this.set(next as T);
   }
 
-  getItem<K extends keyof T>(key: K): T[K]|undefined {
+  getItem<K extends keyof T>(key: K): T[K] | undefined {
     return this.v && this.v[key];
   }
 
-  setItem<K extends keyof T>(key: K, value: T[K]|undefined) {
+  setItem<K extends keyof T>(key: K, value: T[K] | undefined) {
     const prev = this.v;
     if (!prev || prev[key] === value) return this;
-    const next = {...prev};
+    const next = { ...prev };
     if (value === undefined) {
       delete next[key];
     } else {
