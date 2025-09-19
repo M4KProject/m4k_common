@@ -1,7 +1,7 @@
 import { removeItem } from './list';
 import { debounce, throttle } from './async';
-import { toError, toVoid } from './cast';
-import { isDef, isFun, isItem } from './check';
+import { toVoid } from './cast';
+import { isDef, isEq, isFun, isItemEmpty } from './check';
 import { global } from './global';
 import { getStored, setStored } from './storage';
 
@@ -123,22 +123,55 @@ export class Msg<T = any> implements IMsg<T> {
 
   apply(cb: (next: T) => void) {
     const prev = this.v;
-    if (!isItem(prev)) throw toError('msg not item');
     const next = { ...prev } as T;
     cb(next);
-    return this.set(next);
+    if (!isEq(prev, next)) this.set(next);
+    return this;
   }
 
   merge(changes: Partial<T>) {
-    return this.apply((next) => {
-      Object.assign(next, changes);
-    });
+    const prev = this.v;
+    if (!prev) return this;
+
+    for (const key in changes) {
+      if (changes[key] === prev[key]) {
+        delete changes[key];
+      }
+    }
+
+    if (isItemEmpty(changes)) return this;
+
+    const next = { ...prev };
+
+    for (const key in changes) {
+      if (changes[key] === undefined) {
+        delete next[key];
+      } else {
+        next[key] = changes[key];
+      }
+    }
+
+    return this.set(next as T);
   }
 
-  delete(id: string) {
-    return this.apply((next) => {
-      delete next[id];
-    });
+  getItem<K extends keyof T>(key: K): T[K]|undefined {
+    return this.v && this.v[key];
+  }
+
+  setItem<K extends keyof T>(key: K, value: T[K]|undefined) {
+    const prev = this.v;
+    if (!prev || prev[key] === value) return this;
+    const next = {...prev};
+    if (value === undefined) {
+      delete next[key];
+    } else {
+      next[key] = value;
+    }
+    this.set(next);
+  }
+
+  delete<K extends keyof T>(key: K) {
+    return this.setItem(key, undefined);
   }
 
   subscribe(handler: (next: T) => void): IMsgSubscription {
