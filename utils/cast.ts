@@ -1,6 +1,6 @@
 import { isList, isDate, isNil, isStr, isItem, isPositive } from './check';
 
-export const me = <T = any>(value: T): T => value;
+export const toMe = <T = any>(value: T): T => value;
 
 interface ToList {
   <T = any>(v: T[] | T | null | undefined): T[];

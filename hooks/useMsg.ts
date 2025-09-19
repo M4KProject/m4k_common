@@ -1,3 +1,4 @@
+import { Dict, toMe } from '@common/utils';
 import { Msg, IMsgReadonly } from '@common/utils/Msg';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -11,12 +12,7 @@ interface UseMsg {
 
 interface UseMsgState {
   <T = any>(msg: Msg<T>): [T, (next: T) => void];
-  <T = any, U = any>(msg: Msg<T>, get: (msg: Msg<T>) => U): [U, (next: T) => void];
-  <T = any, U = any>(msg: Msg<T>, get: (v: Msg<T>) => U, set: (msg: Msg<T>, next: U) => void): [U, (next: T) => void];
-
   <T = any>(msg: NMsg<T>): [T | undefined, (next: T) => void];
-  <T = any, U = any>(msg: NMsg<T>, get: (msg: Msg<T>) => U): [U | undefined, (next: T) => void];
-  <T = any, U = any>(msg: NMsg<T>, get: (v: Msg<T>) => U, set: (msg: Msg<T>, next: U) => void): [U | undefined, (next: T) => void];
 }
 
 export const useMsg = (<T = any>(msg: IMsgReadonly<T> | null | undefined): T | undefined => {
@@ -28,20 +24,25 @@ export const useMsg = (<T = any>(msg: IMsgReadonly<T> | null | undefined): T | u
   return state;
 }) as UseMsg;
 
-const _get = (msg: Msg) => msg.get();
-const _set = (msg: Msg, next: any) => msg.set(next);
-
-export const useMsgState = (<T>(
-  msg: Msg<T>,
-  get: (msg: Msg<T>) => T = _get,
-  set: (msg: Msg<T>, next: T) => void = _set,
-): [T, (next: T) => void] => {
-  const [state, setState] = useState(msg && get(msg));
+export const useMsgState = (<T = any>(msg: Msg<T>): [T, (next: T) => void] => {
+  const [state, setState] = useState(msg && msg.v);
   useEffect(() => {
-    setState(msg && get(msg));
-    return msg && msg.on(() => {
-      setState(msg && get(msg));
-    });
+    setState(msg && msg.v);
+    return msg && msg.on(setState);
   }, [msg]);
-  return [state, (next) => msg && set(msg, next)];
+  return [state, (next) => msg && msg.set(next)];
 }) as UseMsgState;
+
+export const useMsgItem = <T=any>(
+  msg: NMsg<Dict<T>>,
+  key: string,
+): [T|undefined, (next: T) => void] => {
+  const [state, setState] = useState(msg && msg.getItem(key));
+  useEffect(() => {
+    setState(msg && msg.getItem(key));
+    return msg && msg.on(() => {
+      setState(msg && msg.getItem(key));
+    });
+  }, [msg, key]);
+  return [state, (next) => msg && msg.setItem(key, next)];
+};
