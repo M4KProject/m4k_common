@@ -13,7 +13,7 @@ import { toErr } from '@common/utils/err';
 // import { groupId$ } from "../api/repos";
 // import { medias$ } from "../api/storage";
 // import { by } from "@common/utils/by";
-import { Eye, EyeOff } from 'lucide-react';
+import { Check, Eye, EyeOff } from 'lucide-react';
 import { Button } from './Button';
 import { Msg } from '@common/utils/Msg';
 import { useMsg } from '../hooks';
@@ -84,6 +84,32 @@ const css: Css = {
     // padding: 8,
   },
 
+  '&-check &Input': {
+    ...flexCenter(),
+    p: 0,
+    w: 1.4,
+    h: 1.4,
+    cursor: 'pointer',
+    border: '1px solid #ccc',
+    bg: '#fff',
+    position: 'relative',
+    rounded: 1,
+    transition: 0.3,
+    boxSizing: 'border-box',
+  },
+  '&-check &Input-selected': {
+    border: 'primary',
+    bg: 'primary',
+  },
+  '&-check &Input svg': {
+    color: 'white', 
+    transition: 0.3,
+    transform: 'scale(0)',
+  },
+  '&-check &Input-selected svg': { 
+    transform: 'scale(1)',
+  },
+
   '&-switch &Input': {
     ...flexCenter(),
     w: 2,
@@ -130,6 +156,7 @@ export type FieldType =
   | 'select'
   | 'picker'
   | 'switch'
+  | 'check'
   | 'image'
   | 'doc'
   | 'date'
@@ -311,6 +338,17 @@ const compByType: Record<FieldType, FieldComp> = {
       </Div>
     );
   },
+  check: ({ cls, value, onChange, fieldProps }) => {
+    return (
+      <Div
+        cls={[`${cls}`, value && `${cls}-selected`]}
+        onClick={() => onChange(!value)}
+        {...fieldProps.props}
+      >
+        <Check />
+      </Div>
+    );
+  },
   image: getMediaField(['image/png', 'image/jpeg', 'image/svg+xml', 'application/pdf']),
   doc: getMediaField(['application/pdf']),
   date: ({ cls, name, required, value, onChange, fieldProps }) => (
@@ -372,7 +410,7 @@ export const Field = (props: FieldProps) => {
   } = props;
   const c = useCss('Field', css);
 
-  const valDelay = delay || type === 'switch' ? 0 : delay;
+  const valDelay = delay || (type === 'switch' || type === 'check') ? 0 : delay;
 
   const msgVal = useMsg(msg);
   const val = msg ? msgVal : value;

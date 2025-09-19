@@ -41,6 +41,9 @@ const css: Css = {
   '&Cell-around &CellContent': {
     ...flexRow({ align: 'center', justify: 'around' }),
   },
+  '&Cell-check': {
+    width: 0,
+  },
   '&Cell-header': {
     pt: 1,
     bg: 'white',
@@ -101,7 +104,7 @@ export const Row = ({ cls, mode, ...props }: RowProps) => {
 };
 
 export interface CellProps extends JSX.HTMLAttributes<HTMLTableCellElement> {
-  variant?: 'row' | 'center' | 'around';
+  variant?: 'row' | 'center' | 'around' | 'check';
   cls?: any;
 }
 export const Cell = ({ cls, variant, children, ...props }: CellProps) => {
