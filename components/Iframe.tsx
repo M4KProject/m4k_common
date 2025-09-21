@@ -1,7 +1,6 @@
 import { JSX } from 'preact';
 import { clsx, Css } from '@common/ui/html';
 
-
 const c = Css('Iframe', {
   '&': {
     // position: "relative",
@@ -13,7 +12,7 @@ const c = Css('Iframe', {
 });
 
 export interface IframeProps extends JSX.HTMLAttributes<HTMLIFrameElement> {
-   class?: string;
+  class?: string;
 }
 
 export const Iframe = ({ className, ...props }: IframeProps) => {

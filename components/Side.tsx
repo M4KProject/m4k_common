@@ -81,7 +81,12 @@ export const SideButton = ({ page, title, children, ...props }: SideButtonProps)
   const page$ = useContext(SideContext);
   const curr = useMsg(page$);
   return (
-    <Button class={c('Button')} selected={page === curr} onClick={() => page$?.set(page)} {...props}>
+    <Button
+      class={c('Button')}
+      selected={page === curr}
+      onClick={() => page$?.set(page)}
+      {...props}
+    >
       {title}
       {children}
     </Button>

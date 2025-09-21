@@ -13,7 +13,7 @@ export const newApiReq = (baseUrl: string = '', baseOptions: ReqOptions<any> = {
     ...baseOptions,
     base: (o) => {
       o.onError = apiError$.setter();
-      
+
       const auth = auth$.v;
       if (auth) {
         o.headers = {

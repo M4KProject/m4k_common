@@ -455,7 +455,7 @@ export const setCss = (key: string, css?: CssValue) => {
 
 export const Css = (key: string, css?: CssValue) => {
   let isInit = false;
-  return (...args: (string|undefined|({ class?: string }))[]) => {
+  return (...args: (string | undefined | { class?: string })[]) => {
     if (!isInit) {
       setCss(key, css);
       isInit = true;
@@ -465,14 +465,13 @@ export const Css = (key: string, css?: CssValue) => {
     for (const arg of args) {
       if (isStr(arg)) {
         sb.push(key + arg);
-      }
-      else if (isItem(arg)) {
+      } else if (isItem(arg)) {
         arg.class && sb.push(arg.class);
       }
     }
     return sb.join(' ');
-  }
-}
+  };
+};
 
 export const refreshCss = () => {
   const map = _cssMap;

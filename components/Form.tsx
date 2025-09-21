@@ -25,7 +25,7 @@ const c = Css('Form', {
 
 type FormHTMLProps = JSX.HTMLAttributes<HTMLFormElement>;
 export interface FormProps extends Omit<FormHTMLProps, 'style'> {
-   class?: string;
+  class?: string;
   style?: string | JSX.CSSProperties | undefined;
 }
 

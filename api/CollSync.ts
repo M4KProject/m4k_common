@@ -1,11 +1,11 @@
-import { MsgDict } from "@common/utils/MsgDict";
-import { Coll, CollOptions, CollWhere } from "./Coll";
-import { ModelCreate, ModelUpdate } from "./models.base";
-import { byId } from "@common/utils/by";
-import { Dict, isDictOfItem, isEmpty, isList, isStr } from "@common/utils/check";
-import { NotImplemented } from "@common/utils/error";
-import { Models } from "./models";
-import { toVoid } from "@common/utils";
+import { MsgDict } from '@common/utils/MsgDict';
+import { Coll, CollOptions, CollWhere } from './Coll';
+import { ModelCreate, ModelUpdate } from './models.base';
+import { byId } from '@common/utils/by';
+import { Dict, isDictOfItem, isEmpty, isList, isStr } from '@common/utils/check';
+import { NotImplemented } from '@common/utils/error';
+import { Models } from './models';
+import { toVoid } from '@common/utils';
 
 export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> extends Coll<K, T> {
   cache = new MsgDict<T>({}, this.name + 'Cache', true, isDictOfItem);
@@ -26,7 +26,7 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
           this.off = toVoid;
         }
       }, 10);
-    }
+    };
   }
 
   findCache(where?: CollWhere<T>) {
@@ -37,12 +37,18 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
       if (isList(filter)) {
         const [operator, operand] = filter;
         switch (operator) {
-          case '=': (v: any) => v[p] === operand;
-          case '!=': (v: any) => v[p] !== operand;
-          case '>': (v: any) => v[p] > operand;
-          case '>=': (v: any) => v[p] >= operand;
-          case '<': (v: any) => v[p] < operand;
-          case '<=': (v: any) => v[p] <= operand;
+          case '=':
+            (v: any) => v[p] === operand;
+          case '!=':
+            (v: any) => v[p] !== operand;
+          case '>':
+            (v: any) => v[p] > operand;
+          case '>=':
+            (v: any) => v[p] >= operand;
+          case '<':
+            (v: any) => v[p] < operand;
+          case '<=':
+            (v: any) => v[p] <= operand;
           // case '~':   // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
           // case '!~':  // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
           // case '?=':  // Any/At least one of Equal
@@ -61,20 +67,23 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
       }
     });
 
-    const filteredItems = items.filter(item => !filters.find(f => {
-      console.debug('findCache filter', item, f, !f(item));
-      return !f(item);
-    })); 
+    const filteredItems = items.filter(
+      (item) =>
+        !filters.find((f) => {
+          console.debug('findCache filter', item, f, !f(item));
+          return !f(item);
+        })
+    );
     console.debug('findCache', where, filters, items, filteredItems);
     return filteredItems;
   }
 
   findPage(where: CollWhere<T>, o?: CollOptions<T>) {
-    return super.findPage(where, o).then(page => {
-      const changes: Dict<T|undefined> = byId(page.items);
+    return super.findPage(where, o).then((page) => {
+      const changes: Dict<T | undefined> = byId(page.items);
       if (page.totalPages === 1) {
         const prev = this.findCache(where);
-        const deletedIds = prev.filter(i => !changes[i.id]);
+        const deletedIds = prev.filter((i) => !changes[i.id]);
         for (const id of deletedIds) {
           (changes as any)[id] = undefined;
         }
@@ -86,7 +95,7 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
   }
 
   create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
-    return super.create(item, o).then(result => {
+    return super.create(item, o).then((result) => {
       this.cache.update({ [result.id]: { ...item, ...result } });
       return result;
     });
@@ -97,7 +106,7 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     changes: ModelUpdate<T>,
     o?: CollOptions<T>
   ): Promise<T | null> {
-    return super.update(id, changes, o).then(result => {
+    return super.update(id, changes, o).then((result) => {
       if (isStr(id)) {
         const prev = this.cache.getItem(id);
         this.cache.update({ [id]: { ...prev, ...changes, ...result } });
@@ -111,7 +120,7 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
   }
 
   delete(id: string, o?: CollOptions<T>): Promise<void> {
-    return super.delete(id, o).then(result => {
+    return super.delete(id, o).then((result) => {
       this.cache.update({ [id]: undefined });
       return result;
     });
@@ -122,10 +131,14 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     cb?: (item: T, action: 'update' | 'create' | 'delete') => void,
     o?: CollOptions<T>
   ) {
-    return super.subscribe(topic, (item, action) => {
-      this.cache.update({ [item.id]: action === 'delete' ? undefined : item });
-      cb && cb(item, action);
-    }, o);
+    return super.subscribe(
+      topic,
+      (item, action) => {
+        this.cache.update({ [item.id]: action === 'delete' ? undefined : item });
+        cb && cb(item, action);
+      },
+      o
+    );
   }
 }
 
@@ -135,8 +148,5 @@ export type CollSyncByName = {
 
 const _colls = {} as Partial<CollSyncByName>;
 
-export const collSync = <K extends keyof Models>(name: K): CollSync<K> => (
-  _colls[name] || (
-    (_colls[name] as CollSync<K>) = new CollSync<K>(name)
-  )
-);
+export const collSync = <K extends keyof Models>(name: K): CollSync<K> =>
+  _colls[name] || ((_colls[name] as CollSync<K>) = new CollSync<K>(name));

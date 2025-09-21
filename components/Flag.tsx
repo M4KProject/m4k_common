@@ -1,4 +1,3 @@
-
 import { Css } from '@common/ui/html';
 
 const c = Css('Flag', {
@@ -17,7 +16,7 @@ const c = Css('Flag', {
 });
 
 export interface FlagSVGProps {
-   class?: string;
+  class?: string;
   iso: string; // ISO codes: fr, en, de, es, it
   title?: string;
   size?: string | number;

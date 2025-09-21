@@ -156,11 +156,11 @@ export interface DeviceModel extends _DeviceModel {
 export interface LockModel extends _LockModel {}
 
 export interface Models {
-  contents: ContentModel,
-  devices: DeviceModel,
-  groups: GroupModel,
-  jobs: JobModel,
-  medias: MediaModel,
-  members: MemberModel,
-  users: UserModel,
+  contents: ContentModel;
+  devices: DeviceModel;
+  groups: GroupModel;
+  jobs: JobModel;
+  medias: MediaModel;
+  members: MemberModel;
+  users: UserModel;
 }

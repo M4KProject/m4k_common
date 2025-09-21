@@ -95,7 +95,7 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 
 export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   static onError: (error: any) => void;
-  
+
   unsubscribes: (() => void)[] = [];
   r: Req;
 
@@ -214,7 +214,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   }
 
   getUrl(id?: string, filename?: any, thumb?: [number, number]) {
-    return getUrl(this.name, id, filename, thumb)
+    return getUrl(this.name, id, filename, thumb);
   }
 
   subscribe(
@@ -266,8 +266,5 @@ export type CollByName = {
 
 const _colls = {} as Partial<CollByName>;
 
-export const coll = <K extends keyof Models>(name: K): Coll<K> => (
-  _colls[name] || (
-    (_colls[name] as Coll<K>) = new Coll<K>(name)
-  )
-);
+export const coll = <K extends keyof Models>(name: K): Coll<K> =>
+  _colls[name] || ((_colls[name] as Coll<K>) = new Coll<K>(name));

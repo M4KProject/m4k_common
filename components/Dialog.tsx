@@ -36,11 +36,7 @@ export const showDialog = (
 export const showError = (e: any) => {
   const error = toError(e);
   console.debug('showError', error);
-  showDialog(
-    'Error:'+error.name,
-    () => error.message,
-    { variant: 'error' },
-  );
+  showDialog('Error:' + error.name, () => error.message, { variant: 'error' });
 };
 
 const c = Css('Dialog', {

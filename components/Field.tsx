@@ -483,10 +483,7 @@ export const Field = (props: FieldProps) => {
   const Comp = compByType[type || 'text'] || compByType.text;
 
   return (
-    <div
-      {...divProps}
-      class={c('', row && '-row', type && `-${type}`, err && '-error', divProps)}
-    >
+    <div {...divProps} class={c('', row && '-row', type && `-${type}`, err && '-error', divProps)}>
       {label && <div class={c('Label')}>{label} :</div>}
       <div class={c('Content')}>
         <Comp

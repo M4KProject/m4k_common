@@ -241,7 +241,7 @@ export const Select = ({
                 class={c(
                   `Option`,
                   key === value && `Option-selected`,
-                  index === highlightedIndex && `Option-highlighted`,
+                  index === highlightedIndex && `Option-highlighted`
                 )}
                 onClick={() => handleOptionClick(key)}
               >

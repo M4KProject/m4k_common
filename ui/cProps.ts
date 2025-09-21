@@ -1,11 +1,11 @@
-import { isItem, isList, isObj, isStr } from "@common/utils/check";
-import { JSX } from "preact/jsx-runtime";
+import { isItem, isList, isObj, isStr } from '@common/utils/check';
+import { JSX } from 'preact/jsx-runtime';
 
 type SVal = string | JSX.CSSProperties | undefined | null | false;
-export type S = SVal|S[];
+export type S = SVal | S[];
 
 type CVal = string | undefined | null | false;
-export type C = CVal|C[];
+export type C = CVal | C[];
 
 const getStyle = (s: S): JSX.CSSProperties => {
   if (isItem(s)) {
@@ -43,19 +43,19 @@ const getClassName = (...cs: any[]) => {
 };
 
 type PropsBase = {
-  style?: any,
-  class?: any,
-  className?: any,
-}
+  style?: any;
+  class?: any;
+  className?: any;
+};
 
-export type CProps<T extends PropsBase> = Omit<T, 'style'|'class'|'className'> & {
-  c?: C,
-  cls?: C,
-  class?: C,
-  className?: C,
-  s?: S,
+export type CProps<T extends PropsBase> = Omit<T, 'style' | 'class' | 'className'> & {
+  c?: C;
+  cls?: C;
+  class?: C;
+  className?: C;
+  s?: S;
   style?: S;
-}
+};
 
 export interface DivProps extends CProps<JSX.HTMLAttributes<HTMLDivElement>> {}
 
@@ -65,4 +65,4 @@ export const cProps = <T extends PropsBase>(props: CProps<T>) => {
   result.style = getStyle([s, style]);
 
   return props as T;
-}
+};
