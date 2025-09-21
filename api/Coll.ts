@@ -3,13 +3,12 @@ import { Keys, ModelBase, ModelCreate, Models, ModelUpdate } from './models';
 import { isList, isDef } from '../utils/check';
 import { removeItem } from '../utils/list';
 import { parse, stringify } from '../utils/json';
-import { getApiUrl } from './messages';
 import { realtime } from './realtime';
 import { newApiReq } from './call';
 import { Req, ReqOptions, ReqParams } from '../utils/req';
-import { pathJoin } from '../utils/pathJoin';
 import { toError } from '../utils/cast';
 import { global } from '../utils/global';
+import { getUrl } from './getUrl';
 
 export type CollOperator =
   | '=' // Equal
@@ -94,11 +93,11 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
   return r;
 };
 
-export class Coll<T extends ModelBase> {
+export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   unsubscribes: (() => void)[] = [];
   r: Req;
 
-  constructor(public coll: string) {
+  constructor(public coll: K) {
     this.r = newApiReq(`collections/${this.coll}/`);
     global[this.coll + 'Coll'] = this;
   }
@@ -212,16 +211,8 @@ export class Coll<T extends ModelBase> {
     );
   }
 
-  getUrl(id?: string, filename?: any) {
-    if (!id || !filename) return '';
-    return pathJoin(getApiUrl(), `files/${this.coll}/${id}/${filename}`);
-  }
-
-  getThumbUrl(id?: string, filename?: any, thumb?: [number, number]) {
-    if (!id || !filename) return '';
-    const url = this.getUrl(id, filename);
-    const [w, h] = thumb || [200, 200];
-    return `${url}?thumb=${w}x${h}`;
+  getUrl(id?: string, filename?: any, thumb?: [number, number]) {
+    return getUrl(this.coll, id, filename, thumb)
   }
 
   subscribe(
@@ -268,13 +259,13 @@ export class Coll<T extends ModelBase> {
 }
 
 export type CollByName = {
-  [K in keyof Models]?: Coll<Models[K]>;
+  [K in keyof Models]?: Coll<K>;
 };
 
 const _colls: CollByName = {};
 
-export const coll = <K extends keyof Models>(name: K): Coll<Models[K]> => (
+export const coll = <K extends keyof Models>(name: K): Coll<K> => (
   _colls[name] || (
-    (_colls as any)[name] = new Coll<Models[K]>(name)
+    _colls[name] = new Coll<K>(name)
   )
 );
