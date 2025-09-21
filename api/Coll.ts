@@ -259,13 +259,13 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
 }
 
 export type CollByName = {
-  [K in keyof Models]?: Coll<K>;
+  [K in keyof Models]: Coll<K>;
 };
 
-const _colls: CollByName = {};
+const _colls = {} as Partial<CollByName>;
 
 export const coll = <K extends keyof Models>(name: K): Coll<K> => (
   _colls[name] || (
-    _colls[name] = new Coll<K>(name)
+    (_colls[name] as Coll<K>) = new Coll<K>(name)
   )
 );

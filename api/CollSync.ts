@@ -5,14 +5,28 @@ import { byId } from "@common/utils/by";
 import { Dict, isEmpty, isList, isStr } from "@common/utils/check";
 import { NotImplemented } from "@common/utils/error";
 import { Models } from "./models";
+import { toVoid } from "@common/utils";
 
-export class CollSync<T extends ModelBase> extends Coll<T> {
+export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> extends Coll<K, T> {
   cache: MsgDict<T>;
-  stop?: () => void;
+  onCount = 0;
+  off = toVoid;
 
-  start() {
-    if (this.stop) return;
-    this.stop = this.subscribe('*');
+  on() {
+    this.onCount++;
+    if (this.onCount === 1) {
+      this.off = this.subscribe('*');
+    }
+    return () => {
+      this.onCount--;
+      setTimeout(() => {
+        if (this.onCount <= 0) {
+          this.onCount = 0;
+          this.off();
+          this.off = toVoid;
+        }
+      }, 10);
+    }
   }
 
   findCache(where?: CollWhere<T>) {
@@ -111,13 +125,13 @@ export class CollSync<T extends ModelBase> extends Coll<T> {
 }
 
 export type CollSyncByName = {
-  [K in keyof Models]?: Coll<Models[K]>;
+  [K in keyof Models]: CollSync<K>;
 };
 
-const _collSyncs: CollSyncByName = {};
+const _colls = {} as Partial<CollSyncByName>;
 
-export const collSync = <K extends keyof Models>(name: K): Coll<Models[K]> => (
-  _collSyncs[name] || (
-    (_collSyncs as any)[name] = new CollSync<Models[K]>(name)
+export const collSync = <K extends keyof Models>(name: K): CollSync<K> => (
+  _colls[name] || (
+    (_colls[name] as CollSync<K>) = new CollSync<K>(name)
   )
 );
