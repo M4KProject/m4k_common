@@ -67,14 +67,7 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
       }
     });
 
-    const filteredItems = items.filter(
-      (item) =>
-        !filters.find((f) => {
-          console.debug('findCache filter', item, f, !f(item));
-          return !f(item);
-        })
-    );
-    console.debug('findCache', where, filters, items, filteredItems);
+    const filteredItems = items.filter((i) => !filters.find((f) => !f(i)));
     return filteredItems;
   }
 
