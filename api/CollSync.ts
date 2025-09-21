@@ -1,14 +1,14 @@
 import { MsgDict } from "@common/utils/MsgDict";
 import { Coll, CollOptions, CollWhere } from "./Coll";
-import { ModelBase, ModelCreate, ModelUpdate } from "./models.base";
+import { ModelCreate, ModelUpdate } from "./models.base";
 import { byId } from "@common/utils/by";
-import { Dict, isEmpty, isList, isStr } from "@common/utils/check";
+import { Dict, isDictOfItem, isEmpty, isList, isStr } from "@common/utils/check";
 import { NotImplemented } from "@common/utils/error";
 import { Models } from "./models";
 import { toVoid } from "@common/utils";
 
 export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> extends Coll<K, T> {
-  cache: MsgDict<T>;
+  cache = new MsgDict<T>({}, this.name + 'Cache', true, isDictOfItem);
   onCount = 0;
   off = toVoid;
 
@@ -31,18 +31,18 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
 
   findCache(where?: CollWhere<T>) {
     const items = this.cache.getItems();
-    if (!isEmpty(where)) return items;
+    if (isEmpty(where)) return items;
 
-    const filters = Object.entries(where).map(([prop, filter]) => {
+    const filters = Object.entries(where).map(([p, filter]) => {
       if (isList(filter)) {
         const [operator, operand] = filter;
         switch (operator) {
-          case '=': (v: any) => v === operand;
-          case '!=': (v: any) => v !== operand;
-          case '>': (v: any) => v > operand;
-          case '>=': (v: any) => v >= operand;
-          case '<': (v: any) => v < operand;
-          case '<=': (v: any) => v <= operand;
+          case '=': (v: any) => v[p] === operand;
+          case '!=': (v: any) => v[p] !== operand;
+          case '>': (v: any) => v[p] > operand;
+          case '>=': (v: any) => v[p] >= operand;
+          case '<': (v: any) => v[p] < operand;
+          case '<=': (v: any) => v[p] <= operand;
           // case '~':   // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
           // case '!~':  // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
           // case '?=':  // Any/At least one of Equal
@@ -57,15 +57,20 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
             throw new NotImplemented(`operator "${operator}"`);
         }
       } else {
-        return (v: any) => v === filter;
+        return (v: any) => v[p] === filter;
       }
     });
-    return items.filter(item => !filters.find(f => !f(item)));
+
+    const filteredItems = items.filter(item => !filters.find(f => {
+      console.debug('findCache filter', item, f, !f(item));
+      return !f(item);
+    })); 
+    console.debug('findCache', where, filters, items, filteredItems);
+    return filteredItems;
   }
 
   findPage(where: CollWhere<T>, o?: CollOptions<T>) {
     return super.findPage(where, o).then(page => {
-      debugger;
       const changes: Dict<T|undefined> = byId(page.items);
       if (page.totalPages === 1) {
         const prev = this.findCache(where);

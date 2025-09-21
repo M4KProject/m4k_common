@@ -1,4 +1,6 @@
+
 export * from './Msg';
+export * from './MsgDict';
 export * from './async';
 export * from './b64toBlob';
 export * from './by';
@@ -8,6 +10,7 @@ export * from './check';
 export * from './color';
 export * from './date';
 export * from './err';
+export * from './error';
 export * from './global';
 export * from './json';
 export * from './list';

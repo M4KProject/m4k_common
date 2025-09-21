@@ -1,17 +1,18 @@
-import { collSync } from "@common/api";
+import { CollSync, groupId$ } from "@common/api";
 import { CollWhere } from "@common/api/Coll";
 import { Models } from "@common/api/models";
 import { stringify } from "@common/utils";
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
+import { useMsg } from "./useMsg";
 
-export const useQuery = <K extends keyof Models>(name: K, where?: CollWhere<Models[K]>) => {
+export const useQuery = <K extends keyof Models>(coll: CollSync<K, Models[K]>, where?: CollWhere<Models[K]>) => {
     const [state, setState] = useState([] as Models[K][]);
-    
-    const coll = collSync(name);
     
     useEffect(() => {
         const refresh = () => {
-            setState(coll.findCache(where));
+            const items = coll.findCache(where);
+            console.debug('useQuery refresh', coll.name, where, items);
+            setState(items);
         }
 
         refresh();
@@ -24,7 +25,12 @@ export const useQuery = <K extends keyof Models>(name: K, where?: CollWhere<Mode
             off();
             off2();
         }
-    }, [name, stringify(where)]);
+    }, [coll, stringify(where)]);
 
     return state;
+}
+
+export const useGroupQuery = <K extends keyof Models>(coll: CollSync<K, Models[K]>, where?: CollWhere<Models[K]>) => {
+    const group = useMsg(groupId$);
+    return useQuery(coll, { ...where, group });
 }

@@ -1,12 +1,11 @@
 import { toErr } from '@common/utils/err';
-import { getParams, CollOptions } from '@common/api/Coll';
-import { collUsers } from '@common/api/collUsers';
+import { getParams, CollOptions, coll } from '@common/api/Coll';
 import { auth$ } from '@common/api/messages';
 import { UserModel } from '@common/api/models';
 
-let _authColl = collUsers;
+let _authColl = coll('users');
 
-export const setAuthColl = (coll: typeof collUsers) => {
+export const setAuthColl = (coll: typeof _authColl) => {
   _authColl = coll;
 };
 

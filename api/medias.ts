@@ -1,11 +1,12 @@
 import { Msg } from '../utils/Msg';
 import { uuid } from '../utils/str';
 import { retry, sleep } from '../utils/async';
-import { collMedias } from './collMedias';
 import { needAuthId, needGroupId } from './messages';
 import { MediaModel } from './models';
 import { deleteKey } from '../utils/obj';
 import { toError } from '../utils/cast';
+import { MsgDict } from '@common/utils';
+import { mediaCtrl } from '@/admin/controllers';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 const MAX_RETRY = 3;
@@ -28,7 +29,7 @@ export interface UploadItem {
   error?: any;
 }
 
-export const uploadItems$ = new Msg<Record<string, UploadItem>>({});
+export const uploadItems$ = new MsgDict<UploadItem>({});
 
 const update = (id: string, changes: Partial<UploadItem>) =>
   uploadItems$.merge({ [id]: { ...uploadItems$.v[id], ...changes } });
@@ -43,7 +44,7 @@ const startUpload = (item: UploadItem) =>
 
       update(id, { status: UPLOADING });
 
-      const media = await collMedias.create(
+      const media = await mediaCtrl.create(
         {
           title: String(file.name),
           source: file,
@@ -52,6 +53,7 @@ const startUpload = (item: UploadItem) =>
         },
         {
           req: {
+            xhr: true,
             onProgress: (progress) => {
               update(id, { progress: progress * 100 });
             },

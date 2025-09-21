@@ -1,3 +1,4 @@
+
 export * from './useAnimState';
 export * from './useAsync';
 export * from './useAsyncEffect';
@@ -5,5 +6,7 @@ export * from './useConstant';
 export * from './useCss';
 export * from './useMsg';
 export * from './usePromise';
+export * from './useQuery';
+export * from './useSyncColl';
 export * from './useTimerMs';
 export * from './useTr';

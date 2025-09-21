@@ -94,16 +94,18 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 };
 
 export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
+  static onError: (error: any) => void;
+  
   unsubscribes: (() => void)[] = [];
   r: Req;
 
-  constructor(public coll: K) {
-    this.r = newApiReq(`collections/${this.coll}/`);
-    global[this.coll + 'Coll'] = this;
+  constructor(public name: K) {
+    this.r = newApiReq(`collections/${this.name}/`);
+    global[this.name + 'Coll'] = this;
   }
 
   log(...args: any[]) {
-    console.debug('Coll', this.coll, ...args);
+    console.debug('Coll', this.name, ...args);
   }
 
   get(id: string, o?: CollOptions<T>): Promise<T | null> {
@@ -212,7 +214,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   }
 
   getUrl(id?: string, filename?: any, thumb?: [number, number]) {
-    return getUrl(this.coll, id, filename, thumb)
+    return getUrl(this.name, id, filename, thumb)
   }
 
   subscribe(
@@ -220,7 +222,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     cb: (item: T, action: 'update' | 'create' | 'delete') => void,
     o?: CollOptions<T>
   ) {
-    console.debug('subscribe', this.coll, topic, o);
+    console.debug('subscribe', this.name, topic, o);
     // 'devices/8e2mu4rr32b0glf?options={"headers": {"x-token": "..."}}'
 
     const p = getParams(o);
@@ -230,17 +232,17 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
         headers: p.headers,
       })
     );
-    let key = `${this.coll}/${topic}`;
+    let key = `${this.name}/${topic}`;
     if (p.query || p.headers) key += `?options=${keyOptions}`;
 
-    console.debug('subscribe key', this.coll, key);
+    console.debug('subscribe key', this.name, key);
 
     const listener = (event: MessageEvent) => {
       // console.debug('subscribe listener', this.coll, key, event);
       const payload = parse(event.data);
       const record = (payload ? payload.record : null) || payload;
       const id = (record ? record.id : null) || record;
-      console.debug('subscribe listener payload', this.coll, key, id);
+      console.debug('subscribe listener payload', this.name, key, id);
       cb(record, payload.action);
     };
 

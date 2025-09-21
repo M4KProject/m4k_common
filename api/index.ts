@@ -3,6 +3,7 @@ export * from './Coll';
 export * from './CollSync';
 export * from './auth';
 export * from './call';
+export * from './getUrl';
 export * from './job';
 export * from './medias';
 export * from './messages';

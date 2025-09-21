@@ -1,6 +1,9 @@
+import { Msg } from '@common/utils';
 import { pathJoin } from '../utils/pathJoin';
 import { createReq, Req, ReqMethod, ReqOptions } from '../utils/req';
 import { auth$, getApiUrl } from './messages';
+
+export const apiError$ = new Msg<any>(null);
 
 export const newApiReq = (baseUrl: string = '', baseOptions: ReqOptions<any> = {}) =>
   createReq({
@@ -9,6 +12,8 @@ export const newApiReq = (baseUrl: string = '', baseOptions: ReqOptions<any> = {
     // log: true,
     ...baseOptions,
     base: (o) => {
+      o.onError = apiError$.setter();
+      
       const auth = auth$.v;
       if (auth) {
         o.headers = {
