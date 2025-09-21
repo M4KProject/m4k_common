@@ -1,8 +1,8 @@
 import { Css } from '@common/ui/html';
 import { flexRow } from '@common/ui/flexBox';
-import { Div, DivProps } from './Div';
+import { DivProps } from './Div';
 
-const css = Css('Toolbar', {
+const c = Css('Toolbar', {
   '&': {
     bg: 'white',
     border: '1px solid #ddd',
@@ -14,7 +14,6 @@ const css = Css('Toolbar', {
   },
 });
 
-export const Toolbar = ({ cls, ...props }: DivProps) => {
-  const c = css();
-  return <Div cls={[c, cls]} {...props} />;
+export const Toolbar = (props: DivProps) => {
+  return <div {...props} class={c('', props)} />;
 };

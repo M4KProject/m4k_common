@@ -1,7 +1,7 @@
 import { Css, flexColumn, flexRow } from '@common/ui';
-import { Div, DivProps } from './Div';
+import { DivProps } from './Div';
 
-const css = Css('Flex', {
+const c = Css('Flex', {
   '&Row': {
     ...flexRow({ align: 'center', justify: 'between' })
   },
@@ -10,14 +10,14 @@ const css = Css('Flex', {
   },
 });
 
-export const FlexRow = ({ cls, ...props }: DivProps) => {
+export const FlexRow = (props: DivProps) => {
   return (
-    <Div cls={[css(`Row`), cls]} {...props} />
+    <div {...props} class={c(`Row`, props)} />
   )
 };
 
-export const FlexCol = ({ cls, ...props }: DivProps) => {
+export const FlexCol = (props: DivProps) => {
   return (
-    <Div cls={[css(`Col`), cls]} {...props} />
+    <div {...props} class={c(`Col`, props)} />
   )
 };

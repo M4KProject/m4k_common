@@ -1,13 +1,12 @@
 import { ComponentChildren } from 'preact';
 import { render } from 'preact';
 import { Css, addListener } from '@common/ui/html';
-
-import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
 import { addOverlay, removeOverlay } from '@common/ui/overlay';
 import { flexCenter } from '@common/ui/flexBox';
+import { DivProps } from './Div';
 
-// const css = Css('', {
+// const c = Css('', {
 //     '&': {
 //         display: 'inline-block',
 //         position: 'relative',
@@ -66,21 +65,21 @@ import { flexCenter } from '@common/ui/flexBox';
 //     '&-right &Title::after': { top: '50%', left: '0%' },
 // }
 
-// export interface TooltipProps extends Omit<DivProps, 'title'> {
+// export interface TooltipProps extends Omit<divProps, 'title'> {
 //     title: ReactNode,
 //     pos?: 'top'|'bottom'|'left'|'right',
 // }
-// const Tooltip = ({ cls, title, pos, children, ...props }: TooltipProps) => {
+// const Tooltip = ({ title, pos, children, ...props }: TooltipProps) => {
 //     const c = useCss('Tooltip', css)
 //     return (
-//         <Div cls={[c, `${c}-${pos||'top'}`, cls]} {...props}>
-//             <Div cls={css(`Title`)}>{title}</Div>
+//         <div class={[c, `${c}-${pos||'top'}`, cls]} {...props}>
+//             <div class={c('Title')}>{title}</div>
 //             {children}
-//         </Div>
+//         </div>
 //     );
 // };
 
-const css = Css('Tooltip', {
+const c = Css('Tooltip', {
   '&': {
     position: 'absolute',
     userSelect: 'none',
@@ -118,28 +117,23 @@ export interface TooltipProps extends Omit<DivProps, 'title'> {
   target: HTMLElement;
   children: ComponentChildren;
 }
-export const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
+export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
   const { top, left, width, height } = target.getBoundingClientRect();
 
   console.debug('top', top);
 
   const pos: string = top > 40 ? 'top' : 'bottom';
   return (
-    <Div
-      cls={[`${css()} ${css()}-${pos}`, cls]}
+    <div
       {...props}
-      style={{
-        top,
-        left,
-        width,
-        height,
-      }}
+      class={c('', `-${pos}`, props)}
+      style={{ top, left, width, height }}
     >
-      <Div cls={css(`Arrow`)} />
-      <Div cls={css(`Content`)}>
+      <div class={c('Arrow')} />
+      <div class={c('Content')}>
         <Tr>{children}</Tr>
-      </Div>
-    </Div>
+      </div>
+    </div>
   );
 };
 // , pos?: 'top'|'bottom'|'left'|'right'

@@ -1,11 +1,11 @@
 import { flexColumn, flexRow } from '@common/ui/flexBox';
 import { Css } from '@common/ui/html';
 
-import { Div, DivProps } from './Div';
+import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { ComponentChildren } from 'preact';
 
-const css = Css('Page', {
+const c = Css('Page', {
   '&': {
     ...flexColumn({ align: 'stretch', justify: 'start' }),
     flex: 1,
@@ -40,42 +40,38 @@ const css = Css('Page', {
 });
 
 export interface PageProps extends DivProps {}
-export const Page = ({ cls, children, ...props }: PageProps) => {
-  const c = css();
+export const Page = ({ children, ...props }: PageProps) => {
   return (
-    <Div cls={[c, cls]} {...props}>
+    <div {...props} class={c('', props)}>
       {children}
-    </Div>
+    </div>
   );
 };
 
 export interface PageHeaderProps extends Omit<DivProps, 'title'> {
   title: ComponentChildren;
 }
-export const PageHeader = ({ cls, title, children, ...props }: PageHeaderProps) => {
-  const c = css();
+export const PageHeader = ({ title, children, ...props }: PageHeaderProps) => {
   return (
-    <Div cls={[`${c}Header`, cls]} {...props}>
-      <Div cls={css(`HeaderTitle`)}>
+    <div {...props} class={c('Header', props)}>
+      <div class={c('HeaderTitle')}>
         <Tr>{title}</Tr>
-      </Div>
-      <Div cls={css(`HeaderContent`)}>{children}</Div>
-    </Div>
+      </div>
+      <div class={c('HeaderContent')}>{children}</div>
+    </div>
   );
 };
 
 export interface PageActionsProps extends DivProps {}
 export const PageActions = (props: PageActionsProps) => {
-  const c = css();
-  return <Div {...props} cls={[`${c}Actions`, props.cls]} />;
+  return <div {...props} class={c('Actions', props)} />;
 };
 
 export interface PageBodyProps extends DivProps {}
-export const PageBody = ({ cls, children, ...props }: PageBodyProps) => {
-  const c = css();
+export const PageBody = ({ children, ...props }: PageBodyProps) => {
   return (
-    <Div cls={[`${c}Body`, cls]} {...props}>
+    <div {...props} class={c('Body', props)}>
       {children}
-    </Div>
+    </div>
   );
 };

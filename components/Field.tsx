@@ -4,7 +4,7 @@ import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
 import { toNbr } from '@common/utils/cast';
-import { Div, DivProps } from './Div';
+import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { Select } from './Select';
 import { Picker } from './Picker';
@@ -18,7 +18,7 @@ import { Button } from './Button';
 import { Msg } from '@common/utils/Msg';
 import { useMsg } from '../hooks';
 
-const css = Css('Field', {
+const c = Css('Field', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     w: '100%',
@@ -201,12 +201,12 @@ const getMediaField = (_mimetypes: string[]): FieldComp => {
     // const groupId = useMsg(groupId$);
     return (
       <select
-        class={cls}
         name={name}
         required={required}
         value={value || ''}
         onChange={onChange}
         {...fieldProps.props}
+        class={c(cls, fieldProps.props)}
       >
         {/* <option value="" className={!value ? `${cls}Selected` : undefined}></option>
                 {Object.values(filteredMedias).map(media => (
@@ -222,13 +222,13 @@ const getMediaField = (_mimetypes: string[]): FieldComp => {
 const compByType: Record<FieldType, FieldComp> = {
   email: ({ cls, name, required, value, onChange, fieldProps }) => (
     <input
-      class={cls}
       type="email"
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
   password: ({ cls, name, required, value, onChange, fieldProps }) => {
@@ -236,13 +236,13 @@ const compByType: Record<FieldType, FieldComp> = {
     return (
       <>
         <input
-          class={cls}
           type={show ? 'text' : 'password'}
           name={name}
           required={required}
           value={value || ''}
           onChange={onChange}
           {...fieldProps.props}
+          class={c(cls, fieldProps.props)}
         />
         <Button
           onClick={(e) => {
@@ -256,60 +256,60 @@ const compByType: Record<FieldType, FieldComp> = {
   },
   color: ({ cls, name, required, value, onChange, fieldProps }) => (
     <input
-      class={cls}
       type="color"
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
   text: ({ cls, name, required, value, onChange, fieldProps }) => (
     <input
-      class={cls}
       type="text"
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
   number: ({ cls, name, required, value, onChange, fieldProps }) => (
     <input
-      class={cls}
       type="number"
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
   multiline: ({ cls, name, required, value, onChange, fieldProps }) => (
     <textarea
-      class={cls}
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       rows={5}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
   html: ({ cls, name, required, value, onChange, fieldProps }) => (
     <textarea
-      class={cls}
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       rows={5}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
-  // select: ({ cls, name, required, value, onChange, fieldProps }) => (
+  // select: ({ name, required, value, onChange, fieldProps }) => (
   //     <select class={cls} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props}>
   //         {/* <option value=""></option> */}
   //         {fieldProps.items?.map(kv => (
@@ -329,53 +329,52 @@ const compByType: Record<FieldType, FieldComp> = {
   ),
   switch: ({ cls, value, onChange, fieldProps }) => {
     return (
-      <Div
-        cls={[`${cls}`, value && `${cls}-selected`]}
+      <div
         onClick={() => onChange(!value)}
         {...fieldProps.props}
+        class={c(cls, value && `${cls}-selected`, fieldProps.props)}
       >
-        <Div cls={`${cls}Handle`}></Div>
-      </Div>
+        <div class={c(`${cls}Handle`)}></div>
+      </div>
     );
   },
   check: ({ cls, value, onChange, fieldProps }) => {
     return (
-      <Div
-        cls={[`${cls}`, value && `${cls}-selected`]}
+      <div
         onClick={() => onChange(!value)}
         {...fieldProps.props}
+        class={c(cls, value && `${cls}-selected`, fieldProps.props)}
       >
         <Check />
-      </Div>
+      </div>
     );
   },
   image: getMediaField(['image/png', 'image/jpeg', 'image/svg+xml', 'application/pdf']),
   doc: getMediaField(['application/pdf']),
   date: ({ cls, name, required, value, onChange, fieldProps }) => (
     <input
-      class={cls}
       type="date"
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
   datetime: ({ cls, name, required, value, onChange, fieldProps }) => (
     <input
-      class={cls}
       type="date"
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
   time: ({ cls, name, required, value, onChange, fieldProps }) => (
     <input
-      class={cls}
       type="time"
       step="1"
       name={name}
@@ -383,13 +382,13 @@ const compByType: Record<FieldType, FieldComp> = {
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
+      class={c(cls, fieldProps.props)}
     />
   ),
 };
 
 export const Field = (props: FieldProps) => {
   const {
-    cls,
     row,
     type,
     name,
@@ -484,14 +483,14 @@ export const Field = (props: FieldProps) => {
   const Comp = compByType[type || 'text'] || compByType.text;
 
   return (
-    <Div
+    <div
       {...divProps}
-      cls={[css(), row && css(`-row`), type && css(`-${type}`), err && css(`-error`), cls]}
+      class={c('', row && '-row', type && `-${type}`, err && '-error', divProps)}
     >
-      {label && <Div cls={css(`Label`)}>{label} :</Div>}
-      <Div cls={css(`Content`)}>
+      {label && <div class={c('Label')}>{label} :</div>}
+      <div class={c('Content')}>
         <Comp
-          cls={css(`Input`)}
+          cls={'Input'}
           name={name}
           value={changed === undefined ? initiated : changed}
           onChange={handleChange}
@@ -499,14 +498,14 @@ export const Field = (props: FieldProps) => {
           fieldProps={props}
         />
         {err ? (
-          <Div cls={css(`Error`)}>
+          <div class={c('Error')}>
             <Tr>{err}</Tr>
-          </Div>
+          </div>
         ) : helper ? (
-          <Div cls={css(`Helper`)}>{helper}</Div>
+          <div class={c('Helper')}>{helper}</div>
         ) : null}
-      </Div>
-    </Div>
+      </div>
+    </div>
   );
 };
 

@@ -1,11 +1,10 @@
 import { ComponentChildren } from 'preact';
 import { Css } from '@common/ui/html';
 import { flexRow } from '@common/ui/flexBox';
-import { Div } from './Div';
 import { Button } from './Button';
 import { isList } from '@common/utils/check';
 
-const css = Css('Picker', {
+const c = Css('Picker', {
   '&': {
     ...flexRow({ align: 'center', justify: 'center', wrap: 'wrap' }),
     w: '100%',
@@ -24,7 +23,7 @@ const css = Css('Picker', {
 });
 
 export interface PickerProps {
-  cls?: string;
+  class?: string;
   name?: string;
   required?: boolean;
   value?: string;
@@ -34,7 +33,6 @@ export interface PickerProps {
 }
 
 export const Picker = ({
-  cls,
   name,
   required,
   value = '',
@@ -42,8 +40,6 @@ export const Picker = ({
   items = [],
   ...props
 }: PickerProps) => {
-  const c = css();
-
   const validItems = items.filter((item) => isList(item)) as [string, ComponentChildren][];
 
   const handleIconClick = (iconValue: string) => {
@@ -51,7 +47,7 @@ export const Picker = ({
   };
 
   return (
-    <Div cls={[c, cls]} {...props}>
+    <div {...props} class={c('', props)}>
       {/* Hidden input for form compatibility */}
       <input
         name={name}
@@ -71,6 +67,6 @@ export const Picker = ({
           // title={key} // Tooltip showing the key/value
         />
       ))}
-    </Div>
+    </div>
   );
 };

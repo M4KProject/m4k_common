@@ -4,7 +4,7 @@ import { Css } from '@common/ui/html';
 
 import { ComponentChildren } from 'preact';
 import { Msg } from '@common/utils/Msg';
-import { Div, DivProps } from './Div';
+import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';
@@ -43,7 +43,7 @@ export const showError = (e: any) => {
   );
 };
 
-const css = Css('Dialog', {
+const c = Css('Dialog', {
   '&': {
     position: 'fixed',
     inset: 0,
@@ -109,15 +109,15 @@ const DialogRender = ({ open$, variant, title, children, ...props }: DialogRende
   }, [open]);
 
   return (
-    <Div cls={[css(), open && css(`-open`), variant && css(`-${variant}`)]} onClick={onClose} {...props}>
-      <Div cls={css(`Window`)} onClick={(e) => e.stopPropagation()}>
+    <div class={c('', open && '-open', variant && `-${variant}`)} onClick={onClose} {...props}>
+      <div class={c('Window')} onClick={(e) => e.stopPropagation()}>
         {title && (
-          <Div cls={css(`Header`)}>
+          <div class={c('Header')}>
             <Tr>{title}</Tr>
-          </Div>
+          </div>
         )}
-        <Div cls={css(`Content`)}>{init ? children : null}</Div>
-      </Div>
-    </Div>
+        <div class={c('Content')}>{init ? children : null}</div>
+      </div>
+    </div>
   );
 };

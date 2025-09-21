@@ -15,7 +15,7 @@ addTranslates({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
 });
 
-const css = Css('AuthForm', {
+const c = Css('AuthForm', {
   '&': {
     ...flexColumn({ align: 'stretch', justify: 'center' }),
     w: 30,
@@ -42,7 +42,7 @@ export const AuthForm = () => {
   );
 
   return (
-    <Form cls={css()}>
+    <Form class={c()}>
       {isAuthLoading ? (
         <Loading />
       ) : page === 'sign-in' ? (

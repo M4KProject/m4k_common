@@ -1,10 +1,9 @@
-import { clsx } from '@common/ui/html';
 import { JSX } from 'preact';
 
 type DivHTMLProps = JSX.HTMLAttributes<HTMLDivElement>;
 export interface DivProps extends Omit<DivHTMLProps, 'style'> {
-  cls?: any;
-  style?: string | JSX.CSSProperties | undefined;
+  class?: string;
+  style?: JSX.CSSProperties;
 }
 
 export const getStyle = (
@@ -23,9 +22,3 @@ export const getStyle = (
   }
   return style;
 };
-
-export const Div = ({ cls, style, className, children, ...props }: DivProps) => (
-  <div {...props} style={getStyle(style)} class={clsx(cls, className)}>
-    {children}
-  </div>
-);

@@ -1,12 +1,11 @@
 import { ComponentChildren } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { Css } from '@common/ui/html';
-import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
-import { Div } from './Div';
+import { flexCenter, flexRow } from '@common/ui/flexBox';
 import { isList } from '@common/utils/check';
 import { isSearched } from '@common/utils/str';
 
-const css = Css('Select', {
+const c = Css('Select', {
   '&': {
     position: 'relative',
     border: 0,
@@ -90,7 +89,7 @@ const css = Css('Select', {
 });
 
 export interface SelectProps {
-  cls?: string;
+  class?: string;
   name?: string;
   required?: boolean;
   value?: string;
@@ -102,7 +101,6 @@ export interface SelectProps {
 }
 
 export const Select = ({
-  cls,
   name,
   required,
   value = '',
@@ -112,7 +110,6 @@ export const Select = ({
   searchable = true,
   ...props
 }: SelectProps) => {
-  const c = css();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -202,8 +199,8 @@ export const Select = ({
   };
 
   return (
-    <Div cls={[c, isOpen && `${c}-open`, cls]} ref={dropdownRef} {...props}>
-      <Div cls={css(`Container`)} onClick={handleInputClick}>
+    <div ref={dropdownRef} {...props} class={c('', isOpen && `-open`, props)}>
+      <div class={c('Container')} onClick={handleInputClick}>
         {searchable && isOpen ? (
           <input
             ref={inputRef}
@@ -218,7 +215,7 @@ export const Select = ({
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <Div cls={css(`Input`)} onKeyDown={handleKeyDown}>
+          <div class={c('Input')} onKeyDown={handleKeyDown}>
             {displayValue || placeholder}
             <input
               ref={inputRef}
@@ -228,32 +225,32 @@ export const Select = ({
               style={{ display: 'none' }}
               tabIndex={-1}
             />
-          </Div>
+          </div>
         )}
-        <Div cls={css(`Arrow`)}>▼</Div>
-      </Div>
+        <div class={c('Arrow')}>▼</div>
+      </div>
 
       {isOpen && (
-        <Div cls={css(`Dropdown`)}>
+        <div class={c('Dropdown')}>
           {filteredItems.length === 0 ? (
-            <Div cls={css(`Option`)}>Aucun résultat</Div>
+            <div class={c('Option')}>Aucun résultat</div>
           ) : (
             filteredItems.map(([key, label], index) => (
-              <Div
+              <div
                 key={key}
-                cls={[
-                  `${c}Option`,
-                  key === value && `${c}Option-selected`,
-                  index === highlightedIndex && `${c}Option-highlighted`,
-                ]}
+                class={c(
+                  `Option`,
+                  key === value && `Option-selected`,
+                  index === highlightedIndex && `Option-highlighted`,
+                )}
                 onClick={() => handleOptionClick(key)}
               >
                 {label}
-              </Div>
+              </div>
             ))
           )}
-        </Div>
+        </div>
       )}
-    </Div>
+    </div>
   );
 };

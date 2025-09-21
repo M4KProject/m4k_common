@@ -1,12 +1,12 @@
 import { ComponentChildren, JSX } from 'preact';
 import { useRef } from 'preact/hooks';
 import { flexCenter, flexRow } from '@common/ui/flexBox';
-import { Css, clsx } from '@common/ui/html';
+import { Css } from '@common/ui/html';
 
-import { Div, DivProps } from './Div';
+import { DivProps } from './Div';
 import { Tr } from './Tr';
 
-const css = Css('Button', {
+const c = Css('Button', {
   '&': {
     ...flexRow({ align: 'center', justify: 'start' }),
     position: 'relative',
@@ -76,7 +76,7 @@ const css = Css('Button', {
 });
 
 export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
-  cls?: any;
+  class?: string;
   color?: 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
   selected?: boolean;
@@ -87,7 +87,6 @@ export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement>
 
 export const Button = ({
   title,
-  cls,
   color,
   variant,
   selected,
@@ -101,25 +100,25 @@ export const Button = ({
 
   return (
     <button
-      class={clsx(
-        css(),
-        color && css(`-${color}`),
-        selected && css(`-selected`),
-        isIcon && css(`-icon`),
-        variant && css(`-${variant}`),
-        cls
-      )}
       onClick={onClick}
       {...props}
+      class={c(
+        '',
+        color && `-${color}`,
+        selected && `-selected`,
+        isIcon && `-icon`,
+        variant && `-${variant}`,
+        props
+      )}
     >
-      <Div cls={css(`Sfx`)} />
+      <div class={c('Sfx')} />
       {before}
-      {icon && <Div cls={css(`Icon`)}>{icon}</Div>}
+      {icon && <div class={c('Icon')}>{icon}</div>}
       {(title || children) && (
-        <Div cls={css(`Content`)}>
+        <div class={c('Content')}>
           {title && <Tr>{title}</Tr>}
           {children && <Tr>{children}</Tr>}
-        </Div>
+        </div>
       )}
     </button>
   );

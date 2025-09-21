@@ -65,7 +65,7 @@ const props: Partial<Record<keyof D, RenderProp>> = {
         if (B.page$.v.split('+').includes(p)) cls.curr = true;
         cls['page-' + p] = true;
       });
-    setCls(el, cls, true);
+    setCls(el, true);
   },
   click: (el, v) => (el._b!.click = v),
 };
@@ -632,7 +632,7 @@ export default class B {
 
   cls(cls: Cls | string, active?: boolean | number) {
     if (typeof cls === 'string') cls = { [cls]: active };
-    setCls(this.el, cls, true);
+    setCls(this.el, true);
     this.update$.set({ b: this, cls });
     return this;
   }

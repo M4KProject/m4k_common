@@ -2,7 +2,7 @@ import { JSX } from 'preact';
 import { clsx, Css } from '@common/ui/html';
 
 
-const css = Css('Iframe', {
+const c = Css('Iframe', {
   '&': {
     // position: "relative",
     // w: "100%",
@@ -13,9 +13,9 @@ const css = Css('Iframe', {
 });
 
 export interface IframeProps extends JSX.HTMLAttributes<HTMLIFrameElement> {
-  cls?: any;
+   class?: string;
 }
 
-export const Iframe = ({ cls, className, ...props }: IframeProps) => {
-  return <iframe {...props} class={clsx(css(), cls, className)} />;
+export const Iframe = ({ className, ...props }: IframeProps) => {
+  return <iframe {...props} class={c('', props)} />;
 };

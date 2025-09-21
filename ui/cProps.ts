@@ -60,7 +60,7 @@ export type CProps<T extends PropsBase> = Omit<T, 'style'|'class'|'className'> &
 export interface DivProps extends CProps<JSX.HTMLAttributes<HTMLDivElement>> {}
 
 export const cProps = <T extends PropsBase>(props: CProps<T>) => {
-  const { c, cls, class: className0, className, s, style, ...rest } = props;
+  const { c, class: className0, className, s, style, ...rest } = props;
   const result = rest as T;
   result.style = getStyle([s, style]);
 

@@ -1,7 +1,7 @@
 
 import { Css } from '@common/ui/html';
 
-const css = Css('Flag', {
+const c = Css('Flag', {
   '&': {
     display: 'inline-block',
     width: '1.33em',
@@ -17,7 +17,7 @@ const css = Css('Flag', {
 });
 
 export interface FlagSVGProps {
-  cls?: string;
+   class?: string;
   iso: string; // ISO codes: fr, en, de, es, it
   title?: string;
   size?: string | number;
@@ -70,7 +70,7 @@ const ISO_MAPPING: Record<string, string> = {
   uk: 'en', // United Kingdom -> English flag
 };
 
-export const Flag = ({ cls, iso, title, size, variant = '4x3' }: FlagSVGProps) => {
+export const Flag = ({ iso, title, size, variant = '4x3', ...props }: FlagSVGProps) => {
   // Normalize ISO code
   let normalizedIso = iso?.toLowerCase() || '';
   if (normalizedIso in ISO_MAPPING) {
@@ -83,10 +83,6 @@ export const Flag = ({ cls, iso, title, size, variant = '4x3' }: FlagSVGProps) =
   // Determine title
   const flagTitle = title || `Flag of ${iso?.toUpperCase() || 'Unknown'}`;
 
-  // Build classes
-  const variantClass = variant === '1x1' ? `${css()}-square` : '';
-  const classes = `${css()} ${variantClass} ${cls || ''}`.trim();
-
   const style: any = {};
   if (size) {
     const sizeValue = typeof size === 'number' ? `${size}em` : size;
@@ -95,7 +91,7 @@ export const Flag = ({ cls, iso, title, size, variant = '4x3' }: FlagSVGProps) =
   }
 
   return (
-    <span className={classes} title={flagTitle} style={style}>
+    <span class={c('', variant === '1x1' && '-square', props)} title={flagTitle} style={style}>
       {flagSVG}
     </span>
   );

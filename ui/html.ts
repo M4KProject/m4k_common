@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { isEq, isList, isNbr } from '@common/utils/check';
+import { isEq, isItem, isList, isNbr, isStr, isUndef } from '@common/utils/check';
 
 export type Style = Partial<CSSStyleDeclaration>;
 
@@ -455,12 +455,22 @@ export const setCss = (key: string, css?: CssValue) => {
 
 export const Css = (key: string, css?: CssValue) => {
   let isInit = false;
-  return (name?: string) => {
+  return (...args: (string|undefined|({ class?: string }))[]) => {
     if (!isInit) {
       setCss(key, css);
       isInit = true;
     }
-    return name ? key + name : key;
+    if (args.length === 0) return key;
+    const sb = [];
+    for (const arg of args) {
+      if (isStr(arg)) {
+        sb.push(key + arg);
+      }
+      else if (isItem(arg)) {
+        arg.class && sb.push(arg.class);
+      }
+    }
+    return sb.join(' ');
   }
 }
 
@@ -510,7 +520,7 @@ export const El = (el: HTMLElement | keyof HTMLElementTagNameMap, o?: ElOptions)
   if (reset) setAttrs(el, {});
   if (attrs) setAttrs(el, attrs, true);
   if (style) setStyle(el, style, true);
-  if (cls) setCls(el, cls, true);
+  if (cls) setCls(el, cls);
   if (ctn) el.innerHTML = ctn;
   if (parent) (parent === 'body' ? document.body : parent).appendChild(el);
 

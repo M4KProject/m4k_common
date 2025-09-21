@@ -1,12 +1,12 @@
 import { Css } from '@common/ui/html';
 
-import { Div, DivProps } from './Div';
+import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { RotateCcw } from 'lucide-react';
 import { flexCenter } from '@common/ui/flexBox';
 import { addTranslates } from '../hooks/useTr';
 
-const css = Css('Loading', {
+const c = Css('Loading', {
   '&': {
     w: '100%',
     h: '100%',
@@ -33,16 +33,16 @@ addTranslates({
   loading: 'Chargement...',
 });
 
-export const Loading = ({ cls, content, children, ...props }: DivProps & { content?: string }) => {
+export const Loading = ({ content, children, ...props }: DivProps & { content?: string }) => {
   return (
-    <Div {...props} cls={[css(), cls]}>
+    <div {...props} class={c('', props)}>
       <RotateCcw />
       {content !== '' && (
-        <Div cls={css('Content')}>
+        <div class={c('Content')}>
           <Tr>{content || 'loading'}</Tr>
-        </Div>
+        </div>
       )}
       {children}
-    </Div>
+    </div>
   );
 };
