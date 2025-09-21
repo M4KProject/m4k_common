@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { Keys, ModelBase, ModelCreate, ModelUpdate } from './models';
+import { Keys, ModelBase, ModelCreate, Models, ModelUpdate } from './models';
 import { isList, isDef } from '../utils/check';
 import { removeItem } from '../utils/list';
 import { parse, stringify } from '../utils/json';
@@ -10,7 +10,6 @@ import { Req, ReqOptions, ReqParams } from '../utils/req';
 import { pathJoin } from '../utils/pathJoin';
 import { toError } from '../utils/cast';
 import { global } from '../utils/global';
-import { firstUpper } from '../utils/str';
 
 export type CollOperator =
   | '=' // Equal
@@ -63,15 +62,9 @@ const stringifyFilter = (key: string, propFilter: CollFilter) => {
 };
 
 const stringifyWhere = <T extends ModelBase>(
-  where: CollWhere<T>[] | CollWhere<T> | undefined
+  where: CollWhere<T> | undefined
 ): string | undefined => {
   if (!where) return undefined;
-
-  if (isList(where)) {
-    const orList = where.map(stringifyWhere).filter((f) => f);
-    if (orList.length === 0) return undefined;
-    return `(${orList.join(' || ')})`;
-  }
 
   const filters = Object.entries(where || {})
     .map(([k, f]) => (isDef(f) ? stringifyFilter(k, f) : ''))
@@ -107,7 +100,7 @@ export class Coll<T extends ModelBase> {
 
   constructor(public coll: string) {
     this.r = newApiReq(`collections/${this.coll}/`);
-    global['coll' + firstUpper(this.coll)] = this;
+    global[this.coll + 'Coll'] = this;
   }
 
   log(...args: any[]) {
@@ -274,4 +267,14 @@ export class Coll<T extends ModelBase> {
   }
 }
 
-export const coll = <T extends ModelBase>(name: string) => new Coll<T>(name);
+export type CollByName = {
+  [K in keyof Models]?: Coll<Models[K]>;
+};
+
+const _colls: CollByName = {};
+
+export const coll = <K extends keyof Models>(name: K): Coll<Models[K]> => (
+  _colls[name] || (
+    (_colls as any)[name] = new Coll<Models[K]>(name)
+  )
+);

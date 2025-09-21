@@ -1,7 +1,7 @@
 import { removeItem } from './list';
 import { debounce, throttle } from './async';
 import { toVoid } from './cast';
-import { isDef, isEq, isFun, isItemEmpty } from './check';
+import { isDef, isFun } from './check';
 import { global } from './global';
 import { getStored, setStored } from './storage';
 
@@ -119,59 +119,6 @@ export class Msg<T = any> implements IMsg<T> {
   signal() {
     this.set(this.v, true);
     return this;
-  }
-
-  apply(cb: (next: T) => void) {
-    const prev = this.v;
-    const next = { ...prev } as T;
-    cb(next);
-    if (!isEq(prev, next)) this.set(next);
-    return this;
-  }
-
-  merge(changes: Partial<T>) {
-    const prev = this.v;
-    if (!prev) return this;
-
-    for (const key in changes) {
-      if (changes[key] === prev[key]) {
-        delete changes[key];
-      }
-    }
-
-    if (isItemEmpty(changes)) return this;
-
-    const next = { ...prev };
-
-    for (const key in changes) {
-      if (changes[key] === undefined) {
-        delete next[key];
-      } else {
-        next[key] = changes[key];
-      }
-    }
-
-    return this.set(next as T);
-  }
-
-  getItem<K extends keyof T>(key: K): T[K] | undefined {
-    return this.v && this.v[key];
-  }
-
-  setItem<K extends keyof T>(key: K, value: T[K] | undefined) {
-    const prev = this.v;
-    if (!prev || prev[key] === value) return this;
-    const next = { ...prev };
-    if (value === undefined) {
-      delete next[key];
-    } else {
-      next[key] = value;
-    }
-    this.set(next);
-  }
-
-  delete<K extends keyof T>(key: K) {
-    return this.setItem(key, undefined);
   }
 
   subscribe(handler: (next: T) => void): IMsgSubscription {

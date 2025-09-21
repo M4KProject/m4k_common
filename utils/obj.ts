@@ -92,7 +92,7 @@ export const merge = (a: any, b: any): any => {
     if (b.$set) return b.$set;
     if (b.$push) return [...toList(a), ...b.$push];
     if (b.$fun) return b.$fun(a, b);
-    if (b.$delete) return undefined;
+    if (b.$del) return undefined;
   }
   if (isNil(a) || isNil(b) || typeof a !== typeof b) return b;
   if (isItem(a) && isItem(b)) {
