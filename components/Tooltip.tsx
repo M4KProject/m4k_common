@@ -1,13 +1,13 @@
 import { ComponentChildren } from 'preact';
 import { render } from 'preact';
 import { Css, addListener } from '@common/ui/html';
-import { useCss } from '../hooks/useCss';
+
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
 import { addOverlay, removeOverlay } from '@common/ui/overlay';
 import { flexCenter } from '@common/ui/flexBox';
 
-// const css: Css = {
+// const css = Css('', {
 //     '&': {
 //         display: 'inline-block',
 //         position: 'relative',
@@ -74,13 +74,13 @@ import { flexCenter } from '@common/ui/flexBox';
 //     const c = useCss('Tooltip', css)
 //     return (
 //         <Div cls={[c, `${c}-${pos||'top'}`, cls]} {...props}>
-//             <Div cls={`${c}Title`}>{title}</Div>
+//             <Div cls={css(`Title`)}>{title}</Div>
 //             {children}
 //         </Div>
 //     );
 // };
 
-const css: Css = {
+const css = Css('Tooltip', {
   '&': {
     position: 'absolute',
     userSelect: 'none',
@@ -112,14 +112,13 @@ const css: Css = {
 
   '&-bottom &Content': { bottom: '-0.5em', x: '50%', translate: '-50%, 100%' },
   '&-bottom &Arrow': { bottom: '-0.5em', x: '50%' },
-};
+});
 
 export interface TooltipProps extends Omit<DivProps, 'title'> {
   target: HTMLElement;
   children: ComponentChildren;
 }
 export const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
-  const c = useCss('Tooltip', css);
   const { top, left, width, height } = target.getBoundingClientRect();
 
   console.debug('top', top);
@@ -127,7 +126,7 @@ export const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
   const pos: string = top > 40 ? 'top' : 'bottom';
   return (
     <Div
-      cls={[`${c} ${c}-${pos}`, cls]}
+      cls={[`${css()} ${css()}-${pos}`, cls]}
       {...props}
       style={{
         top,
@@ -136,8 +135,8 @@ export const Tooltip = ({ cls, target, children, ...props }: TooltipProps) => {
         height,
       }}
     >
-      <Div cls={`${c}Arrow`} />
-      <Div cls={`${c}Content`}>
+      <Div cls={css(`Arrow`)} />
+      <Div cls={css(`Content`)}>
         <Tr>{children}</Tr>
       </Div>
     </Div>

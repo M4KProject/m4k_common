@@ -404,11 +404,11 @@ export type CssRecord =
   | (JSX.CSSProperties & {
       [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0];
     });
-export type Css = null | string | string[] | Record<string, CssRecord>;
+export type CssValue = null | string | string[] | Record<string, CssRecord>;
 
-const _cssMap: { [key: string]: [HTMLElement, Css] } = {};
+const _cssMap: { [key: string]: [HTMLElement, CssValue] } = {};
 
-export const setCss = (key: string, css?: Css) => {
+export const setCss = (key: string, css?: CssValue) => {
   const old = _cssMap[key];
   if (old) {
     if (isEq(old[1], css)) return key;
@@ -452,6 +452,17 @@ export const setCss = (key: string, css?: Css) => {
   }
   return key;
 };
+
+export const Css = (key: string, css?: CssValue) => {
+  let isInit = false;
+  return (name?: string) => {
+    if (!isInit) {
+      setCss(key, css);
+      isInit = true;
+    }
+    return name ? key + name : key;
+  }
+}
 
 export const refreshCss = () => {
   const map = _cssMap;

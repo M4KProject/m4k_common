@@ -2,11 +2,11 @@ import { ComponentChildren, JSX } from 'preact';
 import { useRef } from 'preact/hooks';
 import { flexCenter, flexRow } from '@common/ui/flexBox';
 import { Css, clsx } from '@common/ui/html';
-import { useCss } from '../hooks/useCss';
+
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
 
-const css: Css = {
+const css = Css('Button', {
   '&': {
     ...flexRow({ align: 'center', justify: 'start' }),
     position: 'relative',
@@ -73,7 +73,7 @@ const css: Css = {
   '&-success:hover &Icon': { bg: 'success', fg: 'white' },
   '&-warn:hover &Icon': { bg: 'warn', fg: 'white' },
   '&-error:hover &Icon': { bg: 'error', fg: 'white' },
-};
+});
 
 export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   cls?: any;
@@ -97,28 +97,26 @@ export const Button = ({
   onClick,
   ...props
 }: ButtonProps) => {
-  const c = useCss('Button', css);
-
   const isIcon = icon && !(children || title);
 
   return (
     <button
       class={clsx(
-        c,
-        color && `${c}-${color}`,
-        selected && `${c}-selected`,
-        isIcon && `${c}-icon`,
-        variant && `${c}-${variant}`,
+        css(),
+        color && css(`-${color}`),
+        selected && css(`-selected`),
+        isIcon && css(`-icon`),
+        variant && css(`-${variant}`),
         cls
       )}
       onClick={onClick}
       {...props}
     >
-      <Div cls={`${c}Sfx`} />
+      <Div cls={css(`Sfx`)} />
       {before}
-      {icon && <Div cls={`${c}Icon`}>{icon}</Div>}
+      {icon && <Div cls={css(`Icon`)}>{icon}</Div>}
       {(title || children) && (
-        <Div cls={`${c}Content`}>
+        <Div cls={css(`Content`)}>
           {title && <Tr>{title}</Tr>}
           {children && <Tr>{children}</Tr>}
         </Div>
@@ -168,10 +166,4 @@ export const UploadButton = ({
       }
     />
   );
-};
-
-export interface ButtonRowProps extends DivProps {}
-export const ButtonRow = (props: ButtonRowProps) => {
-  const c = useCss('Button', css);
-  return <Div {...props} cls={[`${c}Row`, props.cls]} />;
 };

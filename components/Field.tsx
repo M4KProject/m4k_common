@@ -1,5 +1,5 @@
 import { Css } from '@common/ui/html';
-import { useCss } from '../hooks/useCss';
+
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
@@ -18,7 +18,7 @@ import { Button } from './Button';
 import { Msg } from '@common/utils/Msg';
 import { useMsg } from '../hooks';
 
-const css: Css = {
+const css = Css('Field', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     w: '100%',
@@ -134,7 +134,7 @@ const css: Css = {
     translateX: '-1em',
   },
   '&-switch &Input-selected &InputHandle': { translateX: '1em' },
-};
+});
 
 export type FieldComp<T = any> = (props: {
   cls?: string;
@@ -408,8 +408,6 @@ export const Field = (props: FieldProps) => {
     props: propsProps,
     ...divProps
   } = props;
-  const c = useCss('Field', css);
-
   const valDelay = delay || type === 'switch' || type === 'check' ? 0 : delay;
 
   const msgVal = useMsg(msg);
@@ -488,12 +486,12 @@ export const Field = (props: FieldProps) => {
   return (
     <Div
       {...divProps}
-      cls={[c, row && `${c}-row`, type && `${c}-${type}`, err && `${c}-error`, cls]}
+      cls={[css(), row && css(`-row`), type && css(`-${type}`), err && css(`-error`), cls]}
     >
-      {label && <Div cls={`${c}Label`}>{label} :</Div>}
-      <Div cls={`${c}Content`}>
+      {label && <Div cls={css(`Label`)}>{label} :</Div>}
+      <Div cls={css(`Content`)}>
         <Comp
-          cls={`${c}Input`}
+          cls={css(`Input`)}
           name={name}
           value={changed === undefined ? initiated : changed}
           onChange={handleChange}
@@ -501,11 +499,11 @@ export const Field = (props: FieldProps) => {
           fieldProps={props}
         />
         {err ? (
-          <Div cls={`${c}Error`}>
+          <Div cls={css(`Error`)}>
             <Tr>{err}</Tr>
           </Div>
         ) : helper ? (
-          <Div cls={`${c}Helper`}>{helper}</Div>
+          <Div cls={css(`Helper`)}>{helper}</Div>
         ) : null}
       </Div>
     </Div>

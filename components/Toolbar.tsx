@@ -1,9 +1,8 @@
 import { Css } from '@common/ui/html';
-import { useCss } from '../hooks/useCss';
 import { flexRow } from '@common/ui/flexBox';
 import { Div, DivProps } from './Div';
 
-const css: Css = {
+const css = Css('Toolbar', {
   '&': {
     bg: 'white',
     border: '1px solid #ddd',
@@ -13,9 +12,9 @@ const css: Css = {
     elevation: 1,
     ...flexRow({ align: 'center', justify: 'between' }),
   },
-};
+});
 
 export const Toolbar = ({ cls, ...props }: DivProps) => {
-  const c = useCss('Toolbar', css);
+  const c = css();
   return <Div cls={[c, cls]} {...props} />;
 };

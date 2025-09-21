@@ -1,29 +1,29 @@
 import { useState } from 'preact/hooks';
 import { Css } from '@common/ui/html';
 import { flexColumn } from '@common/ui/flexBox';
-import { useCss } from '../hooks/useCss';
+
 import { login, passwordReset, signUp } from '../api/auth';
 import { Loading } from './Loading';
 import { Field } from './Field';
-import { Button, ButtonRow } from './Button';
+import { Button } from './Button';
 import { Form } from './Form';
 import { toErr } from '@common/utils/err';
 import { addTranslates } from '../hooks/useTr';
+import { FlexCol } from './Flex';
 
 addTranslates({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
 });
 
-const css: Css = {
+const css = Css('AuthForm', {
   '&': {
     ...flexColumn({ align: 'stretch', justify: 'center' }),
     w: 30,
     bg: 'white',
   },
-};
+});
 
 export const AuthForm = () => {
-  const c = useCss('AuthForm', css);
   const isAuthLoading = false; // useMsg(isAuthLoading$);
   const [page, setPage] = useState('sign-in');
   const [email, setEmail] = useState('');
@@ -42,7 +42,7 @@ export const AuthForm = () => {
   );
 
   return (
-    <Form cls={c}>
+    <Form cls={css()}>
       {isAuthLoading ? (
         <Loading />
       ) : page === 'sign-in' ? (
@@ -57,7 +57,7 @@ export const AuthForm = () => {
             props={{ autoComplete: 'current-password' }}
             error={passwordError}
           />
-          <ButtonRow>
+          <FlexCol>
             <Button
               onClick={async () => {
                 setPage('');
@@ -78,7 +78,7 @@ export const AuthForm = () => {
               Vous n'avez pas de compte ?<br />
               Inscrivez-vous
             </Button>
-          </ButtonRow>
+          </FlexCol>
         </>
       ) : page === 'sign-up' ? (
         <>
@@ -91,7 +91,7 @@ export const AuthForm = () => {
             label="Votre mot de passe"
             props={{ autoComplete: 'new-password' }}
           />
-          <ButtonRow>
+          <FlexCol>
             <Button
               onClick={async () => {
                 setPage('');
@@ -106,12 +106,12 @@ export const AuthForm = () => {
               Vous avez déjà un compte ?<br />
               Connectez-vous
             </Button>
-          </ButtonRow>
+          </FlexCol>
         </>
       ) : page === 'forgot-password' ? (
         <>
           {emailField}
-          <ButtonRow>
+          <FlexCol>
             <Button
               onClick={async () => {
                 setPage('');
@@ -127,13 +127,13 @@ export const AuthForm = () => {
               Vous avez déjà un compte ?<br />
               Connectez-vous.
             </Button>
-          </ButtonRow>
+          </FlexCol>
         </>
       ) : page === 'code' ? (
         <>
           {emailField}
           <Field value={password} onValue={setPassword} label="Le CODE reçu par email" />
-          <ButtonRow>
+          <FlexCol>
             <Button
               onClick={() => {
                 /* signWithCode(email, password) */
@@ -146,7 +146,7 @@ export const AuthForm = () => {
               Vous avez déjà un compte ?<br />
               Connectez-vous
             </Button>
-          </ButtonRow>
+          </FlexCol>
         </>
       ) : (
         <Loading />

@@ -1,12 +1,12 @@
 import { Css } from '@common/ui/html';
 import { Div, DivProps } from './Div';
-import { useCss } from '../hooks/useCss';
+
 import { clamp, round } from '@common/utils/nbr';
 import { toNbr } from '@common/utils/cast';
 import { flexCenter } from '@common/ui/flexBox';
 import { ComponentChildren } from 'preact';
 
-const css: Css = {
+const css = Css('Progress', {
   '&': {
     ...flexCenter(),
     position: 'relative',
@@ -28,24 +28,24 @@ const css: Css = {
     fg: 'black',
     zIndex: 1,
   },
-};
+});
 
 export interface ProgressProps extends DivProps {
   step?: ComponentChildren;
   progress?: number | null;
 }
 export const Progress = ({ progress, step, cls, children, ...props }: ProgressProps) => {
-  const c = useCss('Progress', css);
+  const c = css();
   const prct = clamp(round(toNbr(progress, 0)), 0, 100);
   return (
     <Div {...props} cls={[c, cls]}>
-      <Div cls={`${c}Bar`} style={{ width: prct + '%' }} />
+      <Div cls={css(`Bar`)} style={{ width: prct + '%' }} />
       {step ? (
-        <Div cls={`${c}Text`}>
+        <Div cls={css(`Text`)}>
           {step} ({prct}%)
         </Div>
       ) : (
-        <Div cls={`${c}Text`}>{prct}%</Div>
+        <Div cls={css(`Text`)}>{prct}%</Div>
       )}
       {children}
     </Div>

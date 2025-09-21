@@ -1,12 +1,11 @@
 import { ComponentChildren } from 'preact';
-import { useCss } from '../hooks/useCss';
 import { Css } from '@common/ui/html';
 import { flexRow } from '@common/ui/flexBox';
 import { Div } from './Div';
 import { Button } from './Button';
 import { isList } from '@common/utils/check';
 
-const css: Css = {
+const css = Css('Picker', {
   '&': {
     ...flexRow({ align: 'center', justify: 'center', wrap: 'wrap' }),
     w: '100%',
@@ -22,7 +21,7 @@ const css: Css = {
     wh: '1em',
     bg: 'transparent',
   },
-};
+});
 
 export interface PickerProps {
   cls?: string;
@@ -43,7 +42,7 @@ export const Picker = ({
   items = [],
   ...props
 }: PickerProps) => {
-  const c = useCss('Picker', css);
+  const c = css();
 
   const validItems = items.filter((item) => isList(item)) as [string, ComponentChildren][];
 

@@ -1,11 +1,11 @@
 import { flexColumn, flexRow } from '@common/ui/flexBox';
 import { Css } from '@common/ui/html';
-import { useCss } from '../hooks/useCss';
+
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
 import { ComponentChildren } from 'preact';
 
-const css: Css = {
+const css = Css('Page', {
   '&': {
     ...flexColumn({ align: 'stretch', justify: 'start' }),
     flex: 1,
@@ -37,11 +37,11 @@ const css: Css = {
     overflowY: 'auto',
     flex: 1,
   },
-};
+});
 
 export interface PageProps extends DivProps {}
 export const Page = ({ cls, children, ...props }: PageProps) => {
-  const c = useCss('Page', css);
+  const c = css();
   return (
     <Div cls={[c, cls]} {...props}>
       {children}
@@ -53,26 +53,26 @@ export interface PageHeaderProps extends Omit<DivProps, 'title'> {
   title: ComponentChildren;
 }
 export const PageHeader = ({ cls, title, children, ...props }: PageHeaderProps) => {
-  const c = useCss('Page', css);
+  const c = css();
   return (
     <Div cls={[`${c}Header`, cls]} {...props}>
-      <Div cls={`${c}HeaderTitle`}>
+      <Div cls={css(`HeaderTitle`)}>
         <Tr>{title}</Tr>
       </Div>
-      <Div cls={`${c}HeaderContent`}>{children}</Div>
+      <Div cls={css(`HeaderContent`)}>{children}</Div>
     </Div>
   );
 };
 
 export interface PageActionsProps extends DivProps {}
 export const PageActions = (props: PageActionsProps) => {
-  const c = useCss('Page', css);
+  const c = css();
   return <Div {...props} cls={[`${c}Actions`, props.cls]} />;
 };
 
 export interface PageBodyProps extends DivProps {}
 export const PageBody = ({ cls, children, ...props }: PageBodyProps) => {
-  const c = useCss('Page', css);
+  const c = css();
   return (
     <Div cls={[`${c}Body`, cls]} {...props}>
       {children}

@@ -1,7 +1,7 @@
-import { useCss } from '../hooks/useCss';
+
 import { Css } from '@common/ui/html';
 
-const css: Css = {
+const css = Css('Flag', {
   '&': {
     display: 'inline-block',
     width: '1.33em',
@@ -14,7 +14,7 @@ const css: Css = {
     width: '1em',
     height: '1em',
   },
-};
+});
 
 export interface FlagSVGProps {
   cls?: string;
@@ -71,8 +71,6 @@ const ISO_MAPPING: Record<string, string> = {
 };
 
 export const Flag = ({ cls, iso, title, size, variant = '4x3' }: FlagSVGProps) => {
-  const c = useCss('Flag', css);
-
   // Normalize ISO code
   let normalizedIso = iso?.toLowerCase() || '';
   if (normalizedIso in ISO_MAPPING) {
@@ -86,8 +84,8 @@ export const Flag = ({ cls, iso, title, size, variant = '4x3' }: FlagSVGProps) =
   const flagTitle = title || `Flag of ${iso?.toUpperCase() || 'Unknown'}`;
 
   // Build classes
-  const variantClass = variant === '1x1' ? `${c}-square` : '';
-  const classes = `${c} ${variantClass} ${cls || ''}`.trim();
+  const variantClass = variant === '1x1' ? `${css()}-square` : '';
+  const classes = `${css()} ${variantClass} ${cls || ''}`.trim();
 
   const style: any = {};
   if (size) {

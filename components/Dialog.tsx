@@ -1,15 +1,15 @@
 import { flexCenter, flexColumn } from '@common/ui/flexBox';
 import { useMsg } from '../hooks/useMsg';
 import { Css } from '@common/ui/html';
-import { useCss } from '../hooks/useCss';
+
 import { ComponentChildren } from 'preact';
 import { Msg } from '@common/utils/Msg';
 import { Div, DivProps } from './Div';
 import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';
-import { toErr } from '@common/utils/err';
 import { addTranslates } from '../hooks/useTr';
+import { toError } from '@common/utils';
 
 addTranslates({
   Error: 'Erreur',
@@ -34,13 +34,16 @@ export const showDialog = (
 };
 
 export const showError = (e: any) => {
-  const error = toErr(e);
+  const error = toError(e);
   console.debug('showError', error);
-  const err = toErr(error);
-  showDialog(err.name, () => err.message, { variant: 'error' });
+  showDialog(
+    'Error:'+error.name,
+    () => error.message,
+    { variant: 'error' },
+  );
 };
 
-const css: Css = {
+const css = Css('Dialog', {
   '&': {
     position: 'fixed',
     inset: 0,
@@ -84,14 +87,13 @@ const css: Css = {
   '&-error &Header': {
     fg: 'error',
   },
-};
+});
 
 interface DialogRenderProps extends DivProps {
   open$: Msg<boolean>;
   variant?: 'error';
 }
 const DialogRender = ({ open$, variant, title, children, ...props }: DialogRenderProps) => {
-  const c = useCss('Dialog', css);
   const open = useMsg(open$);
   const onClose = () => open$.set(false);
   const [init, setInit] = useState(false);
@@ -107,14 +109,14 @@ const DialogRender = ({ open$, variant, title, children, ...props }: DialogRende
   }, [open]);
 
   return (
-    <Div cls={[c, open && `${c}-open`, variant && `${c}-${variant}`]} onClick={onClose} {...props}>
-      <Div cls={`${c}Window`} onClick={(e) => e.stopPropagation()}>
+    <Div cls={[css(), open && css(`-open`), variant && css(`-${variant}`)]} onClick={onClose} {...props}>
+      <Div cls={css(`Window`)} onClick={(e) => e.stopPropagation()}>
         {title && (
-          <Div cls={`${c}Header`}>
+          <Div cls={css(`Header`)}>
             <Tr>{title}</Tr>
           </Div>
         )}
-        <Div cls={`${c}Content`}>{init ? children : null}</Div>
+        <Div cls={css(`Content`)}>{init ? children : null}</Div>
       </Div>
     </Div>
   );

@@ -1,13 +1,12 @@
 import { ComponentChildren } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { Css } from '@common/ui/html';
-import { useCss } from '../hooks/useCss';
 import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
 import { Div } from './Div';
 import { isList } from '@common/utils/check';
 import { isSearched } from '@common/utils/str';
 
-const css: Css = {
+const css = Css('Select', {
   '&': {
     position: 'relative',
     border: 0,
@@ -88,7 +87,7 @@ const css: Css = {
   '&-open &Arrow': {
     transform: 'rotate(180deg)',
   },
-};
+});
 
 export interface SelectProps {
   cls?: string;
@@ -113,7 +112,7 @@ export const Select = ({
   searchable = true,
   ...props
 }: SelectProps) => {
-  const c = useCss('Select', css);
+  const c = css();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -204,7 +203,7 @@ export const Select = ({
 
   return (
     <Div cls={[c, isOpen && `${c}-open`, cls]} ref={dropdownRef} {...props}>
-      <Div cls={`${c}Container`} onClick={handleInputClick}>
+      <Div cls={css(`Container`)} onClick={handleInputClick}>
         {searchable && isOpen ? (
           <input
             ref={inputRef}
@@ -219,7 +218,7 @@ export const Select = ({
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          <Div cls={`${c}Input`} onKeyDown={handleKeyDown}>
+          <Div cls={css(`Input`)} onKeyDown={handleKeyDown}>
             {displayValue || placeholder}
             <input
               ref={inputRef}
@@ -231,13 +230,13 @@ export const Select = ({
             />
           </Div>
         )}
-        <Div cls={`${c}Arrow`}>▼</Div>
+        <Div cls={css(`Arrow`)}>▼</Div>
       </Div>
 
       {isOpen && (
-        <Div cls={`${c}Dropdown`}>
+        <Div cls={css(`Dropdown`)}>
           {filteredItems.length === 0 ? (
-            <Div cls={`${c}Option`}>Aucun résultat</Div>
+            <Div cls={css(`Option`)}>Aucun résultat</Div>
           ) : (
             filteredItems.map(([key, label], index) => (
               <Div

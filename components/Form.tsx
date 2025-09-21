@@ -1,10 +1,10 @@
 import { clsx, Css } from '@common/ui/html';
-import { useCss } from '../hooks/useCss';
+
 import { flexColumn } from '@common/ui/flexBox';
 import { Div, getStyle } from './Div';
 import { JSX } from 'preact/jsx-runtime';
 
-const css: Css = {
+const css = Css('Form', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     m: 0.5,
@@ -21,7 +21,7 @@ const css: Css = {
     fontWeight: 'bold',
     // borderBottom: '1px solid #0a536f',
   },
-};
+});
 
 type FormHTMLProps = JSX.HTMLAttributes<HTMLFormElement>;
 export interface FormProps extends Omit<FormHTMLProps, 'style'> {
@@ -30,18 +30,17 @@ export interface FormProps extends Omit<FormHTMLProps, 'style'> {
 }
 
 export const Form = ({ cls, style, className, children, title, onSubmit, ...props }: FormProps) => {
-  const c = useCss('Form', css);
   return (
     <form
       {...props}
       style={getStyle(style)}
-      class={clsx(c, cls, className)}
+      class={clsx(css(), cls, className)}
       onSubmit={(e) => {
         e.preventDefault();
         if (onSubmit) onSubmit(e);
       }}
     >
-      {title && <Div cls={`${c}Title`}>{title}</Div>}
+      {title && <Div cls={css(`Title`)}>{title}</Div>}
       {children}
     </form>
   );

@@ -1,4 +1,4 @@
-import { useCss, useMsg } from '../hooks';
+import { useMsg } from '../hooks';
 import { Css } from '@common/ui/html';
 import { Msg } from '@common/utils/Msg';
 import { flexColumn } from '@common/ui/flexBox';
@@ -8,7 +8,7 @@ import { createContext } from 'preact';
 import { useContext, useState } from 'preact/hooks';
 import { Menu } from 'lucide-react';
 
-const css: Css = {
+const css = Css('Side', {
   '&': {
     position: 'relative',
     transition: 0.2,
@@ -69,7 +69,7 @@ const css: Css = {
     borderRadius: '0 0.5em 0.5em 0',
   },
   '&-editor &Sep': { visibility: 'hidden' },
-};
+});
 
 const SideContext = createContext<Msg<string> | null | undefined>(undefined);
 const SideProvider = SideContext.Provider;
@@ -78,11 +78,11 @@ export interface SideButtonProps extends ButtonProps {
   page: string;
 }
 export const SideButton = ({ page, title, children, ...props }: SideButtonProps) => {
-  const c = useCss('Side', css);
+  const c = css();
   const page$ = useContext(SideContext);
   const curr = useMsg(page$);
   return (
-    <Button cls={`${c}Button`} selected={page === curr} onClick={() => page$?.set(page)} {...props}>
+    <Button cls={css(`Button`)} selected={page === curr} onClick={() => page$?.set(page)} {...props}>
       {title}
       {children}
     </Button>
@@ -91,7 +91,7 @@ export const SideButton = ({ page, title, children, ...props }: SideButtonProps)
 
 export interface SideSepProps extends DivProps {}
 export const SideSep = ({ cls, ...props }: SideSepProps) => {
-  const c = useCss('Side', css);
+  const c = css();
   return <Div {...props} cls={[`${c}Sep`, cls]} />;
 };
 
@@ -99,14 +99,14 @@ export interface SideProps extends DivProps {
   page$?: Msg<string> | null;
 }
 export const Side = ({ cls, children, page$, ...props }: SideProps) => {
-  const c = useCss('Side', css);
+  const c = css();
   const [open, setOpen] = useState(true);
   const toggleOpen = () => setOpen((open) => !open);
   return (
     <SideProvider value={page$}>
       <Div {...props} cls={[c, open && `${c}-open`, cls]}>
-        <Div cls={`${c}Mask`}>
-          <Div cls={`${c}Content`}>
+        <Div cls={css(`Mask`)}>
+          <Div cls={css(`Content`)}>
             <Button icon={<Menu />} onClick={toggleOpen}>
               Ouvrir
             </Button>
