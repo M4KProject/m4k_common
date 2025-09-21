@@ -45,6 +45,7 @@ export interface ReqOptions<T = any> {
   before?: (ctx: ReqContext<T>) => void | Promise<void> | null;
   after?: (ctx: ReqContext<T>) => void | Promise<void> | null;
   cast?: (ctx: ReqContext<T>) => T | Promise<T> | null;
+  onError?: (error: Error, ctx: ReqContext<T>) => void;
   onProgress?: (progress: number, ctx: ReqContext<T>) => void | null;
   request?: <T>(ctx: ReqContext<T>) => Promise<T> | null;
   cors?: boolean | null;
@@ -298,6 +299,7 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
   }
 
   const error = ctx.error;
+  o.onError && o.onError(error, ctx);
   if (error || !ctx.ok) {
     const message = isStr(ctx.error) ? ctx.error : ctx.error.message;
     if (log) console.warn('req error', message, ctx);
