@@ -5,6 +5,5 @@ export * from './useConstant';
 export * from './useMsg';
 export * from './usePromise';
 export * from './useQuery';
-export * from './useSyncColl';
 export * from './useTimerMs';
 export * from './useTr';

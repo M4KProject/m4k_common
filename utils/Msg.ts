@@ -103,8 +103,12 @@ export class Msg<T = any> implements IMsg<T> {
     return this.v;
   }
 
+  isEq(value: T) {
+    return this.v === value;
+  }
+
   set(value: T, ignoreEqual?: boolean) {
-    if (ignoreEqual || value !== this.v) {
+    if (ignoreEqual || !this.isEq(value)) {
       const old = this.v;
       this.v = value;
       this.h.forEach((h) => h(this.v, old));

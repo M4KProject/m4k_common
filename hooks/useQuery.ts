@@ -11,24 +11,8 @@ export const useQuery = <K extends keyof Models>(
 ) => {
   const [state, setState] = useState([] as Models[K][]);
 
-  useEffect(() => {
-    const refresh = () => {
-      const items = coll.findCache(where);
-      console.debug('useQuery refresh', coll.name, where, items);
-      setState(items);
-    };
-
-    refresh();
-    coll.find(where).then(refresh);
-
-    const off = coll.on();
-    const off2 = coll.cache.throttle(50).on(refresh);
-
-    return () => {
-      off();
-      off2();
-    };
-  }, [coll, stringify(where)]);
+  useEffect(() => coll.on(), [coll]);
+  useEffect(() => coll.find$(where).on(setState), [coll, stringify(where)]);
 
   return state;
 };

@@ -94,8 +94,6 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 };
 
 export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
-  static onError: (error: any) => void;
-
   unsubscribes: (() => void)[] = [];
   r: Req;
 
@@ -142,19 +140,19 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     );
   }
 
-  findOne(where: CollWhere<T>, o?: CollOptions<T>): Promise<T | null> {
+  one(where: CollWhere<T>, o?: CollOptions<T>): Promise<T | null> {
     return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(
       (r) => r.items[0] || null
     );
   }
 
   findId(where: CollWhere<T>, o?: CollOptions<T>): Promise<string | null> {
-    return this.findOne(where, { ...o, select: ['id' as Keys<T>] }).then((r) => r?.id);
+    return this.one(where, { ...o, select: ['id' as Keys<T>] }).then((r) => r?.id);
   }
 
   findKey(key: string, o?: CollOptions<T>): Promise<T | null> {
-    return this.findOne({ key } as CollWhere<T>, { ...o }).then((result) => {
-      if (!result) return this.get(key);
+    return this.one({ key } as CollWhere<T>, o).then((result) => {
+      if (!result) return this.get(key, o);
       return result;
     });
   }

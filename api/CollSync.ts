@@ -9,6 +9,7 @@ import { toVoid } from '@common/utils';
 
 export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> extends Coll<K, T> {
   cache = new MsgDict<T>({}, this.name + 'Cache', true, isDictOfItem);
+  up$ = this.cache.throttle(100);
   onCount = 0;
   off = toVoid;
 
@@ -29,7 +30,7 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     };
   }
 
-  findCache(where?: CollWhere<T>) {
+  findCache(where?: CollWhere<T>, one?: boolean) {
     const items = this.cache.getItems();
     if (isEmpty(where)) return items;
 
@@ -67,7 +68,10 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
       }
     });
 
-    const filteredItems = items.filter((i) => !filters.find((f) => !f(i)));
+    const filteredItems = one
+      ? [items.find((i) => !filters.find((f) => !f(i)))]
+      : items.filter((i) => !filters.find((f) => !f(i)));
+    
     return filteredItems;
   }
 
@@ -85,6 +89,16 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
       this.cache.merge(changes);
       return page;
     });
+  }
+
+  find$(where?: CollWhere<T>) {
+    this.find(where);
+    return this.up$.map(() => this.findCache(where));
+  }
+
+  one$(where?: CollWhere<T>) {
+    this.one(where);
+    return this.up$.map(() => this.findCache(where, true)[0]);
   }
 
   create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
