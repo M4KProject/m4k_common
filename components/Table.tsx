@@ -38,6 +38,16 @@ const c = Css('Table', {
   'Cell-around &CellContent': {
     fRow: ['center', 'space-around'],
   },
+  'Cell-actions': {
+    w: 0,
+  },
+  'Cell-actions &CellContent': {
+    fRow: ['center', 'end'],
+    p: 0,
+  },
+  'Cell-actions .Button': {
+    m: 0.2,
+  },
   'Cell-check': {
     width: 0,
   },
@@ -96,7 +106,7 @@ export const Row = (props: RowProps) => {
 };
 
 export interface CellProps extends JSX.HTMLAttributes<HTMLTableCellElement> {
-  variant?: 'row' | 'center' | 'around' | 'check';
+  variant?: 'row' | 'center' | 'around' | 'check' | 'actions';
   class?: string;
 }
 export const Cell = ({ variant, children, ...props }: CellProps) => {
