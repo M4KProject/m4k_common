@@ -1,4 +1,4 @@
-import { isItem, isList, isFun, isNil } from './check';
+import { isItem, isList, isFun, isNil, Dict } from './check';
 
 export type ArRecKey<T> = undefined | null | keyof T | ((item: T, index: number) => any);
 export type ArRecVal<T, U> = undefined | null | keyof T | ((item: T, index: number) => U);
@@ -6,24 +6,24 @@ export type RecKey<T> = undefined | null | keyof T | ((item: T, key: string) => 
 export type RecVal<T, U> = undefined | null | keyof T | ((item: T, key: string) => U);
 
 interface GroupBy {
-  <T>(items: T[], key?: ArRecKey<T>): Record<string, T[]>;
-  <T, U>(items: T[], key: ArRecKey<T>, val: ArRecVal<T, U>): Record<string, U[]>;
-  <T>(record: Record<string, T>, key?: RecKey<T>): Record<string, T[]>;
-  <T, U>(record: Record<string, T>, key: RecKey<T>, val: RecVal<T, U>): Record<string, U[]>;
+  <T>(items: T[], key?: ArRecKey<T>): Dict<T[]>;
+  <T, U>(items: T[], key: ArRecKey<T>, val: ArRecVal<T, U>): Dict<U[]>;
+  <T>(record: Record<string, T>, key?: RecKey<T>): Dict<T[]>;
+  <T, U>(record: Record<string, T>, key: RecKey<T>, val: RecVal<T, U>): Dict<U[]>;
 }
 
 interface By {
-  <T>(items: T[], key?: ArRecKey<T>): Record<string, T>;
-  <T, U>(items: T[], key: ArRecKey<T>, val: ArRecVal<T, U>): Record<string, U>;
-  <T>(record: Record<string, T>, key?: RecKey<T>): Record<string, T>;
-  <T, U>(record: Record<string, T>, key: RecKey<T>, val: RecVal<T, U>): Record<string, U>;
+  <T>(items: T[], key?: ArRecKey<T>): Dict<T>;
+  <T, U>(items: T[], key: ArRecKey<T>, val: ArRecVal<T, U>): Dict<U>;
+  <T>(record: Record<string, T>, key?: RecKey<T>): Dict<T>;
+  <T, U>(record: Record<string, T>, key: RecKey<T>, val: RecVal<T, U>): Dict<U>;
 }
 
 interface ById {
-  <T extends { id?: string }>(items: T[]): Record<string, T>;
-  <T extends { id?: string }, U>(items: T[], val: ArRecVal<T, U>): Record<string, U>;
-  <T extends { id?: string }>(record: Record<string, T>): Record<string, T>;
-  <T extends { id?: string }, U>(record: Record<string, T>, val: RecVal<T, U>): Record<string, U>;
+  <T extends { id?: string }>(items: T[]): Dict<T>;
+  <T extends { id?: string }, U>(items: T[], val: ArRecVal<T, U>): Dict<U>;
+  <T extends { id?: string }>(record: Dict<T>): Dict<T>;
+  <T extends { id?: string }, U>(record: Dict<T>, val: RecVal<T, U>): Dict<U>;
 }
 
 const _groupBy = (items: any, key: any, val: any, add: any) => {

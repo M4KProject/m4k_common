@@ -1,4 +1,4 @@
-export type Dict<T = any> = { [prop: string]: T };
+export type Dict<T = any> = Record<string, T>;
 export type List<T = any> = T[];
 export type Item = Dict<any>;
 export type Obj = Item | List;
