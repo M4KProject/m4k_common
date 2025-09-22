@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { isEq, isItem, isList, isNbr, isStr, isUndef } from '@common/utils/check';
+import { Dict, isEq, isItem, isList, isNbr, isStr } from '@common/utils/check';
 
 export type Style = Partial<CSSStyleDeclaration>;
 
@@ -404,7 +404,7 @@ export type CssRecord =
   | (JSX.CSSProperties & {
       [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0];
     });
-export type CssValue = null | string | string[] | Record<string, CssRecord>;
+export type CssValue = null | string | string[] | Dict<CssRecord>;
 
 const _cssMap: { [key: string]: [HTMLElement, CssValue] } = {};
 
