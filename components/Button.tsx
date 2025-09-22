@@ -34,8 +34,6 @@ const c = Css('Button', {
     textAlign: 'left',
   },
 
-
-
   '-icon': {
     m: 0,
   },
@@ -46,7 +44,6 @@ const c = Css('Button', {
     h: 1.4,
     rounded: 2,
   },
-
 
   '-primary': { bg: 'primary', fg: 'bg' },
   '-secondary': { bg: 'secondary', fg: 'bg' },
@@ -61,11 +58,11 @@ const c = Css('Button', {
   // '-error &Icon': { fg: 'bg' },
 
   ':hover': { fg: 'fg' },
-  
+
   ':hover, &-selected': { fg: 'selected' },
 
   ':hover &Sfx, &-selected &Sfx': { scaleX: 1 },
-  
+
   ':active &Sfx': { elevation: 0 },
 });
 

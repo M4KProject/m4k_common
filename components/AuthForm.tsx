@@ -22,7 +22,7 @@ const c = Css('AuthForm', {
   ' .Form': {
     elevation: 0,
     border: 0,
-  }
+  },
 });
 
 export const AuthForm = () => {
