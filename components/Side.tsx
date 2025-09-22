@@ -9,13 +9,13 @@ import { useContext, useState } from 'preact/hooks';
 import { Menu } from 'lucide-react';
 
 const c = Css('Side', {
-  '&': {
+  '': {
     position: 'relative',
     transition: 0.2,
     elevation: 1,
     w: 3,
   },
-  '&Mask': {
+  Mask: {
     position: 'absolute',
     x: 0,
     y: '50%',
@@ -26,7 +26,7 @@ const c = Css('Side', {
     translateY: '-50%',
     transition: 0.2,
   },
-  '&Content': {
+  Content: {
     ...flexColumn({ align: 'stretch' }),
     position: 'absolute',
     color: '#ffffff',
@@ -36,22 +36,22 @@ const c = Css('Side', {
     h: '100%',
     bg: '#f4f7fe',
   },
-  '& .ButtonContent': {
+  ' .ButtonContent': {
     transition: 0.2,
     opacity: 0,
   },
 
-  '&-open': {
+  '-open': {
     w: 13,
   },
-  '&-open &Mask': {
+  '-open &Mask': {
     w: 13,
   },
-  '&-open .ButtonContent': {
+  '-open .ButtonContent': {
     opacity: 1,
   },
 
-  '&Sep': {
+  Sep: {
     ...flexColumn({ align: 'start', justify: 'end' }),
     pl: 1,
     flex: 1,
@@ -60,15 +60,15 @@ const c = Css('Side', {
     // borderBottom: '1px solid #0a536f',
   },
 
-  '&-editor': { w: 0 },
-  '&-editor &Mask': {
+  '-editor': { w: 0 },
+  '-editor &Mask': {
     w: 3,
     h: 18,
     bg: '#0090c87a',
     elevation: 1,
     borderRadius: '0 0.5em 0.5em 0',
   },
-  '&-editor &Sep': { visibility: 'hidden' },
+  '-editor &Sep': { visibility: 'hidden' },
 });
 
 const SideContext = createContext<Msg<string> | null | undefined>(undefined);

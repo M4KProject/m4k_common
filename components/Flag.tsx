@@ -1,7 +1,7 @@
 import { Css } from '@common/ui/html';
 
 const c = Css('Flag', {
-  '&': {
+  '': {
     display: 'inline-block',
     width: '1.33em',
     height: '1em',
@@ -9,7 +9,7 @@ const c = Css('Flag', {
     overflow: 'hidden',
     verticalAlign: 'middle',
   },
-  '&-square': {
+  '-square': {
     width: '1em',
     height: '1em',
   },

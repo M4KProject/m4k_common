@@ -71,7 +71,7 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     const filteredItems = one
       ? [items.find((i) => !filters.find((f) => !f(i)))]
       : items.filter((i) => !filters.find((f) => !f(i)));
-    
+
     return filteredItems;
   }
 

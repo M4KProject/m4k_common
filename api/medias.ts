@@ -35,7 +35,7 @@ const startUpload = (item: UploadItem) =>
       const file = item.file;
       if (!file) return;
 
-      update(id, { status: "uploading" });
+      update(id, { status: 'uploading' });
 
       const media = await mediaCtrl.create(
         {
@@ -54,7 +54,7 @@ const startUpload = (item: UploadItem) =>
         }
       );
 
-      update(id, { media, progress: 100, status: "success" });
+      update(id, { media, progress: 100, status: 'success' });
 
       console.info('upload success', item, media);
       return media;
@@ -70,9 +70,9 @@ const startUpload = (item: UploadItem) =>
 const processQueue = async () => {
   while (true) {
     const items = Object.values(uploadItems$.v);
-    if (items.filter((i) => i.status === "uploading").length >= MAX_CONCURRENT_UPLOADS) return;
+    if (items.filter((i) => i.status === 'uploading').length >= MAX_CONCURRENT_UPLOADS) return;
 
-    const item = items.find((i) => i.status === "pending");
+    const item = items.find((i) => i.status === 'pending');
     if (!item) return;
 
     const id = item.id;
@@ -82,7 +82,7 @@ const processQueue = async () => {
     } catch (e) {
       const error = toError(e);
       console.error('upload failed', item, error);
-      update(item.id, { status: "failed", error });
+      update(item.id, { status: 'failed', error });
     }
 
     setTimeout(() => uploadItems$.next((items) => deleteKey({ ...items }, id)), 10000);
@@ -93,7 +93,7 @@ export const upload = (files: File[]): string[] => {
   const ids = files.map((file) => {
     const id = uuid();
     uploadItems$.merge({
-      [id]: { id, file, name: file.name, status: "pending" } as UploadItem,
+      [id]: { id, file, name: file.name, status: 'pending' } as UploadItem,
     });
     return id;
   });

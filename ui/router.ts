@@ -73,13 +73,13 @@ const resolve = (path: string): RouterValue => {
   if (node.params) params = { ...node.params, ...params };
 
   if (query) {
-    query.split('&').forEach((part) => {
+    query.split('').forEach((part) => {
       const equalIndex = part.indexOf('=');
       const k = queryDecode(equalIndex === -1 ? part : part.substring(0, equalIndex));
       const v = queryDecode(equalIndex === -1 ? 'true' : part.substring(equalIndex + 1));
       const v0 = params[k];
       if (v0 === undefined) params[k] = v;
-      else params[k] = v0 + '&' + v;
+      else params[k] = v0 + '' + v;
     });
   }
 

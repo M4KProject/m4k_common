@@ -6,31 +6,31 @@ import { Tr } from './Tr';
 import { ComponentChildren } from 'preact';
 
 const c = Css('Page', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch', justify: 'start' }),
     flex: 1,
     position: 'relative',
     overflow: 'hidden',
     bg: '#eee',
   },
-  '&Header': {
+  Header: {
     ...flexRow({ align: 'center', justify: 'around' }),
     bg: 'headerBg',
     mt: 1,
     h: 3,
   },
-  '&HeaderTitle': {
+  HeaderTitle: {
     ...flexRow({ align: 'center' }),
     fontSize: 1.4,
     fg: 'headerTitle',
   },
-  '&HeaderContent': {
+  HeaderContent: {
     ...flexRow({ align: 'center' }),
   },
-  '&Actions': {
+  Actions: {
     ...flexRow({ align: 'center', justify: 'around' }),
   },
-  '&Body': {
+  Body: {
     ...flexColumn({ align: 'stretch', justify: 'start' }),
     position: 'relative',
     overflowX: 'hidden',

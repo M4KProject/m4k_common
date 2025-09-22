@@ -7,7 +7,7 @@ import { DivProps } from './Div';
 import { Tr } from './Tr';
 
 const c = Css('Button', {
-  '&': {
+  '': {
     ...flexRow({ align: 'center', justify: 'start' }),
     position: 'relative',
     m: 0.2,
@@ -18,13 +18,13 @@ const c = Css('Button', {
     fg: 'fg',
     hMin: 2.5,
   },
-  '&Row': {
+  Row: {
     ...flexRow({ align: 'center', justify: 'around' }),
   },
-  '&-icon': {
+  '-icon': {
     m: 0,
   },
-  '&Icon': {
+  Icon: {
     ...flexCenter(),
     mx: 0.25,
     w: 1.4,
@@ -33,12 +33,12 @@ const c = Css('Button', {
     bg: 'white',
     fg: 'selectedFg',
   },
-  '&Content': {
+  Content: {
     m: 0.25,
     flex: 1,
     textAlign: 'left',
   },
-  '&Sfx': {
+  Sfx: {
     position: 'absolute',
     inset: 0,
     bg: 'white',
@@ -50,29 +50,29 @@ const c = Css('Button', {
     elevation: 1,
   },
 
-  '&:hover, &-selected': { fg: 'selectedFg' },
-  '&:hover &Sfx, &-selected &Sfx': { scaleX: 1 },
-  // '&:hover &Content, &-selected &Content': { fontWeight: 'bold' },
-  '&:active &Sfx': { elevation: 0 },
+  ':hover, &-selected': { fg: 'selectedFg' },
+  ':hover &Sfx, &-selected &Sfx': { scaleX: 1 },
+  // ':hover &Content, &-selected &Content': { fontWeight: 'bold' },
+  ':active &Sfx': { elevation: 0 },
 
-  '&-primary': { bg: 'primary', fg: 'white' },
-  '&-secondary': { bg: 'secondary', fg: 'white' },
-  '&-success': { bg: 'success', fg: 'white' },
-  '&-warn': { bg: 'warn', fg: 'white' },
-  '&-error': { bg: 'error', fg: 'white' },
+  '-primary': { bg: 'primary', fg: 'white' },
+  '-secondary': { bg: 'secondary', fg: 'white' },
+  '-success': { bg: 'success', fg: 'white' },
+  '-warn': { bg: 'warn', fg: 'white' },
+  '-error': { bg: 'error', fg: 'white' },
 
-  '&-primary &Icon': { bg: 'white', fg: 'primary' },
-  '&-secondary &Icon': { bg: 'white', fg: 'secondary' },
-  '&-success &Icon': { bg: 'white', fg: 'success' },
-  '&-warn &Icon': { bg: 'white', fg: 'warn' },
-  '&-error &Icon': { bg: 'white', fg: 'error' },
+  '-primary &Icon': { bg: 'white', fg: 'primary' },
+  '-secondary &Icon': { bg: 'white', fg: 'secondary' },
+  '-success &Icon': { bg: 'white', fg: 'success' },
+  '-warn &Icon': { bg: 'white', fg: 'warn' },
+  '-error &Icon': { bg: 'white', fg: 'error' },
 
-  '&:hover &Icon': { bg: 'selectedFg', fg: 'white' },
-  '&-primary:hover &Icon': { bg: 'primary', fg: 'white' },
-  '&-secondary:hover &Icon': { bg: 'secondary', fg: 'white' },
-  '&-success:hover &Icon': { bg: 'success', fg: 'white' },
-  '&-warn:hover &Icon': { bg: 'warn', fg: 'white' },
-  '&-error:hover &Icon': { bg: 'error', fg: 'white' },
+  ':hover &Icon': { bg: 'selectedFg', fg: 'white' },
+  '-primary:hover &Icon': { bg: 'primary', fg: 'white' },
+  '-secondary:hover &Icon': { bg: 'secondary', fg: 'white' },
+  '-success:hover &Icon': { bg: 'success', fg: 'white' },
+  '-warn:hover &Icon': { bg: 'warn', fg: 'white' },
+  '-error:hover &Icon': { bg: 'error', fg: 'white' },
 });
 
 export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {

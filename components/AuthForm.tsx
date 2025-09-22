@@ -16,7 +16,7 @@ addTr({
 });
 
 const c = Css('AuthForm', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch', justify: 'center' }),
     w: 30,
     bg: 'white',

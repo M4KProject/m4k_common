@@ -3,59 +3,59 @@ import { Css, clsx } from '@common/ui/html';
 import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
 
 const c = Css('Table', {
-  '&': {
+  '': {
     border: 0,
     borderCollapse: 'collapse',
     m: 0.5,
     rounded: 2,
     elevation: 1,
   },
-  '&Row': {
+  Row: {
     borderCollapse: 'collapse',
     w: '100%',
   },
-  '&Row-success': { fg: 'success' },
-  '&Row-error': { fg: 'error' },
-  '&Row-selected': { fg: 'selected' },
-  '&Row:nth-child(even)': { bg: '#ffffff70' },
-  '&Row:hover': { bg: 'transparent', elevation: 1 },
-  '&Cell': {
+  'Row-success': { fg: 'success' },
+  'Row-error': { fg: 'error' },
+  'Row-selected': { fg: 'selected' },
+  'Row:nth-child(even)': { bg: '#ffffff70' },
+  'Row:hover': { bg: 'transparent', elevation: 1 },
+  Cell: {
     border: '1px solid #ddd',
     textAlign: 'left',
     h: 3,
   },
-  '&CellContent': {
+  CellContent: {
     ...flexColumn({ align: 'stretch', justify: 'center' }),
     px: 0.5,
     position: 'relative',
     h: 3,
   },
-  '&Cell-row &CellContent': {
+  'Cell-row &CellContent': {
     ...flexRow({ align: 'center', justify: 'start' }),
   },
-  '&Cell-center &CellContent': {
+  'Cell-center &CellContent': {
     ...flexCenter({}),
   },
-  '&Cell-around &CellContent': {
+  'Cell-around &CellContent': {
     ...flexRow({ align: 'center', justify: 'around' }),
   },
-  '&Cell-check': {
+  'Cell-check': {
     width: 0,
   },
-  '&Cell-header': {
+  'Cell-header': {
     pt: 1,
     bg: 'white',
     fg: 'primary',
     borderTop: 0,
   },
-  '& input': {
+  ' input': {
     background: 'transparent',
     border: 0,
   },
-  '& *[draggable="true"]': {
+  ' *[draggable="true"]': {
     cursor: 'grab',
   },
-  '& .dragging': {
+  ' .dragging': {
     // visibility: 'hidden',
   },
 });

@@ -2,7 +2,7 @@ import { JSX } from 'preact';
 import { clsx, Css } from '@common/ui/html';
 
 const c = Css('Iframe', {
-  '&': {
+  '': {
     // position: "relative",
     // w: "100%",
     // h: "100%",

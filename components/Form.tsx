@@ -5,7 +5,7 @@ import { getStyle } from './Div';
 import { JSX } from 'preact/jsx-runtime';
 
 const c = Css('Form', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch' }),
     m: 0.5,
     p: 1,
@@ -14,7 +14,7 @@ const c = Css('Form', {
     bg: 'white',
     rounded: 1,
   },
-  '&Title': {
+  Title: {
     ...flexColumn({ align: 'start', justify: 'end' }),
     py: 0.5,
     color: '#0a536f',

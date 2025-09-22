@@ -2,10 +2,10 @@ import { Css, flexColumn, flexRow } from '@common/ui';
 import { DivProps } from './Div';
 
 const c = Css('Flex', {
-  '&Row': {
+  Row: {
     ...flexRow({ align: 'center', justify: 'between' }),
   },
-  '&Col': {
+  Col: {
     ...flexColumn({ align: 'stretch', justify: 'between' }),
   },
 });

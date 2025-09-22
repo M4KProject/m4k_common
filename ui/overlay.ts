@@ -2,14 +2,14 @@ import { addEl, Css, setCss, setEl } from './html';
 import { sleep } from '@common/utils/async';
 
 const overlayCss: Css = {
-  '&': {
+  '': {
     position: 'fixed',
     xy: 0,
     transition: 'opacity 0.2s ease',
     opacity: 1,
   },
-  '&-adding': { opacity: 0 },
-  '&-removed': { opacity: 0 },
+  '-adding': { opacity: 0 },
+  '-removed': { opacity: 0 },
 };
 
 export const addOverlay = () => {

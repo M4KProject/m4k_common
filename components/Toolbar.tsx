@@ -3,7 +3,7 @@ import { flexRow } from '@common/ui/flexBox';
 import { DivProps } from './Div';
 
 const c = Css('Toolbar', {
-  '&': {
+  '': {
     bg: 'white',
     border: '1px solid #ddd',
     px: 0.5,

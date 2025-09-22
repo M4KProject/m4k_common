@@ -24,7 +24,7 @@ const handleUserInteraction = () => {
  */
 const showAutoHide = () => {
   setCss('autoHide', {
-    '&': {
+    '': {
       opacity: 1,
       pointerEvents: 'auto',
       transition: 'opacity 0.3s ease-in-out',
@@ -37,7 +37,7 @@ const showAutoHide = () => {
  */
 const hideAutoHide = () => {
   setCss('autoHide', {
-    '&': {
+    '': {
       opacity: 0,
       pointerEvents: 'none',
       transition: 'opacity 0.3s ease-in-out',

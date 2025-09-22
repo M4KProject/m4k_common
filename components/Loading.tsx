@@ -7,12 +7,12 @@ import { flexCenter } from '@common/ui/flexBox';
 import { addTr } from '../hooks/useTr';
 
 const c = Css('Loading', {
-  '&': {
+  '': {
     w: '100%',
     h: '100%',
     ...flexCenter(),
   },
-  '& svg': {
+  ' svg': {
     fontSize: 1.2,
     // anim: {
     //     count: 'infinite',
@@ -24,7 +24,7 @@ const c = Css('Loading', {
     //     }
     // }
   },
-  '&Content': {
+  Content: {
     ml: 0.5,
   },
 });

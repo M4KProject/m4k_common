@@ -6,12 +6,12 @@ import { isList } from '@common/utils/check';
 import { isSearched } from '@common/utils/str';
 
 const c = Css('Select', {
-  '&': {
+  '': {
     position: 'relative',
     border: 0,
     p: 0,
   },
-  '&Container': {
+  Container: {
     ...flexRow({
       align: 'center',
       justify: 'between',
@@ -22,14 +22,14 @@ const c = Css('Select', {
     bg: 'white',
     cursor: 'pointer',
   },
-  '&Container:hover': {
+  'Container:hover': {
     borderColor: '#777',
   },
-  '&Container:focus-within': {
+  'Container:focus-within': {
     borderColor: '#4a90e2',
     boxShadow: '0 0 0 2px rgba(74, 144, 226, 0.2)',
   },
-  '&Input': {
+  Input: {
     flex: 1,
     border: 'none',
     outline: 'none',
@@ -41,7 +41,7 @@ const c = Css('Select', {
     p: 0,
     pl: 1,
   },
-  '&Dropdown': {
+  Dropdown: {
     position: 'absolute',
     y: '100%',
     mt: 0.2,
@@ -56,23 +56,23 @@ const c = Css('Select', {
     zIndex: 1000,
     elevation: 2,
   },
-  '&Option': {
+  Option: {
     py: 0.5,
     px: 1,
     cursor: 'pointer',
     transition: 0.2,
   },
-  '&Option:hover': {
+  'Option:hover': {
     bg: '#f5f5f5',
   },
-  '&Option-selected': {
+  'Option-selected': {
     bg: '#e3f2fd',
     fg: '#1976d2',
   },
-  '&Option-highlighted': {
+  'Option-highlighted': {
     bg: '#e8f4fd',
   },
-  '&Arrow': {
+  Arrow: {
     ...flexCenter(),
     w: 1.5,
     h: 1.5,
@@ -83,7 +83,7 @@ const c = Css('Select', {
     pointerEvents: 'none',
     flexShrink: 0,
   },
-  '&-open &Arrow': {
+  '-open &Arrow': {
     transform: 'rotate(180deg)',
   },
 });

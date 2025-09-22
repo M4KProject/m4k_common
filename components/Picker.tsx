@@ -5,18 +5,18 @@ import { Button } from './Button';
 import { isList } from '@common/utils/check';
 
 const c = Css('Picker', {
-  '&': {
+  '': {
     ...flexRow({ align: 'center', justify: 'center', wrap: 'wrap' }),
     w: '100%',
     p: 0,
     border: 0,
   },
-  '& .Button': {
+  ' .Button': {
     m: 0,
     p: 0,
     hMin: '1em',
   },
-  '& .Button .ButtonIcon': {
+  ' .Button .ButtonIcon': {
     wh: '1em',
     bg: 'transparent',
   },

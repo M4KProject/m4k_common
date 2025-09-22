@@ -19,18 +19,18 @@ import { Msg } from '@common/utils/Msg';
 import { useMsg } from '../hooks';
 
 const c = Css('Field', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch' }),
     w: '100%',
     // m: 0.5,
   },
-  '&-row': {
+  '-row': {
     ...flexRow({ align: 'start' }),
   },
-  '&-error &Label': { fg: 'error' },
-  '&-error &Input': { border: 'error' },
-  '&Error': { fg: 'error' },
-  '&Label': {
+  '-error &Label': { fg: 'error' },
+  '-error &Input': { border: 'error' },
+  Error: { fg: 'error' },
+  Label: {
     mt: 1,
     mb: 0.2,
     // flex: 1,
@@ -38,12 +38,12 @@ const c = Css('Field', {
     opacity: 0.6,
     fg: 'labelFg',
   },
-  '&Content': {
+  Content: {
     ...flexRow({ align: 'center', justify: 'start' }),
     flex: 2,
     hMin: 2,
   },
-  '&Input': {
+  Input: {
     w: '100%',
     h: 2,
     py: 0.2,
@@ -55,18 +55,18 @@ const c = Css('Field', {
     fg: 'black',
     // elevation: 1,
   },
-  '&Input:hover': {
+  'Input:hover': {
     borderColor: '#777',
   },
 
   // Régle la couleur de l'autocompletion
-  '&Input:autofill': {
+  'Input:autofill': {
     '-webkit-text-fill-color': 'black',
     '-webkit-box-shadow': '0 0 0 1000px white inset',
     'caret-color': 'black',
   },
 
-  '& select': {
+  ' select': {
     // width: '100',
     // padding: '8px 12px',
     // fontSize: '16px',
@@ -75,16 +75,16 @@ const c = Css('Field', {
     // cursor: 'pointer',
     // transition: 'border-color 0.3s, box-shadow 0.3s',
   },
-  '& select:focus': {
+  ' select:focus': {
     // outline: 'none',
     // borderColor: '#4a90e2',
     // boxShadow: '0 0 0 2px rgba(74, 144, 226, 0.2)',
   },
-  '& option': {
+  ' option': {
     // padding: 8,
   },
 
-  '&-check &Input': {
+  '-check &Input': {
     ...flexCenter(),
     p: 0,
     w: 1.4,
@@ -97,20 +97,20 @@ const c = Css('Field', {
     transition: 0.3,
     boxSizing: 'border-box',
   },
-  '&-check &Input-selected': {
+  '-check &Input-selected': {
     border: 'primary',
     bg: 'primary',
   },
-  '&-check &Input svg': {
+  '-check &Input svg': {
     color: 'white',
     transition: 0.3,
     transform: 'scale(0)',
   },
-  '&-check &Input-selected svg': {
+  '-check &Input-selected svg': {
     transform: 'scale(1)',
   },
 
-  '&-switch &Input': {
+  '-switch &Input': {
     ...flexCenter(),
     w: 2,
     h: 1.5,
@@ -121,9 +121,9 @@ const c = Css('Field', {
     borderRadius: '999px',
     transition: 0.3,
   },
-  '&-switch &Input-selected': { border: 'primary', bg: 'primary' },
+  '-switch &Input-selected': { border: 'primary', bg: 'primary' },
 
-  '&-switch &InputHandle': {
+  '-switch &InputHandle': {
     w: 1.2,
     h: 1.2,
     bg: '#fff',
@@ -133,7 +133,7 @@ const c = Css('Field', {
     transition: 0.3,
     translateX: '-1em',
   },
-  '&-switch &Input-selected &InputHandle': { translateX: '1em' },
+  '-switch &Input-selected &InputHandle': { translateX: '1em' },
 });
 
 export type FieldComp<T = any> = (props: {

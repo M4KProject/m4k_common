@@ -426,7 +426,10 @@ export const setCss = (key: string, css?: CssValue) => {
         const kPrefix = '.' + key;
         for (const k in css) {
           const ctx: CssContext = { key, css };
-          sb.push(`${k.replace(/&/g, kPrefix)} {`);
+          const query = k.startsWith('.')
+            ? k
+            : (k.startsWith('&') ? k : '&' + k).replace(/&/g, kPrefix);
+          sb.push(`${query} {`);
           const props = css[k];
           for (const prop in props) {
             const value = (props as any)[prop];

@@ -7,7 +7,7 @@ import { flexCenter } from '@common/ui/flexBox';
 import { ComponentChildren } from 'preact';
 
 const c = Css('Progress', {
-  '&': {
+  '': {
     ...flexCenter(),
     position: 'relative',
     bg: 'white',
@@ -15,7 +15,7 @@ const c = Css('Progress', {
     borderRadius: '0.2em',
     w: '100%',
   },
-  '&Bar': {
+  Bar: {
     position: 'absolute',
     xy: 0,
     h: '100%',
@@ -24,7 +24,7 @@ const c = Css('Progress', {
     borderRadius: '0.2em 0 0 0.2em',
     transition: 'width 0.5s ease',
   },
-  '&Text': {
+  Text: {
     fg: 'black',
     zIndex: 1,
   },

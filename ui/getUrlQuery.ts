@@ -15,7 +15,7 @@ export const getUrlQuery = (): { path: string[]; [key: string]: any } => {
   if (search) {
     const queryString = search.substring(1);
     if (queryString) {
-      const pairs = queryString.split('&');
+      const pairs = queryString.split('');
       pairs.forEach((pair) => {
         const [key, valueString] = pair.split('=');
         query[key] = decode(valueString);

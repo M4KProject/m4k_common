@@ -40,7 +40,7 @@ export const showError = (e: any) => {
 };
 
 const c = Css('Dialog', {
-  '&': {
+  '': {
     position: 'fixed',
     inset: 0,
     bg: '#000000AA',
@@ -48,7 +48,7 @@ const c = Css('Dialog', {
     opacity: 0,
     transition: 0.5,
   },
-  '&Window': {
+  Window: {
     ...flexColumn(),
     elevation: 3,
     rounded: 2,
@@ -59,7 +59,7 @@ const c = Css('Dialog', {
     scale: 0,
     transition: 0.5,
   },
-  '&Header': {
+  Header: {
     ...flexCenter(),
     textAlign: 'center',
     fontSize: 1.4,
@@ -69,18 +69,18 @@ const c = Css('Dialog', {
     bg: 'header',
     fg: 'headerTitle',
   },
-  '&Content': {
+  Content: {
     ...flexColumn(),
     m: 1,
   },
 
-  '&-open': {
+  '-open': {
     opacity: 1,
   },
-  '&-open &Window': {
+  '-open &Window': {
     scale: 1,
   },
-  '&-error &Header': {
+  '-error &Header': {
     fg: 'error',
   },
 });
