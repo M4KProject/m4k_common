@@ -1,4 +1,6 @@
-import { isBetween, isDate, isDef, isFileOrBlob, isList, isObj, isStr } from './check';
+import { retry, sleep } from './async';
+import { toError } from './cast';
+import { isBetween, isDate, isDef, isFileOrBlob, isList, isObj } from './check';
 import { parse, stringify } from './json';
 import { pathJoin } from './pathJoin';
 
@@ -45,13 +47,13 @@ export interface ReqOptions<T = any> {
   before?: (ctx: ReqContext<T>) => void | Promise<void> | null;
   after?: (ctx: ReqContext<T>) => void | Promise<void> | null;
   cast?: (ctx: ReqContext<T>) => T | Promise<T> | null;
-  onError?: (error: Error, ctx: ReqContext<T>) => void;
+  onError?: (ctx: ReqContext<T>) => void;
   onProgress?: (progress: number, ctx: ReqContext<T>) => void | null;
   request?: <T>(ctx: ReqContext<T>) => Promise<T> | null;
   cors?: boolean | null;
   password?: string | null;
   username?: string | null;
-  log?: boolean;
+  retry?: number;
 }
 
 export interface ReqContext<T = any> {
@@ -104,11 +106,9 @@ export const toFormData = (form: FormDataObject | FormData | null | undefined, b
 export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
   try {
     const o = ctx.options;
-    const log = o.log;
-    if (log) console.debug('reqXHR options', o);
     const xhr: XMLHttpRequest = ctx.xhr || (ctx.xhr = new XMLHttpRequest());
 
-    xhr.timeout = ctx.timeout || 20000;
+    xhr.timeout = ctx.timeout || 10000;
     const responseType = (xhr.responseType = ctx.resType || 'json');
 
     if (o.cors) xhr.withCredentials = true;
@@ -126,12 +126,9 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
     if (onProgress) {
       const _onProgress = (event: ProgressEvent<XMLHttpRequestEventTarget>) => {
         try {
-          if (log) console.debug('reqXHR onProgress', event.loaded, event.total);
           ctx.event = event;
           onProgress(event.loaded / event.total, ctx);
-        } catch (error) {
-          if (log) console.warn('reqXHR onProgress', event, error);
-        }
+        } catch (_) {}
       };
       xhr.addEventListener('progress', _onProgress);
       xhr.upload?.addEventListener('progress', _onProgress);
@@ -162,7 +159,7 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
 export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
   try {
     const o = ctx.options;
-    const log = o.log;
+
     const fetchRequest: RequestInit = (ctx.fetchInit = {
       body: ctx.body as any,
       headers: ctx.headers,
@@ -181,8 +178,6 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
     }
 
     if (o.before) await o.before(ctx);
-
-    if (log) console.debug('fetch', ctx.url, fetchRequest);
 
     const response = await (typeof o.fetch === 'function' ? o.fetch : fetch)(ctx.url, fetchRequest);
     ctx.res = response;
@@ -223,7 +218,6 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
 
 const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
   const o = { ...options };
-  const log = o.log === true;
 
   if (o.base) o.base(o);
   if (!o.url) throw new ReqError<T>('no-url', { options });
@@ -279,31 +273,30 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
     body,
     timeout,
     ok: false,
+    toString: () => `${ctx.method} ${ctx.url}`,
   } as ReqContext<T>;
 
-  try {
-    const request = o.request || (o.fetch || typeof fetch === 'function' ? reqFetch : reqXHR);
-    if (log) console.debug('req url', o.url);
-    await request(ctx as any);
-    if (log) console.debug('req result', o.url, ctx);
-    if (o.cast) ctx.data = await o.cast(ctx);
-    if (o.after) await o.after(ctx);
-    if (log) console.debug('req data', o.url, ctx.data);
-  } catch (error) {
-    if (log) console.debug('req error', o.url, error);
-    ctx.error = error;
-  }
+  await retry(async () => {
+    try {
+      const request = o.request || (o.fetch || typeof fetch === 'function' ? reqFetch : reqXHR);
+      await request(ctx as any);
+      if (o.cast) ctx.data = await o.cast(ctx);
+      if (o.after) await o.after(ctx);
+      if (!isBetween(ctx.status, 200, 299)) throw ctx.status;
+      if (ctx.error) throw ctx.error;
+    } catch (error) {
+      ctx.error = toError(error);
+      o.onError && o.onError(ctx);
+      if (ctx.error) {
+        await sleep(5000);
+        throw error;
+      }
+    }
+  }, o.retry || 3);
 
-  if (!isBetween(ctx.status, 200, 299)) {
-    ctx.error = String(ctx.status);
-  }
-
-  const error = ctx.error;
-  o.onError && o.onError(error, ctx);
-  if (error || !ctx.ok) {
-    const message = isStr(ctx.error) ? ctx.error : ctx.error.message;
-    if (log) console.warn('req error', message, ctx);
-    throw new ReqError<T>(message, ctx);
+  if (ctx.error || !ctx.ok) {
+    ctx.error = toError(ctx.error);
+    throw new ReqError<T>(ctx.error, ctx);
   }
 
   return ctx.data as T;

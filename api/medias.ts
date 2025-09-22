@@ -1,5 +1,5 @@
 import { uuid } from '../utils/str';
-import { retry, sleep } from '../utils/async';
+import { sleep } from '../utils/async';
 import { needAuthId, needGroupId } from './messages';
 import { MediaModel } from './models';
 import { deleteKey } from '../utils/obj';
@@ -27,45 +27,43 @@ export const uploadItems$ = new MsgDict<UploadItem>({});
 const update = (id: string, changes: Partial<UploadItem>) =>
   uploadItems$.merge({ [id]: { ...uploadItems$.v[id], ...changes } });
 
-const startUpload = (item: UploadItem) =>
-  retry(async () => {
-    const id = item.id;
+const startUpload = async (item: UploadItem) => {
+  const id = item.id;
 
-    try {
-      const file = item.file;
-      if (!file) return;
+  try {
+    const file = item.file;
+    if (!file) return;
 
-      update(id, { status: 'uploading' });
+    update(id, { status: 'uploading' });
 
-      const media = await mediaCtrl.create(
-        {
-          title: String(file.name),
-          source: file,
-          group: needGroupId(),
-          user: needAuthId(),
-        },
-        {
-          req: {
-            xhr: true,
-            onProgress: (progress) => {
-              update(id, { progress: progress * 100 });
-            },
+    const media = await mediaCtrl.create(
+      {
+        title: String(file.name),
+        source: file,
+        group: needGroupId(),
+        user: needAuthId(),
+      },
+      {
+        req: {
+          xhr: true,
+          onProgress: (progress) => {
+            update(id, { progress: progress * 100 });
           },
-        }
-      );
+        },
+      }
+    );
 
-      update(id, { media, progress: 100, status: 'success' });
+    update(id, { media, progress: 100, status: 'success' });
 
-      console.info('upload success', item, media);
-      return media;
-    } catch (e) {
-      const error = toError(e);
-      console.warn('upload failed, retrying in 5s', item, error);
-      update(id, { error });
-      await sleep(5000);
-      throw error;
-    }
-  }, MAX_RETRY);
+    console.info('upload success', item, media);
+    return media;
+  } catch (e) {
+    const error = toError(e);
+    console.warn('upload failed, retrying in 5s', item, error);
+    update(id, { error });
+    throw error;
+  }
+};
 
 const processQueue = async () => {
   while (true) {
