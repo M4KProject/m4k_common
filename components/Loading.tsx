@@ -3,14 +3,14 @@ import { Css } from '@common/ui/html';
 import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { RotateCcw } from 'lucide-react';
-import { flexCenter } from '@common/ui/flexBox';
+
 import { addTr } from '../hooks/useTr';
 
 const c = Css('Loading', {
   '': {
     w: '100%',
     h: '100%',
-    ...flexCenter(),
+    fCenter: 1,
   },
   ' svg': {
     fontSize: 1.2,

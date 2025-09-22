@@ -1,7 +1,6 @@
 import { useMsg } from '../hooks';
 import { Css } from '@common/ui/html';
 import { Msg } from '@common/utils/Msg';
-import { flexColumn } from '@common/ui/flexBox';
 import { DivProps } from './Div';
 import { Button, ButtonProps } from './Button';
 import { createContext } from 'preact';
@@ -27,7 +26,7 @@ const c = Css('Side', {
     transition: 0.2,
   },
   Content: {
-    ...flexColumn({ align: 'stretch' }),
+    fCol: 1,
     position: 'absolute',
     color: '#ffffff',
     fg: 'sideFg',
@@ -52,7 +51,7 @@ const c = Css('Side', {
   },
 
   Sep: {
-    ...flexColumn({ align: 'start', justify: 'end' }),
+    fCol: ['start', 'end'],
     pl: 1,
     flex: 1,
     color: '#0a536f',
@@ -82,12 +81,12 @@ export const SideButton = ({ page, title, children, ...props }: SideButtonProps)
   const curr = useMsg(page$);
   return (
     <Button
+      title={title}
       class={c('Button')}
       selected={page === curr}
       onClick={() => page$?.set(page)}
       {...props}
     >
-      {title}
       {children}
     </Button>
   );

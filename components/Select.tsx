@@ -1,7 +1,6 @@
 import { ComponentChildren } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { Css } from '@common/ui/html';
-import { flexCenter, flexRow } from '@common/ui/flexBox';
 import { isList } from '@common/utils/check';
 import { isSearched } from '@common/utils/str';
 
@@ -12,10 +11,7 @@ const c = Css('Select', {
     p: 0,
   },
   Container: {
-    ...flexRow({
-      align: 'center',
-      justify: 'between',
-    }),
+    fRow: 1,
     wh: '100%',
     border: '1px solid #ddd',
     rounded: 1,
@@ -73,7 +69,7 @@ const c = Css('Select', {
     bg: '#e8f4fd',
   },
   Arrow: {
-    ...flexCenter(),
+    fCenter: 1,
     w: 1.5,
     h: 1.5,
     opacity: 0.6,

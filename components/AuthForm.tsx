@@ -1,7 +1,5 @@
 import { useState } from 'preact/hooks';
 import { Css } from '@common/ui/html';
-import { flexColumn } from '@common/ui/flexBox';
-
 import { login, passwordReset, signUp } from '../api/auth';
 import { Loading } from './Loading';
 import { Field } from './Field';
@@ -17,7 +15,7 @@ addTr({
 
 const c = Css('AuthForm', {
   '': {
-    ...flexColumn({ align: 'stretch', justify: 'center' }),
+    fCol: ['stretch', 'center'],
     w: 30,
     bg: 'white',
   },

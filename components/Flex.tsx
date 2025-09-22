@@ -1,12 +1,12 @@
-import { Css, flexColumn, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { DivProps } from './Div';
 
 const c = Css('Flex', {
   Row: {
-    ...flexRow({ align: 'center', justify: 'between' }),
+    fRow: 1,
   },
   Col: {
-    ...flexColumn({ align: 'stretch', justify: 'between' }),
+    fCol: 1,
   },
 });
 

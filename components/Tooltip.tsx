@@ -3,7 +3,7 @@ import { render } from 'preact';
 import { Css, addListener } from '@common/ui/html';
 import { Tr } from './Tr';
 import { addOverlay, removeOverlay } from '@common/ui/overlay';
-import { flexCenter } from '@common/ui/flexBox';
+
 import { DivProps } from './Div';
 
 // const c = Css('', {
@@ -14,7 +14,7 @@ import { DivProps } from './Div';
 //         left: '',
 //     },
 //     // 'Mask': {
-//     //     ...flexCenter(),
+//     //     fCenter: 1,
 //     //     visibility: 'hidden',
 //     //     position: 'absolute',
 //     //     inset: 0,
@@ -87,7 +87,7 @@ const c = Css('Tooltip', {
     zIndex: 9999,
   },
   Content: {
-    ...flexCenter(),
+    fCenter: 1,
     textAlign: 'center',
     position: 'absolute',
     p: 0.25,

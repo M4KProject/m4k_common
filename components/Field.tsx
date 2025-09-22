@@ -1,18 +1,12 @@
 import { Css } from '@common/ui/html';
-
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
 import { toNbr } from '@common/utils/cast';
 import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { Select } from './Select';
 import { Picker } from './Picker';
 import { toErr } from '@common/utils/err';
-// import { useMsg } from "../hooks/useMsg";
-// import { groupId$ } from "../api/repos";
-// import { medias$ } from "../api/storage";
-// import { by } from "@common/utils/by";
 import { Check, Eye, EyeOff } from 'lucide-react';
 import { Button } from './Button';
 import { Msg } from '@common/utils/Msg';
@@ -20,12 +14,12 @@ import { useMsg } from '../hooks';
 
 const c = Css('Field', {
   '': {
-    ...flexColumn({ align: 'stretch' }),
+    fRow: ['stretch'],
     w: '100%',
     // m: 0.5,
   },
   '-row': {
-    ...flexRow({ align: 'start' }),
+    fRow: ['start'],
   },
   '-error &Label': { fg: 'error' },
   '-error &Input': { border: 'error' },
@@ -39,7 +33,7 @@ const c = Css('Field', {
     fg: 'labelFg',
   },
   Content: {
-    ...flexRow({ align: 'center', justify: 'start' }),
+    fRow: ['center', 'start'],
     flex: 2,
     hMin: 2,
   },
@@ -85,7 +79,7 @@ const c = Css('Field', {
   },
 
   '-check &Input': {
-    ...flexCenter(),
+    fCenter: 1,
     p: 0,
     w: 1.4,
     h: 1.4,
@@ -111,7 +105,7 @@ const c = Css('Field', {
   },
 
   '-switch &Input': {
-    ...flexCenter(),
+    fCenter: 1,
     w: 2,
     h: 1.5,
     cursor: 'pointer',

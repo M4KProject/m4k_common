@@ -1,7 +1,6 @@
 export * from './addFont';
 export * from './autoHide';
 export * from './clipboard';
-export * from './flexBox';
 export * from './getCallCb';
 export * from './getDatasetValue';
 export * from './html';

@@ -1,12 +1,12 @@
 import { ComponentChildren } from 'preact';
 import { Css } from '@common/ui/html';
-import { flexRow } from '@common/ui/flexBox';
 import { Button } from './Button';
 import { isList } from '@common/utils/check';
 
 const c = Css('Picker', {
   '': {
-    ...flexRow({ align: 'center', justify: 'center', wrap: 'wrap' }),
+    fRow: ['center', 'center'],
+    flexWrap: 'wrap',
     w: '100%',
     p: 0,
     border: 0,

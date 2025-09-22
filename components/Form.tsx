@@ -1,12 +1,10 @@
-import { clsx, Css } from '@common/ui/html';
-
-import { flexColumn } from '@common/ui/flexBox';
+import { Css } from '@common/ui/html';
 import { getStyle } from './Div';
 import { JSX } from 'preact/jsx-runtime';
 
 const c = Css('Form', {
   '': {
-    ...flexColumn({ align: 'stretch' }),
+    fRow: ['stretch'],
     m: 0.5,
     p: 1,
     elevation: 1,
@@ -15,7 +13,7 @@ const c = Css('Form', {
     rounded: 1,
   },
   Title: {
-    ...flexColumn({ align: 'start', justify: 'end' }),
+    fCol: ['start', 'end'],
     py: 0.5,
     color: '#0a536f',
     fontWeight: 'bold',

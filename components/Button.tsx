@@ -1,14 +1,11 @@
 import { ComponentChildren, JSX } from 'preact';
 import { useRef } from 'preact/hooks';
-import { flexCenter, flexRow } from '@common/ui/flexBox';
 import { Css } from '@common/ui/html';
-
-import { DivProps } from './Div';
 import { Tr } from './Tr';
 
 const c = Css('Button', {
   '': {
-    ...flexRow({ align: 'center', justify: 'start' }),
+    fRow: ['center', 'start'],
     position: 'relative',
     m: 0.2,
     p: 0.2,
@@ -19,13 +16,13 @@ const c = Css('Button', {
     hMin: 2.5,
   },
   Row: {
-    ...flexRow({ align: 'center', justify: 'around' }),
+    fRow: ['center', 'space-around'],
   },
   '-icon': {
     m: 0,
   },
   Icon: {
-    ...flexCenter(),
+    fCenter: 1,
     mx: 0.25,
     w: 1.4,
     h: 1.4,

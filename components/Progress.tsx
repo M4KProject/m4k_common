@@ -3,12 +3,12 @@ import { DivProps } from './Div';
 
 import { clamp, round } from '@common/utils/nbr';
 import { toNbr } from '@common/utils/cast';
-import { flexCenter } from '@common/ui/flexBox';
+
 import { ComponentChildren } from 'preact';
 
 const c = Css('Progress', {
   '': {
-    ...flexCenter(),
+    fCenter: 1,
     position: 'relative',
     bg: 'white',
     border: 'primary',

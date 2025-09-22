@@ -1,6 +1,5 @@
 import { JSX } from 'preact';
-import { Css, clsx } from '@common/ui/html';
-import { flexCenter, flexColumn, flexRow } from '@common/ui/flexBox';
+import { Css } from '@common/ui/html';
 
 const c = Css('Table', {
   '': {
@@ -25,19 +24,19 @@ const c = Css('Table', {
     h: 3,
   },
   CellContent: {
-    ...flexColumn({ align: 'stretch', justify: 'center' }),
+    fCol: ['stretch', 'center'],
     px: 0.5,
     position: 'relative',
     h: 3,
   },
   'Cell-row &CellContent': {
-    ...flexRow({ align: 'center', justify: 'start' }),
+    fRow: ['center', 'start'],
   },
   'Cell-center &CellContent': {
-    ...flexCenter({}),
+    fCenter: 1,
   },
   'Cell-around &CellContent': {
-    ...flexRow({ align: 'center', justify: 'around' }),
+    fRow: ['center', 'space-around'],
   },
   'Cell-check': {
     width: 0,

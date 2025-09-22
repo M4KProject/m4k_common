@@ -1,7 +1,5 @@
-import { flexCenter, flexColumn } from '@common/ui/flexBox';
 import { useMsg } from '../hooks/useMsg';
 import { Css } from '@common/ui/html';
-
 import { ComponentChildren } from 'preact';
 import { Msg } from '@common/utils/Msg';
 import { DivProps } from './Div';
@@ -44,12 +42,12 @@ const c = Css('Dialog', {
     position: 'fixed',
     inset: 0,
     bg: '#000000AA',
-    ...flexCenter(),
+    fCenter: 1,
     opacity: 0,
     transition: 0.5,
   },
   Window: {
-    ...flexColumn(),
+    fCol: 1,
     elevation: 3,
     rounded: 2,
     maxWidth: '80%',
@@ -60,7 +58,7 @@ const c = Css('Dialog', {
     transition: 0.5,
   },
   Header: {
-    ...flexCenter(),
+    fCenter: 1,
     textAlign: 'center',
     fontSize: 1.4,
     fontWeight: 'bold',
@@ -70,7 +68,7 @@ const c = Css('Dialog', {
     fg: 'headerTitle',
   },
   Content: {
-    ...flexColumn(),
+    fCol: 1,
     m: 1,
   },
 
