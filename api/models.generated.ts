@@ -88,7 +88,8 @@ export interface _GroupModel extends ModelBase {
   id: string;
   key?: string;
   name?: string;
-  plugins?: '' | 'hiboutik';
+  data?: any;
+  icon?: File | Blob | string;
   user?: string;
 }
 
@@ -128,8 +129,9 @@ export interface _MediaModel extends ModelBase {
   seconds?: number;
   data?: any;
   source?: File | Blob | string;
-  variants?: (File | Blob | string)[];
+  variants?: File | Blob | string;
   parent?: string;
+  uses?: string[];
   user?: string;
   group?: string;
 }

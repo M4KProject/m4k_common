@@ -71,15 +71,51 @@ export interface FileInfo {
   pagesCount?: number;
   page?: number;
 }
+
+export interface PdfData {
+  pagesCount?: number;
+  variants?: FileInfo[];
+}
+
+export interface VideoData {
+  nbFrames?: number;
+  variants?: FileInfo[];
+}
+
+export interface ImageData {
+  variants?: FileInfo[];
+}
+
+export interface PlaylistData {
+  items: PlaylistEntry[];
+}
+
 export interface MediaModel extends _MediaModel {
   paths?: string[];
   order?: string;
-  data?: {
-    nbFrames?: number;
-    pagesCount?: number;
-    variants?: FileInfo[];
-  };
+  data?: PdfData | VideoData | ImageData | PlaylistData;
 }
+
+export interface VideoModel extends MediaModel {
+  type: 'video';
+  data?: VideoData;
+}
+
+export interface ImageModel extends MediaModel {
+  type: 'image';
+  data?: ImageData;
+}
+
+export interface PdfModel extends MediaModel {
+  type: 'pdf';
+  data?: PdfData;
+}
+
+export interface PlaylistModel extends MediaModel {
+  type: 'playlist';
+  data?: PlaylistData;
+}
+
 export type MediaType = MediaModel['type'];
 
 export interface GroupModel extends _GroupModel {}
