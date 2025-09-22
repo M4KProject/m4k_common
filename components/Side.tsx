@@ -29,10 +29,8 @@ const c = Css('Side', {
   Content: {
     fCol: 1,
     position: 'absolute',
-    color: '#ffffff',
-    fg: 'sideFg',
     xy: 0,
-    wMinMax: 13,
+    wMin: 13,
     h: '100%',
   },
   ' .ButtonContent': {

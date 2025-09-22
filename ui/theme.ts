@@ -43,7 +43,6 @@ export const setTheme = (
     selectedFg: '#0a536f',
     // selected: lighten(primary, 20),
 
-    // sideFg: '#f4f7fe',
     // bg: _setHsl(primary, { l: 97 }),
     // fg,
 
