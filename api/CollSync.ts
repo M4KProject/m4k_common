@@ -30,14 +30,6 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     };
   }
 
-  async todo<U>(cb: () => Promise<U>): Promise<U> {
-    return cb();
-  }
-
-  async flush(): Promise<void> {
-
-  }
-
   getCache(id: string) {
     return this.cache.getItem(id);
   }
@@ -88,21 +80,19 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
   }
 
   findPage(where: CollWhere<T>, o?: CollOptions<T>) {
-    return this.todo(() => (
-      super.findPage(where, o).then((page) => {
-        const changes: Dict<T | undefined> = byId(page.items);
-        if (page.totalPages === 1) {
-          const prev = this.findCache(where);
-          const deletedIds = prev.filter((i) => !changes[i.id]);
-          for (const id of deletedIds) {
-            (changes as any)[id] = undefined;
-          }
-          this.cache.merge(changes);
+    return super.findPage(where, o).then((page) => {
+      const changes: Dict<T | undefined> = byId(page.items);
+      if (page.totalPages === 1) {
+        const prev = this.findCache(where);
+        const deletedIds = prev.filter((i) => !changes[i.id]);
+        for (const id of deletedIds) {
+          (changes as any)[id] = undefined;
         }
         this.cache.merge(changes);
-        return page;
-      })
-    ));
+      }
+      this.cache.merge(changes);
+      return page;
+    });
   }
 
   find$(where?: CollWhere<T>) {
@@ -116,12 +106,10 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
   }
 
   create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
-    return this.todo(() => (
-      super.create(item, o).then((result) => {
-        this.cache.update({ [result.id]: { ...item, ...result } });
-        return result;
-      })
-    ));
+    return super.create(item, o).then((result) => {
+      this.cache.update({ [result.id]: { ...item, ...result } });
+      return result;
+    });
   }
 
   update(
@@ -129,15 +117,13 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     changes: ModelUpdate<T>,
     o?: CollOptions<T>
   ): Promise<T | null> {
-    return this.todo(() => (
-      super.update(id, changes, o).then((result) => {
-        if (isStr(id)) {
-          const prev = this.cache.getItem(id);
-          this.cache.update({ [id]: { ...prev, ...changes, ...result } });
-        }
-        return result;
-      })
-    ));
+    return super.update(id, changes, o).then((result) => {
+      if (isStr(id)) {
+        const prev = this.cache.getItem(id);
+        this.cache.update({ [id]: { ...prev, ...changes, ...result } });
+      }
+      return result;
+    });
   }
 
   up(id: string | CollWhere<T>, changes: ModelUpdate<T>, o?: CollOptions<T>) {
@@ -145,12 +131,10 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
   }
 
   delete(id: string, o?: CollOptions<T>): Promise<void> {
-    return this.todo(() => (
-      super.delete(id, o).then((result) => {
-        this.cache.update({ [id]: undefined });
-        return result;
-      })
-    ));
+    return super.delete(id, o).then((result) => {
+      this.cache.update({ [id]: undefined });
+      return result;
+    });
   }
 
   subscribe(
