@@ -131,7 +131,7 @@ export interface _MediaModel extends ModelBase {
   source?: File | Blob | string;
   variants?: File | Blob | string;
   parent?: string;
-  uses?: string[];
+  deps?: string[];
   user?: string;
   group?: string;
 }

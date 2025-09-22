@@ -30,6 +30,10 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     };
   }
 
+  getCache(id: string) {
+    return this.cache.getItem(id);
+  }
+
   findCache(where?: CollWhere<T>, one?: boolean) {
     const items = this.cache.getItems();
     if (isEmpty(where)) return items;

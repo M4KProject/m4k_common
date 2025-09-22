@@ -1,3 +1,4 @@
+import { Dict } from '@common/utils';
 import type { FieldInfo } from '../components/Field';
 import {
   _ContentModel,
@@ -43,7 +44,7 @@ export interface HtmlContentModel extends ContentModel {
 }
 
 export interface PlaylistEntry {
-  title: string;
+  title?: string;
   duration?: number;
   startTime?: number; // Seconds since midnight
   endTime?: number; // Seconds since midnight
@@ -87,33 +88,36 @@ export interface ImageData {
 }
 
 export interface PlaylistData {
-  items: PlaylistEntry[];
+  items?: PlaylistEntry[];
 }
 
-export interface MediaModel extends _MediaModel {
+export interface BaseMediaModel extends _MediaModel {
   paths?: string[];
   order?: string;
-  data?: PdfData | VideoData | ImageData | PlaylistData;
 }
 
-export interface VideoModel extends MediaModel {
+export interface VideoModel extends BaseMediaModel {
   type: 'video';
   data?: VideoData;
 }
 
-export interface ImageModel extends MediaModel {
+export interface ImageModel extends BaseMediaModel {
   type: 'image';
   data?: ImageData;
 }
 
-export interface PdfModel extends MediaModel {
+export interface PdfModel extends BaseMediaModel {
   type: 'pdf';
   data?: PdfData;
 }
 
-export interface PlaylistModel extends MediaModel {
+export interface PlaylistModel extends BaseMediaModel {
   type: 'playlist';
   data?: PlaylistData;
+}
+
+export interface MediaModel extends BaseMediaModel {
+  data?: VideoData & ImageData & PdfData & PlaylistData;
 }
 
 export type MediaType = MediaModel['type'];

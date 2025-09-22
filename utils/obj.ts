@@ -1,4 +1,4 @@
-import { isDef, isItem, isList, isNil, isObj, isStr, isUndef, Item, List } from './check';
+import { isDef, isEq, isItem, isList, isNil, isObj, isStr, isUndef, Item, List } from './check';
 import { toList } from './cast';
 import { last, sort, uniq } from './list';
 import { nbrMax } from './nbr';
@@ -6,25 +6,15 @@ import { nbrMax } from './nbr';
 export const sortKey = <T extends Record<any, any>>(record: T): T =>
   Object.fromEntries(sort(Object.entries(record))) as T;
 
-export const getChanges = (source: any, target: any): any => {
-  if (source === target) return undefined;
-  if (!isObj(source) || !isObj(target) || isList(source) || isList(target)) return target;
-  const result: any = {};
-  const allKeys = uniq([...Object.keys(source), ...Object.keys(target)]);
-  if (allKeys.length === 0) return undefined;
-  for (const key of allKeys) {
-    const sourceChild = source[key];
-    const targetChild = target[key];
-    if (sourceChild === targetChild) continue;
-    if (targetChild === undefined) {
-      result[key] = undefined;
-      continue;
+export const getChanges = <T extends Item = Item>(source: T, target: Partial<T>): Partial<T> => {
+  if (source === target) return {};
+  const changes: Partial<T> = {};
+  for (const key in target) {
+    if (!isEq(source[key], target[key])) {
+      changes[key] = target[key];
     }
-    const changes = getChanges(sourceChild, targetChild);
-    if (changes === undefined) continue;
-    result[key] = changes;
   }
-  return result;
+  return changes;
 };
 
 export const fisrtKey = (v: Item): string | null => {

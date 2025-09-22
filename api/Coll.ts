@@ -99,7 +99,6 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
 
   constructor(public name: K) {
     this.r = newApiReq(`collections/${this.name}/`);
-    global[this.name + 'Coll'] = this;
   }
 
   log(...args: any[]) {
