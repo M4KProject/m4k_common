@@ -11,13 +11,31 @@ const c = Css('Button', {
     p: 0.2,
     rounded: 2,
     border: 'none',
-    bg: 'transparent',
+    bg: 'bg',
     fg: 'fg',
+    wMin: 2.5,
     hMin: 2.5,
   },
-  Row: {
-    fRow: ['center', 'space-around'],
+  Sfx: {
+    position: 'absolute',
+    inset: 0,
+    bg: 'bg',
+    transition: 'transform 0.5s ease',
+    scaleX: 0,
+    transformOrigin: 'left',
+    rounded: 2,
+    elevation: 1,
   },
+  Content: {
+    position: 'relative',
+    fRow: ['center', 'start'],
+    m: 0.25,
+    flex: 1,
+    textAlign: 'left',
+  },
+
+
+
   '-icon': {
     m: 0,
   },
@@ -27,30 +45,8 @@ const c = Css('Button', {
     w: 1.4,
     h: 1.4,
     rounded: 2,
-    bg: 'bg',
-    fg: 'selected',
-  },
-  Content: {
-    m: 0.25,
-    flex: 1,
-    textAlign: 'left',
-  },
-  Sfx: {
-    position: 'absolute',
-    inset: 0,
-    bg: 'bg',
-    zIndex: -1,
-    transition: 'transform 0.5s ease',
-    scaleX: 0,
-    transformOrigin: 'left',
-    rounded: 2,
-    elevation: 1,
   },
 
-  ':hover, &-selected': { fg: 'selected' },
-  ':hover &Sfx, &-selected &Sfx': { scaleX: 1 },
-  // ':hover &Content, &-selected &Content': { fontWeight: 'bold' },
-  ':active &Sfx': { elevation: 0 },
 
   '-primary': { bg: 'primary', fg: 'bg' },
   '-secondary': { bg: 'secondary', fg: 'bg' },
@@ -58,18 +54,19 @@ const c = Css('Button', {
   '-warn': { bg: 'warn', fg: 'bg' },
   '-error': { bg: 'error', fg: 'bg' },
 
-  '-primary &Icon': { bg: 'bg', fg: 'primary' },
-  '-secondary &Icon': { bg: 'bg', fg: 'secondary' },
-  '-success &Icon': { bg: 'bg', fg: 'success' },
-  '-warn &Icon': { bg: 'bg', fg: 'warn' },
-  '-error &Icon': { bg: 'bg', fg: 'error' },
+  // '-primary &Icon': { fg: 'bg' },
+  // '-secondary &Icon': { fg: 'bg' },
+  // '-success &Icon': { fg: 'bg' },
+  // '-warn &Icon': { fg: 'bg' },
+  // '-error &Icon': { fg: 'bg' },
 
-  ':hover &Icon': { bg: 'selected', fg: 'bg' },
-  '-primary:hover &Icon': { bg: 'primary', fg: 'bg' },
-  '-secondary:hover &Icon': { bg: 'secondary', fg: 'bg' },
-  '-success:hover &Icon': { bg: 'success', fg: 'bg' },
-  '-warn:hover &Icon': { bg: 'warn', fg: 'bg' },
-  '-error:hover &Icon': { bg: 'error', fg: 'bg' },
+  ':hover': { fg: 'fg' },
+  
+  ':hover, &-selected': { fg: 'selected' },
+
+  ':hover &Sfx, &-selected &Sfx': { scaleX: 1 },
+  
+  ':active &Sfx': { elevation: 0 },
 });
 
 export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -109,14 +106,12 @@ export const Button = ({
       )}
     >
       <div class={c('Sfx')} />
-      {before}
-      {icon && <div class={c('Icon')}>{icon}</div>}
-      {(title || children) && (
-        <div class={c('Content')}>
-          {title && <Tr>{title}</Tr>}
-          {children}
-        </div>
-      )}
+      <div class={c('Content')}>
+        {before}
+        {icon && <div class={c('Icon')}>{icon}</div>}
+        {title && <Tr>{title}</Tr>}
+        {children}
+      </div>
     </button>
   );
 };
