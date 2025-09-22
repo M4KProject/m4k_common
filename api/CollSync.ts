@@ -38,17 +38,17 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
         const [operator, operand] = filter;
         switch (operator) {
           case '=':
-            (v: any) => v[p] === operand;
+            return (v: any) => v[p] === operand;
           case '!=':
-            (v: any) => v[p] !== operand;
+            return (v: any) => v[p] !== operand;
           case '>':
-            (v: any) => v[p] > operand;
+            return (v: any) => v[p] > operand;
           case '>=':
-            (v: any) => v[p] >= operand;
+            return (v: any) => v[p] >= operand;
           case '<':
-            (v: any) => v[p] < operand;
+            return (v: any) => v[p] < operand;
           case '<=':
-            (v: any) => v[p] <= operand;
+            return (v: any) => v[p] <= operand;
           // case '~':   // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
           // case '!~':  // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
           // case '?=':  // Any/At least one of Equal
