@@ -1,31 +1,20 @@
 import { uuid } from '../utils/str';
-import { sleep } from '../utils/async';
 import { needAuthId, needGroupId } from './messages';
-import { MediaModel } from './models';
-import { deleteKey } from '../utils/obj';
+import { JobModel } from './models';
 import { toError } from '../utils/cast';
 import { MsgDict } from '@common/utils';
 import { mediaCtrl } from '@/admin/controllers';
 
 const MAX_CONCURRENT_UPLOADS = 3;
-const MAX_RETRY = 3;
 
-export interface UploadItem {
-  id: string;
+export interface UploadItem extends JobModel {
   file: File;
-  name: string;
-  status: 'pending' | 'uploading' | 'processing' | 'failed' | 'success';
-  media?: MediaModel;
-  progress?: number;
-  created?: number;
-  started?: number;
-  error?: any;
 }
 
-export const uploadItems$ = new MsgDict<UploadItem>({});
+export const uploadJobs$ = new MsgDict<UploadItem>({});
 
 const update = (id: string, changes: Partial<UploadItem>) =>
-  uploadItems$.merge({ [id]: { ...uploadItems$.v[id], ...changes } });
+  uploadJobs$.merge({ [id]: changes });
 
 const startUpload = async (item: UploadItem) => {
   const id = item.id;
@@ -34,7 +23,7 @@ const startUpload = async (item: UploadItem) => {
     const file = item.file;
     if (!file) return;
 
-    update(id, { status: 'uploading' });
+    update(id, { status: 'processing' });
 
     const media = await mediaCtrl.create(
       {
@@ -53,45 +42,46 @@ const startUpload = async (item: UploadItem) => {
       }
     );
 
-    update(id, { media, progress: 100, status: 'success' });
+    update(id, { progress: 100, status: 'finished' });
 
     console.info('upload success', item, media);
     return media;
   } catch (e) {
     const error = toError(e);
-    console.warn('upload failed, retrying in 5s', item, error);
-    update(id, { error });
-    throw error;
+    console.warn('upload failed', item, error);
+    update(id, { error: error.message, status: 'failed' });
+  } finally {
+    setTimeout(() => uploadJobs$.delete(id), 5000);
   }
 };
 
 const processQueue = async () => {
   while (true) {
-    const items = Object.values(uploadItems$.v);
-    if (items.filter((i) => i.status === 'uploading').length >= MAX_CONCURRENT_UPLOADS) return;
-
-    const item = items.find((i) => i.status === 'pending');
-    if (!item) return;
-
-    const id = item.id;
-
-    try {
-      await startUpload(item);
-    } catch (e) {
-      const error = toError(e);
-      console.error('upload failed', item, error);
-      update(item.id, { status: 'failed', error });
+    const items = Object.values(uploadJobs$.v);
+    if (items.filter((i) => i.status === 'processing').length >= MAX_CONCURRENT_UPLOADS) {
+      return;
     }
 
-    setTimeout(() => uploadItems$.next((items) => deleteKey({ ...items }, id)), 10000);
+    const item = items.find((i) => i.status === 'pending');
+    if (!item) {
+      return;
+    }
+    
+    await startUpload(item);
   }
 };
 
 export const upload = (files: File[]): string[] => {
   const ids = files.map((file) => {
     const id = uuid();
-    uploadItems$.merge({
-      [id]: { id, file, name: file.name, status: 'pending' } as UploadItem,
+    uploadJobs$.merge({
+      [id]: {
+        id,
+        file,
+        name: file.name,
+        action: 'upload',
+        status: 'pending',
+      }
     });
     return id;
   });

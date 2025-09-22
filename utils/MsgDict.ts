@@ -50,7 +50,7 @@ export class MsgDict<T extends {}> extends Msg<Dict<T>> {
     return this.update({ [id]: item });
   }
 
-  delete<K extends keyof T>(id: K) {
+  delete(id: string) {
     return this.update({ [id]: undefined });
   }
 

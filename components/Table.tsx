@@ -12,12 +12,13 @@ const c = Css('Table', {
   Row: {
     borderCollapse: 'collapse',
     w: '100%',
+    bg: 'tr',
   },
   'Row-success': { fg: 'success' },
   'Row-error': { fg: 'error' },
   'Row-selected': { fg: 'selected' },
-  'Row:nth-child(even)': { bg: '#ffffff70' },
-  'Row:hover': { bg: 'transparent', elevation: 1 },
+  'Row:nth-child(even)': { bg: 'trEven' },
+  'Row:hover': { bg: 'trHover' },
   Cell: {
     border: '1px solid #ddd',
     textAlign: 'left',

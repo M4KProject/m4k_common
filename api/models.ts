@@ -124,7 +124,9 @@ export type MediaType = MediaModel['type'];
 
 export interface GroupModel extends _GroupModel {}
 
-export interface JobModel extends _JobModel {}
+export interface JobModel extends Omit<_JobModel, 'action'> {
+  action?: _JobModel['action'] | 'upload';
+}
 
 export interface ConvertJobModel extends JobModel {
   action: 'convert';

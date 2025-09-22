@@ -30,6 +30,10 @@ export const setTheme = (
   const body = l(primary, 0.9 * contrast);
   const toolbar = l(primary, 0.95 * contrast);
 
+  const tr = l(primary, 0.95 * contrast);
+  const trEven = l(primary, 0.9 * contrast);
+  const trHover = l(primary, 0.8 * contrast);
+
   setCssColors({
     primary,
     secondary,
@@ -67,6 +71,10 @@ export const setTheme = (
     selected,
 
     shadow,
+
+    tr,
+    trEven,
+    trHover,
 
     ...colors,
   });
