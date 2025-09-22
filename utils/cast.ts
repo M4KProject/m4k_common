@@ -59,7 +59,7 @@ export const toItem = ((v: any, d: any) => (isItem(v) ? v : isItem(d) ? d : {}))
 
 interface ToStr {
   (value: any): string;
-  <T extends string = string>(value: any|T, defaultValue: T): T;
+  <T extends string = string>(value: any | T, defaultValue: T): T;
 }
 export const toStr = ((v: any, d: any) => (isNil(v) ? d : String(v))) as ToStr;
 

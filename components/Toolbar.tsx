@@ -15,7 +15,7 @@ const c = Css('Toolbar', {
   Title: {
     fontSize: 1.4,
     fg: 'headerTitle',
-  }
+  },
 });
 
 export interface ToolbarProps extends DivProps {

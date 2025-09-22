@@ -316,14 +316,22 @@ const em = (v: Em): string =>
 
 export type FlexDirection = '' | 'row' | 'column' | 'row-reverse' | 'column-reverse';
 export type FlexAlign = '' | 'start' | 'center' | 'end' | 'stretch' | 'baseline';
-export type FlexJustify = '' | 'start' | 'center' | 'end' | 'evenly' | 'space-between' | 'space-around';
+export type FlexJustify =
+  | ''
+  | 'start'
+  | 'center'
+  | 'end'
+  | 'evenly'
+  | 'space-between'
+  | 'space-around';
 
-const displayFlex = (direction: FlexDirection, align: FlexAlign, justify: FlexJustify) => [
-  'display:flex;',
-  direction ? `flex-direction:${direction};` : '',
-  align ? `align-items:${align};` : '',
-  justify ? `justify-content:${justify};` : '',
-].join('');
+const displayFlex = (direction: FlexDirection, align: FlexAlign, justify: FlexJustify) =>
+  [
+    'display:flex;',
+    direction ? `flex-direction:${direction};` : '',
+    align ? `align-items:${align};` : '',
+    justify ? `justify-content:${justify};` : '',
+  ].join('');
 
 const cssFunMap = {
   x,
@@ -407,9 +415,11 @@ const cssFunMap = {
   translateX: transformProp('translateX'),
   translateY: transformProp('translateY'),
 
-  fRow: (v: 1 | [] | [FlexAlign] | [FlexAlign, FlexJustify]) => v && displayFlex('row', toStr(v[0], 'center'), toStr(v[1], 'space-between')),
-  fCol: (v: 1 | [] | [FlexAlign] | [FlexAlign, FlexJustify]) => v && displayFlex('column', toStr(v[0], 'stretch'), toStr(v[1], 'start')),
-  fCenter: (v: 1 | [] | [FlexDirection]) => v && displayFlex(v[0]||'column', 'center', 'center'),
+  fRow: (v: 1 | [] | [FlexAlign] | [FlexAlign, FlexJustify]) =>
+    v && displayFlex('row', toStr(v[0], 'center'), toStr(v[1], 'space-between')),
+  fCol: (v: 1 | [] | [FlexAlign] | [FlexAlign, FlexJustify]) =>
+    v && displayFlex('column', toStr(v[0], 'stretch'), toStr(v[1], 'start')),
+  fCenter: (v: 1 | [] | [FlexDirection]) => v && displayFlex(v[0] || 'column', 'center', 'center'),
 };
 
 type CssFunMap = typeof cssFunMap;
