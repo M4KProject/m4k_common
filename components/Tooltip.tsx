@@ -1,9 +1,9 @@
 import { ComponentChildren } from 'preact';
 import { render } from 'preact';
-import { Css, addListener } from '@common/ui/html';
+import { addListener } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { Tr } from './Tr';
 import { addOverlay, removeOverlay } from '@common/ui/overlay';
-
 import { DivProps } from './Div';
 
 // const c = Css('', {

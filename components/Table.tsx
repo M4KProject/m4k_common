@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 
 const c = Css('Table', {
   '': {

@@ -1,6 +1,6 @@
 import { ComponentChildren, JSX } from 'preact';
 import { useRef } from 'preact/hooks';
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { Tr } from './Tr';
 
 const c = Css('Button', {

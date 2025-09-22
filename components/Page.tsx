@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { DivProps } from './Div';
 
 const c = Css('Page', {

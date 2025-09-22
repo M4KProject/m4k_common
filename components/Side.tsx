@@ -1,5 +1,5 @@
 import { useMsg } from '../hooks';
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { Msg } from '@common/utils/Msg';
 import { DivProps } from './Div';
 import { Button, ButtonProps } from './Button';

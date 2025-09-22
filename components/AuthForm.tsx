@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { login, passwordReset, signUp } from '../api/auth';
 import { Loading } from './Loading';
 import { Field } from './Field';

@@ -1,4 +1,4 @@
-import { setCssColors } from './html';
+import { setCssColors } from './css';
 import { darken, lighten, setHsl, addHsl } from '@common/utils/color';
 
 export const setTheme = (

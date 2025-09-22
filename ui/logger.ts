@@ -1,4 +1,5 @@
-import { createEl, setCss } from './html';
+import { createEl } from './html';
+import { setCss } from './css';
 import { logArgsToStr } from '@common/utils/log';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';

@@ -1,5 +1,5 @@
 import { ComponentChildren } from 'preact';
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { Button } from './Button';
 import { isList } from '@common/utils/check';
 

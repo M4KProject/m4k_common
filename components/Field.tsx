@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { toNbr } from '@common/utils/cast';

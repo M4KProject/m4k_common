@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { DivProps } from './Div';
 import { Tr } from './Tr';
 

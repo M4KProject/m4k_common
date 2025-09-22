@@ -1,5 +1,5 @@
 import { useMsg } from '../hooks/useMsg';
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { ComponentChildren } from 'preact';
 import { Msg } from '@common/utils/Msg';
 import { DivProps } from './Div';

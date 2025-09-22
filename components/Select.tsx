@@ -1,6 +1,6 @@
 import { ComponentChildren } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
-import { Css } from '@common/ui/html';
+import { Css } from '@common/ui/css';
 import { isList } from '@common/utils/check';
 import { isSearched } from '@common/utils/str';
 

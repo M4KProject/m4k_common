@@ -1,7 +1,8 @@
-import { addEl, Css, setCss, setEl } from './html';
+import { addEl, setEl } from './html';
+import { CssValue, setCss } from './css';
 import { sleep } from '@common/utils/async';
 
-const overlayCss: Css = {
+const overlayCss: CssValue = {
   '': {
     position: 'fixed',
     xy: 0,
