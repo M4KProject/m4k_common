@@ -15,7 +15,7 @@ const c = Css('Select', {
     wh: '100%',
     border: '1px solid #ddd',
     rounded: 1,
-    bg: 'white',
+    bg: 'bg',
     cursor: 'pointer',
   },
   'Container:hover': {
@@ -43,7 +43,7 @@ const c = Css('Select', {
     mt: 0.2,
     x: 0,
     w: '100%',
-    bg: 'white',
+    bg: 'bg',
     border: '1px solid #ddd',
     borderTop: 'none',
     borderRadius: '0 0 4px 4px',

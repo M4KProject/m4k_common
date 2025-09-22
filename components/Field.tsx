@@ -46,8 +46,8 @@ const c = Css('Field', {
     border: '1px solid #ddd',
     rounded: 1,
     outline: 'none',
-    bg: 'white',
-    fg: 'black',
+    bg: 'bg',
+    fg: 'fg',
     // elevation: 1,
   },
   'Input:hover': {
@@ -97,7 +97,7 @@ const c = Css('Field', {
     bg: 'primary',
   },
   '-check &Input svg': {
-    color: 'white',
+    color: 'bg',
     transition: 0.3,
     transform: 'scale(0)',
   },

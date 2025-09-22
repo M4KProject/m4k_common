@@ -9,7 +9,7 @@ const c = Css('Form', {
     p: 1,
     elevation: 1,
     border: '1px solid #eee',
-    bg: 'white',
+    bg: 'bg',
     rounded: 1,
   },
   Title: {

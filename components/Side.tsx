@@ -13,6 +13,7 @@ const c = Css('Side', {
     transition: 0.2,
     elevation: 1,
     w: 3,
+    bg: 'side',
   },
   Mask: {
     position: 'absolute',
@@ -33,7 +34,6 @@ const c = Css('Side', {
     xy: 0,
     wMinMax: 13,
     h: '100%',
-    bg: '#f4f7fe',
   },
   ' .ButtonContent': {
     transition: 0.2,

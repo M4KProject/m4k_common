@@ -1,31 +1,45 @@
 import { setCssColors } from './html';
-import { lighten, setHsl, addHsl } from '@common/utils/color';
+import { darken, lighten, setHsl, addHsl } from '@common/utils/color';
 
 export const setTheme = (
-  primary: string,
+  isDark: boolean = false,
+  contrast: number = 100,
+  primary: string = '#28A8D9',
   secondary?: string,
   { colors }: { colors?: Record<string, string> } = {}
 ) => {
+  contrast = 0.5 * contrast;
+
   if (!secondary) secondary = addHsl(primary, { h: 180 });
 
-  // const _lighten = isDark ? darken : lighten;
-  // const _setHsl = isDark ? (c: any, v: Partial<HslColor>) => {
-  //     if (v.l) v.l = 100 - v.l;
-  //     return setHsl(c, v);
-  // } : setHsl;
-
-  // isDark ? lighten : darken
+  const l = isDark ? darken : lighten;
 
   const grey = '#808080';
+  const info = setHsl(primary, { h: 240 });
+  const success = setHsl(primary, { h: 120, l: 40 });
+  const error = setHsl(primary, { h: 0 });
+  const warn = setHsl(primary, { h: 30 });
+  const selected = primary;
+  const shadow = '#11698a1c';
+
   // const bg = lighten(grey, 40);
-  const fg = lighten(grey, -50);
+  const bg = l(grey, contrast);
+  const fg = l(grey, -contrast);
+
+  const side = l(primary, contrast);
+  const body = l(primary, 0.9 * contrast);
+  const toolbar = l(primary, 0.95 * contrast);
 
   setCssColors({
     primary,
     secondary,
 
-    bg: '#f4f7fe',
-    fg: '#9aaabd',
+    side,
+    body,
+    toolbar,
+
+    bg,
+    fg,
     selectedFg: '#0a536f',
     // selected: lighten(primary, 20),
 
@@ -42,18 +56,18 @@ export const setTheme = (
     btnBg: 'transparent',
     btnFg: fg,
 
-    labelFg: lighten(primary, -40),
+    labelFg: l(primary, -40),
 
     btnBgHover: '',
     btnFgHover: '',
 
-    info: setHsl(primary, { h: 240 }),
-    success: setHsl(primary, { h: 120, l: 40 }),
-    error: setHsl(primary, { h: 0 }),
-    warn: setHsl(primary, { h: 30 }),
-    selected: '#0a536f',
+    info,
+    success,
+    error,
+    warn,
+    selected,
 
-    shadow: '#11698a1c',
+    shadow,
 
     ...colors,
   });

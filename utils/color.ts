@@ -159,7 +159,8 @@ export const toRgb = (c: any): RgbColor => {
     return rgbColor(c, c, c, 1);
   }
 
-  throw new Error('toRgb fallback' + JSON.stringify(c));
+  console.error('toRgb fallback' + JSON.stringify(c));
+  return toRgb('#FF0000');
 };
 
 /**

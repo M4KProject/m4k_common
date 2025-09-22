@@ -43,7 +43,7 @@ const c = Css('Table', {
   },
   'Cell-header': {
     pt: 1,
-    bg: 'white',
+    bg: 'bg',
     fg: 'primary',
     borderTop: 0,
   },

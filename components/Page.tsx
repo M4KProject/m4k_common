@@ -18,6 +18,7 @@ const c = Css('Page', {
     overflowX: 'hidden',
     overflowY: 'auto',
     flex: 1,
+    bg: 'body',
   },
 });
 

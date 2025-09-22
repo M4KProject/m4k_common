@@ -10,7 +10,7 @@ const c = Css('Progress', {
   '': {
     fCenter: 1,
     position: 'relative',
-    bg: 'white',
+    bg: 'bg',
     border: 'primary',
     borderRadius: '0.2em',
     w: '100%',
