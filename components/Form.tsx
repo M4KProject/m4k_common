@@ -4,7 +4,7 @@ import { JSX } from 'preact/jsx-runtime';
 
 const c = Css('Form', {
   '': {
-    fRow: ['stretch'],
+    fCol: ['stretch'],
     m: 0.5,
     p: 1,
     elevation: 1,

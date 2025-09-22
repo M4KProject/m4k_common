@@ -14,7 +14,9 @@ import { useMsg } from '../hooks';
 
 const c = Css('Field', {
   '': {
-    fRow: ['stretch'],
+    fRow: ['center'],
+    mt: 0.4,
+    mb: 0.4,
     w: '100%',
     // m: 0.5,
   },
@@ -25,12 +27,11 @@ const c = Css('Field', {
   '-error &Input': { border: 'error' },
   Error: { fg: 'error' },
   Label: {
-    mt: 1,
-    mb: 0.2,
     // flex: 1,
     textAlign: 'left',
     opacity: 0.6,
     fg: 'labelFg',
+    w: 12,
   },
   Content: {
     fRow: ['center', 'start'],

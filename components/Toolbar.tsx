@@ -6,8 +6,7 @@ const c = Css('Toolbar', {
   '': {
     bg: 'white',
     border: '1px solid #ddd',
-    px: 0.5,
-    mx: 0.5,
+    px: 1,
     my: 0,
     elevation: 1,
     fRow: 1,
