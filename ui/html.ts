@@ -435,7 +435,7 @@ export type CssValue = null | string | string[] | Dict<CssRecord>;
 
 const _cssMap: { [key: string]: [HTMLElement, CssValue] } = {};
 
-export const setCss = (key: string, css?: CssValue) => {
+export const setCss = (key: string, css?: CssValue, order?: number) => {
   const old = _cssMap[key];
   if (old) {
     if (isEq(old[1], css)) return key;
@@ -479,15 +479,19 @@ export const setCss = (key: string, css?: CssValue) => {
     el.textContent = content;
     document.head.appendChild(el);
     _cssMap[key] = [el, css];
+    
+    (el as any).order = order;
   }
   return key;
 };
 
+let cssCount = 0;
 export const Css = (key: string, css?: CssValue) => {
+  const order = cssCount++;
   let isInit = false;
   return (...args: (string | undefined | { class?: string })[]) => {
     if (!isInit) {
-      setCss(key, css);
+      setCss(key, css, order);
       isInit = true;
     }
     if (args.length === 0) return key;

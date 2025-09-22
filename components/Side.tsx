@@ -80,10 +80,10 @@ export const SideButton = ({ page, title, children, ...props }: SideButtonProps)
   return (
     <Button
       title={title}
-      class={c('Button')}
       selected={page === curr}
       onClick={() => page$?.set(page)}
       {...props}
+      class={c('Button', props)}
     >
       {children}
     </Button>
@@ -92,7 +92,7 @@ export const SideButton = ({ page, title, children, ...props }: SideButtonProps)
 
 export interface SideSepProps extends DivProps {}
 export const SideSep = (props: SideSepProps) => {
-  return <div {...props} class={c(`${c}Sep`, props)} />;
+  return <div {...props} class={c('Sep', props)} />;
 };
 
 export interface SideProps extends DivProps {
