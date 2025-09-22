@@ -8,10 +8,10 @@ import { Field } from './Field';
 import { Button } from './Button';
 import { Form } from './Form';
 import { toErr } from '@common/utils/err';
-import { addTranslates } from '../hooks/useTr';
+import { addTr } from '../hooks/useTr';
 import { FlexCol } from './Flex';
 
-addTranslates({
+addTr({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
 });
 

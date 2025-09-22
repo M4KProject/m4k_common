@@ -8,10 +8,10 @@ import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';
-import { addTranslates } from '../hooks/useTr';
+import { addTr } from '../hooks/useTr';
 import { toError } from '@common/utils';
 
-addTranslates({
+addTr({
   Error: 'Erreur',
   'Failed to update record.': 'Échec de la modification.',
 });

@@ -4,7 +4,7 @@ import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { RotateCcw } from 'lucide-react';
 import { flexCenter } from '@common/ui/flexBox';
-import { addTranslates } from '../hooks/useTr';
+import { addTr } from '../hooks/useTr';
 
 const c = Css('Loading', {
   '&': {
@@ -29,7 +29,7 @@ const c = Css('Loading', {
   },
 });
 
-addTranslates({
+addTr({
   loading: 'Chargement...',
 });
 
