@@ -1,7 +1,8 @@
-import { toStr } from "@common/utils/cast";
-import { Dict, isEq, isItem, isList, isNbr, isStr } from "@common/utils/check";
-import { JSX } from "preact/jsx-runtime";
-import { createEl } from "./html";
+import { toStr } from '@common/utils/cast';
+import { Dict, isEq, isItem, isList, isNbr, isStr } from '@common/utils/check';
+import { JSX } from 'preact/jsx-runtime';
+import { createEl } from './html';
+import { sort } from '@common/utils/list';
 
 let _colors: Record<string, string> = {};
 
@@ -247,7 +248,9 @@ export type CssRecord =
     });
 export type CssValue = null | string | string[] | Dict<CssRecord>;
 
-const _cssMap: { [key: string]: [HTMLElement, CssValue] } = {};
+const _cssMap: { [key: string]: [HTMLElement, CssValue, number] } = {};
+
+let cssCount = 0;
 
 export const setCss = (key: string, css?: CssValue, order?: number) => {
   const old = _cssMap[key];
@@ -291,30 +294,17 @@ export const setCss = (key: string, css?: CssValue, order?: number) => {
       content = String(css);
     }
     el.textContent = content;
-    (el as any).order = order ?? 0;
-    
-    const styles = Array.from(document.head.querySelectorAll('style')).filter(s => (s as any).order !== undefined);
-    let insertBefore: HTMLElement | null = null;
-    
-    for (const style of styles) {
-      if (((style as any).order ?? 0) > (order ?? 0)) {
-        insertBefore = style;
-        break;
-      }
-    }
-    
-    if (insertBefore) {
-      document.head.insertBefore(el, insertBefore);
-    } else {
-      document.head.appendChild(el);
-    }
-    
-    _cssMap[key] = [el, css];
+    _cssMap[key] = [el, css, order || cssCount++];
+
+    Object.values(_cssMap)
+      .sort((a, b) => a[2] - b[2])
+      .map((p) => {
+        document.head.appendChild(p[0]);
+      });
   }
   return key;
 };
 
-let cssCount = 0;
 export const Css = (key: string, css?: CssValue) => {
   const order = cssCount++;
   let isInit = false;

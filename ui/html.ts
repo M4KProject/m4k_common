@@ -1,7 +1,3 @@
-import { JSX } from 'preact';
-import { Dict, isEq, isItem, isList, isNbr, isStr } from '@common/utils/check';
-import { toStr } from '@common/utils/cast';
-
 export type Style = Partial<CSSStyleDeclaration>;
 
 export type HTMLAllElement = HTMLDivElement &
@@ -9,20 +5,6 @@ export type HTMLAllElement = HTMLDivElement &
   HTMLVideoElement &
   HTMLImageElement &
   HTMLHeadingElement;
-
-export type Drag = {
-  e?: DragEvent;
-  el: HTMLElement;
-  x0: number;
-  y0: number;
-  x: number;
-  y: number;
-  dX0: number;
-  dY0: number;
-  dX: number;
-  dY: number;
-  dispose: () => void;
-};
 
 export const createEl: typeof document.createElement = (tagName, options) =>
   document.createElement(tagName, options);
@@ -63,7 +45,8 @@ export const waitScriptLoaded = (el: HTMLScriptElement): Promise<HTMLScriptEleme
       reject(new Error(`Loading script ${el.src} timed out after 60s`));
     }, 60000);
 
-    el.addEventListener(
+    addListener(
+      el,
       'load',
       () => {
         clearTimeout(timer);
@@ -72,7 +55,8 @@ export const waitScriptLoaded = (el: HTMLScriptElement): Promise<HTMLScriptEleme
       { once: true }
     );
 
-    el.addEventListener(
+    addListener(
+      el,
       'error',
       (err) => {
         clearTimeout(timer);
