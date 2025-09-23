@@ -145,6 +145,7 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
         ctx.res = xhr.response;
         ctx.status = xhr.status;
         ctx.headers = {};
+        ctx.ok = xhr.status >= 200 && xhr.status < 300;
         resolve();
       };
       xhr.onloadend = xhr.onerror = xhr.ontimeout = xhr.onabort = cb;
