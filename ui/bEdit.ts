@@ -210,19 +210,19 @@ export async function pasteIn(bParent: B) {
   return b;
 }
 
-export function getColors(b: B) {
-  const colorDico: Record<string, boolean> = {};
-  b.forEach((bChild) => {
-    const s = getComputedStyle(bChild.el);
-    if (s.color) colorDico[s.color] = true;
-    if (s.borderTopColor) colorDico[s.borderTopColor] = true;
-    if (s.borderLeftColor) colorDico[s.borderLeftColor] = true;
-    if (s.borderRightColor) colorDico[s.borderRightColor] = true;
-    if (s.borderBottomColor) colorDico[s.borderBottomColor] = true;
-    if (s.backgroundColor) colorDico[s.backgroundColor] = true;
-  });
-  return Object.keys(colorDico);
-}
+// export function getColors(b: B) {
+//   const colorDico: Record<string, boolean> = {};
+//   b.forEach((bChild) => {
+//     const s = getComputedStyle(bChild.el);
+//     if (s.color) colorDico[s.color] = true;
+//     if (s.borderTopColor) colorDico[s.borderTopColor] = true;
+//     if (s.borderLeftColor) colorDico[s.borderLeftColor] = true;
+//     if (s.borderRightColor) colorDico[s.borderRightColor] = true;
+//     if (s.borderBottomColor) colorDico[s.borderBottomColor] = true;
+//     if (s.backgroundColor) colorDico[s.backgroundColor] = true;
+//   });
+//   return Object.keys(colorDico);
+// }
 
 let lastSelectEl: HTMLElement | null = null;
 B.select$.on((b) => {

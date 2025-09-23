@@ -194,9 +194,9 @@ const cssFunMap = {
 
   inset,
 
-  bg: (v: string) => `background-color:${_colors[v] || v};`,
-  fg: (v: string) => `color:${_colors[v] || v};`,
-  border: (v: number | string) => `border:${_colors[v] ? `${_colors[v]} 1px solid` : v};`,
+  bg: (v: string) => `background-color:${getColor(v)};`,
+  fg: (v: string) => `color:${getColor(v)};`,
+  bColor: (v: string) => `border-color:${getColor(v)}`,
   bgUrl: (v: string) => `background-image: url("${v}");`,
   bgMode: (v: 'contain' | 'cover' | 'fill') =>
     `background-repeat:no-repeat;background-position:center;background-size:${v === 'fill' ? '100% 100%' : v};`,
@@ -335,7 +335,11 @@ export const refreshCss = () => {
   }
 };
 
-export const setCssColors = (colors: Record<string, string>) => {
+export const getColors = () => _colors;
+export const getColor = (k: string) => _colors[k] || k;
+
+export const setColors = (colors: Dict<string>) => {
+  console.debug('setColors', colors);
   _colors = colors;
   refreshCss();
 };

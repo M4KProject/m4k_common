@@ -235,7 +235,7 @@ export const toHslString = (color: any): string => {
  * @param color - Color in any supported format
  * @returns Hex color string (#RRGGBB or #RRGGBBAA if alpha < 1)
  */
-export const toHex = (color: any): string => {
+export const toColor = (color: any): string => {
   const { r, g, b, a } = toRgb(color);
 
   // Function to convert numeric value to padded hex without rounding up
@@ -256,7 +256,7 @@ export const addRgb = (color: any, values: Partial<RgbColor>) => {
   if (isNbr(values.g)) color.g += values.g;
   if (isNbr(values.b)) color.b += values.b;
   if (isNbr(values.a)) color.a += values.a;
-  return toHex(color);
+  return toColor(color);
 };
 
 export const addHsl = (color: any, values: Partial<HslColor>) => {
@@ -265,7 +265,7 @@ export const addHsl = (color: any, values: Partial<HslColor>) => {
   if (isNbr(values.s)) color.s += values.s;
   if (isNbr(values.l)) color.l += values.l;
   if (isNbr(values.a)) color.a += values.a;
-  return toHex(color);
+  return toColor(color);
 };
 
 export const mulHsl = (color: any, values: Partial<HslColor>) => {
@@ -274,7 +274,7 @@ export const mulHsl = (color: any, values: Partial<HslColor>) => {
   if (isNbr(values.s)) color.s *= values.s;
   if (isNbr(values.l)) color.l *= values.l;
   if (isNbr(values.a)) color.a *= values.a;
-  return toHex(color);
+  return toColor(color);
 };
 
 export const setRgb = (color: any, values: Partial<RgbColor>) => {
@@ -283,7 +283,7 @@ export const setRgb = (color: any, values: Partial<RgbColor>) => {
   if (isNbr(values.g)) color.g = values.g;
   if (isNbr(values.b)) color.b = values.b;
   if (isNbr(values.a)) color.a = values.a;
-  return toHex(color);
+  return toColor(color);
 };
 
 export const setHsl = (color: any, values: Partial<HslColor>) => {
@@ -292,7 +292,7 @@ export const setHsl = (color: any, values: Partial<HslColor>) => {
   if (isNbr(values.s)) color.s = values.s;
   if (isNbr(values.l)) color.l = values.l;
   if (isNbr(values.a)) color.a = values.a;
-  return toHex(color);
+  return toColor(color);
 };
 
 /**
@@ -322,7 +322,7 @@ export const mixcolor = (color1: any, color2: any, ratio: number = 0.5): string 
   const a = toRgb(color1);
   const b = toRgb(color2);
 
-  return toHex([
+  return toColor([
     a.r * (1 - ratio) + b.r * ratio,
     a.g * (1 - ratio) + b.g * ratio,
     a.b * (1 - ratio) + b.b * ratio,
@@ -353,7 +353,7 @@ export const desaturate = (color: any, amount: number = 10): string => saturate(
  */
 export const invertColor = (color: any): string => {
   const { r, g, b, a } = toRgb(color);
-  return toHex([255 - r, 255 - g, 255 - b, a]);
+  return toColor([255 - r, 255 - g, 255 - b, a]);
 };
 
 /**
@@ -378,5 +378,5 @@ export const randColor = (
   a: number = 0
 ): string => {
   const r = (max: number) => (max > 0 ? Math.random() * max : 0);
-  return toHex({ h: r(h), s: r(s), l: r(l), a: 1 - r(a) });
+  return toColor({ h: r(h), s: r(s), l: r(l), a: 1 - r(a) });
 };
