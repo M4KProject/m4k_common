@@ -8,6 +8,7 @@ import { Form } from './Form';
 import { toErr } from '@common/utils/err';
 import { addTr } from '../hooks/useTr';
 import { FlexCol } from './Flex';
+import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';
 
 addTr({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
@@ -62,6 +63,8 @@ export const AuthForm = () => {
             />
             <FlexCol>
               <Button
+                icon={<LogIn />}
+                title="Se connecter"
                 onClick={async () => {
                   setPage('');
                   try {
@@ -73,15 +76,13 @@ export const AuthForm = () => {
                   setPage('sign-in');
                 }}
                 color="primary"
-              >
-                Se connecter
-              </Button>
-              <Button onClick={() => setPage('forgot-password')}>Mot de passe oublié ?</Button>
-              <Button onClick={() => setPage('sign-up')}>
-                Vous n'avez pas de compte ?
-                <br />
-                Inscrivez-vous
-              </Button>
+              />
+              <Button title="Mot de passe oublié ?" icon={<Key />} onClick={() => setPage('forgot-password')} />
+              <Button
+                title="Vous n'avez pas de compte ? Inscrivez-vous"
+                icon={<UserPlus />}
+                onClick={() => setPage('sign-up')}
+              />
             </FlexCol>
           </>
         ) : page === 'sign-up' ? (
@@ -97,19 +98,20 @@ export const AuthForm = () => {
             />
             <FlexCol>
               <Button
+                title="S'inscrire"
                 onClick={async () => {
                   setPage('');
                   await signUp(email, password);
                   setPage('sign-in');
                 }}
                 color="primary"
-              >
-                S'inscrire
-              </Button>
-              <Button onClick={() => setPage('sign-in')}>
-                Vous avez déjà un compte ?<br />
-                Connectez-vous
-              </Button>
+                icon={<UserPlus />}
+              />
+              <Button
+                title="Vous avez déjà un compte ? Connectez-vous"
+                icon={<LogIn />}
+                onClick={() => setPage('sign-in')}
+              />
             </FlexCol>
           </>
         ) : page === 'forgot-password' ? (
@@ -117,6 +119,7 @@ export const AuthForm = () => {
             {emailField}
             <FlexCol>
               <Button
+                title="Réinitialiser le mot de passe par email"
                 onClick={async () => {
                   setPage('');
                   await passwordReset(email);
@@ -124,13 +127,13 @@ export const AuthForm = () => {
                   // setPage('code');
                 }}
                 color="primary"
-              >
-                Réinitialiser le mot de passe par email.
-              </Button>
-              <Button onClick={() => setPage('sign-in')}>
-                Vous avez déjà un compte ?<br />
-                Connectez-vous.
-              </Button>
+                icon={<Mail />}
+              />
+              <Button
+                title="Vous avez déjà un compte ? Connectez-vous"
+                icon={<ArrowLeft />}
+                onClick={() => setPage('sign-in')}
+              />
             </FlexCol>
           </>
         ) : page === 'code' ? (
@@ -139,17 +142,18 @@ export const AuthForm = () => {
             <Field value={password} onValue={setPassword} label="Le CODE reçu par email" />
             <FlexCol>
               <Button
+                title="Connexion avec le CODE"
                 onClick={() => {
                   /* signWithCode(email, password) */
                 }}
                 color="primary"
-              >
-                Connexion avec le CODE
-              </Button>
-              <Button onClick={() => setPage('sign-in')}>
-                Vous avez déjà un compte ?<br />
-                Connectez-vous
-              </Button>
+                icon={<Key />}
+              />
+              <Button
+                title="Vous avez déjà un compte ? Connectez-vous"
+                onClick={() => setPage('sign-in')}
+                icon={<ArrowLeft />}
+              />
             </FlexCol>
           </>
         ) : (
