@@ -212,7 +212,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
 
   async apply(
     id: string,
-    cb: (prev: T) => void|Promise<void>,
+    cb: (prev: T) => void | Promise<void>,
     o?: CollOptions<T>
   ): Promise<T | null> {
     const prev = await this.get(id, o);

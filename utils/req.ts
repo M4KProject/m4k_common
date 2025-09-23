@@ -1,3 +1,4 @@
+import { error } from 'console';
 import { retry, sleep } from './async';
 import { toError } from './cast';
 import { isBetween, isDate, isDef, isFileOrBlob, isList, isObj } from './check';
@@ -18,15 +19,18 @@ export class ReqError<T = any> extends Error {
   res?: Response;
   data?: T;
   constructor(
-    message: string,
+    public error: Error,
     public ctx: Partial<ReqContext<T>>
   ) {
-    super(message);
+    super(error.message);
     this.status = ctx.status || 0;
     this.res = ctx.res;
     this.data = ctx.data;
   }
 }
+
+export const toReqError = <T = any>(e: any, ctx: ReqContext<T>) =>
+  e instanceof ReqError ? e : new ReqError<T>(toError(e), ctx);
 
 export interface ReqOptions<T = any> {
   url?: ReqURL;
@@ -47,7 +51,7 @@ export interface ReqOptions<T = any> {
   before?: (ctx: ReqContext<T>) => void | Promise<void> | null;
   after?: (ctx: ReqContext<T>) => void | Promise<void> | null;
   cast?: (ctx: ReqContext<T>) => T | Promise<T> | null;
-  onError?: (ctx: ReqContext<T>) => void;
+  onError?: (error: ReqError<T>) => void;
   onProgress?: (progress: number, ctx: ReqContext<T>) => void | null;
   request?: <T>(ctx: ReqContext<T>) => Promise<T> | null;
   cors?: boolean | null;
@@ -221,7 +225,11 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
   const o = { ...options };
 
   if (o.base) o.base(o);
-  if (!o.url) throw new ReqError<T>('no-url', { options });
+  if (!o.url) {
+    const error = toReqError('no-url', { options } as ReqContext);
+    o.onError && o.onError(error);
+    throw error;
+  }
 
   const headers: ReqHeaders = {};
   const params = o.params || {};
@@ -286,19 +294,20 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
       if (o.after) await o.after(ctx);
       if (!isBetween(ctx.status, 200, 299)) throw ctx.status;
       if (ctx.error) throw ctx.error;
-    } catch (error) {
-      ctx.error = toError(error);
-      o.onError && o.onError(ctx);
+    } catch (e) {
+      ctx.error = e;
+      o.onError && o.onError(toReqError(e, ctx));
       if (ctx.error) {
         await sleep(5000);
-        throw error;
+        throw ctx.error;
       }
     }
-  }, o.retry || 3);
+  }, o.retry || 3).catch((e) => {
+    ctx.error = e;
+  });
 
   if (ctx.error || !ctx.ok) {
-    ctx.error = toError(ctx.error);
-    throw new ReqError<T>(ctx.error, ctx);
+    throw (ctx.error = toReqError(ctx.error || ctx.status, ctx));
   }
 
   return ctx.data as T;

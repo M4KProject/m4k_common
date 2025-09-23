@@ -122,11 +122,13 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     return super.update(id, changes, o).then((result) => {
       if (isStr(id)) {
         const prev = this.cache.getItem(id);
-        this.cache.update({ [id]: {
-          ...prev,
-          ...changes,
-          ...result
-        }});
+        this.cache.update({
+          [id]: {
+            ...prev,
+            ...changes,
+            ...result,
+          },
+        });
       }
       return result;
     });

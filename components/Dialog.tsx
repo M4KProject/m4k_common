@@ -7,7 +7,7 @@ import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';
 import { addTr } from '../hooks/useTr';
-import { toError } from '@common/utils';
+import { ReqError, toError } from '@common/utils';
 
 addTr({
   Error: 'Erreur',
@@ -34,7 +34,11 @@ export const showDialog = (
 export const showError = (e: any) => {
   const error = toError(e);
   console.debug('showError', error);
-  showDialog('Error:' + error.name, () => error.message, { variant: 'error' });
+  if (error instanceof ReqError) {
+    showDialog('ReqError', () => error.message, { variant: 'error' });
+  } else {
+    showDialog('Error:' + error.name, () => error.message, { variant: 'error' });
+  }
 };
 
 const c = Css('Dialog', {

@@ -54,7 +54,7 @@ const startUpload = async (item: UploadItem) => {
 
     if (item.parent) {
       console.debug('upload apply parent', { item, media });
-      await mediaCtrl.apply(item.parent, next => {
+      await mediaCtrl.apply(item.parent, (next) => {
         next.deps.push(media.id);
         console.debug('upload apply parent next', { item, media, next });
       });
