@@ -78,8 +78,8 @@ const c = Css('Field', {
     boxSizing: 'border-box',
   },
   '-check &Input-selected': {
-    border: 'primary',
-    bg: 'primary',
+    border: 'selected',
+    bg: 'selected',
   },
   '-check &Input svg': {
     color: 'bg',
@@ -101,7 +101,7 @@ const c = Css('Field', {
     borderRadius: '999px',
     transition: 0.3,
   },
-  '-switch &Input-selected': { border: 'primary', bg: 'primary' },
+  '-switch &Input-selected': { border: 'selected', bg: 'selected' },
 
   '-switch &InputHandle': {
     w: 1.2,

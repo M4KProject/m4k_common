@@ -189,7 +189,8 @@ const cssFunMap = {
   py,
 
   elevation: (v: number) =>
-    `box-shadow:${em(v * 0.1)} ${em(v * 0.2)} ${em(v * 0.25)} 0px ${_colors.shadow || '#000000AA'};`,
+    `box-shadow:${em(v * 0.1)} ${em(v * 0.2)} ${em(v * 0.25)} 0px ${getColor('shadow')};`,
+
   rounded: (v: number) => `border-radius:${em(v * 0.2)};`,
 
   inset,

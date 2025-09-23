@@ -1,13 +1,13 @@
-import { Dict, isItem, Msg } from '@common/utils';
+import { isItem, Msg } from '@common/utils';
 import { setColors } from './css';
-import { darken, lighten, setHsl, addHsl, toHsl, toColor } from '@common/utils/color';
+import { setHsl, addHsl, toHsl, toColor } from '@common/utils/color';
 
 export interface ThemeInfo {
-  isDark?: boolean;
-  contrast?: number;
+  mode?: 'dark' | 'light';
   primary?: string;
   secondary?: string;
-  colors?: Dict<string>;
+  grey?: string;
+  [key: string]: string;
 }
 
 export const theme$ = new Msg<ThemeInfo>({}, 'theme$', true, isItem);
@@ -17,115 +17,117 @@ export const setTheme = (changes?: Partial<ThemeInfo>) => {
 };
 
 export const newColors = (p: string, color: string, isDark: boolean = false) => {
-  const { h, s, l } = toHsl(color);
-
-  const c = (lvl: number) => {
-    if (lvl === 0) return isDark ? '#000000' : '#ffffff';
-    if (lvl === 100) return isDark ? '#ffffff' : '#000000';
-
-    const n = lvl / 100;
-    const ci = (Math.cos(((lvl - 50) * Math.PI) / 50) + 1) / 2;
-    const tL = isDark ? n * 100 : (1 - n) * 100;
-    const fL = l * ci + tL * (1 - ci);
-
-    return toColor({
-      h,
-      s: s * (0.3 + 0.7 * ci),
-      l: fL,
-    });
-  };
-
-  return {
-    [`${p}0`]: c(0),
-    [`${p}5`]: c(5),
-    [`${p}10`]: c(10),
-    [`${p}20`]: c(20),
-    [`${p}30`]: c(30),
-    [`${p}40`]: c(40),
-    [`${p}50`]: c(50),
-    [`${p}60`]: c(60),
-    [`${p}70`]: c(70),
-    [`${p}80`]: c(80),
-    [`${p}90`]: c(90),
-    [`${p}100`]: c(100),
-  };
+  const hsl = toHsl(color);
+  const { h, s, l } = hsl;
+  const rL = l / 100;
+  const results = {};
+  for (let i = 0; i <= 100; i += 5) {
+    const k = p + i;
+    const r = 2 * (i / 100);
+    const nL = r < 1 ? rL * r : rL + (1 - rL) * (r - 1);
+    const c = toColor({ h, s, l: nL * 100 });
+    results[k] = c;
+  }
+  return results;
 };
 
 export const refreshTheme = () => {
   const theme = theme$.v;
 
-  const isDark = theme.isDark || false;
-  const contrast = theme.contrast || 50;
-  const primary = theme.primary || '#28A8D9';
-  const secondary = theme.secondary || addHsl(primary, { h: 180 });
-  const colors = theme.colors || {};
+  const isDark = theme.mode === 'dark';
 
-  const l = isDark ? darken : lighten;
+  const t = { ...theme };
+  delete t.mode;
 
-  const info = setHsl(primary, { h: 240 });
-  const success = setHsl(primary, { h: 120, l: 40 });
-  const error = setHsl(primary, { h: 0 });
-  const warn = setHsl(primary, { h: 30 });
-  const selected = primary;
-  const shadow = '#11698a1c';
+  const primary = t.primary || '#28A8D9';
+  const secondary = t.secondary || addHsl(primary, { h: 360 / 3 });
+  const grey = t.grey || setHsl(t.primary, { s: 0 });
+  const white = '#ffffff';
+  const black = '#000000';
+  const bg = isDark ? black : white;
+  const fg = isDark ? white : black;
 
-  // const bg = lighten(grey, 40);
-  const bg = l('#aaa', contrast);
-  const fg = l('#aaa', -contrast);
+  Object.assign(
+    t,
+    {
+      primary,
+      secondary,
+      grey,
+      white,
+      black,
+      bg,
+      fg,
+    },
+    theme
+  );
 
-  const side = l(primary, contrast);
-  const body = l(primary, 0.9 * contrast);
-  const toolbar = l(primary, 0.95 * contrast);
+  Object.assign(
+    t,
+    {
+      ...newColors('p', primary, isDark),
+      ...newColors('s', secondary, isDark),
+      ...newColors('g', grey, isDark),
+      info: setHsl(primary, { h: 240 }),
+      success: setHsl(primary, { h: 120, l: 40 }),
+      error: setHsl(primary, { h: 0 }),
+      warn: setHsl(primary, { h: 30 }),
+      selected: secondary,
+      shadow: isDark ? '#ffffff20' : '#00000020',
+    },
+    theme
+  );
 
-  const tr = l(primary, 0.95 * contrast);
-  const trEven = l(primary, 0.9 * contrast);
-  const trHover = l(primary, 0.8 * contrast);
+  Object.assign(
+    t,
+    {
+      side: isDark ? t.g20 : t.p90,
+      body: isDark ? t.bg : t.bg,
+      toolbar: isDark ? t.g10 : t.p50,
+      toolbarFg: white,
+      tr: isDark ? t.g5 : t.p95,
+      trEven: isDark ? t.g10 : t.p90,
+      trHover: isDark ? t.g20 : t.p80,
+      button: isDark ? t.g5 : t.g95,
+    },
+    theme
+  );
 
-  setColors({
-    ...newColors('p', primary, isDark),
-    ...newColors('s', secondary, isDark),
+  setColors(t);
 
-    primary,
-    secondary,
+  //   bg,
+  //   fg,
+  //   selectedFg: '#0a536f',
+  //   // selected: lighten(primary, 20),
 
-    side,
-    body,
-    toolbar,
+  //   // bg: _setHsl(primary, { l: 97 }),
+  //   // fg,
 
-    bg,
-    fg,
-    selectedFg: '#0a536f',
-    // selected: lighten(primary, 20),
+  //   headerBg: 'transparent',
+  //   headerTitle: '#0a536f',
 
-    // bg: _setHsl(primary, { l: 97 }),
-    // fg,
+  //   tooltipBg: '#0a536f',
+  //   tooltipFg: '#ffffff',
 
-    headerBg: 'transparent',
-    headerTitle: '#0a536f',
+  //   btnBg: 'transparent',
+  //   btnFg: fg,
 
-    tooltipBg: '#0a536f',
-    tooltipFg: '#ffffff',
+  //   labelFg: l(primary, -40),
 
-    btnBg: 'transparent',
-    btnFg: fg,
+  //   btnBgHover: '',
+  //   btnFgHover: '',
 
-    labelFg: l(primary, -40),
+  //   info,
+  //   success,
+  //   error,
+  //   warn,
+  //   selected,
 
-    btnBgHover: '',
-    btnFgHover: '',
+  //   shadow,
 
-    info,
-    success,
-    error,
-    warn,
-    selected,
+  //   tr,
+  //   trEven,
+  //   trHover,
 
-    shadow,
-
-    tr,
-    trEven,
-    trHover,
-
-    ...colors,
-  });
+  //   ...colors,
+  // });
 };

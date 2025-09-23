@@ -5,6 +5,7 @@ import { Tr } from './Tr';
 const c = Css('Toolbar', {
   '': {
     bg: 'toolbar',
+    fg: 'toolbarFg',
     px: 1,
     my: 0,
     elevation: 1,

@@ -11,20 +11,21 @@ const c = Css('Button', {
     p: 0,
     rounded: 2,
     border: 'none',
-    bg: 'bg',
+    bg: 'button',
     fg: 'fg',
     wMin: 2.2,
     hMin: 2.2,
+    elevation: 1,
+    transition: 0.5,
   },
   Sfx: {
     position: 'absolute',
     inset: 0,
     bg: 'bg',
-    transition: 'transform 0.5s ease',
+    transition: 0.5,
     scaleX: 0,
     transformOrigin: 'left',
     rounded: 2,
-    elevation: 1,
   },
   Content: {
     position: 'relative',
@@ -48,8 +49,8 @@ const c = Css('Button', {
     rounded: 2,
   },
 
-  '-primary': { bg: 'primary', fg: 'bg' },
-  '-secondary': { bg: 'secondary', fg: 'bg' },
+  '-primary': { bg: 'p40', fg: 'bg' },
+  '-secondary': { bg: 's40', fg: 'bg' },
   '-success': { bg: 'success', fg: 'bg' },
   '-warn': { bg: 'warn', fg: 'bg' },
   '-error': { bg: 'error', fg: 'bg' },
@@ -60,7 +61,7 @@ const c = Css('Button', {
   // '-warn &Icon': { fg: 'bg' },
   // '-error &Icon': { fg: 'bg' },
 
-  ':hover': { fg: 'fg' },
+  ':hover': { fg: 'fg', elevation: 0 },
 
   ':hover, &-selected': { fg: 'selected' },
 

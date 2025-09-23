@@ -41,7 +41,10 @@ const c = Css('Side', {
   '-close .ButtonContent': {
     opacity: 0,
   },
-  'Button-tab': {
+  ' .Button': {
+    mx: 0.5,
+  },
+  ' &Button-tab': {
     ml: 1.5,
     transition: 0.2,
   },
