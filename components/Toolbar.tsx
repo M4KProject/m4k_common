@@ -10,9 +10,11 @@ const c = Css('Toolbar', {
     my: 0,
     elevation: 1,
     fRow: 1,
+    h: 3,
   },
   Title: {
     fg: 'headerTitle',
+    flex: 1,
   },
 });
 
