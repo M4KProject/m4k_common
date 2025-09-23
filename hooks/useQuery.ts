@@ -12,7 +12,10 @@ export const useQuery = <K extends keyof Models>(
   const [state, setState] = useState([] as Models[K][]);
 
   useEffect(() => coll.on(), [coll]);
-  useEffect(() => coll.find$(where).on(setState), [coll, stringify(where)]);
+  useEffect(() => {
+    setState(coll.findCache(where));
+    coll.find$(where).on(setState);
+  }, [coll, stringify(where)]);
 
   return state;
 };

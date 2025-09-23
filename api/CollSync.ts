@@ -11,11 +11,14 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
   cache = new MsgDict<T>({}, this.name + 'Cache', true, isDictOfItem);
   up$ = this.cache.throttle(100);
   onCount = 0;
-  off = toVoid;
+  isInit = false;
+  off = null;
 
   on() {
     this.onCount++;
-    if (this.onCount === 1) {
+    if (!this.isInit) {
+      this.isInit = true;
+      this.find({});
       this.off = this.subscribe('*');
     }
     return () => {
@@ -25,6 +28,7 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
           this.onCount = 0;
           this.off();
           this.off = toVoid;
+          this.isInit = false;
         }
       }, 10);
     };
@@ -96,12 +100,10 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
   }
 
   find$(where?: CollWhere<T>) {
-    this.find(where);
     return this.up$.map(() => this.findCache(where));
   }
 
   one$(where?: CollWhere<T>) {
-    this.one(where);
     return this.up$.map(() => this.findCache(where, true)[0]);
   }
 
