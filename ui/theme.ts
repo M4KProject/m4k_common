@@ -1,16 +1,29 @@
+import { Dict, isItem, Msg } from '@common/utils';
 import { setCssColors } from './css';
 import { darken, lighten, setHsl, addHsl } from '@common/utils/color';
 
-export const setTheme = (
-  isDark: boolean = false,
-  contrast: number = 100,
-  primary: string = '#28A8D9',
-  secondary?: string,
-  { colors }: { colors?: Record<string, string> } = {}
-) => {
-  contrast = 0.5 * contrast;
+export interface ThemeInfo {
+  isDark?: boolean;
+  contrast?: number;
+  primary?: string;
+  secondary?: string;
+  colors?: Dict<string>;
+}
 
-  if (!secondary) secondary = addHsl(primary, { h: 180 });
+export const theme$ = new Msg<ThemeInfo>({}, 'theme$', true, isItem);
+
+export const setTheme = (changes?: Partial<ThemeInfo>) => {
+  theme$.next(prev => ({ ...prev, ...changes }));
+}
+
+export const refreshTheme = () => {
+  const theme = theme$.v;
+
+  const isDark = theme.isDark || false;
+  const contrast = theme.contrast || 50;
+  const primary = theme.primary || '#28A8D9';
+  const secondary = theme.secondary || addHsl(primary, { h: 180 });
+  const colors = theme.colors || {};
 
   const l = isDark ? darken : lighten;
 

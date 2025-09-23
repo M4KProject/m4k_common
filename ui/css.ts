@@ -252,10 +252,10 @@ const _cssMap: { [key: string]: [HTMLElement, CssValue, number] } = {};
 
 let cssCount = 0;
 
-export const setCss = (key: string, css?: CssValue, order?: number) => {
+export const setCss = (key: string, css?: CssValue, order?: number, force?: boolean) => {
   const old = _cssMap[key];
   if (old) {
-    if (isEq(old[1], css)) return key;
+    if (!force && isEq(old[1], css)) return key;
     old[0].remove();
     delete _cssMap[key];
   }
@@ -328,10 +328,10 @@ export const Css = (key: string, css?: CssValue) => {
 
 export const refreshCss = () => {
   const map = _cssMap;
-  for (const key in map) setCss(key, null);
+  // for (const key in map) setCss(key, null);
   for (const key in map) {
     const [,css,order] = map[key];
-    setCss(key, css, order);
+    setCss(key, css, order, true);
   }
 };
 
