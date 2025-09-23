@@ -8,13 +8,13 @@ const c = Css('Button', {
     fRow: ['center', 'start'],
     position: 'relative',
     m: 0.2,
-    p: 0.2,
+    p: 0,
     rounded: 2,
     border: 'none',
     bg: 'bg',
     fg: 'fg',
-    wMin: 2.5,
-    hMin: 2.5,
+    wMin: 2.2,
+    hMin: 2.2,
   },
   Sfx: {
     position: 'absolute',
@@ -29,7 +29,7 @@ const c = Css('Button', {
   Content: {
     position: 'relative',
     fRow: ['center', 'start'],
-    m: 0.25,
+    mr: 0.5,
     flex: 1,
     textAlign: 'left',
   },
@@ -37,11 +37,14 @@ const c = Css('Button', {
   '-icon': {
     m: 0,
   },
+  '-icon &Content': {
+    display: 'none',
+  },
   Icon: {
+    position: 'relative',
     fCenter: 1,
-    mx: 0.25,
-    w: 1.4,
-    h: 1.4,
+    wMin: 2.2,
+    hMin: 2.2,
     rounded: 2,
   },
 
@@ -103,9 +106,9 @@ export const Button = ({
       )}
     >
       <div class={c('Sfx')} />
+      {before}
+      {icon && <div class={c('Icon')}>{icon}</div>}
       <div class={c('Content')}>
-        {before}
-        {icon && <div class={c('Icon')}>{icon}</div>}
         {title && <Tr>{title}</Tr>}
         {children}
       </div>

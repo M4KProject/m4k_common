@@ -35,7 +35,7 @@ const c = Css('Side', {
   },
   ' .ButtonContent': {
     transition: 0.2,
-    opacity: 0,
+    // opacity: 0,
   },
 
   '-open': {
