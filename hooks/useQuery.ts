@@ -9,7 +9,7 @@ export const useQuery = <K extends keyof Models>(
   coll: CollSync<K, Models[K]>,
   where?: CollWhere<Models[K]>
 ) => {
-  const [state, setState] = useState([] as Models[K][]);
+  const [state, setState] = useState(() => coll.findCache(where));
 
   useEffect(() => coll.on(), [coll]);
   useEffect(() => {
@@ -26,4 +26,19 @@ export const useGroupQuery = <K extends keyof Models>(
 ) => {
   const group = useMsg(groupId$);
   return useQuery(coll, { ...where, group });
+};
+
+export const useQueryOne = <K extends keyof Models>(
+  coll: CollSync<K, Models[K]>,
+  where?: string|CollWhere<Models[K]>
+) => {
+  const [state, setState] = useState(() => coll.getCache(where));
+
+  useEffect(() => coll.on(), [coll]);
+  useEffect(() => {
+    setState(coll.getCache(where));
+    coll.one$(where).on(setState);
+  }, [coll, stringify(where)]);
+
+  return state;
 };

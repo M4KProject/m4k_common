@@ -34,8 +34,8 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     };
   }
 
-  getCache(id: string) {
-    return this.cache.getItem(id);
+  getCache(where?: string|CollWhere<T>) {
+    return isStr(where) ? this.cache.getItem(where) : this.findCache(where, true)[0];
   }
 
   findCache(where?: CollWhere<T>, one?: boolean) {
@@ -103,8 +103,8 @@ export class CollSync<K extends keyof Models, T extends Models[K] = Models[K]> e
     return this.up$.map(() => this.findCache(where));
   }
 
-  one$(where?: CollWhere<T>) {
-    return this.up$.map(() => this.findCache(where, true)[0]);
+  one$(where?: string|CollWhere<T>) {
+    return this.up$.map(() => this.getCache(where));
   }
 
   create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
