@@ -30,7 +30,7 @@ export const useGroupQuery = <K extends keyof Models>(
 
 export const useQueryOne = <K extends keyof Models>(
   coll: CollSync<K, Models[K]>,
-  where?: string|CollWhere<Models[K]>
+  where?: string | CollWhere<Models[K]>
 ) => {
   const [state, setState] = useState(() => coll.getCache(where));
 

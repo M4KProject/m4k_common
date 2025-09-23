@@ -58,7 +58,7 @@ const startUpload = async (item: UploadItem) => {
   } finally {
     setTimeout(() => {
       console.debug('upload clean', id, item);
-      uploadJobs$.delete(id)
+      uploadJobs$.delete(id);
     }, 5000);
   }
 };

@@ -20,7 +20,7 @@ const c = Css('Field', {
     w: '100%',
     // m: 0.5,
   },
-  'Group': {
+  Group: {
     fRow: ['center', 'space-between'],
   },
   '-row': {
@@ -486,8 +486,7 @@ export const Field = (props: FieldProps) => {
   );
 };
 
-export const FieldGroup = (props: DivProps) => 
-  <div {...props} class={c('Group', props)} />
+export const FieldGroup = (props: DivProps) => <div {...props} class={c('Group', props)} />;
 
 // //     type?: 'text'|'textarea'|'select';
 // //     name: string;

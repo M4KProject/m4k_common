@@ -24,7 +24,7 @@ export const useMsg = (<T = any>(msg: IMsgReadonly<T> | null | undefined): T | u
       return;
     }
     setState(msg.v);
-    return msg.on(v => setState(v));
+    return msg.on((v) => setState(v));
   }, [msg]);
   return state;
 }) as UseMsg;

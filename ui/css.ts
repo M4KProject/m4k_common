@@ -330,7 +330,7 @@ export const refreshCss = () => {
   const map = _cssMap;
   // for (const key in map) setCss(key, null);
   for (const key in map) {
-    const [,css,order] = map[key];
+    const [, css, order] = map[key];
     setCss(key, css, order, true);
   }
 };
