@@ -45,7 +45,7 @@ const initRealtime = () => {
   };
 
   const disconnect = () => {
-    console.debug('realtime disconnect');
+    // console.debug('realtime disconnect');
     if (xhr) {
       xhr.abort();
       xhr = undefined;
@@ -79,7 +79,7 @@ const initRealtime = () => {
         resolve();
       });
     });
-    console.debug('realtime connected', clientId);
+    // console.debug('realtime connected', clientId);
   };
 
   const update = async (req: Req) => {
@@ -100,7 +100,7 @@ const initRealtime = () => {
           subscriptionKeys.push(key);
         }
       }
-      console.debug('realtime update state', state);
+      // console.debug('realtime update state', state);
 
       if (!subscriptionKeys.length) return disconnect();
       if (!isConnected()) await connect();

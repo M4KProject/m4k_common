@@ -279,7 +279,6 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
   await retry(async () => {
     try {
       const isXhr = o.xhr || (typeof fetch !== 'function' && typeof o.fetch !== 'function');
-      console.info('isXhr', isXhr);
       const request = o.request || (isXhr ? reqXHR : reqFetch);
       await request(ctx as any);
       if (o.cast) ctx.data = await o.cast(ctx);
