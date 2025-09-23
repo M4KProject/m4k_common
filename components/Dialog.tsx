@@ -7,16 +7,17 @@ import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';
 import { addTr } from '../hooks/useTr';
-import { ReqError, toError } from '@common/utils';
+import { isItem, ReqError, stringify, toError } from '@common/utils';
 
 addTr({
   Error: 'Erreur',
+  ReqError: 'Erreur serveur',
   'Failed to update record.': 'Échec de la modification.',
 });
 
 export const showDialog = (
   title: string,
-  content: (open$: Msg<boolean>) => ComponentChildren,
+  getContent: (open$: Msg<boolean>) => ComponentChildren,
   props?: Partial<DialogRenderProps>
 ) => {
   console.debug('showDialog', title);
@@ -26,16 +27,27 @@ export const showDialog = (
 
   const el = portal(
     <DialogRender open$={open$} title={title} {...props}>
-      <Tr>{content(open$)}</Tr>
+      <Tr>{getContent(open$)}</Tr>
     </DialogRender>
   );
 };
 
 export const showError = (e: any) => {
   const error = toError(e);
-  console.debug('showError', error);
+  console.debug('showError', error, error.message, error.name, (error as any).data, (error as any).ctx);
   if (error instanceof ReqError) {
-    showDialog('ReqError', () => error.message, { variant: 'error' });
+    const message = error.data?.message || error.message;
+    const data = error.data?.data;
+    const props = 
+    console.debug('showError ReqError', message, error.data);
+    showDialog('ReqError', () => (
+      <>
+        <div><Tr>{message}</Tr></div>
+        {isItem(data) ? Object.entries(data).map(([prop, value]) => (
+          <div><Tr>{prop}</Tr>: <Tr>{value.message}</Tr></div>
+        )) : stringify(data)}
+      </>
+    ), { variant: 'error' });
   } else {
     showDialog('Error:' + error.name, () => error.message, { variant: 'error' });
   }
