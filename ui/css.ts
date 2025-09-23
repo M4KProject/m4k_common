@@ -2,7 +2,6 @@ import { toStr } from '@common/utils/cast';
 import { Dict, isEq, isItem, isList, isNbr, isStr } from '@common/utils/check';
 import { JSX } from 'preact/jsx-runtime';
 import { createEl } from './html';
-import { sort } from '@common/utils/list';
 
 let _colors: Record<string, string> = {};
 
@@ -143,10 +142,10 @@ export type FlexJustify =
 const displayFlex = (direction: FlexDirection, align: FlexAlign, justify: FlexJustify) =>
   [
     'display:flex;',
-    direction ? `flex-direction:${direction};` : '',
-    align ? `align-items:${align};` : '',
-    justify ? `justify-content:${justify};` : '',
-  ].join('');
+    direction ? `  flex-direction:${direction};` : '',
+    align ? `  align-items:${align};` : '',
+    justify ? `  justify-content:${justify};` : '',
+  ].join('\n');
 
 const cssFunMap = {
   x,
