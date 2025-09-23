@@ -77,7 +77,11 @@ export const AuthForm = () => {
                 }}
                 color="primary"
               />
-              <Button title="Mot de passe oublié ?" icon={<Key />} onClick={() => setPage('forgot-password')} />
+              <Button
+                title="Mot de passe oublié ?"
+                icon={<Key />}
+                onClick={() => setPage('forgot-password')}
+              />
               <Button
                 title="Vous n'avez pas de compte ? Inscrivez-vous"
                 icon={<UserPlus />}
