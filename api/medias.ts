@@ -17,6 +17,7 @@ const update = (id: string, changes: Partial<UploadItem>) => uploadJobs$.merge({
 
 const startUpload = async (item: UploadItem) => {
   const id = item.id;
+  console.info('startUpload', id, item);
 
   try {
     const file = item.file;
@@ -34,7 +35,9 @@ const startUpload = async (item: UploadItem) => {
       {
         req: {
           xhr: true,
+          timeout: 5 * 60 * 1000,
           onProgress: (progress) => {
+            console.info('startUpload onProgress', id, progress);
             update(id, { progress: progress * 100 });
           },
         },
@@ -42,6 +45,7 @@ const startUpload = async (item: UploadItem) => {
     );
 
     update(id, { progress: 100, status: 'finished' });
+    console.info('startUpload finished', id, item);
 
     console.info('upload success', item, media);
     return media;
@@ -50,6 +54,7 @@ const startUpload = async (item: UploadItem) => {
     console.warn('upload failed', item, error);
     update(id, { error: error.message, status: 'failed' });
   } finally {
+    console.info('startUpload delete', id, item);
     setTimeout(() => uploadJobs$.delete(id), 5000);
   }
 };
