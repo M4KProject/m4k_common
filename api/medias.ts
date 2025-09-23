@@ -13,7 +13,10 @@ export interface UploadItem extends JobModel {
 
 export const uploadJobs$ = new MsgDict<UploadItem>({});
 
-const update = (id: string, changes: Partial<UploadItem>) => uploadJobs$.merge({ [id]: changes });
+const update = (id: string, changes: Partial<UploadItem>) => {
+  changes.updated = new Date();
+  uploadJobs$.merge({ [id]: changes });
+};
 
 const startUpload = async (item: UploadItem) => {
   const id = item.id;
@@ -85,6 +88,7 @@ export const upload = (files: File[]): string[] => {
         name: file.name,
         action: 'upload',
         status: 'pending',
+        created: new Date(),
       },
     });
     return id;
