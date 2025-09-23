@@ -33,9 +33,20 @@ const c = Css('Side', {
     wMin: 13,
     h: '100%',
   },
+
   ' .ButtonContent': {
     transition: 0.2,
-    // opacity: 0,
+    opacity: 1,
+  },
+  '-close .ButtonContent': {
+    opacity: 0,
+  },
+  'Button-tab': {
+    ml: 1.5,
+    transition: 0.2,
+  },
+  '-close .Button': {
+    ml: 0.4,
   },
 
   '-open': {
@@ -43,9 +54,6 @@ const c = Css('Side', {
   },
   '-open &Mask': {
     w: 13,
-  },
-  '-open .ButtonContent': {
-    opacity: 1,
   },
 
   Sep: {
@@ -56,16 +64,6 @@ const c = Css('Side', {
     fontWeight: 'bold',
     // borderBottom: '1px solid #0a536f',
   },
-
-  '-editor': { w: 0 },
-  '-editor &Mask': {
-    w: 3,
-    h: 18,
-    bg: '#0090c87a',
-    elevation: 1,
-    borderRadius: '0 0.5em 0.5em 0',
-  },
-  '-editor &Sep': { visibility: 'hidden' },
 });
 
 const SideContext = createContext<Msg<string> | null | undefined>(undefined);
@@ -73,8 +71,9 @@ const SideProvider = SideContext.Provider;
 
 export interface SideButtonProps extends ButtonProps {
   page: string;
+  tab?: boolean;
 }
-export const SideButton = ({ page, title, children, ...props }: SideButtonProps) => {
+export const SideButton = ({ page, tab, title, children, ...props }: SideButtonProps) => {
   const page$ = useContext(SideContext);
   const curr = useMsg(page$);
   return (
@@ -83,7 +82,7 @@ export const SideButton = ({ page, title, children, ...props }: SideButtonProps)
       selected={page === curr}
       onClick={() => page$?.set(page)}
       {...props}
-      class={c('Button', props)}
+      class={c('Button', tab && 'Button-tab', props)}
     >
       {children}
     </Button>
@@ -103,7 +102,7 @@ export const Side = ({ children, page$, ...props }: SideProps) => {
   const toggleOpen = () => setOpen((open) => !open);
   return (
     <SideProvider value={page$}>
-      <div {...props} class={c('', open && '-open', props)}>
+      <div {...props} class={c('', open ? '-open' : '-close', props)}>
         <div class={c('Mask')}>
           <div class={c('Content')}>
             <Button icon={<Menu />} onClick={toggleOpen}>
