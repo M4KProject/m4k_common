@@ -11,7 +11,6 @@ const c = Css('Toolbar', {
     fRow: 1,
   },
   Title: {
-    fontSize: 1.4,
     fg: 'headerTitle',
   },
 });

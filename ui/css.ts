@@ -329,7 +329,10 @@ export const Css = (key: string, css?: CssValue) => {
 export const refreshCss = () => {
   const map = _cssMap;
   for (const key in map) setCss(key, null);
-  for (const key in map) setCss(key, map[key][1]);
+  for (const key in map) {
+    const [,css,order] = map[key];
+    setCss(key, css, order);
+  }
 };
 
 export const setCssColors = (colors: Record<string, string>) => {

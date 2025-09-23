@@ -61,24 +61,6 @@ const c = Css('Field', {
     'caret-color': 'black',
   },
 
-  ' select': {
-    // width: '100',
-    // padding: '8px 12px',
-    // fontSize: '16px',
-    // border: '1px solid',
-    // borderRadius: '4px',
-    // cursor: 'pointer',
-    // transition: 'border-color 0.3s, box-shadow 0.3s',
-  },
-  ' select:focus': {
-    // outline: 'none',
-    // borderColor: '#4a90e2',
-    // boxShadow: '0 0 0 2px rgba(74, 144, 226, 0.2)',
-  },
-  ' option': {
-    // padding: 8,
-  },
-
   '-check &Input': {
     fCenter: 1,
     p: 0,

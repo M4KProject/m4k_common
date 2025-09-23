@@ -62,12 +62,6 @@ const c = Css('Table', {
     background: 'transparent',
     border: 0,
   },
-  ' *[draggable="true"]': {
-    cursor: 'grab',
-  },
-  ' .dragging': {
-    // visibility: 'hidden',
-  },
 });
 
 export interface TableProps extends JSX.HTMLAttributes<HTMLTableElement> {

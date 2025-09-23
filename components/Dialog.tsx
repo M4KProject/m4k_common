@@ -54,13 +54,13 @@ const c = Css('Dialog', {
     minWidth: '80%',
     overflow: 'hidden',
     bg: 'bg',
+    fg: 'fg',
     scale: 0,
     transition: 0.5,
   },
   Header: {
     fCenter: 1,
     textAlign: 'center',
-    fontSize: 1.4,
     fontWeight: 'bold',
     m: 0,
     p: 1,
@@ -68,7 +68,7 @@ const c = Css('Dialog', {
     fg: 'headerTitle',
   },
   Content: {
-    fCol: 1,
+    fCol: ['center'],
     m: 1,
   },
 

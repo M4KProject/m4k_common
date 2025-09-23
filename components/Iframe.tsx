@@ -3,10 +3,6 @@ import { clsx, Css } from '@common/ui/css';
 
 const c = Css('Iframe', {
   '': {
-    // position: "relative",
-    // w: "100%",
-    // h: "100%",
-    // border: 'none',
     border: '1px solid red',
   },
 });

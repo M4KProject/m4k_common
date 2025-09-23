@@ -74,7 +74,6 @@ const c = Css('Select', {
     h: 1.5,
     opacity: 0.6,
     transition: 0.3,
-    fontSize: '12px',
     lineHeight: 1,
     pointerEvents: 'none',
     flexShrink: 0,
