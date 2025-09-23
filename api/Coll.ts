@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-explicit-any
 import { Keys, ModelBase, ModelCreate, Models, ModelUpdate } from './models';
-import { isList, isDef } from '../utils/check';
+import { isList, isDef, isEmpty } from '../utils/check';
 import { removeItem } from '../utils/list';
 import { parse, stringify } from '../utils/json';
 import { realtime } from './realtime';
 import { newApiReq } from './call';
 import { Req, ReqOptions, ReqParams } from '../utils/req';
 import { toError } from '../utils/cast';
-import { global } from '../utils/global';
 import { getUrl } from './getUrl';
+import { deepClone, getChanges } from '@common/utils/obj';
 
 export type CollOperator =
   | '=' // Equal
@@ -208,6 +208,19 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     return this.findId(where).then((id) =>
       id ? (this.update(id, changes, o) as Promise<T>) : this.create(changes, o)
     );
+  }
+
+  async apply(
+    id: string,
+    cb: (prev: T) => void|Promise<void>,
+    o?: CollOptions<T>
+  ): Promise<T | null> {
+    const prev = await this.get(id, o);
+    const next = deepClone(prev);
+    await cb(next);
+    const changes = getChanges(prev, next);
+    if (isEmpty(changes)) return prev;
+    return await this.update(id, changes, o);
   }
 
   getUrl(id?: string, filename?: any, thumb?: [number, number]) {

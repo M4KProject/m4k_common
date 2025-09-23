@@ -9,6 +9,7 @@ const MAX_CONCURRENT_UPLOADS = 3;
 
 export interface UploadItem extends JobModel {
   file: File;
+  parent?: string;
 }
 
 export const uploadJobs$ = new MsgDict<UploadItem>({});
@@ -20,7 +21,7 @@ const update = (id: string, changes: Partial<UploadItem>) => {
 
 const startUpload = async (item: UploadItem) => {
   const id = item.id;
-  console.info('upload started', id, item);
+  console.info('upload started', { id, item });
 
   try {
     const file = item.file;
@@ -28,12 +29,14 @@ const startUpload = async (item: UploadItem) => {
 
     update(id, { status: 'processing' });
 
+    console.debug('upload creating', { item });
     const media = await mediaCtrl.create(
       {
         title: String(file.name),
         source: file,
         group: needGroupId(),
         user: needAuthId(),
+        parent: item.parent,
       },
       {
         req: {
@@ -46,6 +49,16 @@ const startUpload = async (item: UploadItem) => {
         },
       }
     );
+
+    console.debug('upload created', { item, media });
+
+    if (item.parent) {
+      console.debug('upload apply parent', { item, media });
+      await mediaCtrl.apply(item.parent, next => {
+        next.deps.push(media.id);
+        console.debug('upload apply parent next', { item, media, next });
+      });
+    }
 
     update(id, { progress: 100, status: 'finished' });
 
@@ -79,10 +92,11 @@ const processQueue = async () => {
   }
 };
 
-export const upload = (files: File[]): string[] => {
+export const upload = (files: File[], parent?: string): string[] => {
+  console.debug('upload', { files, parent });
   const ids = files.map((file) => {
     const id = uuid();
-    uploadJobs$.merge({
+    uploadJobs$.update({
       [id]: {
         id,
         file,
@@ -90,6 +104,8 @@ export const upload = (files: File[]): string[] => {
         action: 'upload',
         status: 'pending',
         created: new Date(),
+        updated: new Date(),
+        parent,
       },
     });
     return id;
