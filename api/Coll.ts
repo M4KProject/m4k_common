@@ -7,7 +7,7 @@ import { realtime } from './realtime';
 import { newApiReq } from './call';
 import { Req, ReqOptions, ReqParams } from '../utils/req';
 import { toError } from '../utils/cast';
-import { getUrl } from './getUrl';
+import { getUrl, Thumb } from './getUrl';
 import { deepClone, getChanges } from '@common/utils/obj';
 
 export type CollOperator =
@@ -223,7 +223,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     return await this.update(id, changes, o);
   }
 
-  getUrl(id?: string, filename?: any, thumb?: [number, number]) {
+  getUrl(id?: string, filename?: any, thumb?: Thumb) {
     return getUrl(this.name, id, filename, thumb);
   }
 
