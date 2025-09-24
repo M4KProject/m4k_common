@@ -8,23 +8,34 @@ export const first = <T>(items: T[]) => items[0];
 
 export const last = <T>(items: T[]) => items[items.length - 1];
 
+export const normalizeIndex = (index: number, length: number) => {
+  if (length === 0) return 0;
+  index = index % length;
+  if (index < 0) index += length;
+  return index;
+}
+
 export const moveIndex = <T>(items: T[], from: number, to: number) => {
+  // Normaliser les index avant tout traitement
+  from = normalizeIndex(from, items.length);
+  to = normalizeIndex(to, items.length);
+  
   if (from === to) return items;
+  
   const removes = items.splice(from, 1);
   items.splice(to, 0, removes[0]);
   return items;
 };
 
-export const moveItemTo = <T>(items: T[], item: T, to: number) => {
+export const setItemIndex = <T>(items: T[], item: T, index: number) => {
   const from = items.indexOf(item);
-  return moveIndex(items, from, to);
+  return moveIndex(items, from, index);
 };
 
-export const moveItemAdd = <T>(items: T[], item: T, addIndex: number) => {
+export const moveItem = <T>(items: T[], item: T, offset: number) => {
   const from = items.indexOf(item);
   if (from === -1) return items;
-  let to = (from + addIndex) % items.length;
-  if (to < 0) to += items.length;
+  const to = from + offset;
   return moveIndex(items, from, to);
 };
 
@@ -36,8 +47,11 @@ export const range = (from: number, to: number): number[] => {
 };
 
 export const addItem = <T>(items: T[], item: T, index?: number) => {
-  items.push(item);
-  if (isDef(index)) moveItemTo(items, item, index);
+  if (isDef(index)) {
+    items.splice(index, 0, item);
+  } else {
+    items.push(item);
+  }
   return items;
 };
 
