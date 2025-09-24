@@ -6,7 +6,6 @@ const c = Css('Page', {
     fCol: 1,
     flex: 1,
     position: 'relative',
-    overflow: 'hidden',
     bg: '#eee',
   },
   Actions: {
@@ -15,7 +14,6 @@ const c = Css('Page', {
   Body: {
     fCol: 1,
     position: 'relative',
-    overflowX: 'hidden',
     overflowY: 'auto',
     flex: 1,
     bg: 'body',
