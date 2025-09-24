@@ -1,5 +1,3 @@
-import { Dict } from '@common/utils';
-import type { FieldInfo } from '../components/Field';
 import {
   _ContentModel,
   _DeviceModel,
@@ -9,10 +7,43 @@ import {
   _MemberModel,
   _UserModel,
   _LockModel,
+  _SuperuserModel,
 } from './models.generated';
 
 export * from './models.base';
 export * from './models.generated';
+
+export type FieldType =
+  | 'email'
+  | 'password'
+  | 'text'
+  | 'multiline'
+  | 'html'
+  | 'color'
+  | 'number'
+  | 'select'
+  | 'picker'
+  | 'switch'
+  | 'check'
+  | 'image'
+  | 'doc'
+  | 'date'
+  | 'datetime'
+  | 'time';
+
+export interface FieldInfo<T = any> {
+  row?: boolean;
+  type?: FieldType;
+  name?: string;
+  label?: string;
+  helper?: string;
+  error?: string;
+  items?: ([T, string] | false | null | undefined)[];
+  required?: boolean;
+  readonly?: boolean;
+  castType?: string;
+  props?: any;
+}
 
 export interface ContentModel extends _ContentModel {}
 
@@ -197,6 +228,8 @@ export interface DeviceModel extends _DeviceModel {
 
 export interface LockModel extends _LockModel {}
 
+export interface SuperuserModel extends _SuperuserModel {}
+
 export interface Models {
   contents: ContentModel;
   devices: DeviceModel;
@@ -205,4 +238,6 @@ export interface Models {
   medias: MediaModel;
   members: MemberModel;
   users: UserModel;
+  superusers: SuperuserModel;
+  locks: LockModel;
 }

@@ -63,7 +63,7 @@ export interface _ContentModel extends ModelBase {
   title?: string;
   type?: '' | 'empty' | 'form' | 'table' | 'html' | 'playlist' | 'hiboutik' | 'odoo';
   data?: any;
-  files?: File | Blob | string;
+  files?: (File | Blob | string)[];
   medias?: string[];
   group?: string;
 }
@@ -78,7 +78,7 @@ export interface _DeviceModel extends ModelBase {
   input?: string;
   result?: any;
   capture?: File | Blob | string;
-  files?: File | Blob | string;
+  files?: (File | Blob | string)[];
   media?: string;
   user?: string;
   group?: string;
@@ -111,7 +111,7 @@ export interface _JobModel extends ModelBase {
   input?: any;
   result?: any;
   logs?: string;
-  files?: File | Blob | string;
+  files?: (File | Blob | string)[];
   media?: string;
   group?: string;
 }
@@ -129,7 +129,7 @@ export interface _MediaModel extends ModelBase {
   seconds?: number;
   data?: any;
   source?: File | Blob | string;
-  variants?: File | Blob | string;
+  variants?: (File | Blob | string)[];
   parent?: string;
   deps?: string[];
   user?: string;
