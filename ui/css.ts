@@ -194,7 +194,7 @@ const cssFunMap = {
 
   inset,
 
-  bold: (v: 1|0) => v ? `font-weight:bold;` : '',
+  bold: (v: 1 | 0) => (v ? `font-weight:bold;` : ''),
 
   bg: (v: string) => `background-color:${getColor(v)};`,
   fg: (v: string) => `color:${getColor(v)};`,

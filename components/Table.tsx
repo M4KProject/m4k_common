@@ -69,24 +69,16 @@ const c = Css('Table', {
 });
 
 export interface TableProps extends JSX.HTMLAttributes<HTMLTableElement> {}
-export const Table = (props: TableProps) => (
-  <table {...props} class={c('', props)} />
-);
+export const Table = (props: TableProps) => <table {...props} class={c('', props)} />;
 
 export interface TableHeadProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
-export const TableHead = (props: TableHeadProps) => (
-  <thead {...props} class={c('Head', props)} />
-);
+export const TableHead = (props: TableHeadProps) => <thead {...props} class={c('Head', props)} />;
 
 export interface TableBodyProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
-export const TableBody = (props: TableBodyProps) => (
-  <tbody {...props} class={c('Body', props)} />
-);
+export const TableBody = (props: TableBodyProps) => <tbody {...props} class={c('Body', props)} />;
 
 export interface TableFootProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
-export const TableFoot = (props: TableFootProps) => (
-  <tfoot {...props} class={c('Foot', props)} />
-);
+export const TableFoot = (props: TableFootProps) => <tfoot {...props} class={c('Foot', props)} />;
 
 export interface RowProps extends JSX.HTMLAttributes<HTMLTableRowElement> {
   mode?: 'success' | 'error' | 'selected';

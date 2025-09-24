@@ -36,14 +36,14 @@ export const setTheme = (changes?: Partial<ThemeInfo>) => {
 
 export const newColors = (p: string, color: string, isDark: boolean = false) => {
   const { h, s, l } = toHsl(color);
-  const hList = [ 52, 37, 26, 12, 6, 0, -6, -12, -18, -24 ];
+  const hList = [52, 37, 26, 12, 6, 0, -6, -12, -18, -24];
   if (isDark) hList.reverse();
   return {
     ...by(
       hList,
       (_, i) => p + i,
-      (v, i) => toColor({ h, s, l: l + v }),
-    )
+      (v, i) => toColor({ h, s, l: l + v })
+    ),
   };
 };
 

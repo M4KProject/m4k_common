@@ -98,7 +98,7 @@ export const Button = ({
       {...props}
       class={c(
         '',
-        `-${color||'default'}`,
+        `-${color || 'default'}`,
         selected && `-selected`,
         isIcon && `-icon`,
         variant && `-${variant}`,
