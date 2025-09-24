@@ -1,5 +1,5 @@
 import { toStr } from './cast';
-import { isStr } from './check';
+import { isDef, isStr } from './check';
 import { stringify } from './json';
 
 export const compact = <T>(value: T[]) => value.filter(Boolean) as T[];
@@ -15,10 +15,15 @@ export const moveIndex = <T>(items: T[], from: number, to: number) => {
   return items;
 };
 
-export const moveItem = <T>(items: T[], item: T, addIndex: number) => {
+export const moveItemTo = <T>(items: T[], item: T, to: number) => {
+  const from = items.indexOf(item);
+  return moveIndex(items, from, to);
+};
+
+export const moveItemAdd = <T>(items: T[], item: T, addIndex: number) => {
   const from = items.indexOf(item);
   if (from === -1) return items;
-  let to = (from + addIndex) % 5;
+  let to = (from + addIndex) % items.length;
   if (to < 0) to += items.length;
   return moveIndex(items, from, to);
 };
@@ -30,8 +35,9 @@ export const range = (from: number, to: number): number[] => {
   return r;
 };
 
-export const addItem = <T>(items: T[], item: T) => {
+export const addItem = <T>(items: T[], item: T, index?: number) => {
   items.push(item);
+  if (isDef(index)) moveItemTo(items, item, index);
   return items;
 };
 
