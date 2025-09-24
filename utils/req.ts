@@ -298,7 +298,6 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
       ctx.error = e;
       o.onError && o.onError(toReqError(e, ctx));
       if (ctx.error && isBetween(ctx.status, 500, 600)) {
-        debugger;
         await sleep(5000);
         throw ctx.error;
       }

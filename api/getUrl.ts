@@ -2,17 +2,10 @@ import { pathJoin } from '@common/utils/pathJoin';
 import { getApiUrl } from './messages';
 import { Models } from './models';
 
-export const getUrl = (
-  coll: keyof Models,
-  id?: string,
-  filename?: any,
-  thumb?: [number, number]
-) => {
+export type Thumb = 24 | 48 | 100 | 200 | 360 | 720 | 1920 | 4096;
+
+export const getUrl = (coll: keyof Models, id?: string, filename?: any, thumb?: Thumb) => {
   if (!id || !filename) return '';
   const url = pathJoin(getApiUrl(), `files/${coll}/${id}/${filename}`);
-  if (thumb) {
-    const [w, h] = thumb || [200, 200];
-    return `${url}?thumb=${w}x${h}`;
-  }
-  return url;
+  return thumb ? `${url}?thumb=${thumb}x${thumb}` : url;
 };

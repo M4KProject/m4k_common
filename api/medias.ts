@@ -29,6 +29,8 @@ const startUpload = async (item: UploadItem) => {
 
     update(id, { status: 'processing' });
 
+    const parent = item.parent && (await mediaCtrl.get(item.parent));
+
     console.debug('upload creating', { item });
     const media = await mediaCtrl.create(
       {
@@ -36,7 +38,7 @@ const startUpload = async (item: UploadItem) => {
         source: file,
         group: needGroupId(),
         user: needAuthId(),
-        parent: item.parent,
+        parent: parent?.id,
       },
       {
         req: {
@@ -52,11 +54,11 @@ const startUpload = async (item: UploadItem) => {
 
     console.debug('upload created', { item, media });
 
-    if (item.parent) {
-      console.debug('upload apply parent', { item, media });
-      await mediaCtrl.apply(item.parent, (next) => {
+    if (parent && parent.type === 'playlist') {
+      console.debug('upload apply playlist', { item, media, parent });
+      await mediaCtrl.apply(parent.id, (next) => {
         next.deps.push(media.id);
-        console.debug('upload apply parent next', { item, media, next });
+        next.data.items.push({ media: media.id });
       });
     }
 
