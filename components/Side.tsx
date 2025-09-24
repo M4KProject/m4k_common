@@ -11,9 +11,10 @@ const c = Css('Side', {
   '': {
     position: 'relative',
     transition: 0.2,
-    elevation: 1,
+    elevation: 3,
     w: 3,
-    bg: 'side',
+    bg: 'b0',
+    zIndex: 50,
   },
   Mask: {
     position: 'absolute',
@@ -30,8 +31,12 @@ const c = Css('Side', {
     fCol: 1,
     position: 'absolute',
     xy: 0,
-    wMin: 13,
+    wMin: 15,
     h: '100%',
+  },
+  Button: {
+    elevation: 0,
+    my: 0.25,
   },
 
   ' .ButtonContent': {
@@ -41,22 +46,22 @@ const c = Css('Side', {
   '-close .ButtonContent': {
     opacity: 0,
   },
-  ' .Button': {
-    mx: 0.5,
-  },
+  // ' .Button': {
+  //   mx: 0.5,
+  // },
   ' &Button-tab': {
-    ml: 1.5,
+    ml: 2,
     transition: 0.2,
   },
   '-close .Button': {
-    ml: 0.4,
+    ml: 0.25,
   },
 
   '-open': {
-    w: 13,
+    w: 15,
   },
   '-open &Mask': {
-    w: 13,
+    w: 15,
   },
 
   Sep: {
@@ -64,7 +69,7 @@ const c = Css('Side', {
     pl: 1,
     flex: 1,
     color: '#0a536f',
-    fontWeight: 'bold',
+    bold: 1,
     // borderBottom: '1px solid #0a536f',
   },
 });

@@ -1,5 +1,5 @@
 import { toStr } from '@common/utils/cast';
-import { Dict, isEq, isItem, isList, isNbr, isStr } from '@common/utils/check';
+import { Dict, isEq, isItem, isList, isNbr, isStr, isStrNotEmpty } from '@common/utils/check';
 import { JSX } from 'preact/jsx-runtime';
 import { createEl } from './html';
 
@@ -126,7 +126,7 @@ const py = (v: Em) => pt(v) + pb(v);
 
 type Em = number | string | (number | string)[];
 const em = (v: Em): string =>
-  typeof v === 'number' ? v + 'rem' : typeof v === 'string' ? v : v.map(em).join(' ');
+  typeof v === 'number' ? v + 'em' : typeof v === 'string' ? v : v.map(em).join(' ');
 
 export type FlexDirection = '' | 'row' | 'column' | 'row-reverse' | 'column-reverse';
 export type FlexAlign = '' | 'start' | 'center' | 'end' | 'stretch' | 'baseline';
@@ -194,9 +194,11 @@ const cssFunMap = {
 
   inset,
 
+  bold: (v: 1|0) => v ? `font-weight:bold;` : '',
+
   bg: (v: string) => `background-color:${getColor(v)};`,
   fg: (v: string) => `color:${getColor(v)};`,
-  bColor: (v: string) => `border-color:${getColor(v)}`,
+  bColor: (v: string) => `border-color:${getColor(v)};`,
   bgUrl: (v: string) => `background-image: url("${v}");`,
   bgMode: (v: 'contain' | 'cover' | 'fill') =>
     `background-repeat:no-repeat;background-position:center;background-size:${v === 'fill' ? '100% 100%' : v};`,
@@ -308,7 +310,7 @@ export const setCss = (key: string, css?: CssValue, order?: number, force?: bool
 export const Css = (key: string, css?: CssValue) => {
   const order = cssCount++;
   let isInit = false;
-  return (...args: (string | undefined | { class?: string })[]) => {
+  return (...args: (string | undefined | { class?: any })[]) => {
     if (!isInit) {
       setCss(key, css, order);
       isInit = true;
@@ -319,7 +321,7 @@ export const Css = (key: string, css?: CssValue) => {
       if (isStr(arg)) {
         sb.push(key + arg);
       } else if (isItem(arg)) {
-        arg.class && sb.push(arg.class);
+        isStrNotEmpty(arg.class) && sb.push(arg.class);
       }
     }
     return sb.join(' ');

@@ -6,79 +6,6 @@ import { Tr } from './Tr';
 import { addOverlay, removeOverlay } from '@common/ui/overlay';
 import { DivProps } from './Div';
 
-// const c = Css('', {
-//     '': {
-//         display: 'inline-block',
-//         position: 'relative',
-//         top: '105%',
-//         left: '',
-//     },
-//     // 'Mask': {
-//     //     fCenter: 1,
-//     //     visibility: 'hidden',
-//     //     position: 'absolute',
-//     //     inset: 0,
-//     //     transition: 'opacity 0.5s ease',
-//     //     opacity: 0,
-//     // },
-//     'Title': {
-//         position: 'absolute',
-
-//         fg: 'tooltipFg',
-//         bg: 'tooltipBg',
-//         m: 0,
-//         p: 0.25,
-//         px: 0.5,
-//         rounded: 1,
-//         zIndex: 1,
-//         textAlign: 'center',
-
-//         visibility: 'hidden',
-//         opacity: 0,
-//         transition: 'opacity 0.5s ease',
-//     },
-//     ':hover &Title': { visibility: 'visible', opacity: 1 },
-//     'Title::after': {
-//         content: '" "',
-//         position: 'absolute',
-//         m: -0.25,
-//         w: 0.5,
-//         h: 0.5,
-//         fg: 'tooltipFg',
-//         bg: 'tooltipBg',
-//         transform: 'rotate(45deg)',
-//         zIndex: -1,
-//         top: '100%',
-//         left: '50%',
-//     },
-
-//     '-top &Title': { transform: 'translate(-50%, -100%)', top: '-0.5em', left: '50%' },
-//     '-top &Title::after': { top: '100%', left: '50%' },
-
-//     '-bottom &Title': { transform: 'translate(-50%, 100%)', bottom: '-0.5em', left: '50%' },
-//     '-bottom &Title::after': { top: '0%', left: '50%' },
-
-//     '-left &Title': { transform: 'translate(-100%, -50%)', top: '50%', left: '-0.5em' },
-//     '-left &Title::after': { top: '50%', left: '100%' },
-
-//     '-right &Title': { transform: 'translate(100%, -50%)', top: '50%', right: '-0.5em' },
-//     '-right &Title::after': { top: '50%', left: '0%' },
-// }
-
-// export interface TooltipProps extends Omit<divProps, 'title'> {
-//     title: ReactNode,
-//     pos?: 'top'|'bottom'|'left'|'right',
-// }
-// const Tooltip = ({ title, pos, children, ...props }: TooltipProps) => {
-//     const c = useCss('Tooltip', css)
-//     return (
-//         <div class={[c, `${c}-${pos||'top'}`, cls]} {...props}>
-//             <div class={c('Title')}>{title}</div>
-//             {children}
-//         </div>
-//     );
-// };
-
 const c = Css('Tooltip', {
   '': {
     position: 'absolute',
@@ -90,9 +17,9 @@ const c = Css('Tooltip', {
     fCenter: 1,
     textAlign: 'center',
     position: 'absolute',
-    p: 0.25,
-    fg: 'tooltipFg',
-    bg: 'tooltipBg',
+    p: 0.5,
+    fg: 'w0',
+    bg: 'p9',
     rounded: 1,
     fontFamily: 'Roboto',
   },
@@ -101,16 +28,16 @@ const c = Css('Tooltip', {
     m: -0.25,
     w: 0.5,
     h: 0.5,
-    fg: 'tooltipFg',
-    bg: 'tooltipBg',
+    fg: 'w0',
+    bg: 'p9',
     rotate: '45deg',
   },
 
-  '-top &Content': { top: '-0.5em', x: '50%', translate: '-50%, -100%' },
-  '-top &Arrow': { top: '-0.5em', x: '50%' },
+  '-top &Content': { t: -0.5, x: '50%', translate: '-50%, -100%' },
+  '-top &Arrow': { t: -0.5, x: '50%' },
 
-  '-bottom &Content': { bottom: '-0.5em', x: '50%', translate: '-50%, 100%' },
-  '-bottom &Arrow': { bottom: '-0.5em', x: '50%' },
+  '-bottom &Content': { b: -0.5, x: '50%', translate: '-50%, 100%' },
+  '-bottom &Arrow': { b: -0.5, x: '50%' },
 });
 
 export interface TooltipProps extends Omit<DivProps, 'title'> {
@@ -121,6 +48,8 @@ export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
   const { top, left, width, height } = target.getBoundingClientRect();
 
   console.debug('top', top);
+
+  if (!children) return null;
 
   const pos: string = top > 40 ? 'top' : 'bottom';
   return (

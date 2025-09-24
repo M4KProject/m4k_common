@@ -7,21 +7,23 @@ const c = Css('Button', {
   '': {
     fRow: ['center', 'start'],
     position: 'relative',
-    m: 0.2,
-    p: 0,
+    m: 0.25,
+    p: 0.25,
     rounded: 2,
     border: 'none',
-    bg: 'button',
-    fg: 'fg',
+    bg: 'transparent',
+    fg: 'w2',
     wMin: 2.2,
     hMin: 2.2,
     elevation: 1,
     transition: 0.5,
+    bold: 1,
+    fontSize: 'inherit',
   },
   Sfx: {
     position: 'absolute',
     inset: 0,
-    bg: 'bg',
+    bg: 's5',
     transition: 0.5,
     scaleX: 0,
     transformOrigin: 'left',
@@ -30,49 +32,46 @@ const c = Css('Button', {
   Content: {
     position: 'relative',
     fRow: ['center', 'start'],
-    mr: 0.5,
+    m: 0.25,
     flex: 1,
     textAlign: 'left',
   },
 
-  '-icon': {
-    m: 0,
-  },
   '-icon &Content': {
     display: 'none',
   },
   Icon: {
     position: 'relative',
     fCenter: 1,
-    wMin: 2.2,
-    hMin: 2.2,
+    m: 0.25,
     rounded: 2,
   },
 
-  '-primary': { bg: 'p40', fg: 'bg' },
-  '-secondary': { bg: 's40', fg: 'bg' },
-  '-success': { bg: 'success', fg: 'bg' },
-  '-warn': { bg: 'warn', fg: 'bg' },
-  '-error': { bg: 'error', fg: 'bg' },
+  '-primary': { bg: 'p5' },
+  '-secondary': { bg: 's4' },
+  '-success': { bg: 'success' },
+  '-warn': { bg: 'warn' },
+  '-error': { bg: 'error' },
+  '-default': { bg: 'b1', fg: 't2' },
 
-  // '-primary &Icon': { fg: 'bg' },
-  // '-secondary &Icon': { fg: 'bg' },
-  // '-success &Icon': { fg: 'bg' },
-  // '-warn &Icon': { fg: 'bg' },
-  // '-error &Icon': { fg: 'bg' },
+  '-icon': { m: 0, bg: 'transparent', elevation: 0 },
+  '-icon&-primary': { fg: 'p5' },
+  '-icon&-secondary': { fg: 's4' },
+  '-icon&-success': { fg: 'success' },
+  '-icon&-warn': { fg: 'warn' },
+  '-icon&-error': { fg: 'error' },
+  '-icon&-default': { fg: 't2' },
 
-  ':hover': { fg: 'fg', elevation: 0 },
+  ':active': { bg: 'p4', fg: 'w2' },
+  '-selected': { bg: 'p4', fg: 'w2' },
 
-  ':hover, &-selected': { fg: 'selected' },
-
-  ':hover &Sfx, &-selected &Sfx': { scaleX: 1 },
-
-  ':active &Sfx': { elevation: 0 },
+  ':hover &Sfx': { scaleX: 1 },
+  ':hover': { elevation: 0, fg: 'w0' },
 });
 
 export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   class?: string;
-  color?: 'primary' | 'secondary' | 'success' | 'warn' | 'error';
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
   selected?: boolean;
   icon?: ComponentChildren;
@@ -99,7 +98,7 @@ export const Button = ({
       {...props}
       class={c(
         '',
-        color && `-${color}`,
+        `-${color||'default'}`,
         selected && `-selected`,
         isIcon && `-icon`,
         variant && `-${variant}`,

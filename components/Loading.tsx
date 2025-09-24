@@ -13,7 +13,6 @@ const c = Css('Loading', {
     fCenter: 1,
   },
   ' svg': {
-    fontSize: 1.2,
     // anim: {
     //     count: 'infinite',
     //     timing: 'linear',

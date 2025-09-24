@@ -1,6 +1,8 @@
-import { isItem, Msg } from '@common/utils';
+import { by } from '@common/utils/by';
+import { isItem } from '@common/utils/check';
+import { Msg } from '@common/utils/Msg';
 import { setColors } from './css';
-import { setHsl, addHsl, toHsl, toColor } from '@common/utils/color';
+import { setHsl, addHsl, toHsl, toColor, setRgb } from '@common/utils/color';
 
 export interface ThemeInfo {
   mode?: 'dark' | 'light';
@@ -16,36 +18,61 @@ export const setTheme = (changes?: Partial<ThemeInfo>) => {
   theme$.next((prev) => ({ ...prev, ...changes }));
 };
 
+// export const lerp = (points: [number, number][]): ((x: number) => number) => {
+//   const sorted = [...points].sort((a, b) => a[0] - b[0]);
+//   return (x: number) => {
+//     if (x <= sorted[0][0]) return sorted[0][1];
+//     if (x >= sorted[sorted.length - 1][0]) return sorted[sorted.length - 1][1];
+//     for (let i = 0; i < sorted.length - 1; i++) {
+//       const [x1, y1] = sorted[i];
+//       const [x2, y2] = sorted[i + 1];
+//       if (x >= x1 && x <= x2) {
+//         return y1 + ((y2 - y1) * (x - x1)) / (x2 - x1);
+//       }
+//     }
+//     return 0;
+//   };
+// };
+
 export const newColors = (p: string, color: string, isDark: boolean = false) => {
-  const hsl = toHsl(color);
-  const { h, s, l } = hsl;
-  const rL = l / 100;
-  const results = {};
-  for (let i = 0; i <= 100; i += 5) {
-    const k = p + i;
-    const r = 2 * (i / 100);
-    const nL = r < 1 ? rL * r : rL + (1 - rL) * (r - 1);
-    const c = toColor({ h, s, l: nL * 100 });
-    results[k] = c;
-  }
-  return results;
+  const { h, s, l } = toHsl(color);
+  const hList = [ 52, 37, 26, 12, 6, 0, -6, -12, -18, -24 ];
+  if (isDark) hList.reverse();
+  return {
+    ...by(
+      hList,
+      (_, i) => p + i,
+      (v, i) => toColor({ h, s, l: l + v }),
+    )
+  };
 };
 
 export const refreshTheme = () => {
   const theme = theme$.v;
-
-  const isDark = theme.mode === 'dark';
-
   const t = { ...theme };
+  const isDark = t.mode === 'dark';
   delete t.mode;
 
   const primary = t.primary || '#28A8D9';
   const secondary = t.secondary || addHsl(primary, { h: 360 / 3 });
-  const grey = t.grey || setHsl(t.primary, { s: 0 });
-  const white = '#ffffff';
-  const black = '#000000';
-  const bg = isDark ? black : white;
-  const fg = isDark ? white : black;
+  const grey = t.grey || setHsl(primary, { s: 0 });
+
+  const w0 = '#ffffff';
+  const w1 = setHsl(primary, { s: 30, l: 98 });
+  const w2 = setHsl(primary, { s: 30, l: 95 });
+  const w3 = setHsl(primary, { s: 30, l: 90 });
+  const g0 = '#000000';
+  const g1 = setHsl(primary, { s: 30, l: 5 });
+  const g2 = setHsl(primary, { s: 30, l: 10 });
+  const g3 = setHsl(primary, { s: 30, l: 15 });
+  const b0 = isDark ? g0 : w0;
+  const b1 = isDark ? g1 : w1;
+  const b2 = isDark ? g2 : w2;
+  const b3 = isDark ? g3 : w3;
+  const t0 = isDark ? w0 : g0;
+  const t1 = isDark ? w1 : g1;
+  const t2 = isDark ? w2 : g2;
+  const t3 = isDark ? w3 : g3;
 
   Object.assign(
     t,
@@ -53,10 +80,22 @@ export const refreshTheme = () => {
       primary,
       secondary,
       grey,
-      white,
-      black,
-      bg,
-      fg,
+      w0,
+      w1,
+      w2,
+      w3,
+      g0,
+      g1,
+      g2,
+      g3,
+      b0,
+      b1,
+      b2,
+      b3,
+      t0,
+      t1,
+      t2,
+      t3,
     },
     theme
   );
@@ -71,8 +110,7 @@ export const refreshTheme = () => {
       success: setHsl(primary, { h: 120, l: 40 }),
       error: setHsl(primary, { h: 0 }),
       warn: setHsl(primary, { h: 30 }),
-      selected: secondary,
-      shadow: isDark ? '#ffffff20' : '#00000020',
+      shadow: setHsl(primary, { s: 100, l: 5, a: 0.1 }),
     },
     theme
   );
@@ -80,14 +118,13 @@ export const refreshTheme = () => {
   Object.assign(
     t,
     {
-      side: isDark ? t.g20 : t.p90,
-      body: isDark ? t.bg : t.bg,
-      toolbar: isDark ? t.g10 : t.p50,
-      toolbarFg: white,
-      tr: isDark ? t.g5 : t.p95,
-      trEven: isDark ? t.g10 : t.p90,
-      trHover: isDark ? t.g20 : t.p80,
-      button: isDark ? t.g5 : t.g95,
+      // body: bg1,
+      // side: bg0,
+      // toolbar: bg0,
+      // tr: isDark ? t.g5 : t.p95,
+      // trEven: isDark ? t.g10 : t.p90,
+      // trHover: isDark ? t.g20 : t.p80,
+      // button: isDark ? t.g5 : t.g95,
     },
     theme
   );

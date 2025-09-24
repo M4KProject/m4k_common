@@ -4,17 +4,19 @@ import { Tr } from './Tr';
 
 const c = Css('Toolbar', {
   '': {
-    bg: 'toolbar',
-    fg: 'toolbarFg',
-    px: 1,
+    bg: 'b1',
+    fg: 't3',
+    px: 2,
     my: 0,
-    elevation: 1,
+    elevation: 2,
     fRow: 1,
-    h: 3,
+    h: 4,
+    zIndex: 20,
   },
   Title: {
-    fg: 'headerTitle',
+    fg: 't2',
     flex: 1,
+    bold: 1,
   },
 });
 

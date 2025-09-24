@@ -18,11 +18,7 @@ const c = Css('AuthForm', {
   '': {
     fCol: ['stretch', 'center'],
     w: 30,
-    bg: 'bg',
-  },
-  ' .Form': {
-    elevation: 0,
-    border: 0,
+    bg: 'b0',
   },
 });
 

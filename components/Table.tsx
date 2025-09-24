@@ -6,29 +6,38 @@ const c = Css('Table', {
     border: 0,
     borderCollapse: 'collapse',
     m: 0.5,
-    rounded: 2,
-    elevation: 1,
   },
+
+  RowHeader: {
+    bg: 'b2',
+    h: 2.5,
+  },
+  CellHeader: {
+    fg: 't2',
+  },
+
   Row: {
     borderCollapse: 'collapse',
     w: '100%',
-    bg: 'tr',
+    bg: 'b0',
+    fg: 't2',
+    h: 3,
   },
+
   'Row-success': { fg: 'success' },
   'Row-error': { fg: 'error' },
   'Row-selected': { fg: 'selected' },
-  'Row:nth-child(even)': { bg: 'trEven' },
+  'Row:nth-child(even)': { bg: 'b2', rounded: 2 },
   'Row:hover': { bg: 'trHover' },
+
   Cell: {
-    border: '1px solid #ddd',
+    border: 0,
     textAlign: 'left',
-    h: 3,
   },
   CellContent: {
     fCol: ['stretch', 'center'],
-    px: 0.5,
     position: 'relative',
-    h: 3,
+    px: 0.5,
   },
   'Cell-row &CellContent': {
     fRow: ['center', 'start'],
@@ -52,74 +61,61 @@ const c = Css('Table', {
   'Cell-check': {
     width: 0,
   },
-  'Cell-header': {
-    pt: 1,
-    bg: 'bg',
-    fg: 'primary',
-    borderTop: 0,
-  },
   ' input': {
     background: 'transparent',
     border: 0,
   },
 });
 
-export interface TableProps extends JSX.HTMLAttributes<HTMLTableElement> {
-  class?: string;
-}
-export const Table = (props: TableProps) => {
-  return <table {...props} class={c('', props)} />;
-};
+export interface TableProps extends JSX.HTMLAttributes<HTMLTableElement> {}
+export const Table = (props: TableProps) => (
+  <table {...props} class={c('', props)} />
+);
 
-export interface TableHeadProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {
-  class?: any;
-}
-export const TableHead = (props: TableHeadProps) => {
-  return <thead {...props} class={c('Head', props)} />;
-};
+export interface TableHeadProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
+export const TableHead = (props: TableHeadProps) => (
+  <thead {...props} class={c('Head', props)} />
+);
 
-export interface TableBodyProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {
-  class?: string;
-}
-export const TableBody = (props: TableBodyProps) => {
-  return <tbody {...props} class={c('Body', props)} />;
-};
+export interface TableBodyProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
+export const TableBody = (props: TableBodyProps) => (
+  <tbody {...props} class={c('Body', props)} />
+);
 
-export interface TableFootProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {
-  class?: string;
-}
-export const TableFoot = (props: TableFootProps) => {
-  return <tfoot {...props} class={c('Foot', props)} />;
-};
+export interface TableFootProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
+export const TableFoot = (props: TableFootProps) => (
+  <tfoot {...props} class={c('Foot', props)} />
+);
 
 export interface RowProps extends JSX.HTMLAttributes<HTMLTableRowElement> {
   mode?: 'success' | 'error' | 'selected';
-  class?: string;
 }
-export const Row = (props: RowProps) => {
-  return <tr {...props} class={c('Row', props.mode && `Row-${props.mode}`, props)} />;
-};
+export const Row = (props: RowProps) => (
+  <tr {...props} class={c('Row', props.mode && `Row-${props.mode}`, props)} />
+);
 
 export interface CellProps extends JSX.HTMLAttributes<HTMLTableCellElement> {
   variant?: 'row' | 'center' | 'around' | 'check' | 'actions';
-  class?: string;
 }
-export const Cell = ({ variant, children, ...props }: CellProps) => {
-  return (
-    <td {...props} class={c('Cell', variant && `Cell-${variant}`, props)}>
-      <div class={c('CellContent')}>{children}</div>
-    </td>
-  );
-};
+export const Cell = ({ variant, children, ...props }: CellProps) => (
+  <td {...props} class={c('Cell', variant && `Cell-${variant}`, props)}>
+    <div class={c('CellContent')}>{children}</div>
+  </td>
+);
+
+export interface RowHeaderProps extends JSX.HTMLAttributes<HTMLTableRowElement> {}
+export const RowHeader = (props: RowProps) => (
+  <>
+    <div class={c('RowHeaderBg')} />
+    <tr {...props} class={c('RowHeader', props.mode && `Row-${props.mode}`, props)} />
+  </>
+);
 
 export interface CellHeaderProps extends JSX.HTMLAttributes<HTMLTableCellElement> {
   variant?: 'row' | 'center';
-  class?: string;
 }
-export const CellHeader = ({ variant, children, ...props }: CellHeaderProps) => {
-  return (
-    <th {...props} class={c('Cell', 'Cell-header', variant && `Cell-${variant}`, props)}>
-      <div class={c('CellContent')}>{children}</div>
-    </th>
-  );
-};
+export const CellHeader = ({ variant, children, ...props }: CellHeaderProps) => (
+  <th {...props} class={c('CellHeader', variant && `Cell-${variant}`, props)}>
+    <div class={c('CellContent')}>{children}</div>
+  </th>
+);
