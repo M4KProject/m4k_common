@@ -35,9 +35,10 @@ const c = Css('Table', {
     textAlign: 'left',
   },
   CellContent: {
-    fCol: ['stretch', 'center'],
     position: 'relative',
+    fCol: ['stretch', 'center'],
     px: 0.5,
+    h: 3,
   },
   'Cell-row &CellContent': {
     fRow: ['center', 'start'],

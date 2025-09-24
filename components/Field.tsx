@@ -107,7 +107,7 @@ const c = Css('Field', {
   '-switch &InputHandle': {
     w: 1.2,
     h: 1.2,
-    bg: 'w1',
+    bg: 'w0',
     borderRadius: '50%',
     position: 'absolute',
     elevation: 1,
