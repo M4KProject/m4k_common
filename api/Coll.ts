@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import { Keys, ModelBase, ModelCreate, Models, ModelUpdate } from './models';
-import { isList, isDef, isEmpty } from '../utils/check';
+import { isList, isDef, isEmpty, isStr } from '../utils/check';
 import { removeItem } from '../utils/list';
 import { parse, stringify } from '../utils/json';
 import { realtime } from './realtime';
@@ -119,7 +119,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   }
 
   findPage(where: CollWhere<T>, o?: CollOptions<T>) {
-    // this.log('findPage', where, o);
+    this.log('findPage', where, o);
     const reqOptions: ReqOptions = o?.req || {};
     return this.r<{
       items: T[];
