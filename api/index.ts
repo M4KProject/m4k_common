@@ -1,5 +1,6 @@
+
 export * from './Coll';
-export * from './CollSync';
+export * from './Sync';
 export * from './auth';
 export * from './call';
 export * from './getUrl';

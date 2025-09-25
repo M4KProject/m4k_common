@@ -1,4 +1,4 @@
-import { Dict, isItemEmpty, Item } from './check';
+import { Dict, isItemEmpty, isNil, Item } from './check';
 import { merge } from './obj';
 import { Msg } from './Msg';
 
@@ -26,7 +26,7 @@ export class MsgDict<T extends {}> extends Msg<Dict<T>> {
     const next = { ...prev };
 
     for (const key in changes) {
-      if (changes[key] === undefined) {
+      if (isNil(changes[key])) {
         delete next[key];
       } else if (!isReplace) {
         next[key] = merge(next[key], changes[key]);
@@ -51,7 +51,7 @@ export class MsgDict<T extends {}> extends Msg<Dict<T>> {
   }
 
   delete(id: string) {
-    return this.update({ [id]: undefined });
+    return this.update({ [id]: null });
   }
 
   getItems() {

@@ -1,10 +1,7 @@
-import { useMsg } from '../hooks';
 import { Css } from '@common/ui/css';
-import { Msg } from '@common/utils/Msg';
 import { DivProps } from './Div';
 import { Button, ButtonProps } from './Button';
-import { createContext } from 'preact';
-import { useContext, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { Menu } from 'lucide-react';
 
 const c = Css('Side', {
@@ -74,52 +71,39 @@ const c = Css('Side', {
   },
 });
 
-const SideContext = createContext<Msg<string> | null | undefined>(undefined);
-const SideProvider = SideContext.Provider;
-
 export interface SideButtonProps extends ButtonProps {
+  curr: string;
   page: string;
   tab?: boolean;
 }
-export const SideButton = ({ page, tab, title, children, ...props }: SideButtonProps) => {
-  const page$ = useContext(SideContext);
-  const curr = useMsg(page$);
-  return (
-    <Button
-      title={title}
-      selected={page === curr}
-      onClick={() => page$?.set(page)}
-      {...props}
-      class={c('Button', tab && 'Button-tab', props)}
-    >
-      {children}
-    </Button>
-  );
-};
+export const SideButton = ({ curr, page, tab, title, children, ...props }: SideButtonProps) => (
+  <Button
+    title={title}
+    selected={page === curr}
+    {...props}
+    class={c('Button', tab && 'Button-tab', props)}
+  >
+    {children}
+  </Button>
+);
 
-export interface SideSepProps extends DivProps {}
-export const SideSep = (props: SideSepProps) => {
-  return <div {...props} class={c('Sep', props)} />;
-};
+export const SideSep = (props: DivProps) => (
+  <div {...props} class={c('Sep', props)} />
+);
 
-export interface SideProps extends DivProps {
-  page$?: Msg<string> | null;
-}
-export const Side = ({ children, page$, ...props }: SideProps) => {
+export const Side = ({ children, ...props }: DivProps) => {
   const [open, setOpen] = useState(true);
   const toggleOpen = () => setOpen((open) => !open);
   return (
-    <SideProvider value={page$}>
-      <div {...props} class={c('', open ? '-open' : '-close', props)}>
-        <div class={c('Mask')}>
-          <div class={c('Content')}>
-            <Button icon={<Menu />} onClick={toggleOpen}>
-              Ouvrir
-            </Button>
-            {children}
-          </div>
+    <div {...props} class={c('', open ? '-open' : '-close', props)}>
+      <div class={c('Mask')}>
+        <div class={c('Content')}>
+          <Button icon={<Menu />} onClick={toggleOpen}>
+            Ouvrir
+          </Button>
+          {children}
         </div>
       </div>
-    </SideProvider>
+    </div>
   );
 };

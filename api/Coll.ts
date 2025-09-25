@@ -94,14 +94,16 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 };
 
 export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
-  unsubscribes: (() => void)[] = [];
-  r: Req;
+  public readonly name: K;
+  private readonly unsubscribes: (() => void)[] = [];
+  private readonly r: Req;
 
-  constructor(public name: K) {
-    this.r = newApiReq(`collections/${this.name}/`);
+  constructor(name: K) {
+    this.name = name;
+    this.r = newApiReq(`collections/${name}/`);
   }
 
-  log(...args: any[]) {
+  private log(...args: any[]) {
     console.debug('Coll', this.name, ...args);
   }
 
@@ -118,7 +120,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     });
   }
 
-  findPage(where: CollWhere<T>, o?: CollOptions<T>) {
+  getPage(where: CollWhere<T>, o?: CollOptions<T>) {
     this.log('findPage', where, o);
     const reqOptions: ReqOptions = o?.req || {};
     return this.r<{
@@ -133,14 +135,18 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     });
   }
 
-  find(where: CollWhere<T>, o?: CollOptions<T>) {
-    return this.findPage(where, { page: 1, perPage: 1000, skipTotal: true, ...o }).then(
+  filter(where: CollWhere<T>, o?: CollOptions<T>) {
+    return this.getPage(where, { page: 1, perPage: 1000, skipTotal: true, ...o }).then(
       (r) => r.items
     );
   }
 
+  all(o?: CollOptions<T>) {
+    return this.filter({}, o);
+  }
+
   one(where: CollWhere<T>, o?: CollOptions<T>): Promise<T | null> {
-    return this.findPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(
+    return this.getPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(
       (r) => r.items[0] || null
     );
   }
@@ -157,7 +163,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   }
 
   count(where: CollWhere<T>, o?: CollOptions<T>) {
-    return this.findPage(where, { page: 1, perPage: 1, ...o }).then((r) => r.totalItems);
+    return this.getPage(where, { page: 1, perPage: 1, ...o }).then((r) => r.totalItems);
   }
 
   create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
@@ -171,15 +177,12 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   }
 
   update(
-    id: string | CollWhere<T>,
+    id: string,
     changes: ModelUpdate<T>,
     o?: CollOptions<T>
   ): Promise<T | null> {
     this.log('update', id, changes, o);
     if (!id) throw toError('no id');
-    if (typeof id === 'object') {
-      return this.findId(id, o).then((id) => (id ? this.update(id, changes, o) : null));
-    }
     const reqOptions: ReqOptions = o?.req || {};
     return this.r('PATCH', `records/${id}`, {
       ...reqOptions,
@@ -188,7 +191,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     });
   }
 
-  up(id: string | CollWhere<T>, changes: ModelUpdate<T>, o?: CollOptions<T>) {
+  up(id: string, changes: ModelUpdate<T>, o?: CollOptions<T>) {
     return this.update(id, changes, { ...o, select: [] }).then(Boolean);
   }
 
@@ -227,12 +230,12 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     return getUrl(this.name, id, filename, thumb);
   }
 
-  subscribe(
-    topic: string,
+  on(
     cb: (item: T, action: 'update' | 'create' | 'delete') => void,
-    o?: CollOptions<T>
+    topic: string = '*',
+    o?: CollOptions<T>,
   ) {
-    console.debug('subscribe', this.name, topic, o);
+    console.debug('on', this.name, topic, o);
     // 'devices/8e2mu4rr32b0glf?options={"headers": {"x-token": "..."}}'
 
     const p = getParams(o);

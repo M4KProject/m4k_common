@@ -4,6 +4,5 @@ export * from './useAsyncEffect';
 export * from './useConstant';
 export * from './useMsg';
 export * from './usePromise';
-export * from './useQuery';
 export * from './useTimerMs';
 export * from './useTr';
