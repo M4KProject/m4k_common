@@ -8,14 +8,6 @@ const c = Css('Table', {
     m: 0.5,
   },
 
-  RowHeader: {
-    bg: 'b2',
-    h: 2.5,
-  },
-  CellHeader: {
-    fg: 't2',
-  },
-
   Row: {
     borderCollapse: 'collapse',
     w: '100%',
@@ -66,6 +58,16 @@ const c = Css('Table', {
     background: 'transparent',
     border: 0,
   },
+
+  RowHead: {
+    bg: 'b0',
+  },
+  CellHead: {
+    fg: 't2',
+  },
+  'CellHead &CellContent': {
+    h: 2.5,
+  },
 });
 
 export interface TableProps extends JSX.HTMLAttributes<HTMLTableElement> {}
@@ -96,19 +98,19 @@ export const Cell = ({ variant, children, ...props }: CellProps) => (
   </td>
 );
 
-export interface RowHeaderProps extends JSX.HTMLAttributes<HTMLTableRowElement> {}
-export const RowHeader = (props: RowProps) => (
+export interface RowHeadProps extends JSX.HTMLAttributes<HTMLTableRowElement> {}
+export const RowHead = (props: RowProps) => (
   <>
-    <div class={c('RowHeaderBg')} />
-    <tr {...props} class={c('RowHeader', props.mode && `Row-${props.mode}`, props)} />
+    <div class={c('RowHeadBg')} />
+    <tr {...props} class={c('RowHead', props)} />
   </>
 );
 
-export interface CellHeaderProps extends JSX.HTMLAttributes<HTMLTableCellElement> {
+export interface CellHeadProps extends JSX.HTMLAttributes<HTMLTableCellElement> {
   variant?: 'row' | 'center';
 }
-export const CellHeader = ({ variant, children, ...props }: CellHeaderProps) => (
-  <th {...props} class={c('CellHeader', variant && `Cell-${variant}`, props)}>
+export const CellHead = ({ variant, children, ...props }: CellHeadProps) => (
+  <th {...props} class={c('CellHead', variant && `Cell-${variant}`, props)}>
     <div class={c('CellContent')}>{children}</div>
   </th>
 );
