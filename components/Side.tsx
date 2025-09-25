@@ -71,20 +71,9 @@ const c = Css('Side', {
   },
 });
 
-export interface SideButtonProps extends ButtonProps {
-  curr: string;
-  page: string;
-  tab?: boolean;
-}
-export const SideButton = ({ curr, page, tab, title, children, ...props }: SideButtonProps) => (
-  <Button
-    title={title}
-    selected={page === curr}
-    {...props}
-    class={c('Button', tab && 'Button-tab', props)}
-  >
-    {children}
-  </Button>
+export interface SideButtonProps extends ButtonProps { tab?: boolean; }
+export const SideButton = ({ tab, ...props }: SideButtonProps) => (
+  <Button {...props} class={c('Button', tab && 'Button-tab', props)} />
 );
 
 export const SideSep = (props: DivProps) => (
