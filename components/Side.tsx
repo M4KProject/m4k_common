@@ -71,14 +71,14 @@ const c = Css('Side', {
   },
 });
 
-export interface SideButtonProps extends ButtonProps { tab?: boolean; }
+export interface SideButtonProps extends ButtonProps {
+  tab?: boolean;
+}
 export const SideButton = ({ tab, ...props }: SideButtonProps) => (
   <Button {...props} class={c('Button', tab && 'Button-tab', props)} />
 );
 
-export const SideSep = (props: DivProps) => (
-  <div {...props} class={c('Sep', props)} />
-);
+export const SideSep = (props: DivProps) => <div {...props} class={c('Sep', props)} />;
 
 export const Side = ({ children, ...props }: DivProps) => {
   const [open, setOpen] = useState(true);

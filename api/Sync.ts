@@ -44,47 +44,49 @@ export class Sync<
 
     const whereList = isList(where) ? where : [where];
 
-    const filtersList = whereList.map(where => Object.entries(where).map(([p, filter]) => {
-      if (isList(filter)) {
-        const [operator, operand] = filter;
-        switch (operator) {
-          case '=':
-            return (v: any) => v[p] === operand;
-          case '!=':
-            return (v: any) => v[p] !== operand;
-          case '>':
-            return (v: any) => v[p] > operand;
-          case '>=':
-            return (v: any) => v[p] >= operand;
-          case '<':
-            return (v: any) => v[p] < operand;
-          case '<=':
-            return (v: any) => v[p] <= operand;
-          // case '~':   // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-          // case '!~':  // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-          // case '?=':  // Any/At least one of Equal
-          // case '?!=': // Any/At least one of NOT equal
-          // case '?>':  // Any/At least one of Greater than
-          // case '?>=': // Any/At least one of Greater than or equal
-          // case '?<':  // Any/At least one of Less than
-          // case '?<=': // Any/At least one of Less than or equal
-          // case '?~':  // Any/At least one of Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-          // case '?!~': // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-          default:
-            throw new NotImplemented(`operator "${operator}"`);
+    const filtersList = whereList.map((where) =>
+      Object.entries(where).map(([p, filter]) => {
+        if (isList(filter)) {
+          const [operator, operand] = filter;
+          switch (operator) {
+            case '=':
+              return (v: any) => v[p] === operand;
+            case '!=':
+              return (v: any) => v[p] !== operand;
+            case '>':
+              return (v: any) => v[p] > operand;
+            case '>=':
+              return (v: any) => v[p] >= operand;
+            case '<':
+              return (v: any) => v[p] < operand;
+            case '<=':
+              return (v: any) => v[p] <= operand;
+            // case '~':   // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+            // case '!~':  // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+            // case '?=':  // Any/At least one of Equal
+            // case '?!=': // Any/At least one of NOT equal
+            // case '?>':  // Any/At least one of Greater than
+            // case '?>=': // Any/At least one of Greater than or equal
+            // case '?<':  // Any/At least one of Less than
+            // case '?<=': // Any/At least one of Less than or equal
+            // case '?~':  // Any/At least one of Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+            // case '?!~': // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+            default:
+              throw new NotImplemented(`operator "${operator}"`);
+          }
+        } else {
+          return (v: any) => v[p] === filter;
         }
-      } else {
-        return (v: any) => v[p] === filter;
-      }
-    }));
+      })
+    );
 
-    const filter = (i) => filtersList.find(filters => filters.every(f => f(i)));
+    const filter = (i) => filtersList.find((filters) => filters.every((f) => f(i)));
 
     const results = one ? [items.find(filter)] : items.filter(filter);
     return results;
   }
 
-  get(where?: string|Where) {
+  get(where?: string | Where) {
     if (!where) return undefined;
     if (isStr(where)) return this.cache.getItem(where);
     return this.filter(where, true)[0];
@@ -95,7 +97,7 @@ export class Sync<
     const items = await this.coll.all();
     const changes: Dict<T | null> = byId(items);
     const prev = this.filter();
-    const deletedIds = prev.filter((i) => !changes[i.id]).map(r => r.id);
+    const deletedIds = prev.filter((i) => !changes[i.id]).map((r) => r.id);
     for (const id of deletedIds) changes[id] = null;
     this.cache.update(changes);
   }
@@ -110,7 +112,7 @@ export class Sync<
       this.load();
     }
   }
-  
+
   filter$(where?: Where) {
     this.init();
     const key = isStr(where) ? where : stringify(where);
@@ -118,14 +120,14 @@ export class Sync<
     return map[key] || (map[key] = this.cache.map(() => this.filter(where)));
   }
 
-  find$(where?: string|Where) {
+  find$(where?: string | Where) {
     this.init();
     const key = isStr(where) ? where : stringify(where);
     const map = this.findMap;
     return map[key] || (map[key] = this.cache.map(() => this.get(where)));
   }
 
-  private set(id: string, item: T|null) {
+  private set(id: string, item: T | null) {
     this.cache.setItem(id, item);
   }
 
@@ -144,8 +146,7 @@ export class Sync<
       const next = { ...prev, ...changes, ...result };
       this.set(id, next);
       return next;
-    }
-    catch(e) {
+    } catch (e) {
       this.set(id, prev);
       throw e;
     }
@@ -156,8 +157,7 @@ export class Sync<
     this.set(id, null);
     try {
       await this.coll.delete(id, o);
-    }
-    catch(e) {
+    } catch (e) {
       this.set(id, prev);
       throw e;
     }

@@ -45,11 +45,11 @@ export const deleteKey = ((record: any, ...keys: string[]): any => {
   return record;
 }) as DeleteKey;
 
-export const clear = <T extends Item|List>(v: T): T => {
+export const clear = <T extends Item | List>(v: T): T => {
   if (isList(v)) v.length = 0;
   else if (isItem(v)) for (const key in v) delete v[key];
   return v;
-}
+};
 
 export const deepClone = <T>(obj: T): T => {
   if (typeof obj !== 'object' || obj === null) return obj;

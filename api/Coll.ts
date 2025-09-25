@@ -176,11 +176,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     });
   }
 
-  update(
-    id: string,
-    changes: ModelUpdate<T>,
-    o?: CollOptions<T>
-  ): Promise<T | null> {
+  update(id: string, changes: ModelUpdate<T>, o?: CollOptions<T>): Promise<T | null> {
     this.log('update', id, changes, o);
     if (!id) throw toError('no id');
     const reqOptions: ReqOptions = o?.req || {};
@@ -233,7 +229,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   on(
     cb: (item: T, action: 'update' | 'create' | 'delete') => void,
     topic: string = '*',
-    o?: CollOptions<T>,
+    o?: CollOptions<T>
   ) {
     console.debug('on', this.name, topic, o);
     // 'devices/8e2mu4rr32b0glf?options={"headers": {"x-token": "..."}}'
