@@ -1,4 +1,4 @@
-import { Req } from '@common/utils/req';
+import { Req, ReqContext } from '@common/utils/req';
 import { parse } from '@common/utils/json';
 import { pathJoin } from '@common/utils/pathJoin';
 import { toError } from '@common/utils/cast';
@@ -7,7 +7,7 @@ import { getApiUrl } from './apiReq';
 const initRealtime = () => {
   let clientId: string = '';
   let eventSource: EventSource | undefined = undefined;
-  let xhr: XMLHttpRequest | undefined = undefined;
+  let reqCtx: ReqContext<any> | undefined = undefined;
   let intervalId: any;
   let lastState = '';
   const subscriptions: Record<string, ((data: any) => void)[]> = {};
@@ -46,9 +46,9 @@ const initRealtime = () => {
 
   const disconnect = () => {
     // console.debug('realtime disconnect');
-    if (xhr) {
-      xhr.abort();
-      xhr = undefined;
+    if (reqCtx) {
+      reqCtx.abort();
+      reqCtx = undefined;
     }
     if (eventSource) {
       // Clean up listeners before closing
@@ -106,7 +106,7 @@ const initRealtime = () => {
       if (!isConnected()) await connect();
 
       await req('POST', realtimeUrl, {
-        xhr: true,
+        // xhr: true,
         json: {
           clientId,
           subscriptions: subscriptionKeys,
@@ -115,11 +115,11 @@ const initRealtime = () => {
           'content-type': 'application/json',
         },
         before: (ctx) => {
-          xhr = ctx.xhr;
+          reqCtx = ctx;
         },
       });
 
-      xhr = undefined;
+      reqCtx = undefined;
       if (eventSource) addAllListeners(eventSource);
     } catch (e) {
       const error = toError(e);

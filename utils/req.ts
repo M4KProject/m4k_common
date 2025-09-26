@@ -77,6 +77,7 @@ export interface ReqContext<T = any> {
   xhr?: XMLHttpRequest;
   res?: Response;
   fetchInit?: RequestInit;
+  abort: () => void;
 }
 
 const acceptJson = 'application/json';
@@ -111,6 +112,8 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
   try {
     const o = ctx.options;
     const xhr: XMLHttpRequest = ctx.xhr || (ctx.xhr = new XMLHttpRequest());
+
+    ctx.abort = () => xhr.abort();
 
     xhr.timeout = ctx.timeout || 10000;
     const responseType = (xhr.responseType = ctx.resType || 'json');
@@ -171,15 +174,12 @@ export const reqFetch = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
       method: ctx.method,
     });
 
+    const abortCtrl = new AbortController();
+    fetchRequest.signal = abortCtrl.signal;
+    ctx.abort = () => abortCtrl.abort();
+
     if (ctx.timeout) {
-      if (!AbortSignal.timeout) {
-        AbortSignal.timeout = function (milliseconds: number): AbortSignal {
-          const controller = new AbortController();
-          setTimeout(() => controller.abort(), milliseconds);
-          return controller.signal;
-        };
-      }
-      fetchRequest.signal = AbortSignal.timeout(ctx.timeout);
+      setTimeout(() => abortCtrl.abort(), ctx.timeout);
     }
 
     if (o.before) await o.before(ctx);

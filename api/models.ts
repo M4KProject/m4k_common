@@ -244,6 +244,6 @@ export interface Models {
   medias: MediaModel;
   members: MemberModel;
   users: UserModel;
-  superusers: SuperuserModel;
   locks: LockModel;
+  _superusers: SuperuserModel;
 }
