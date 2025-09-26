@@ -2,11 +2,12 @@ import { MsgDict } from '@common/utils/MsgDict';
 import { Coll, coll, CollOptions, CollWhere } from './Coll';
 import { ModelCreate, ModelUpdate } from './models.base';
 import { byId } from '@common/utils/by';
-import { Dict, isDictOfItem, isEmpty, isList, isStr } from '@common/utils/check';
+import { Dict, isDictOfItem, isEmpty, isEq, isList, isStr } from '@common/utils/check';
 import { NotImplemented } from '@common/utils/error';
 import { Models } from './models';
 import { IMsgReadonly } from '@common/utils/Msg';
 import { stringify } from '@common/utils/json';
+import { deepClone, getChanges } from '@common/utils';
 
 export class Sync<
   K extends keyof Models,
@@ -146,6 +147,24 @@ export class Sync<
       const next = { ...prev, ...changes, ...result };
       this.set(id, next);
       return next;
+    } catch (e) {
+      this.set(id, prev);
+      throw e;
+    }
+  }
+
+  async apply(id: string, cb: (next: T) => void, o?: CollOptions<T>): Promise<T | null> {
+    const prev = this.get(id);
+    const next = deepClone(prev);
+    cb(next);
+    const changes = getChanges(prev, next);
+    if (isEmpty(changes)) return prev;
+    this.set(id, next);
+    try {
+      const result = await this.coll.update(id, changes, o);
+      const next2 = { ...next, ...result };
+      this.set(id, next2);
+      return next2;
     } catch (e) {
       this.set(id, prev);
       throw e;

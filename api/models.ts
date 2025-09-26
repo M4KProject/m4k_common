@@ -153,7 +153,13 @@ export interface MediaModel extends BaseMediaModel {
 
 export type MediaType = MediaModel['type'];
 
-export interface GroupModel extends _GroupModel {}
+export interface GroupModel extends _GroupModel {
+  data?: {
+    isDark?: boolean;
+    primary?: string;
+    secondary?: string;
+  };
+}
 
 export interface JobModel extends Omit<_JobModel, 'action'> {
   action?: _JobModel['action'] | 'upload';
