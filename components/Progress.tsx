@@ -10,23 +10,33 @@ const c = Css('Progress', {
   '': {
     fCenter: 1,
     position: 'relative',
-    bg: 'bg',
+    bg: 'b1',
     border: 'primary',
     borderRadius: '0.2em',
     w: '100%',
+    overflow: 'hidden',
+    h: 1.5,
   },
   Bar: {
     position: 'absolute',
     xy: 0,
-    h: '100%',
-    w: 0,
+    wh: '100%',
     bg: 'primary',
     borderRadius: '0.2em 0 0 0.2em',
-    transition: 'width 0.5s ease',
+    overflow: 'hidden',
+    transition: 0.5,
   },
   Text: {
-    fg: 'black',
+    fCenter: 1,
+    position: 'absolute',
+    xy: 0,
+    wh: '100%',
+    fg: 't1',
     zIndex: 1,
+  },
+  'Text-in': {
+    fg: 'b1',
+    transition: 0.5,
   },
 });
 
@@ -35,17 +45,16 @@ export interface ProgressProps extends DivProps {
   progress?: number | null;
 }
 export const Progress = ({ progress, step, children, ...props }: ProgressProps) => {
-  const prct = clamp(round(toNbr(progress, 0)), 0, 100);
+  const prct = clamp(toNbr(progress, 0), 0, 100);
+  const text = step ? `${step} ${round(prct)}%` : `${round(prct)}%`;
   return (
     <div {...props} class={c('', props)}>
-      <div class={c('Bar')} style={{ width: prct + '%' }} />
-      {step ? (
-        <div class={c('Text')}>
-          {step} ({prct}%)
+      <div class={c('Text')}>{text}</div>
+      <div class={c('Bar')} style={{ left: (prct-100) + '%' }}>
+        <div class={c('Text', 'Text-in')} style={{ left: -(prct-100) + '%' }}>
+          {text}
         </div>
-      ) : (
-        <div class={c('Text')}>{prct}%</div>
-      )}
+      </div>
       {children}
     </div>
   );
