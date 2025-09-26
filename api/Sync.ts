@@ -2,12 +2,12 @@ import { MsgDict } from '@common/utils/MsgDict';
 import { Coll, coll, CollOptions, CollWhere } from './Coll';
 import { ModelCreate, ModelUpdate } from './models.base';
 import { byId } from '@common/utils/by';
-import { Dict, isDictOfItem, isEmpty, isEq, isList, isStr } from '@common/utils/check';
+import { Dict, isDictOfItem, isEmpty, isList, isStr } from '@common/utils/check';
 import { NotImplemented } from '@common/utils/error';
 import { Models } from './models';
 import { IMsgReadonly } from '@common/utils/Msg';
 import { stringify } from '@common/utils/json';
-import { deepClone, getChanges } from '@common/utils';
+import { deepClone, getChanges } from '@common/utils/obj';
 
 export class Sync<
   K extends keyof Models,
