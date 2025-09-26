@@ -3,7 +3,6 @@ export * from './auth';
 export * from './call';
 export * from './Coll';
 export * from './getUrl';
-export * from './medias';
 export * from './messages';
 export * from './models.base';
 export * from './models.generated';
