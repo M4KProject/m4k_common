@@ -21,8 +21,8 @@ const c = Css('Field', {
   Group: {
     fRow: ['center', 'space-between'],
   },
-  '-row': {
-    fRow: ['start'],
+  '-col': {
+    fCol: ['stretch'],
   },
   '-error &Label': { fg: 'error' },
   '-error &Input': { border: 'error' },
@@ -145,7 +145,7 @@ export type FieldType =
   | 'time';
 
 export interface FieldInfo<T = any> {
-  row?: boolean;
+  col?: boolean;
   type?: FieldType;
   name?: string;
   label?: ComponentChildren;
@@ -370,7 +370,7 @@ const compByType: Record<FieldType, FieldComp> = {
 
 export const Field = (props: FieldProps) => {
   const {
-    row,
+    col,
     type,
     name,
     label,
@@ -464,7 +464,7 @@ export const Field = (props: FieldProps) => {
   const Comp = compByType[type || 'text'] || compByType.text;
 
   return (
-    <div {...divProps} class={c('', row && '-row', type && `-${type}`, err && '-error', divProps)}>
+    <div {...divProps} class={c('', col && '-col', type && `-${type}`, err && '-error', divProps)}>
       {label && <div class={c('Label')}>{label} :</div>}
       <div class={c('Content')}>
         <Comp

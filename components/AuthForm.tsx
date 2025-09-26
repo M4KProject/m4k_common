@@ -1,6 +1,5 @@
 import { useState } from 'preact/hooks';
 import { Css } from '@common/ui/css';
-import { login, passwordReset, signUp } from '../api/auth';
 import { Loading } from './Loading';
 import { Field } from './Field';
 import { Button } from './Button';
@@ -9,6 +8,7 @@ import { toErr } from '@common/utils/err';
 import { addTr } from '../hooks/useTr';
 import { FlexCol } from './Flex';
 import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';
+import { authLogin, authPasswordReset, authSignUp } from '@common/api';
 
 addTr({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
@@ -17,7 +17,7 @@ addTr({
 const c = Css('AuthForm', {
   '': {
     fCol: ['stretch', 'center'],
-    w: 30,
+    w: 40,
     bg: 'b0',
   },
 });
@@ -31,6 +31,7 @@ export const AuthForm = () => {
 
   const emailField = (
     <Field
+      col
       name="username"
       type="email"
       value={email}
@@ -49,6 +50,7 @@ export const AuthForm = () => {
           <>
             {emailField}
             <Field
+              col
               name="password"
               type="password"
               value={password}
@@ -64,7 +66,7 @@ export const AuthForm = () => {
                 onClick={async () => {
                   setPage('');
                   try {
-                    await login(email, password);
+                    await authLogin(email, password);
                     setPasswordError('');
                   } catch (error) {
                     setPasswordError(toErr(error).message);
@@ -89,6 +91,7 @@ export const AuthForm = () => {
           <>
             {emailField}
             <Field
+              col
               name="password"
               type="password"
               value={password}
@@ -101,7 +104,7 @@ export const AuthForm = () => {
                 title="S'inscrire"
                 onClick={async () => {
                   setPage('');
-                  await signUp(email, password);
+                  await authSignUp(email, password);
                   setPage('sign-in');
                 }}
                 color="primary"
@@ -122,7 +125,7 @@ export const AuthForm = () => {
                 title="Réinitialiser le mot de passe par email"
                 onClick={async () => {
                   setPage('');
-                  await passwordReset(email);
+                  await authPasswordReset(email);
                   setPage('sign-in');
                   // setPage('code');
                 }}
@@ -139,7 +142,7 @@ export const AuthForm = () => {
         ) : page === 'code' ? (
           <>
             {emailField}
-            <Field value={password} onValue={setPassword} label="Le CODE reçu par email" />
+            <Field col value={password} onValue={setPassword} label="Le CODE reçu par email" />
             <FlexCol>
               <Button
                 title="Connexion avec le CODE"

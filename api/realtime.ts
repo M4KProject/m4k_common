@@ -1,8 +1,8 @@
 import { Req } from '@common/utils/req';
 import { parse } from '@common/utils/json';
 import { pathJoin } from '@common/utils/pathJoin';
-import { getApiUrl } from './messages';
 import { toError } from '@common/utils/cast';
+import { getApiUrl } from './apiReq';
 
 const initRealtime = () => {
   let clientId: string = '';

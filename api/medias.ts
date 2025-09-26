@@ -1,9 +1,10 @@
 import { uuid } from '../utils/str';
-import { needAuthId, needGroupId } from './messages';
+import { needGroupId } from './messages';
 import { JobModel } from './models';
 import { toError } from '../utils/cast';
 import { MsgDict } from '@common/utils';
 import { mediaCtrl } from '@/admin/controllers';
+import { needAuthId } from './apiReq';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 

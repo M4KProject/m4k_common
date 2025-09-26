@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { Keys, ModelBase, ModelCreate, Models, ModelUpdate } from './models';
 import { isList, isDef, isEmpty } from '../utils/check';
 import { removeItem } from '../utils/list';
