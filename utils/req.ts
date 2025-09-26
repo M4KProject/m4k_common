@@ -1,7 +1,7 @@
 import { error } from 'console';
 import { retry, sleep } from './async';
 import { toError } from './cast';
-import { isBetween, isDate, isDef, isFileOrBlob, isList, isObj } from './check';
+import { isBetween, isDate, isDef, isFileOrBlob, isFun, isItem, isList, isObj } from './check';
 import { parse, stringify } from './json';
 import { pathJoin } from './pathJoin';
 
@@ -287,8 +287,21 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
 
   await retry(async () => {
     try {
-      const isXhr = o.xhr || (typeof fetch !== 'function' && typeof o.fetch !== 'function');
-      const request = o.request || (isXhr ? reqXHR : reqFetch);
+      const request =
+        o.request || typeof o.fetch === 'function'
+          ? reqFetch
+          : typeof o.xhr === 'function'
+            ? reqXHR
+            : o.xhr && typeof XMLHttpRequest === 'function'
+              ? reqXHR
+              : typeof fetch === 'function'
+                ? reqFetch
+                : null;
+
+      if (!request) {
+        throw toError('no request xhr or fetch');
+      }
+
       await request(ctx as any);
       if (o.cast) ctx.data = await o.cast(ctx);
       if (o.after) await o.after(ctx);
