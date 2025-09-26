@@ -50,8 +50,8 @@ export const Progress = ({ progress, step, children, ...props }: ProgressProps) 
   return (
     <div {...props} class={c('', props)}>
       <div class={c('Text')}>{text}</div>
-      <div class={c('Bar')} style={{ left: (prct-100) + '%' }}>
-        <div class={c('Text', 'Text-in')} style={{ left: -(prct-100) + '%' }}>
+      <div class={c('Bar')} style={{ left: prct - 100 + '%' }}>
+        <div class={c('Text', 'Text-in')} style={{ left: -(prct - 100) + '%' }}>
           {text}
         </div>
       </div>
