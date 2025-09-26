@@ -91,7 +91,9 @@ export const sort = <T = any>(items: T[], prop: (item: T) => string | number | D
   list.sort(([a], [b]) =>
     isStr(a) || isStr(b) ? String(a).localeCompare(String(b)) : Number(a) - Number(b)
   );
-  return list.map((i) => i[1]);
+  items.length = 0;
+  items.push(...list.map(([, item]) => item));
+  return items;
 };
 
 export const sum = (list: number[], margin?: number) => {
