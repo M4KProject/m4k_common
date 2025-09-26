@@ -72,45 +72,38 @@ export const refreshTheme = () => {
   const t2 = isD ? w2 : g2;
   const t3 = isD ? w3 : g3;
 
-  Object.assign(
-    t,
-    {
-      primary,
-      secondary,
-      grey,
-      w0,
-      w1,
-      w2,
-      w3,
-      g0,
-      g1,
-      g2,
-      g3,
-      b0,
-      b1,
-      b2,
-      b3,
-      t0,
-      t1,
-      t2,
-      t3,
-    }
-  );
+  Object.assign(t, {
+    primary,
+    secondary,
+    grey,
+    w0,
+    w1,
+    w2,
+    w3,
+    g0,
+    g1,
+    g2,
+    g3,
+    b0,
+    b1,
+    b2,
+    b3,
+    t0,
+    t1,
+    t2,
+    t3,
+  });
 
-  Object.assign(
-    t,
-    {
-      ...newColors('p', primary, isD),
-      ...newColors('s', secondary, isD),
-      ...newColors('g', grey, isD),
-      info: setHsl(primary, { h: 240 }),
-      success: setHsl(primary, { h: 120, l: 40 }),
-      error: setHsl(primary, { h: 0 }),
-      warn: setHsl(primary, { h: 30 }),
-      shadow: setHsl(primary, { s: 100, l: 5, a: 0.1 }),
-    }
-  );
-
+  Object.assign(t, {
+    ...newColors('p', primary, isD),
+    ...newColors('s', secondary, isD),
+    ...newColors('g', grey, isD),
+    info: setHsl(primary, { h: 240 }),
+    success: setHsl(primary, { h: 120, l: 40 }),
+    error: setHsl(primary, { h: 0 }),
+    warn: setHsl(primary, { h: 30 }),
+    shadow: setHsl(primary, { s: 100, l: 5, a: 0.1 }),
+  });
 
   setColors(t as Dict<string>);
 };
