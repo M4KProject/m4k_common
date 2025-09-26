@@ -69,6 +69,7 @@ export const authRefresh = async (
 ): Promise<ApiAuth | null> => {
   try {
     if (!token) token = apiAuth$.v?.token;
+    if (!token) return null;
     console.debug('api authRefresh', token, coll);
     const result = await apiPost(`collections/${coll}/auth-refresh`, {
       headers: getAuthHeaders(token),

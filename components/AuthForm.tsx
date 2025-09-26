@@ -20,6 +20,9 @@ const c = Css('AuthForm', {
     w: 40,
     bg: 'b0',
   },
+  ' .Button': {
+    elevation: 0,
+  },
 });
 
 export const AuthForm = () => {

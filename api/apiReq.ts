@@ -31,10 +31,10 @@ export const needAuthId = () => {
   return id;
 };
 
-export const getAuthHeaders = (token: string) => ({
+export const getAuthHeaders = (token: string) => (token ? {
   Authorization: `Bearer ${token}`,
   'X-Auth-Token': token, // For Android WebView
-});
+} : {});
 
 export const newApiReq = (baseUrl: string = '', baseOptions: ReqOptions<any> = {}) =>
   createReq({

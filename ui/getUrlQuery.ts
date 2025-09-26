@@ -9,8 +9,8 @@ const decode = (str) => {
 
 export const getUrlQuery = (): { path: string[]; [key: string]: any } => {
   if (typeof location === 'undefined') return { path: [] };
-  const search = location.search;
-  const path = location.pathname.split('/').filter((p) => p);
+  const { search, pathname, hash } = location;
+  const path = (pathname+hash).split('/').filter((p) => p);
   const query = { path };
   if (search) {
     const queryString = search.substring(1);
