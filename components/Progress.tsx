@@ -35,7 +35,7 @@ const c = Css('Progress', {
     zIndex: 1,
   },
   'Text-in': {
-    fg: 'b1',
+    fg: 'w1',
     transition: 0.5,
   },
 });
