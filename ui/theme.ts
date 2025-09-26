@@ -71,6 +71,8 @@ export const refreshTheme = () => {
   const t1 = isD ? w1 : g1;
   const t2 = isD ? w2 : g2;
   const t3 = isD ? w3 : g3;
+  const mask = isD ? setRgb(b3, { a: 0.8 }) : setRgb(b3, { a: 0.8 });
+  const shadow = setRgb(g2, { a: 0.1 });
 
   Object.assign(t, {
     primary,
@@ -92,6 +94,8 @@ export const refreshTheme = () => {
     t1,
     t2,
     t3,
+    mask,
+    shadow,
   });
 
   Object.assign(t, {
@@ -102,7 +106,6 @@ export const refreshTheme = () => {
     success: setHsl(primary, { h: 120, l: 40 }),
     error: setHsl(primary, { h: 0 }),
     warn: setHsl(primary, { h: 30 }),
-    shadow: setHsl(primary, { s: 100, l: 5, a: 0.1 }),
   });
 
   setColors(t as Dict<string>);

@@ -73,7 +73,7 @@ const c = Css('Dialog', {
   '': {
     position: 'fixed',
     inset: 0,
-    bg: '#000000AA',
+    bg: 'mask',
     fCenter: 1,
     opacity: 0,
     transition: 0.5,
@@ -81,27 +81,26 @@ const c = Css('Dialog', {
   Window: {
     fCol: 1,
     elevation: 3,
-    rounded: 2,
-    maxWidth: '80%',
-    minWidth: '80%',
-    overflow: 'hidden',
+    rounded: 4,
+    wMin: 40,
     bg: 'b0',
     fg: 't2',
     scale: 0,
     transition: 0.5,
+    p: 0.5,
   },
   Header: {
     fCenter: 1,
-    textAlign: 'center',
+    m: 0.5,
+  },
+  HeaderText: {
+    fg: 't3',
     bold: 1,
-    m: 0,
-    p: 1,
-    bg: 'header',
-    fg: 'headerTitle',
+    fontSize: 2,
   },
   Content: {
     fCol: ['center'],
-    m: 1,
+    m: 0.5,
   },
 
   '-open': {
@@ -139,7 +138,9 @@ const DialogRender = ({ open$, variant, title, children, ...props }: DialogRende
       <div class={c('Window')} onClick={(e) => e.stopPropagation()}>
         {title && (
           <div class={c('Header')}>
-            <Tr>{title}</Tr>
+            <div class={c('HeaderText')}>
+              <Tr>{title}</Tr>
+            </div>
           </div>
         )}
         <div class={c('Content')}>{init ? children : null}</div>
