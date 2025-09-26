@@ -63,10 +63,7 @@ export const authPasswordReset = async (email: string, coll = AUTH_COLL) => {
   }
 };
 
-export const authRefresh = async (
-  token?: string,
-  coll = AUTH_COLL
-): Promise<ApiAuth | null> => {
+export const authRefresh = async (token?: string, coll = AUTH_COLL): Promise<ApiAuth | null> => {
   try {
     if (!token) token = apiAuth$.v?.token;
     if (!token) return null;
