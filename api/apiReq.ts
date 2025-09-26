@@ -21,6 +21,8 @@ export const apiUrl$ = new Msg<string>('', 'apiUrl', true, isStr);
 
 const defaultUrl = 'https://i.m4k.fr/api/'; // (location.port ? location.origin.replace(location.port, "8090") : location.origin) + "/api/";
 
+export const setApiUrl = (next: string) => apiUrl$.set(next);
+
 export const getApiUrl = () => apiUrl$.v || defaultUrl;
 
 export const getAuthId = () => apiAuth$.v?.id || '';
