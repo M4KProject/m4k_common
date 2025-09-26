@@ -1,84 +1,85 @@
-import { toErr } from '@common/utils/err';
-import { getParams, CollOptions, coll } from '@common/api/Coll';
-import { auth$ } from '@common/api/messages';
-import { UserModel } from '@common/api/models';
+import { Auth, auth$ } from '@common/api/messages';
+import { apiPost } from './call';
+import { toError } from '@common/utils/cast';
+import { getAuthHeaders } from './apiReq';
 
-let _authColl = coll('users');
+const COLL = 'users';
 
-export const setAuthColl = (coll: typeof _authColl) => {
-  _authColl = coll;
-};
-
-export const login = (
-  identity: string,
-  password: string,
-  o?: CollOptions<UserModel>
-): Promise<UserModel> =>
-  _authColl
-    .r<{ token: string; record: UserModel }>('POST', `auth-with-password`, {
-      params: getParams(o),
-      form: { identity, password },
-      after: (ctx) => {
-        if (!ctx.data.token) {
-          ctx.error = 'no token';
-          return;
-        }
-      },
-    })
-    .then((result) => {
-      console.debug('login result', result);
-      auth$.set({ ...result.record, token: result.token });
-      return result.record;
-    });
-
-export const signUp = async (email: string, password: string, isLogin = true) => {
+export const login = async (email: string, password: string, coll = COLL) => {
   try {
-    console.debug('signUp email', email);
-    const user = await _authColl.create(
-      {
-        email,
-        password,
-        passwordConfirm: password,
-      },
-      { select: ['id'] }
-    );
-    console.debug('signUp user', user);
-    if (isLogin) await login(email, password);
-    return user;
+    console.debug('api login', coll, email);
+    const result = await apiPost(`collections/${coll}/auth-with-password`, {
+      form: { identity: email, password },
+    });
+    console.debug('api login result', result);
+    if (!result.token) throw toError('no token');
+    const auth: Auth = { ...result.record, token: result.token };
+    auth$.set(auth);
+    console.debug('api login auth', auth);
+    return auth;
   } catch (error) {
-    console.warn('signUp error', toErr(error));
+    console.error('api login error', coll, email, error);
+    throw error;
   }
 };
 
-export const logout = () => auth$.set(null);
-
-export const passwordReset = (email: string, o?: CollOptions<UserModel>) =>
-  _authColl
-    .r('POST', `request-password-reset`, {
-      params: getParams(o),
-      form: { email },
-    })
-    .then((result) => {
-      console.debug('password reset', result);
-      return true;
+export const signUp = async (email: string, password: string, isLogin = true, coll = COLL) => {
+  try {
+    console.debug('api signUp', coll, email);
+    const result = await apiPost(`collections/${coll}/records`, {
+      form: { email, password, passwordConfirm: password },
     });
+    console.debug('api signUp result', result);
+    if (isLogin) {
+      return await login(email, password, coll);
+    }
+    return result.record as Auth;
+  } catch (error) {
+    console.warn('api signUp error', error);
+    throw error;
+  }
+};
 
-export const authRefresh = (): Promise<UserModel | null> =>
-  auth$.v
-    ? _authColl
-        .r('POST', `auth-refresh`, {})
-        .then((result) => {
-          console.debug('authRefresh result', result);
-          if (result.status === 401) {
-            logout();
-            throw toErr(result.message);
-          }
-          if (!result.token) throw toErr(result.message);
-          auth$.set({ ...result.record, token: result.token });
-          return auth$.v;
-        })
-        .catch((error) => {
-          console.warn('authRefresh error', toErr(error));
-          throw error;
-        })
-    : Promise.resolve(null);
+export const logout = () => {
+  console.debug('api logout');
+  auth$.set(null);
+};
+
+export const passwordReset = async (email: string, coll = COLL) => {
+  try {
+    console.debug('api passwordReset', coll, email);
+    const result = await apiPost(`collections/${coll}/request-password-reset`, {
+      form: { email },
+    });
+    console.debug('api passwordReset result', result);
+    return true;
+  } catch (error) {
+    console.warn('api passwordReset error', error);
+    throw error;
+  }
+};
+
+export const authRefresh = async (
+  email: string,
+  token: string,
+  coll = COLL
+): Promise<Auth | null> => {
+  try {
+    console.debug('api authRefresh', coll, email);
+    const result = await apiPost(`collections/${coll}/auth-refresh`, {
+      headers: getAuthHeaders(token),
+    });
+    console.debug('api authRefresh result', result);
+    if (result.status === 401) {
+      logout();
+      throw toError(result.message);
+    }
+    if (!result.token) throw toError(result.message);
+    const auth = { ...result.record, token: result.token };
+    auth$.set(auth);
+    return auth;
+  } catch (error) {
+    console.warn('api authRefresh error', error);
+    throw error;
+  }
+};

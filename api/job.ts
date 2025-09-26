@@ -1,3 +1,4 @@
+/*
 import { JobModel } from './models';
 import { needGroupId } from './messages';
 import { isExpired } from '@common/utils/date';
@@ -44,7 +45,7 @@ export const addJob = async <J extends JobModel = JobModel>(
       }
     };
 
-    const unsubscribe = await jobCtrl.subscribe(job.id, onUpdate);
+    const unsubscribe = await jobCtrl.on(job.id, onUpdate);
 
     const intervalRef = setInterval(async () => {
       const next = await jobCtrl.get(job.id);
@@ -54,3 +55,4 @@ export const addJob = async <J extends JobModel = JobModel>(
 
   return job as J;
 };
+*/

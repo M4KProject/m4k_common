@@ -85,7 +85,7 @@ const processQueue = async () => {
       return;
     }
 
-    const item = items.find((i) => i.status === 'pending');
+    const item = items.find((i) => i.status === '');
     if (!item) {
       return;
     }
@@ -104,7 +104,7 @@ export const upload = (files: File[], parent?: string): string[] => {
         file,
         name: file.name,
         action: 'upload',
-        status: 'pending',
+        status: '',
         created: new Date(),
         updated: new Date(),
         parent,

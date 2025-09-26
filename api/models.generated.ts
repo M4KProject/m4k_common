@@ -89,7 +89,6 @@ export interface _GroupModel extends ModelBase {
   key?: string;
   name?: string;
   data?: any;
-  icon?: File | Blob | string;
   user?: string;
 }
 
@@ -97,15 +96,7 @@ export interface _JobModel extends ModelBase {
   id: string;
   name?: string;
   action?: '' | 'test' | 'test2' | 'addMember' | 'convert';
-  status?:
-    | ''
-    | 'pending'
-    | 'processing'
-    | 'finished'
-    | 'failed'
-    | 'deleted'
-    | 'claimed'
-    | 'created';
+  status?: '' | 'processing' | 'finished' | 'failed' | 'deleted';
   progress?: number;
   error?: string;
   input?: any;

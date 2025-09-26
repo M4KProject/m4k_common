@@ -1,14 +1,14 @@
 // deno-lint-ignore-file no-explicit-any
 import { Keys, ModelBase, ModelCreate, Models, ModelUpdate } from './models';
-import { isList, isDef, isEmpty, isStr } from '../utils/check';
+import { isList, isDef, isEmpty } from '../utils/check';
 import { removeItem } from '../utils/list';
 import { parse, stringify } from '../utils/json';
 import { realtime } from './realtime';
-import { newApiReq } from './call';
 import { Req, ReqOptions, ReqParams } from '../utils/req';
 import { toError } from '../utils/cast';
 import { getUrl, Thumb } from './getUrl';
 import { deepClone, getChanges } from '@common/utils/obj';
+import { newApiReq } from './apiReq';
 
 export type CollOperator =
   | '=' // Equal
@@ -96,7 +96,7 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
 export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
   public readonly name: K;
   private readonly unsubscribes: (() => void)[] = [];
-  private readonly r: Req;
+  readonly r: Req;
 
   constructor(name: K) {
     this.name = name;
