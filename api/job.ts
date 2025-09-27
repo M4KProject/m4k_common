@@ -3,7 +3,7 @@ import { JobModel } from './models';
 import { needGroupId } from './messages';
 import { isExpired } from '@common/utils/date';
 import { toVoid } from '@common/utils/cast';
-import { jobCtrl } from '@/admin/controllers';
+import { jobSync } from '@/admin/controllers';
 
 const jobEndedStatus: Partial<Record<JobModel['status'], 1>> = {
   deleted: 1,
@@ -20,7 +20,7 @@ export const addJob = async <J extends JobModel = JobModel>(
   const group = needGroupId();
 
   console.debug('job pending', action, input, group);
-  let job = await jobCtrl.create({ action, input, group });
+  let job = await jobSync.create({ action, input, group });
 
   onProgress(job as J);
 
@@ -45,10 +45,10 @@ export const addJob = async <J extends JobModel = JobModel>(
       }
     };
 
-    const unsubscribe = await jobCtrl.on(job.id, onUpdate);
+    const unsubscribe = await jobSync.on(job.id, onUpdate);
 
     const intervalRef = setInterval(async () => {
-      const next = await jobCtrl.get(job.id);
+      const next = await jobSync.get(job.id);
       onUpdate(next, next ? 'update' : 'delete');
     }, 10 * 1000);
   });

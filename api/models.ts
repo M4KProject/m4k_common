@@ -234,16 +234,4 @@ export interface DeviceModel extends _DeviceModel {
 
 export interface LockModel extends _LockModel {}
 
-export interface SuperuserModel extends _SuperuserModel {}
-
-export interface Models {
-  contents: ContentModel;
-  devices: DeviceModel;
-  groups: GroupModel;
-  jobs: JobModel;
-  medias: MediaModel;
-  members: MemberModel;
-  users: UserModel;
-  locks: LockModel;
-  _superusers: SuperuserModel;
-}
+export interface SuperUserModel extends _SuperuserModel {}

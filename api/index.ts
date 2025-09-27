@@ -9,4 +9,3 @@ export * from './models.generated';
 export * from './models';
 export * from './realtime';
 export * from './serverTime';
-export * from './Sync';

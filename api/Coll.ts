@@ -9,7 +9,7 @@ import { getUrl, Thumb } from './getUrl';
 import { deepClone, getChanges } from '@common/utils/obj';
 import { newApiReq } from './apiReq';
 
-export type CollOperator =
+export type Operator =
   | '=' // Equal
   | '!=' // NOT equal
   | '>' // Greater than
@@ -27,15 +27,14 @@ export type CollOperator =
   | '?~' // Any/At least one of Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
   | '?!~'; // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
 
-export type CollOperand = string | number | null | boolean | Date;
-
-export type CollFilter = CollOperand | [CollOperator, CollOperand];
-
-export type CollWhere<T extends ModelBase> = { [P in keyof T]?: CollFilter };
+export type Operand = string | number | null | boolean | Date;
+export type Filter = Operand | [Operator, Operand];
+export type WhereItem<T extends ModelBase> = { [P in keyof T]?: Filter };
+export type Where<T extends ModelBase> = WhereItem<T> | WhereItem<T>[];
 
 export interface CollOptions<T extends ModelBase> {
   select?: Keys<T>[];
-  where?: CollWhere<T>;
+  where?: Where<T>;
   orderBy?: (Keys<T> | `-${Keys<T>}`)[];
   expand?: string;
   page?: number;
@@ -46,7 +45,7 @@ export interface CollOptions<T extends ModelBase> {
   req?: ReqOptions<T>;
 }
 
-const stringifyFilter = (key: string, propFilter: CollFilter) => {
+const stringifyFilter = (key: string, propFilter: Filter) => {
   const [operator, operand] = isList(propFilter) ? propFilter : ['=', propFilter];
 
   const operandString =
@@ -59,9 +58,7 @@ const stringifyFilter = (key: string, propFilter: CollFilter) => {
   return `${key} ${operator} ${operandString}`;
 };
 
-const stringifyWhere = <T extends ModelBase>(
-  where: CollWhere<T> | undefined
-): string | undefined => {
+const stringifyWhere = <T extends ModelBase>(where: Where<T> | undefined): string | undefined => {
   if (!where) return undefined;
 
   const filters = Object.entries(where || {})
@@ -92,12 +89,12 @@ export const getParams = (o?: CollOptions<any>): ReqParams => {
   return r;
 };
 
-export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
-  public readonly name: K;
+export class Coll<T extends ModelBase> {
+  public readonly name: string;
   private readonly unsubscribes: (() => void)[] = [];
   readonly r: Req;
 
-  constructor(name: K) {
+  constructor(name: string) {
     this.name = name;
     this.r = newApiReq(`collections/${name}/`);
   }
@@ -119,7 +116,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     });
   }
 
-  getPage(where: CollWhere<T>, o?: CollOptions<T>) {
+  getPage(where: Where<T>, o?: CollOptions<T>) {
     this.log('findPage', where, o);
     const reqOptions: ReqOptions = o?.req || {};
     return this.r<{
@@ -134,7 +131,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     });
   }
 
-  filter(where: CollWhere<T>, o?: CollOptions<T>) {
+  filter(where: Where<T>, o?: CollOptions<T>) {
     return this.getPage(where, { page: 1, perPage: 1000, skipTotal: true, ...o }).then(
       (r) => r.items
     );
@@ -144,24 +141,24 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     return this.filter({}, o);
   }
 
-  one(where: CollWhere<T>, o?: CollOptions<T>): Promise<T | null> {
+  one(where: Where<T>, o?: CollOptions<T>): Promise<T | null> {
     return this.getPage(where, { page: 1, perPage: 1, skipTotal: true, ...o }).then(
       (r) => r.items[0] || null
     );
   }
 
-  findId(where: CollWhere<T>, o?: CollOptions<T>): Promise<string | null> {
+  findId(where: Where<T>, o?: CollOptions<T>): Promise<string | null> {
     return this.one(where, { ...o, select: ['id' as Keys<T>] }).then((r) => r?.id);
   }
 
   findKey(key: string, o?: CollOptions<T>): Promise<T | null> {
-    return this.one({ key } as CollWhere<T>, o).then((result) => {
+    return this.one({ key } as Where<T>, o).then((result) => {
       if (!result) return this.get(key, o);
       return result;
     });
   }
 
-  count(where: CollWhere<T>, o?: CollOptions<T>) {
+  count(where: Where<T>, o?: CollOptions<T>) {
     return this.getPage(where, { page: 1, perPage: 1, ...o }).then((r) => r.totalItems);
   }
 
@@ -201,7 +198,7 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     });
   }
 
-  upsert(where: CollWhere<T>, changes: ModelCreate<T>, o?: CollOptions<T>) {
+  upsert(where: Where<T>, changes: ModelCreate<T>, o?: CollOptions<T>) {
     this.log('upsert', where, changes, o);
     return this.findId(where).then((id) =>
       id ? (this.update(id, changes, o) as Promise<T>) : this.create(changes, o)
@@ -267,12 +264,3 @@ export class Coll<K extends keyof Models, T extends Models[K] = Models[K]> {
     };
   }
 }
-
-export type CollByName = {
-  [K in keyof Models]: Coll<K>;
-};
-
-const _colls = {} as Partial<CollByName>;
-
-export const coll = <K extends keyof Models>(name: K): Coll<K> =>
-  _colls[name] || ((_colls[name] as Coll<K>) = new Coll<K>(name));

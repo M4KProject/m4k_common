@@ -9,6 +9,10 @@ export interface ModelBase extends ModelId {
   // collectionName?: string;
 }
 
+export interface GroupModelBase extends ModelBase {
+  group?: string;
+}
+
 export interface AuthModelBase extends ModelBase {
   email?: string;
   username?: string;
