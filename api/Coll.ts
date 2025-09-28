@@ -1,4 +1,4 @@
-import { Keys, ModelBase, ModelCreate, Models, ModelUpdate } from './models';
+import { Keys, ModelBase, ModelCreate, ModelUpdate } from './models';
 import { isList, isDef, isEmpty } from '../utils/check';
 import { removeItem } from '../utils/list';
 import { parse, stringify } from '../utils/json';
@@ -8,6 +8,7 @@ import { toError } from '../utils/cast';
 import { getUrl, Thumb } from './getUrl';
 import { deepClone, getChanges } from '@common/utils/obj';
 import { newApiReq } from './apiReq';
+import { Dictionary } from '@common/utils/types';
 
 export type Operator =
   | '=' // Equal
@@ -40,7 +41,7 @@ export interface CollOptions<T extends ModelBase> {
   page?: number;
   perPage?: number;
   skipTotal?: boolean;
-  headers?: Record<string, string>;
+  headers?: Dictionary<string>;
   intervalMs?: number;
   req?: ReqOptions<T>;
 }

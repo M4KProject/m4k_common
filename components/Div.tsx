@@ -10,7 +10,7 @@ export const getStyle = (
   style: string | JSX.CSSProperties | undefined
 ): JSX.CSSProperties | undefined => {
   if (typeof style === 'string') {
-    const styleObject: Record<string, string> = {};
+    const styleObject: Dictionary<string> = {};
     style.split(';').forEach((declaration) => {
       const [property, value] = declaration.split(':');
       if (property && value) {

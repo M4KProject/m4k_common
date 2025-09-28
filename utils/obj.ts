@@ -1,7 +1,9 @@
-import { isDef, isEq, isItem, isList, isNil, isObj, isStr, isUndef, Item, List } from './check';
+import { isDef, isItem, isList, isNil, isObj, isStr, isUndef } from './check';
 import { toList } from './cast';
-import { last, sort, uniq } from './list';
+import { last, sort } from './list';
 import { nbrMax } from './nbr';
+import { Item, List } from './types';
+import { isDeepEqual } from './isDeepEqual';
 
 export const sortKey = <T extends Record<any, any>>(record: T): T =>
   Object.fromEntries(sort(Object.entries(record))) as T;
@@ -10,7 +12,7 @@ export const getChanges = <T extends Item = Item>(source: T, target: Partial<T>)
   if (source === target) return {};
   const changes: Partial<T> = {};
   for (const key in target) {
-    if (!isEq(source[key], target[key])) {
+    if (!isDeepEqual(source[key], target[key])) {
       changes[key] = target[key];
     }
   }
@@ -38,7 +40,7 @@ interface DeleteKey {
     k2: K2,
     k3: K3
   ): Omit<Omit<Omit<T, K1>, K2>, K3>;
-  <T>(record: Record<string, T>, ...keys: string[]): Record<string, T>;
+  <T>(record: Dictionary<T>, ...keys: string[]): Dictionary<T>;
 }
 export const deleteKey = ((record: any, ...keys: string[]): any => {
   for (const key of keys) delete record[key];
@@ -149,3 +151,6 @@ export const deepMap = (
   };
   return walk(obj, null, null);
 };
+
+export const len = (v: any): number =>
+isObj(v) ? (isList(v) ? v.length : Object.keys(v).length) : isStr(v) ? v.length : 0;

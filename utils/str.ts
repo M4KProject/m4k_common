@@ -52,7 +52,7 @@ export const firstUpper = (arg: string): string =>
  * @returns
  * @example replace("toto tututoto b!", { toto: 5, b: 'ok' }) => "5 tutu5 ok!"
  */
-export const replace = (val: string, replaceBySearch: Record<string, any>): string => {
+export const replace = (val: string, replaceBySearch: Dictionary<any>): string => {
   val = String(val);
   if ((val as any).replaceAll) {
     for (const key in replaceBySearch)
@@ -73,7 +73,7 @@ export const replace = (val: string, replaceBySearch: Record<string, any>): stri
  * @returns
  * @example setTemplate("toto {a} tutu{a} {b}!", { a: 5, b: 'ok' }) => "toto 5 tutu5 ok!"
  */
-export const setTemplate = (template: string, replaceByKey: Record<string, any>): string =>
+export const setTemplate = (template: string, replaceByKey: Dictionary<any>): string =>
   template.replace(/\{(\w+)\}/g, (s, k) => replaceByKey[k] || s);
 
 export const randStr = (count: number, chars: string = 'abcdefghjkmnpqrstuvwxyz23456789') => {

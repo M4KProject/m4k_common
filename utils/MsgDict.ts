@@ -1,9 +1,10 @@
-import { Dict, isItemEmpty, isNil, Item } from './check';
+import { isItemEmpty, isNil } from './check';
 import { merge } from './obj';
 import { Msg } from './Msg';
+import { Dictionary, Item } from './types';
 
-export class MsgDict<T extends {}> extends Msg<Dict<T>> {
-  apply(cb: (next: Dict<T>) => void) {
+export class MsgDict<T extends Item> extends Msg<Dictionary<T>> {
+  apply(cb: (next: Dictionary<T>) => void) {
     const prev = this.v;
     const next = { ...prev };
     cb(next);
@@ -11,7 +12,7 @@ export class MsgDict<T extends {}> extends Msg<Dict<T>> {
     return this;
   }
 
-  merge(changes: Dict<Partial<T>>, isReplace?: boolean) {
+  merge(changes: Dictionary<Partial<T>>, isReplace?: boolean) {
     const prev = this.v;
     if (!prev) return this;
 
@@ -38,7 +39,7 @@ export class MsgDict<T extends {}> extends Msg<Dict<T>> {
     return this.set(next as T);
   }
 
-  update(changes: Dict<T>) {
+  update(changes: Dictionary<T>) {
     return this.merge(changes, true);
   }
 

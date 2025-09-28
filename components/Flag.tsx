@@ -24,7 +24,7 @@ export interface FlagSVGProps {
 }
 
 // SVG flags for the 5 required languages
-const FLAGS: Record<string, any> = {
+const FLAGS: Dictionary<any> = {
   fr: (
     <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
       <rect width="300" height="600" fill="#002654" />
@@ -64,7 +64,7 @@ const FLAGS: Record<string, any> = {
 };
 
 // Mapping for alternative codes
-const ISO_MAPPING: Record<string, string> = {
+const ISO_MAPPING: Dictionary<string> = {
   gb: 'en', // Great Britain -> English flag
   uk: 'en', // United Kingdom -> English flag
 };

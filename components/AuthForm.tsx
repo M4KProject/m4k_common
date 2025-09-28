@@ -4,7 +4,7 @@ import { Loading } from './Loading';
 import { Field } from './Field';
 import { Button } from './Button';
 import { Form } from './Form';
-import { toErr } from '@common/utils/err';
+import { toError } from '@common/utils/cast';
 import { addTr } from '../hooks/useTr';
 import { FlexCol } from './Flex';
 import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';
@@ -72,7 +72,7 @@ export const AuthForm = () => {
                     await authLogin(email, password);
                     setPasswordError('');
                   } catch (error) {
-                    setPasswordError(toErr(error).message);
+                    setPasswordError(toError(error).message);
                   }
                   setPage('sign-in');
                 }}

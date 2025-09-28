@@ -6,11 +6,12 @@ import { DivProps } from './Div';
 import { Tr } from './Tr';
 import { Select } from './Select';
 import { Picker } from './Picker';
-import { toErr } from '@common/utils/err';
+import { toError } from '@common/utils/cast';
 import { Check, Eye, EyeOff } from 'lucide-react';
 import { Button } from './Button';
 import { Msg } from '@common/utils/Msg';
 import { useMsg } from '../hooks';
+import { Dictionary } from '@common/utils/types';
 
 const c = Css('Field', {
   '': {
@@ -166,10 +167,10 @@ export interface FieldProps<T = any> extends FieldInfo, DivProps {
   delay?: number;
 }
 
-export const castByType: Record<string, (next: any) => any> = {
+export const castByType: Dictionary<(next: any) => any> = {
   number: (next: any) => {
     const casted = toNbr(next, null);
-    if (casted === null) throw toErr('not-a-number');
+    if (casted === null) throw toError('not-a-number');
     return casted;
   },
 };
@@ -494,14 +495,14 @@ export const FieldGroup = (props: DivProps) => <div {...props} class={c('Group',
 // //     label?: string|ReactNode;
 // //     value?: any;
 // //     required?: boolean;
-// //     values?: Record<string, string|ReactNode>;
+// //     values?: Dictionary<string|ReactNode>;
 // //     onChange: (e: any, next: any) => void,
 // //     error?: string,
 // //     helperText?: string,
 // //     className?: string,
 // //     children?: ReactNode,
 
-// export type SelectItems = Record<string, ReactNode>|[string, ReactNode][]
+// export type SelectItems = Dictionary<ReactNode>|[string, ReactNode][]
 
 // export interface SelectFieldProps<T> extends FieldProps<T> {
 //     items?: () => T[]|Msg<T[]>|null,

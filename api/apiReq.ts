@@ -1,7 +1,7 @@
 import { Msg } from '@common/utils/Msg';
 import { pathJoin } from '../utils/pathJoin';
 import { createReq, Req, ReqError, ReqMethod, ReqOptions } from '../utils/req';
-import { isItem, isStr, isStrNotEmpty } from '@common/utils/check';
+import { isItem, isStr,isStrDef } from '@common/utils/check';
 import { toError } from '@common/utils/cast';
 
 export const apiError$ = new Msg<ReqError<any>>(null);
@@ -29,7 +29,7 @@ export const getAuthId = () => apiAuth$.v?.id || '';
 
 export const needAuthId = () => {
   const id = getAuthId();
-  if (!isStrNotEmpty(id)) throw toError('no auth id');
+  if (!isStrDef(id)) throw toError('no auth id');
   return id;
 };
 

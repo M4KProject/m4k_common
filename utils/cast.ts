@@ -67,3 +67,26 @@ export const toVoid = () => {};
 export const toVoidAsync = () => Promise.resolve();
 
 export const toError = (v: any) => (v instanceof Error ? v : new Error(String(v)));
+
+export const toData = (v: any): any => {
+  const result = {};
+  if (isItem(v)) {
+    const seen = {};
+    let o = v;
+    while (o && o !== Object.prototype) {
+      const props = Object.getOwnPropertyNames(o);
+      for (const p of props) {
+        if (!seen[p]) {
+          try {
+            result[p] = v[p];
+          } catch (_) {
+            result[p] = undefined;
+          }
+          seen[p] = true;
+        }
+      }
+      o = Object.getPrototypeOf(o);
+    }
+  }
+  return result;
+}

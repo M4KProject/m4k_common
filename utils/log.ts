@@ -1,10 +1,10 @@
-import { isDate, isErr, isObj } from './check';
-import { toErr } from './err';
+import { isDate, isError, isObj } from './check';
+import { toError } from './cast';
 import { stringify } from './json';
 
 export const logArgToStr = (a: any) =>
-  isErr(a)
-    ? toErr(a).toString()
+  isError(a)
+    ? toError(a).toString()
     : isDate(a)
       ? a.toISOString()
       : isObj(a)

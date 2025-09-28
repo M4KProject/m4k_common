@@ -4,11 +4,11 @@ import { MsgDict } from '@common/utils';
 
 export const tr$ = new MsgDict<string>({});
 
-export function addTr(changes: Record<string, string>) {
+export function addTr(changes: Dictionary<string>) {
   tr$.update(changes);
 }
 
-export const tr = (key: any, params?: Record<string, string>): any => {
+export const tr = (key: any, params?: Dictionary<string>): any => {
   const translateByKey = tr$.v;
   key = String(key);
   const translate = translateByKey[key] || key;

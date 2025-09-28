@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-window
-export const updateUrlParams = (update: Record<string, string>) => {
+export const updateUrlParams = (update: Dictionary<string>) => {
   const queryParams = new URLSearchParams(window.location.search);
   let count = 0;
   for (const prop in update) {
@@ -19,8 +19,8 @@ export const readUrlParams = () => {
   const search = /([^&=]+)=?([^&]*)/g;
   const decode = (s: string) => decodeURIComponent(s.replace(pl, ' '));
   const query = window.location.search.substring(1);
-  const urlParams: Record<string, string> = {};
-  const urlParams2: Record<string, string> = {};
+  const urlParams: Dictionary<string> = {};
+  const urlParams2: Dictionary<string> = {};
   while ((match = search.exec(query))) {
     const key = decode(match[1]);
     const value = decode(match[2]);

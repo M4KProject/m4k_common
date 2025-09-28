@@ -103,7 +103,7 @@ export const sum = (list: number[], margin?: number) => {
 };
 
 export const uniq = <T>(a: T[]): T[] => {
-  const o: Record<string, any> = {};
+  const o: Dictionary<any> = {};
   for (const v of a) {
     o[stringify(v) || String(v)] = v;
   }

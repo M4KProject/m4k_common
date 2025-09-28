@@ -108,7 +108,7 @@ export const refreshTheme = () => {
     warn: setHsl(primary, { h: 30 }),
   });
 
-  setColors(t as Dict<string>);
+  setColors(t as Dictionary<string>);
 };
 
 theme$.on(refreshTheme);

@@ -10,11 +10,11 @@ const initRealtime = () => {
   let reqCtx: ReqContext<any> | undefined = undefined;
   let intervalId: any;
   let lastState = '';
-  const subscriptions: Record<string, ((data: any) => void)[]> = {};
+  const subscriptions: Dictionary<((data: any) => void)[]> = {};
   const realtimeUrl = pathJoin(getApiUrl(), 'realtime');
 
   let lastHeartbeat = 0;
-  const wrappedListeners: Record<string, (event: any) => void> = {};
+  const wrappedListeners: Dictionary<(event: any) => void> = {};
 
   const isConnected = (): boolean =>
     !!eventSource &&

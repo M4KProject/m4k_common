@@ -1,4 +1,4 @@
-import { toErr } from '@common/utils/err';
+import { toError } from '@common/utils/cast';
 import { M4Kiosk } from './m4kInterface';
 import { m4kMethods } from './m4kMethods';
 import { global } from '@common/utils/global';
@@ -23,7 +23,7 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
         if (isFun(result)) result = await result(m4k);
         return { success: true, value: result };
       } catch (e) {
-        return { success: false, error: String(toErr(e)) };
+        return { success: false, error: String(toError(e)) };
       }
     };
   }
@@ -59,7 +59,7 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
         canLog && console.debug('m4k', name, 'result', args, result);
         return result;
       } catch (e) {
-        const error = toErr(e);
+        const error = toError(e);
         canLog && console.error('m4k', name, 'error', args, error);
         throw error;
       }

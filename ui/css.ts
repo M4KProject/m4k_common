@@ -1,9 +1,11 @@
 import { toStr } from '@common/utils/cast';
-import { Dict, isEq, isItem, isList, isNbr, isStr, isStrNotEmpty } from '@common/utils/check';
+import { Dict } from '@common/utils/types';
+import { isItem, isList, isNbr, isStr,isStrDef } from '@common/utils/check';
 import { JSX } from 'preact/jsx-runtime';
 import { createEl } from './html';
+import { isDeepEqual } from '@common/utils/isDeepEqual';
 
-let _colors: Record<string, string> = {};
+let _colors: Dictionary<string> = {};
 
 type CssTransform =
   | string
@@ -26,7 +28,7 @@ type AnimValue =
 
 interface CssContext {
   key: string;
-  css: Record<string, CssRecord>;
+  css: Dictionary<CssRecord>;
   t?: string[];
   a?: string[];
 }
@@ -248,7 +250,7 @@ export type CssRecord =
   | (JSX.CSSProperties & {
       [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0];
     });
-export type CssValue = null | string | string[] | Dict<CssRecord>;
+export type CssValue = null | string | string[] | Dictionary<CssRecord>;
 
 const _cssMap: { [key: string]: [HTMLElement, CssValue, number] } = {};
 
@@ -257,7 +259,7 @@ let cssCount = 0;
 export const setCss = (key: string, css?: CssValue, order?: number, force?: boolean) => {
   const old = _cssMap[key];
   if (old) {
-    if (!force && isEq(old[1], css)) return key;
+    if (!force && isDeepEqual(old[1], css)) return key;
     old[0].remove();
     delete _cssMap[key];
   }
@@ -321,7 +323,7 @@ export const Css = (key: string, css?: CssValue) => {
       if (isStr(arg)) {
         sb.push(key + arg);
       } else if (isItem(arg)) {
-        isStrNotEmpty(arg.class) && sb.push(arg.class);
+       isStrDef(arg.class) && sb.push(arg.class);
       }
     }
     return sb.join(' ');
@@ -340,7 +342,7 @@ export const refreshCss = () => {
 export const getColors = () => _colors;
 export const getColor = (k: string) => _colors[k] || k;
 
-export const setColors = (colors: Dict<string>) => {
+export const setColors = (colors: Dictionary<string>) => {
   console.debug('setColors', colors);
   _colors = colors;
   refreshCss();

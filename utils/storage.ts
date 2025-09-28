@@ -2,11 +2,11 @@ import { addItem, removeItem } from './list';
 import { throttle } from './async';
 import { isBool, isItem, isList, isNbr, isStr, len } from './check';
 import { global } from './global';
-import { toErr } from './err';
+import { toError } from './err';
 
 const newStorage = (): typeof localStorage => {
   const r = {
-    _d: {} as Record<string, string>,
+    _d: {} as Dictionary<string>,
     _r: () => {
       r.length = len(r._d);
     },
@@ -76,11 +76,11 @@ export const getStored = <T = any, U = T>(
                 : () => true;
     }
     if (value !== undefined && !check(value)) {
-      throw toErr('check error', { key, value, initValue });
+      throw toError('check error', { key, value, initValue });
     }
     return value !== undefined ? value : initValue;
   } catch (error) {
-    console.error('getStored error', key, toErr(error));
+    console.error('getStored error', key, toError(error));
     return initValue;
   }
 };
@@ -101,7 +101,7 @@ export const setStored = <T = any>(key: string, value?: T): void => {
     storage.setItem(prefix + key, json);
     _signal();
   } catch (e) {
-    const error = toErr(e);
+    const error = toError(e);
     console.error('setStored error', key, value, error);
   }
 };
@@ -117,9 +117,9 @@ export const getStoredKeys = (): string[] => {
   return keys;
 };
 
-export const getStoredData = (): Record<string, any> => {
+export const getStoredData = (): Dictionary<any> => {
   const keys = getStoredKeys();
-  const result = {} as Record<string, any>;
+  const result = {} as Dictionary<any>;
   for (const key of keys) {
     result[key] = getStored(key);
   }
@@ -134,14 +134,14 @@ export const clearStoredData = (): void => {
   _signal();
 };
 
-export const updateStoredData = (data: Record<string, any>) => {
+export const updateStoredData = (data: Dictionary<any>) => {
   for (const key in data) {
     setStored(key, data[key]);
   }
   _signal();
 };
 
-export const replaceStoredData = (data: Record<string, any>) => {
+export const replaceStoredData = (data: Dictionary<any>) => {
   clearStoredData();
   updateStoredData(data);
 };

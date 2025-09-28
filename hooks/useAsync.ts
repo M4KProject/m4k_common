@@ -1,7 +1,7 @@
 import { useMemo, useEffect } from 'preact/hooks';
 import { Msg } from '@common/utils/Msg';
 import { useMsg } from './useMsg';
-import { toErr } from '@common/utils';
+import { toError } from '@common/utils';
 
 export const useAsync = <T>(
   initValue: T,
@@ -29,7 +29,7 @@ export const useAsync = <T>(
 
   useEffect(() => {
     reload().catch((e) => {
-      const error = toErr(e);
+      const error = toError(e);
       console.error('useAsync load', storedKey, error);
       if (!storedKey) throw error;
     });

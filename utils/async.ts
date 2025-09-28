@@ -1,4 +1,4 @@
-import { toErr } from './err';
+import { timeoutError } from "./error";
 
 export const retry = async <T>(createPromise: () => Promise<T>, retry = 2): Promise<T> => {
   let error: any;
@@ -14,7 +14,7 @@ export const retry = async <T>(createPromise: () => Promise<T>, retry = 2): Prom
 
 export const withTimeout = <T>(promise: Promise<T>, timeoutMs = 5000): Promise<T> => {
   return new Promise<T>((resolve, reject) => {
-    const t = setTimeout(() => reject(toErr('timeout')), timeoutMs);
+    const t = setTimeout(() => reject(timeoutError('promise')), timeoutMs);
     promise
       .then(resolve)
       .catch(reject)

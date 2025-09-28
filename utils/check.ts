@@ -1,7 +1,4 @@
-export type Dict<T = any> = Record<string, T>;
-export type List<T = any> = T[];
-export type Item = Dict<any>;
-export type Obj = Item | List;
+import { Dictionary, Fun, Item, List, Obj } from './types';
 
 ///// Type /////
 export const isObj = <T extends Obj>(v: unknown): v is T => typeof v === 'object' && v !== null;
@@ -9,11 +6,11 @@ export const isList = (v: any): v is List => Array.isArray(v);
 export const isItem = <T extends Item>(v: any): v is T => isObj(v) && !isList(v);
 export const isBool = (v: any): v is boolean => v === true || v === false;
 export const isDate = (v: any): v is Date => v instanceof Date;
-export const isErr = (v: any): v is Error => v instanceof Error;
+export const isError = (v: any): v is Error => v instanceof Error;
 export const isFile = (v: any): v is File => v instanceof File;
 export const isBlob = (v: any): v is Blob => v instanceof Blob;
 export const isFileOrBlob = (v: any): v is File | Blob => isFile(v) || isBlob(v);
-export const isFun = (v: any): v is (...args: any[]) => any => typeof v === 'function';
+export const isFun = (v: any): v is Fun => typeof v === 'function';
 export const isNbr = (v: any): v is number => typeof v === 'number';
 export const isNot = (is: (v: any) => boolean) => (v: any) => !is(v);
 
@@ -34,7 +31,7 @@ export const isBetween = (v: number, min?: number, max?: number): boolean =>
 ///// String /////
 export const isStr = (v: any): v is string => typeof v === 'string';
 export const isStrEmpty = (v: any): v is string => isStr(v) && v.trim() === '';
-export const isStrNotEmpty = (v: any): v is string => isStr(v) && v.trim() !== '';
+export const isStrDef = (v: any): v is string => isStr(v) && v.trim() !== '';
 export const isUuid = (v: any): v is string => {
   const code = String(v).replace(/[a-fA-F0-9]+/g, (a) => '' + a.length);
   return code === '8-4-4-4-12' || code === '32';
@@ -45,12 +42,12 @@ export const isListOf =
   <T>(is: (v: any) => v is T) =>
   (v: any): v is T[] =>
     isList(v) && v.every(is);
-export const isDictOf =
+export const isDictionaryOf =
   <T>(is: (v: any) => v is T) =>
-  (v: any): v is Dict<T> =>
+  (v: any): v is Dictionary<T> =>
     isItem(v) && Object.values(v).every(is);
 export const isListOfItem = isListOf(isItem);
-export const isDictOfItem = isDictOf(isItem);
+export const isDictionaryOfItem = isDictionaryOf(isItem);
 
 export const isListEmpty = (v: any): boolean => isList(v) && v.length === 0;
 export const isItemEmpty = (v: any): boolean => {
@@ -62,22 +59,51 @@ export const isObjEmpty = (v: Obj): boolean => isListEmpty(v) || isItemEmpty(v);
 export const isEmpty = (v: any): boolean => isNil(v) || (isStr(v) ? isStrEmpty(v) : isObjEmpty(v));
 export const isNotEmpty = isNot(isEmpty);
 
-///// DeepEqual /////
-export const len = (v: any): number =>
-  isObj(v) ? (isList(v) ? v.length : Object.keys(v).length) : isStr(v) ? v.length : 0;
-export const isEq = (a: any, b: any): boolean => {
-  if (a === b) return true;
-  if (typeof a !== typeof b) return false;
-  if (isList(a)) {
-    if (a.length !== b.length) return false;
-    for (let i = 0, l = a.length; i < l; i++) if (!isEq(a[i], b[i])) return false;
-    return true;
-  }
-  if (isItem(a)) {
-    if (len(a) !== len(b)) return false;
-    for (const p in a) if (!isEq(a[p], b[p])) return false;
-    return true;
-  }
-  return false;
-};
-export const isNotEq = (a: any, b: any): boolean => !isEq(a, b);
+
+const typeMap: Dictionary<(v: any) => boolean> = {
+  list: isList,
+  item: isItem,
+  bool: isBool,
+  date: isDate,
+  error: isError,
+  file: isFileOrBlob,
+  fun: isFun,
+  nbr: isNbr,
+  real: isReal,
+  positive: isPositive,
+  int: isInt,
+  str: isStr,
+  strDef: isStrDef,
+  itemMap
+  stringMap
+  boolMap
+  listOfItem: isListOfItem,
+  dictionaryOfItem: isDictionaryOfItem,
+}
+
+export const isType = (v: any) => {
+
+}
+
+
+
+
+// import { isBool, isNbr, isReal, isStr } from "./check";
+// import { typeError } from "./error";
+
+
+
+// export const need = (value: any, type: string, prop?: string) => {
+//   if (check(value)) return value;
+//   if (check === isStr) throw typeError(prop, message||'string');
+//   if (check === isNbr) throw typeError(prop, message||'number');
+//   if (check === isReal) throw typeError(prop, message||'number');
+//   if (check === isBool) throw typeError(prop, message||'boolean');
+
+
+//   throw new Error('')
+
+//   const id = getAuthId();
+//   if (!isStrDef(id)) throw toError('no auth id');
+//   return id;
+// };
