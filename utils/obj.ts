@@ -2,7 +2,7 @@ import { isDef, isItem, isList, isNil, isObj, isStr, isUndef } from './check';
 import { toList } from './cast';
 import { last, sort } from './list';
 import { nbrMax } from './nbr';
-import { Item, List } from './types';
+import { Item, List, TMap } from './types';
 import { isDeepEqual } from './isDeepEqual';
 
 export const sortKey = <T extends Record<any, any>>(record: T): T =>
@@ -40,7 +40,7 @@ interface DeleteKey {
     k2: K2,
     k3: K3
   ): Omit<Omit<Omit<T, K1>, K2>, K3>;
-  <T>(record: Dictionary<T>, ...keys: string[]): Dictionary<T>;
+  <T>(record: TMap<T>, ...keys: string[]): TMap<T>;
 }
 export const deleteKey = ((record: any, ...keys: string[]): any => {
   for (const key of keys) delete record[key];
@@ -153,4 +153,4 @@ export const deepMap = (
 };
 
 export const len = (v: any): number =>
-isObj(v) ? (isList(v) ? v.length : Object.keys(v).length) : isStr(v) ? v.length : 0;
+  isObj(v) ? (isList(v) ? v.length : Object.keys(v).length) : isStr(v) ? v.length : 0;

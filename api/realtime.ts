@@ -3,6 +3,7 @@ import { parse } from '@common/utils/json';
 import { pathJoin } from '@common/utils/pathJoin';
 import { toError } from '@common/utils/cast';
 import { getApiUrl } from './apiReq';
+import { TMap } from '@common/utils/types';
 
 const initRealtime = () => {
   let clientId: string = '';
@@ -10,11 +11,11 @@ const initRealtime = () => {
   let reqCtx: ReqContext<any> | undefined = undefined;
   let intervalId: any;
   let lastState = '';
-  const subscriptions: Dictionary<((data: any) => void)[]> = {};
+  const subscriptions: TMap<((data: any) => void)[]> = {};
   const realtimeUrl = pathJoin(getApiUrl(), 'realtime');
 
   let lastHeartbeat = 0;
-  const wrappedListeners: Dictionary<(event: any) => void> = {};
+  const wrappedListeners: TMap<(event: any) => void> = {};
 
   const isConnected = (): boolean =>
     !!eventSource &&

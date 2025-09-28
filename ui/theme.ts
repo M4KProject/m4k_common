@@ -108,7 +108,7 @@ export const refreshTheme = () => {
     warn: setHsl(primary, { h: 30 }),
   });
 
-  setColors(t as Dictionary<string>);
+  setColors(t as TMap<string>);
 };
 
 theme$.on(refreshTheme);

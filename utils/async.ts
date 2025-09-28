@@ -1,4 +1,4 @@
-import { timeoutError } from "./error";
+import { timeoutError } from './error';
 
 export const retry = async <T>(createPromise: () => Promise<T>, retry = 2): Promise<T> => {
   let error: any;

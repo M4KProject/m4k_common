@@ -1,4 +1,5 @@
 import { Css } from '@common/ui/css';
+import { TMap } from '@common/utils/types';
 
 const c = Css('Flag', {
   '': {
@@ -24,7 +25,7 @@ export interface FlagSVGProps {
 }
 
 // SVG flags for the 5 required languages
-const FLAGS: Dictionary<any> = {
+const FLAGS: TMap<any> = {
   fr: (
     <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
       <rect width="300" height="600" fill="#002654" />
@@ -64,7 +65,7 @@ const FLAGS: Dictionary<any> = {
 };
 
 // Mapping for alternative codes
-const ISO_MAPPING: Dictionary<string> = {
+const ISO_MAPPING: TMap<string> = {
   gb: 'en', // Great Britain -> English flag
   uk: 'en', // United Kingdom -> English flag
 };

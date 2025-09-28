@@ -1,4 +1,4 @@
-import { Dictionary, Fun, Item, List, Obj } from './types';
+import { TMap, Fun, Item, List, Obj } from './types';
 
 ///// Type /////
 export const isObj = <T extends Obj>(v: unknown): v is T => typeof v === 'object' && v !== null;
@@ -42,12 +42,12 @@ export const isListOf =
   <T>(is: (v: any) => v is T) =>
   (v: any): v is T[] =>
     isList(v) && v.every(is);
-export const isDictionaryOf =
+export const isTMapOf =
   <T>(is: (v: any) => v is T) =>
-  (v: any): v is Dictionary<T> =>
+  (v: any): v is TMap<T> =>
     isItem(v) && Object.values(v).every(is);
-export const isListOfItem = isListOf(isItem);
-export const isDictionaryOfItem = isDictionaryOf(isItem);
+export const isItems = isListOf(isItem);
+export const isItemMap = isTMapOf(isItem);
 
 export const isListEmpty = (v: any): boolean => isList(v) && v.length === 0;
 export const isItemEmpty = (v: any): boolean => {
@@ -59,8 +59,7 @@ export const isObjEmpty = (v: Obj): boolean => isListEmpty(v) || isItemEmpty(v);
 export const isEmpty = (v: any): boolean => isNil(v) || (isStr(v) ? isStrEmpty(v) : isObjEmpty(v));
 export const isNotEmpty = isNot(isEmpty);
 
-
-const typeMap: Dictionary<(v: any) => boolean> = {
+const typeMap: TMap<(v: any) => boolean> = {
   list: isList,
   item: isItem,
   bool: isBool,
@@ -74,24 +73,18 @@ const typeMap: Dictionary<(v: any) => boolean> = {
   int: isInt,
   str: isStr,
   strDef: isStrDef,
-  itemMap
-  stringMap
-  boolMap
-  listOfItem: isListOfItem,
-  dictionaryOfItem: isDictionaryOfItem,
-}
+  itemMap: isItemMap,
+  items: isItems,
+};
+type TypeMap = typeof typeMap;
 
-export const isType = (v: any) => {
-
-}
-
-
-
+export const isType = <K extends keyof TypeMap>(v: any, type: K): ReturnType<TypeMap[K]> => {
+  const is = typeMap[type];
+  return is && is(v);
+};
 
 // import { isBool, isNbr, isReal, isStr } from "./check";
 // import { typeError } from "./error";
-
-
 
 // export const need = (value: any, type: string, prop?: string) => {
 //   if (check(value)) return value;
@@ -99,7 +92,6 @@ export const isType = (v: any) => {
 //   if (check === isNbr) throw typeError(prop, message||'number');
 //   if (check === isReal) throw typeError(prop, message||'number');
 //   if (check === isBool) throw typeError(prop, message||'boolean');
-
 
 //   throw new Error('')
 

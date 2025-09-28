@@ -278,7 +278,7 @@ export interface M4kIntentOptions {
   component?: string;
   flags?: M4kFlag[] | number;
   categories?: string[];
-  extras?: Dictionary<any>;
+  extras?: TMap<any>;
 }
 
 export type M4kPath = string | string[];
@@ -369,7 +369,7 @@ export interface M4Kiosk {
   // popLogs(count?: number): Promise<M4kLog[]>;
 
   // wvKey(): Promise<string>;
-  // wvList(): Promise<Dictionary<M4kWebViewConfig>>;
+  // wvList(): Promise<TMap<M4kWebViewConfig>>;
   // wvConfig(options: { reset?: boolean, [key: string]: M4kWebViewConfig|boolean|undefined }): Promise<void>;
 
   installedPackages(): Promise<String[]>;

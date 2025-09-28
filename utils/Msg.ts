@@ -4,7 +4,7 @@ import { toVoid } from './cast';
 import { isDef, isFun } from './check';
 import { global } from './global';
 import { getStored, setStored } from './storage';
-import { Dictionary } from './types';
+import { TMap } from './types';
 
 export type IMsgHandler<T> = (value: T, oldValue: T) => void;
 export type IMsgFilter<T> = (value: T) => boolean;
@@ -46,7 +46,7 @@ export interface IMsg<T> extends IMsgReadonly<T>, IMsgSet<T> {
   next(value: T | ((value: T) => T)): IMsg<T>;
 }
 
-export const msgs: Dictionary<Msg> = global.m4kMsgs || (global.m4kMsgs = {});
+export const msgs: TMap<Msg> = global.m4kMsgs || (global.m4kMsgs = {});
 
 export class Msg<T = any> implements IMsg<T> {
   static from<T>(sourceOn: (target: IMsg<T>) => () => void, initValue: T): Msg<T>;

@@ -1,6 +1,6 @@
 import { toError } from '@common/utils/cast';
 import { Msg } from '@common/utils/Msg';
-import { isStr,isStrDef } from '@common/utils/check';
+import { isStr, isStrDef } from '@common/utils/check';
 
 // export const PB_URL_DEV = "http://127.0.0.1:8090/api/";
 

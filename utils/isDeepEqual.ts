@@ -1,5 +1,5 @@
-import { isItem, isList } from "./check";
-import { len } from "./obj";
+import { isItem, isList } from './check';
+import { len } from './obj';
 
 export const isDeepEqual = (a: any, b: any): boolean => {
   if (a === b) return true;

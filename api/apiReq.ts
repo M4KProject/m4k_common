@@ -1,7 +1,7 @@
 import { Msg } from '@common/utils/Msg';
 import { pathJoin } from '../utils/pathJoin';
 import { createReq, Req, ReqError, ReqMethod, ReqOptions } from '../utils/req';
-import { isItem, isStr,isStrDef } from '@common/utils/check';
+import { isItem, isStr, isStrDef } from '@common/utils/check';
 import { toError } from '@common/utils/cast';
 
 export const apiError$ = new Msg<ReqError<any>>(null);

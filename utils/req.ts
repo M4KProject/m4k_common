@@ -8,9 +8,9 @@ import { pathJoin } from './pathJoin';
 export type FormDataObject = { [prop: string]: any };
 export type ReqURL = string | URL;
 export type ReqMethod = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT';
-export type ReqParams = Dictionary<undefined | string | number | (string | number)[]>;
+export type ReqParams = TMap<undefined | string | number | (string | number)[]>;
 export type ReqData = any;
-export type ReqHeaders = Dictionary<string>;
+export type ReqHeaders = TMap<string>;
 export type ReqBody = Document | XMLHttpRequestBodyInit | File | null | undefined;
 export type ReqResponseType = '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
 

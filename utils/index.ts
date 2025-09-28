@@ -1,4 +1,3 @@
-
 export * from './async';
 export * from './b64toBlob';
 export * from './by';
@@ -14,7 +13,7 @@ export * from './json';
 export * from './list';
 export * from './log';
 export * from './Msg';
-export * from './MsgDict';
+export * from './MsgMap';
 export * from './nbr';
 export * from './obj';
 export * from './pathJoin';

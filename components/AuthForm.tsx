@@ -6,7 +6,6 @@ import { Button } from './Button';
 import { Form } from './Form';
 import { toError } from '@common/utils/cast';
 import { addTr } from '../hooks/useTr';
-import { FlexCol } from './Flex';
 import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';
 import { authLogin, authPasswordReset, authSignUp } from '@common/api';
 
@@ -22,6 +21,9 @@ const c = Css('AuthForm', {
   },
   ' .Button': {
     elevation: 0,
+  },
+  Col: {
+    fCol: 1,
   },
 });
 
@@ -62,7 +64,7 @@ export const AuthForm = () => {
               props={{ autoComplete: 'current-password' }}
               error={passwordError}
             />
-            <FlexCol>
+            <div class={c('Col')}>
               <Button
                 icon={<LogIn />}
                 title="Se connecter"
@@ -88,7 +90,7 @@ export const AuthForm = () => {
                 icon={<UserPlus />}
                 onClick={() => setPage('sign-up')}
               />
-            </FlexCol>
+            </div>
           </>
         ) : page === 'sign-up' ? (
           <>
@@ -102,7 +104,7 @@ export const AuthForm = () => {
               label="Votre mot de passe"
               props={{ autoComplete: 'new-password' }}
             />
-            <FlexCol>
+            <div class={c('Col')}>
               <Button
                 title="S'inscrire"
                 onClick={async () => {
@@ -118,12 +120,12 @@ export const AuthForm = () => {
                 icon={<LogIn />}
                 onClick={() => setPage('sign-in')}
               />
-            </FlexCol>
+            </div>
           </>
         ) : page === 'forgot-password' ? (
           <>
             {emailField}
-            <FlexCol>
+            <div class={c('Col')}>
               <Button
                 title="Réinitialiser le mot de passe par email"
                 onClick={async () => {
@@ -140,13 +142,13 @@ export const AuthForm = () => {
                 icon={<ArrowLeft />}
                 onClick={() => setPage('sign-in')}
               />
-            </FlexCol>
+            </div>
           </>
         ) : page === 'code' ? (
           <>
             {emailField}
             <Field col value={password} onValue={setPassword} label="Le CODE reçu par email" />
-            <FlexCol>
+            <div class={c('Col')}>
               <Button
                 title="Connexion avec le CODE"
                 onClick={() => {
@@ -160,7 +162,7 @@ export const AuthForm = () => {
                 onClick={() => setPage('sign-in')}
                 icon={<ArrowLeft />}
               />
-            </FlexCol>
+            </div>
           </>
         ) : (
           <Loading />

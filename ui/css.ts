@@ -1,11 +1,11 @@
 import { toStr } from '@common/utils/cast';
 import { Dict } from '@common/utils/types';
-import { isItem, isList, isNbr, isStr,isStrDef } from '@common/utils/check';
+import { isItem, isList, isNbr, isStr, isStrDef } from '@common/utils/check';
 import { JSX } from 'preact/jsx-runtime';
 import { createEl } from './html';
 import { isDeepEqual } from '@common/utils/isDeepEqual';
 
-let _colors: Dictionary<string> = {};
+let _colors: TMap<string> = {};
 
 type CssTransform =
   | string
@@ -28,7 +28,7 @@ type AnimValue =
 
 interface CssContext {
   key: string;
-  css: Dictionary<CssRecord>;
+  css: TMap<CssRecord>;
   t?: string[];
   a?: string[];
 }
@@ -250,7 +250,7 @@ export type CssRecord =
   | (JSX.CSSProperties & {
       [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0];
     });
-export type CssValue = null | string | string[] | Dictionary<CssRecord>;
+export type CssValue = null | string | string[] | TMap<CssRecord>;
 
 const _cssMap: { [key: string]: [HTMLElement, CssValue, number] } = {};
 
@@ -323,7 +323,7 @@ export const Css = (key: string, css?: CssValue) => {
       if (isStr(arg)) {
         sb.push(key + arg);
       } else if (isItem(arg)) {
-       isStrDef(arg.class) && sb.push(arg.class);
+        isStrDef(arg.class) && sb.push(arg.class);
       }
     }
     return sb.join(' ');
@@ -342,7 +342,7 @@ export const refreshCss = () => {
 export const getColors = () => _colors;
 export const getColor = (k: string) => _colors[k] || k;
 
-export const setColors = (colors: Dictionary<string>) => {
+export const setColors = (colors: TMap<string>) => {
   console.debug('setColors', colors);
   _colors = colors;
   refreshCss();

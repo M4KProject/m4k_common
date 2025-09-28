@@ -1,5 +1,5 @@
-import { isFun } from "./check";
-import { Fun } from "./types";
+import { isFun } from './check';
+import { Fun } from './types';
 
 interface Catcher {
   <F extends Fun>(fun: F): (...args: Parameters<F>) => ReturnType<F> | undefined;

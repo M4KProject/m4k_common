@@ -1,10 +1,10 @@
 import { isItemEmpty, isNil } from './check';
 import { merge } from './obj';
 import { Msg } from './Msg';
-import { Dictionary, Item } from './types';
+import { TMap, Item } from './types';
 
-export class MsgDict<T extends Item> extends Msg<Dictionary<T>> {
-  apply(cb: (next: Dictionary<T>) => void) {
+export class MsgMap<T> extends Msg<TMap<T>> {
+  apply(cb: (next: TMap<T>) => void) {
     const prev = this.v;
     const next = { ...prev };
     cb(next);
@@ -12,7 +12,7 @@ export class MsgDict<T extends Item> extends Msg<Dictionary<T>> {
     return this;
   }
 
-  merge(changes: Dictionary<Partial<T>>, isReplace?: boolean) {
+  merge(changes: TMap<Partial<T>>, isReplace?: boolean) {
     const prev = this.v;
     if (!prev) return this;
 
@@ -36,10 +36,10 @@ export class MsgDict<T extends Item> extends Msg<Dictionary<T>> {
       }
     }
 
-    return this.set(next as T);
+    return this.set(next);
   }
 
-  update(changes: Dictionary<T>) {
+  update(changes: TMap<T>) {
     return this.merge(changes, true);
   }
 
@@ -60,9 +60,9 @@ export class MsgDict<T extends Item> extends Msg<Dictionary<T>> {
   }
 }
 
-export const newMsgDict = <T extends {} = Item>(
+export const newMsgMap = <T extends {} = Item>(
   initValue: T,
   key?: string,
   isStored?: boolean,
   storedCheck?: (value: T) => boolean
-) => new MsgDict<T>(initValue, key, isStored, storedCheck);
+) => new MsgMap<T>(initValue, key, isStored, storedCheck);

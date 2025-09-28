@@ -1,12 +1,15 @@
 import { addItem, removeItem } from './list';
 import { throttle } from './async';
-import { isBool, isItem, isList, isNbr, isStr, len } from './check';
+import { isBool, isItem, isList, isNbr, isStr } from './check';
 import { global } from './global';
-import { toError } from './err';
+import { len } from './obj';
+import { TMap } from './types';
+import { toError } from './cast';
+import { typeError } from './error';
 
 const newStorage = (): typeof localStorage => {
   const r = {
-    _d: {} as Dictionary<string>,
+    _d: {} as TMap<string>,
     _r: () => {
       r.length = len(r._d);
     },
@@ -76,7 +79,7 @@ export const getStored = <T = any, U = T>(
                 : () => true;
     }
     if (value !== undefined && !check(value)) {
-      throw toError('check error', { key, value, initValue });
+      throw typeError(key, value);
     }
     return value !== undefined ? value : initValue;
   } catch (error) {
@@ -117,9 +120,9 @@ export const getStoredKeys = (): string[] => {
   return keys;
 };
 
-export const getStoredData = (): Dictionary<any> => {
+export const getStoredData = (): TMap<any> => {
   const keys = getStoredKeys();
-  const result = {} as Dictionary<any>;
+  const result = {} as TMap<any>;
   for (const key of keys) {
     result[key] = getStored(key);
   }
@@ -134,14 +137,14 @@ export const clearStoredData = (): void => {
   _signal();
 };
 
-export const updateStoredData = (data: Dictionary<any>) => {
+export const updateStoredData = (data: TMap<any>) => {
   for (const key in data) {
     setStored(key, data[key]);
   }
   _signal();
 };
 
-export const replaceStoredData = (data: Dictionary<any>) => {
+export const replaceStoredData = (data: TMap<any>) => {
   clearStoredData();
   updateStoredData(data);
 };

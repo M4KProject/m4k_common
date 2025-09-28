@@ -1,7 +1,7 @@
 import { randString } from './rand';
 import { global } from './global';
 
-const timers: Dictionary<any> = global.m4kTimers || (global.m4kTimers = {});
+const timers: TMap<any> = global.m4kTimers || (global.m4kTimers = {});
 
 const timer = (id: null | string, ms: number, cb: null | (() => void)) => {
   if (!id) id = randString(10) + Date.now();

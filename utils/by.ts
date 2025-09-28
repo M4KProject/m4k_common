@@ -1,5 +1,5 @@
 import { isItem, isList, isFun, isNil } from './check';
-import { Dictionary } from './types';
+import { TMap } from './types';
 
 export type ArRecKey<T> = undefined | null | keyof T | ((item: T, index: number) => any);
 export type ArRecVal<T, U> = undefined | null | keyof T | ((item: T, index: number) => U);
@@ -7,24 +7,24 @@ export type RecKey<T> = undefined | null | keyof T | ((item: T, key: string) => 
 export type RecVal<T, U> = undefined | null | keyof T | ((item: T, key: string) => U);
 
 interface GroupBy {
-  <T>(items: T[], key?: ArRecKey<T>): Dictionary<T[]>;
-  <T, U>(items: T[], key: ArRecKey<T>, val: ArRecVal<T, U>): Dictionary<U[]>;
-  <T>(items: Dictionary<T>, key?: RecKey<T>): Dictionary<T[]>;
-  <T, U>(items: Dictionary<T>, key: RecKey<T>, val: RecVal<T, U>): Dictionary<U[]>;
+  <T>(items: T[], key?: ArRecKey<T>): TMap<T[]>;
+  <T, U>(items: T[], key: ArRecKey<T>, val: ArRecVal<T, U>): TMap<U[]>;
+  <T>(items: TMap<T>, key?: RecKey<T>): TMap<T[]>;
+  <T, U>(items: TMap<T>, key: RecKey<T>, val: RecVal<T, U>): TMap<U[]>;
 }
 
 interface By {
-  <T>(items: T[], key?: ArRecKey<T>): Dictionary<T>;
-  <T, U>(items: T[], key: ArRecKey<T>, val: ArRecVal<T, U>): Dictionary<U>;
-  <T>(items: Dictionary<T>, key?: RecKey<T>): Dictionary<T>;
-  <T, U>(items: Dictionary<T>, key: RecKey<T>, val: RecVal<T, U>): Dictionary<U>;
+  <T>(items: T[], key?: ArRecKey<T>): TMap<T>;
+  <T, U>(items: T[], key: ArRecKey<T>, val: ArRecVal<T, U>): TMap<U>;
+  <T>(items: TMap<T>, key?: RecKey<T>): TMap<T>;
+  <T, U>(items: TMap<T>, key: RecKey<T>, val: RecVal<T, U>): TMap<U>;
 }
 
 interface ById {
-  <T extends { id?: string }>(items: T[]): Dictionary<T>;
-  <T extends { id?: string }, U>(items: T[], val: ArRecVal<T, U>): Dictionary<U>;
-  <T extends { id?: string }>(items: Dictionary<T>): Dictionary<T>;
-  <T extends { id?: string }, U>(items: Dictionary<T>, val: RecVal<T, U>): Dictionary<U>;
+  <T extends { id?: string }>(items: T[]): TMap<T>;
+  <T extends { id?: string }, U>(items: T[], val: ArRecVal<T, U>): TMap<U>;
+  <T extends { id?: string }>(items: TMap<T>): TMap<T>;
+  <T extends { id?: string }, U>(items: TMap<T>, val: RecVal<T, U>): TMap<U>;
 }
 
 const _groupBy = (items: any, key: any, val: any, add: any) => {
@@ -59,8 +59,8 @@ const _groupBy = (items: any, key: any, val: any, add: any) => {
  * isDeepEqual( groupBy({ a, b, c }, null, v => v.x), { a: [5], b: [6], c: [6] } );
  * isDeepEqual( groupBy([ a, b, c ]), groupBy({ 0:a, 1:b, 2:c }) );
  */
-export const groupBy = ((items: any, key: any, val?: any): Dictionary<any[]> => {
-  const r: Dictionary<any[]> = {};
+export const groupBy = ((items: any, key: any, val?: any): TMap<any[]> => {
+  const r: TMap<any[]> = {};
   _groupBy(items, key, val, (k: any, v: any) => {
     (r[k] || (r[k] = [])).push(v);
   });
@@ -76,8 +76,8 @@ export const groupBy = ((items: any, key: any, val?: any): Dictionary<any[]> => 
  * isDeepEqual( by({ a, b, c }, null, v => v.x), { a: 5, b: 6, c: 6 } );
  * isDeepEqual( by([ a, b, c ]), valueBy({ 0:a, 1:b, 2:c }) );
  */
-export const by = ((items: any, key: any, val?: any): Dictionary<any> => {
-  const r: Dictionary<any> = {};
+export const by = ((items: any, key: any, val?: any): TMap<any> => {
+  const r: TMap<any> = {};
   _groupBy(items, key, val, (k: any, v: any) => {
     r[k] = v;
   });

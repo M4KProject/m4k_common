@@ -1,14 +1,15 @@
 import { setTemplate } from '@common/utils/str';
 import { useMsg } from './useMsg';
-import { MsgDict } from '@common/utils';
+import { MsgMap } from '@common/utils';
+import { TMap } from '@common/utils/types';
 
-export const tr$ = new MsgDict<string>({});
+export const tr$ = new MsgMap<string>({});
 
-export function addTr(changes: Dictionary<string>) {
+export function addTr(changes: TMap<string>) {
   tr$.update(changes);
 }
 
-export const tr = (key: any, params?: Dictionary<string>): any => {
+export const tr = (key: any, params?: TMap<string>): any => {
   const translateByKey = tr$.v;
   key = String(key);
   const translate = translateByKey[key] || key;

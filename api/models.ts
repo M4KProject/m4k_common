@@ -195,7 +195,7 @@ export interface DeviceModel extends _DeviceModel {
   //     script?: string|string[];
   //     rotate?: number;
   //     webviewRotate?: number;
-  //     settings?: Dictionary<any>;
+  //     settings?: TMap<any>;
   //     default?: number;
   //     reloadIntervalMs?: number;
   //     updateIntervalMs?: number;
