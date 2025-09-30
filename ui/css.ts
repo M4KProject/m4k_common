@@ -1,5 +1,5 @@
 import { toStr } from '@common/utils/cast';
-import { Dict } from '@common/utils/types';
+import { TMap } from '@common/utils/types';
 import { isItem, isList, isNbr, isStr, isStrDef } from '@common/utils/check';
 import { JSX } from 'preact/jsx-runtime';
 import { createEl } from './html';

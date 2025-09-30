@@ -7,7 +7,6 @@ import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';
 import { addTr } from '../hooks/useTr';
-import { isItem, ReqError, stringify, toError } from '@common/utils';
 
 addTr({
   Error: 'Erreur',
@@ -30,43 +29,6 @@ export const showDialog = (
       <Tr>{getContent(open$)}</Tr>
     </DialogRender>
   );
-};
-
-export const showError = (e: any) => {
-  const error = toError(e);
-  console.debug(
-    'showError',
-    error,
-    error.message,
-    error.name,
-    (error as any).data,
-    (error as any).ctx
-  );
-  if (error instanceof ReqError) {
-    const message = error.data?.message || error.message;
-    const data = error.data?.data;
-    const props = console.debug('showError ReqError', message, error.data);
-    showDialog(
-      'ReqError',
-      () => (
-        <>
-          <div>
-            <Tr>{message}</Tr>
-          </div>
-          {isItem(data)
-            ? Object.entries(data).map(([prop, value]) => (
-                <div>
-                  <Tr>{prop}</Tr>: <Tr>{value.message}</Tr>
-                </div>
-              ))
-            : stringify(data)}
-        </>
-      ),
-      { variant: 'error' }
-    );
-  } else {
-    showDialog('Error:' + error.name, () => error.message, { variant: 'error' });
-  }
 };
 
 const c = Css('Dialog', {

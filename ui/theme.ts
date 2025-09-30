@@ -1,8 +1,9 @@
 import { by } from '@common/utils/by';
-import { Dict, isBool, isItem } from '@common/utils/check';
+import { isBool, isItem } from '@common/utils/check';
 import { Msg } from '@common/utils/Msg';
 import { setColors } from './css';
 import { setHsl, addHsl, toHsl, toColor, setRgb } from '@common/utils/color';
+import { TMap } from '@common/utils/types';
 
 export interface ThemeInfo {
   isDark?: boolean;

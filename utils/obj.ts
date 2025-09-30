@@ -1,12 +1,12 @@
 import { isDef, isItem, isList, isNil, isObj, isStr, isUndef } from './check';
 import { toList } from './cast';
-import { last, sort } from './list';
+import { last, sortItems } from './list';
 import { nbrMax } from './nbr';
 import { Item, List, TMap } from './types';
 import { isDeepEqual } from './isDeepEqual';
 
 export const sortKey = <T extends Record<any, any>>(record: T): T =>
-  Object.fromEntries(sort(Object.entries(record))) as T;
+  Object.fromEntries(sortItems(Object.entries(record))) as T;
 
 export const getChanges = <T extends Item = Item>(source: T, target: Partial<T>): Partial<T> => {
   if (source === target) return {};

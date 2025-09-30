@@ -1,3 +1,4 @@
+
 export * from './async';
 export * from './b64toBlob';
 export * from './by';
@@ -9,6 +10,7 @@ export * from './color';
 export * from './date';
 export * from './error';
 export * from './global';
+export * from './isDeepEqual';
 export * from './json';
 export * from './list';
 export * from './log';
@@ -24,3 +26,4 @@ export * from './req';
 export * from './storage';
 export * from './str';
 export * from './timer';
+export * from './types';
