@@ -1,5 +1,4 @@
 import { Css } from '@common/ui/css';
-import { getStyle } from './Div';
 import { JSX } from 'preact/jsx-runtime';
 
 const c = Css('Form', {
@@ -23,11 +22,10 @@ export interface FormProps extends Omit<FormHTMLProps, 'style'> {
   style?: string | JSX.CSSProperties | undefined;
 }
 
-export const Form = ({ style, className, children, title, onSubmit, ...props }: FormProps) => {
+export const Form = ({ children, title, onSubmit, ...props }: FormProps) => {
   return (
     <form
       {...props}
-      style={getStyle(style)}
       class={c('', props)}
       onSubmit={(e) => {
         e.preventDefault();

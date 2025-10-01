@@ -1,5 +1,5 @@
 import { Css } from '@common/ui/css';
-import { DivProps } from './Div';
+import { DivProps } from './types';
 
 import { clamp, round } from '@common/utils/nbr';
 import { toNbr } from '@common/utils/cast';

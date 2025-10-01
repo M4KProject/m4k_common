@@ -2,7 +2,7 @@ import { Css } from '@common/ui/css';
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { toNbr } from '@common/utils/cast';
-import { DivProps } from './Div';
+import { DivProps } from './types';
 import { Tr } from './Tr';
 import { Select } from './Select';
 import { Picker } from './Picker';

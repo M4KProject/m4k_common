@@ -2,7 +2,7 @@ import { useMsg } from '../hooks/useMsg';
 import { Css } from '@common/ui/css';
 import { ComponentChildren } from 'preact';
 import { Msg } from '@common/utils/Msg';
-import { DivProps } from './Div';
+import { DivProps } from './types';
 import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';

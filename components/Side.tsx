@@ -1,5 +1,5 @@
 import { Css } from '@common/ui/css';
-import { DivProps } from './Div';
+import { DivProps } from './types';
 import { Button, ButtonProps } from './Button';
 import { useState } from 'preact/hooks';
 import { Menu } from 'lucide-react';

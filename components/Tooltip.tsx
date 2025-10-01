@@ -4,7 +4,7 @@ import { addListener } from '@common/ui/html';
 import { Css } from '@common/ui/css';
 import { Tr } from './Tr';
 import { addOverlay, removeOverlay } from '@common/ui/overlay';
-import { DivProps } from './Div';
+import { DivProps } from './types';
 
 const c = Css('Tooltip', {
   '': {
