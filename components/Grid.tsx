@@ -36,9 +36,7 @@ const c = Css('Grid', {
   },
 });
 
-export type GridCol<T extends {} = any, C extends {} = any, K extends keyof T = keyof T> = {
-  key?: string;
-  prop?: K;
+export type GridCol<T extends {} = any, C extends {} = any> = {
   title?: string | ComponentChildren;
   variant?: 'actions';
   val?: (item: T, ctx: C) => ComponentChildren;
@@ -51,12 +49,9 @@ export type GridComputedCol = GridCol & {
   val: (item: any, ctx: any) => ComponentChildren;
 };
 
-export type GridCols<T extends {} = any, C extends {} = any> = (
-  | false
-  | null
-  | undefined
-  | GridCol<T, C>
-)[];
+export type GridCols<T extends {} = any, C extends {} = any> = {
+  [K: string]: false | null | undefined | GridCol<T, C>;
+}
 
 // default w = 100
 
@@ -110,14 +105,20 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
   if (!getKey) getKey = defaultGetKey;
 
   const computedCols = useMemo(() => {
-    const computedCols = cols.filter(Boolean).map((c) => ({ ...c })) as GridComputedCol[];
-    const wTotal = sum(computedCols.map((c) => c.w || 100));
-    computedCols.forEach((col, index) => {
-      const key = col.key || (col.key = String(col.prop || index));
-      col.style = { width: (100 * (col.w || 100)) / wTotal + '%' };
-      if (!col.val) col.val = (item) => item[key];
-    });
-    return computedCols;
+    const wTotal = sum(Object.values(cols).map((c) => c ? c.w || 100 : 0));
+    const results: GridComputedCol[] = [];
+    for (const [key, col] of Object.entries(cols)) {
+      if (!col) continue;
+      results.push({
+        ...col,
+        key,
+        style: {
+          width: (100 * (col.w || 100)) / wTotal + '%'
+        },
+        val: col.val || ((item) => item[key]),
+      })
+    }
+    return results;
   }, [cols]);
 
   return (
