@@ -50,7 +50,7 @@ export type GridComputedCol = GridCol & {
 
 export type GridCols<T extends {} = any, C extends {} = any> = {
   [K: string]: false | null | undefined | GridCol<T, C>;
-}
+};
 
 // default w = 100
 
@@ -104,7 +104,7 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
   if (!getKey) getKey = defaultGetKey;
 
   const computedCols = useMemo(() => {
-    const wTotal = sum(Object.values(cols).map((c) => c ? c.w || 100 : 0));
+    const wTotal = sum(Object.values(cols).map((c) => (c ? c.w || 100 : 0)));
     const results: GridComputedCol[] = [];
     for (const [key, col] of Object.entries(cols)) {
       if (!col) continue;
@@ -112,10 +112,10 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
         ...col,
         key,
         style: {
-          width: (100 * (col.w || 100)) / wTotal + '%'
+          width: (100 * (col.w || 100)) / wTotal + '%',
         },
         val: col.val || ((item) => item[key]),
-      })
+      });
     }
     return results;
   }, [cols]);
