@@ -19,7 +19,6 @@ const c = Css('Grid', {
     w: '100%',
     bg: 'b0',
     fg: 't2',
-    h: 3,
   },
   'Row:nth-child(even)': { bg: 'b2', rounded: 2 },
   'Row:hover': { bg: 'trHover' },
@@ -28,7 +27,7 @@ const c = Css('Grid', {
     fRow: ['center', 'space-around'],
     textAlign: 'left',
     px: 0.5,
-    h: 3,
+    h: 4,
   },
   'Cell input': {
     background: 'transparent',
@@ -38,7 +37,7 @@ const c = Css('Grid', {
 
 export type GridCol<T extends {} = any, C extends {} = any> = {
   title?: string | ComponentChildren;
-  variant?: 'actions';
+  cls?: string;
   val?: (item: T, ctx: C) => ComponentChildren;
   w?: number;
 };
@@ -125,7 +124,7 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
     <div {...props} class={c('', props)}>
       <div class={c('Head')}>
         {computedCols.map((col) => (
-          <div key={col.key} class={c('Cell')} style={col.style}>
+          <div key={col.key} class={c('Cell', col.cls)} style={col.style}>
             {col.title}
           </div>
         ))}
@@ -134,7 +133,7 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
         {items.map((row: any, index: number) => (
           <div key={getKey(row, index)} class={c('Row')}>
             {computedCols.map((col) => (
-              <div key={col.key} class={c('Cell')} style={col.style}>
+              <div key={col.key} class={c('Cell', col.cls)} style={col.style}>
                 {col.val(row, ctx)}
               </div>
             ))}
