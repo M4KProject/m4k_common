@@ -87,7 +87,10 @@ export const removeItem = <T>(items: T[], item: T) => {
   return removeIndex(items, index);
 };
 
-export const sortItems = <T = any>(items: T[], prop: (item: T) => string | number | Date = toStr) => {
+export const sortItems = <T = any>(
+  items: T[],
+  prop: (item: T) => string | number | Date = toStr
+) => {
   const list = items.map((i) => [prop(i), i]) as [string | number | Date, T][];
   list.sort(([a], [b]) =>
     isStr(a) || isStr(b) ? String(a).localeCompare(String(b)) : Number(a) - Number(b)
@@ -97,7 +100,10 @@ export const sortItems = <T = any>(items: T[], prop: (item: T) => string | numbe
   return items;
 };
 
-export const filterItems = <T = any>(items: T[], predicate: (value: T, index: number, array: T[]) => boolean) => {
+export const filterItems = <T = any>(
+  items: T[],
+  predicate: (value: T, index: number, array: T[]) => boolean
+) => {
   const next = items.filter(predicate);
   if (next.length === items.length) return items;
   items.length = 0;

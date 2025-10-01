@@ -7,6 +7,7 @@ export * from './Field';
 export * from './Flag';
 export * from './Picker';
 export * from './Form';
+export * from './Grid';
 export * from './Iframe';
 export * from './Loading';
 export * from './Page';
