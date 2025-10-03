@@ -39,14 +39,14 @@ export type GridCol<T extends {} = any, C extends {} = any> = {
   w?: number;
   title?: string | ComponentChildren;
   cls?: string;
-  val?: (item: T, ctx: C) => ComponentChildren;
-  props?: (item: T, ctx: C) => DivProps;
+  val?: (item: T, ctx: C, index: number) => ComponentChildren;
+  props?: (item: T, ctx: C, index: number) => DivProps;
 };
 
 export type GridComputedCol = GridCol & {
   key: string;
-  val: (item: any, ctx: any) => ComponentChildren;
-  props: (item: any, ctx: any) => DivProps;
+  val: (item: any, ctx: any, index: number) => ComponentChildren;
+  props: (item: any, ctx: any, index: number) => DivProps;
 };
 
 export type GridCols<T extends {} = any, C extends {} = any> = {
@@ -79,8 +79,8 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
       results.push({
         ...col,
         key,
-        props: (item, ctx) => {
-          const props = col.props ? col.props(item, ctx) : ({} as DivProps);
+        props: (item, ctx, index) => {
+          const props = col.props ? col.props(item, ctx, index) : ({} as DivProps);
           return {
             ...props,
             class: c('Cell', col.cls, props),
@@ -97,7 +97,7 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
     <div {...props} class={c('', props)}>
       <div class={c('Head')}>
         {computedCols.map((col) => (
-          <div key={col.key} {...col.props({}, ctx)}>
+          <div key={col.key} {...col.props({}, ctx, -1)}>
             {col.title}
           </div>
         ))}
@@ -106,8 +106,8 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
         {items.map((item: any, index: number) => (
           <div key={getKey(item, index)} class={c('Row')}>
             {computedCols.map((col) => (
-              <div key={col.key} {...col.props(item, ctx)}>
-                {col.val(item, ctx)}
+              <div key={col.key} {...col.props(item, ctx, index)}>
+                {col.val(item, ctx, index)}
               </div>
             ))}
           </div>
