@@ -4,7 +4,7 @@ import { TMap } from './types';
 
 const timers: TMap<any> = global.m4kTimers || (global.m4kTimers = {});
 
-const timer = (id: null | string, ms: number, cb: null | (() => void)) => {
+export const timer = (id: null | string, ms: number, cb: null | (() => void)) => {
   if (!id) id = randString(10) + Date.now();
   if (timers[id]) {
     clearInterval(timers[id]);
@@ -14,5 +14,3 @@ const timer = (id: null | string, ms: number, cb: null | (() => void)) => {
     timers[id] = setInterval(cb, ms);
   }
 };
-
-export default timer;

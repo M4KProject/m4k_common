@@ -8,4 +8,3 @@ export const randString = (length: number, radix: number = 16) => {
   return sb.join('').substring(0, length);
 };
 
-export default rand;
