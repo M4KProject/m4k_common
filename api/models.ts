@@ -122,9 +122,16 @@ export interface PlaylistData {
   items?: PlaylistEntry[];
 }
 
+export interface PageData {}
+
 export interface BaseMediaModel extends _MediaModel {
-  paths?: string[];
-  order?: string;
+  // paths?: string[];
+  // order?: string;
+}
+
+export interface FolderModel extends BaseMediaModel {
+  type: 'folder';
+  data?: undefined;
 }
 
 export interface VideoModel extends BaseMediaModel {
@@ -145,6 +152,11 @@ export interface PdfModel extends BaseMediaModel {
 export interface PlaylistModel extends BaseMediaModel {
   type: 'playlist';
   data?: PlaylistData;
+}
+
+export interface PageModel extends BaseMediaModel {
+  type: 'page';
+  data?: PageData;
 }
 
 export interface MediaModel extends BaseMediaModel {

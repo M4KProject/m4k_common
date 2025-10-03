@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 
-export const useTimerMs = (ms: number = 100, deps: any[] = []): number => {
+export const useInterval = (ms: number = 100, deps: any[] = []): number => {
   const [start, setStart] = useState(0);
   const [now, setNow] = useState(0);
   useEffect(() => {
