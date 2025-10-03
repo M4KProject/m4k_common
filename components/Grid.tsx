@@ -36,55 +36,22 @@ const c = Css('Grid', {
 });
 
 export type GridCol<T extends {} = any, C extends {} = any> = {
+  w?: number;
   title?: string | ComponentChildren;
   cls?: string;
   val?: (item: T, ctx: C) => ComponentChildren;
-  w?: number;
+  props?: (item: T, ctx: C) => DivProps;
 };
 
 export type GridComputedCol = GridCol & {
   key: string;
-  style: CSSProperties;
   val: (item: any, ctx: any) => ComponentChildren;
+  props: (item: any, ctx: any) => DivProps;
 };
 
 export type GridCols<T extends {} = any, C extends {} = any> = {
   [K: string]: false | null | undefined | GridCol<T, C>;
 };
-
-// default w = 100
-
-// const columns: GridColDef[] = [
-//   { field: 'id', headerName: 'ID', w: 70 },
-//   { field: 'firstName', headerName: 'First name', w: 130 },
-//   { field: 'lastName', headerName: 'Last name', w: 130 },
-//   {
-//     field: 'age',
-//     headerName: 'Age',
-//     type: 'number',
-//     width: 90,
-//   },
-//   {
-//     field: 'fullName',
-//     headerName: 'Full name',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 160,
-//     valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-//   },
-// ];
-
-// const rows = [
-//   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-//   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-//   { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-//   { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-//   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-//   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-//   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-//   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-//   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-// ];
 
 export interface GridProps<T extends {} = any, C extends {} = any> extends DivProps {
   ctx: C;
@@ -108,11 +75,17 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
     const results: GridComputedCol[] = [];
     for (const [key, col] of Object.entries(cols)) {
       if (!col) continue;
+      const width = (100 * (col.w || 100)) / wTotal + '%';
       results.push({
         ...col,
         key,
-        style: {
-          width: (100 * (col.w || 100)) / wTotal + '%',
+        props: (item, ctx) => {
+          const props = col.props ? col.props(item, ctx) : ({} as DivProps);
+          return {
+            ...props,
+            class: c('Cell', col.cls, props),
+            style: { width, ...props.style },
+          };
         },
         val: col.val || ((item) => item[key]),
       });
@@ -124,17 +97,17 @@ export const Grid = (({ cols, ctx, select, getKey, items, ...props }: GridProps)
     <div {...props} class={c('', props)}>
       <div class={c('Head')}>
         {computedCols.map((col) => (
-          <div key={col.key} class={c('Cell', col.cls)} style={col.style}>
+          <div key={col.key} {...col.props({}, ctx)}>
             {col.title}
           </div>
         ))}
       </div>
       <div class={c('Body')}>
-        {items.map((row: any, index: number) => (
-          <div key={getKey(row, index)} class={c('Row')}>
+        {items.map((item: any, index: number) => (
+          <div key={getKey(item, index)} class={c('Row')}>
             {computedCols.map((col) => (
-              <div key={col.key} class={c('Cell', col.cls)} style={col.style}>
-                {col.val(row, ctx)}
+              <div key={col.key} {...col.props(item, ctx)}>
+                {col.val(item, ctx)}
               </div>
             ))}
           </div>
