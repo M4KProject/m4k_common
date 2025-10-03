@@ -3,11 +3,12 @@ import { toError } from './cast';
 import { stringify } from './json';
 
 export const humanize = (a: any) =>
-  isList(a) ? a.map(humanize).join(' ') :
-  isError(a)
-    ? toError(a).toString()
-    : isDate(a)
-      ? a.toISOString()
-      : isObj(a)
-        ? stringify(a)
-        : String(a);
+  isList(a)
+    ? a.map(humanize).join(' ')
+    : isError(a)
+      ? toError(a).toString()
+      : isDate(a)
+        ? a.toISOString()
+        : isObj(a)
+          ? stringify(a)
+          : String(a);

@@ -1,3 +1,3 @@
-export default function tPriceToHtml(val: any) {
+export const tPriceToHtml = (val: any) => {
   return `<div class="tPrice">${val}</div>`;
-}
+};

@@ -1,4 +1,7 @@
-const getDatasetValue = (e: null | HTMLElement | MouseEvent, name: string): string | null => {
+export const getDatasetValue = (
+  e: null | HTMLElement | MouseEvent,
+  name: string
+): string | null => {
   let el = e instanceof HTMLElement ? e : null;
   if (!el) {
     const currentTarget = e && (e as MouseEvent).currentTarget;
@@ -13,5 +16,3 @@ const getDatasetValue = (e: null | HTMLElement | MouseEvent, name: string): stri
   }
   return null;
 };
-
-export default getDatasetValue;

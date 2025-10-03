@@ -7,4 +7,3 @@ export const randString = (length: number, radix: number = 16) => {
   while (sb.length < length) sb.push(...Array.from(Math.random().toString(radix).substring(2)));
   return sb.join('').substring(0, length);
 };
-

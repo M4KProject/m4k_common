@@ -157,7 +157,7 @@ const log = (type: LogLevel, ...args: any[]) => {
 //   }, 5000);
 // }
 
-export default {
+export const logger = {
   init,
   show,
   hide,
