@@ -1,4 +1,5 @@
-import { isItem, isList, Item, List } from './check';
+import { isItem, isList } from './check';
+import { Item, List } from './types';
 
 export const parse = (text: string) => {
   try {

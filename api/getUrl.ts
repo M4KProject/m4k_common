@@ -1,5 +1,4 @@
 import { pathJoin } from '@common/utils/pathJoin';
-import { Models } from './models';
 import { getApiUrl } from './apiReq';
 
 export type Thumb = 24 | 48 | 100 | 200 | 360 | 720 | 1920 | 4096;

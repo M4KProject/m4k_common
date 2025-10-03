@@ -4,6 +4,7 @@ import { toError } from './cast';
 import { isBetween, isDate, isDef, isFileOrBlob, isFun, isItem, isList, isObj } from './check';
 import { parse, stringify } from './json';
 import { pathJoin } from './pathJoin';
+import { TMap } from './types';
 
 export type FormDataObject = { [prop: string]: any };
 export type ReqURL = string | URL;

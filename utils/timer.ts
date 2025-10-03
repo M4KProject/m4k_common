@@ -1,5 +1,6 @@
 import { randString } from './rand';
 import { global } from './global';
+import { TMap } from './types';
 
 const timers: TMap<any> = global.m4kTimers || (global.m4kTimers = {});
 
