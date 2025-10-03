@@ -1,5 +1,3 @@
-///// GENERATED FILE /////
-
 import { TMap } from './types';
 
 export const clean = (arg: string): string =>
