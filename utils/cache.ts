@@ -3,7 +3,11 @@ import { isList } from './check';
 
 type Cache<T> = ['CACHE', number, T];
 
-const cache = async <T>(key: string, expiredMs: number, load: () => Promise<T>): Promise<T> => {
+export const cache = async <T>(
+  key: string,
+  expiredMs: number,
+  load: () => Promise<T>
+): Promise<T> => {
   console.debug('cache', key, expiredMs);
   if (expiredMs !== 0) {
     const lastJson = localStorage.getItem(key);
@@ -23,5 +27,3 @@ const cache = async <T>(key: string, expiredMs: number, load: () => Promise<T>):
   console.debug('cache saved', key, value);
   return value;
 };
-
-export default cache;
