@@ -51,6 +51,7 @@ const c = Css('Field', {
     outline: 'none',
     bg: 'b1',
     fg: 't1',
+    fontSize: '1rem',
     // elevation: 1,
   },
   'Input:hover': {

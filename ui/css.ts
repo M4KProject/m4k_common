@@ -128,7 +128,7 @@ const py = (v: Em) => pt(v) + pb(v);
 
 type Em = number | string | (number | string)[];
 const em = (v: Em): string =>
-  typeof v === 'number' ? v + 'em' : typeof v === 'string' ? v : v.map(em).join(' ');
+  typeof v === 'number' ? v + 'rem' : typeof v === 'string' ? v : v.map(em).join(' ');
 
 export type FlexDirection = '' | 'row' | 'column' | 'row-reverse' | 'column-reverse';
 export type FlexAlign = '' | 'start' | 'center' | 'end' | 'stretch' | 'baseline';

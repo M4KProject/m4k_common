@@ -27,7 +27,7 @@ const c = Css('Grid', {
     fRow: ['center', 'space-around'],
     textAlign: 'left',
     px: 0.5,
-    h: 4,
+    h: 3,
   },
   'Cell input': {
     background: 'transparent',

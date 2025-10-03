@@ -13,7 +13,7 @@ const applyResponsive = () => {
   const hypotenuse = Math.sqrt(w * w + h * h);
   const fontSize = hypotenuse / 110 + 'px';
   responsive$.set(w < 576 ? 'xs' : w < 768 ? 'sm' : w < 992 ? 'md' : w < 1200 ? 'lg' : 'xl');
-  setCss('fontSize', { 'html,body': { fontSize } });
+  setCss('fontSize', { ',html,body': { fontSize } });
 };
 
 let isAdded = false;
