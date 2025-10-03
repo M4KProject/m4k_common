@@ -15,6 +15,7 @@ const c = Css('Page', {
     flex: 1,
   },
   Section: {
+    flex: 1,
     fCol: 1,
     position: 'relative',
     bg: 'b0',
