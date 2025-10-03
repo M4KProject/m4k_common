@@ -1,6 +1,6 @@
 import { createEl } from './html';
 import { setCss } from './css';
-import { logArgsToStr } from '@common/utils/log';
+import { humanize } from '@common/utils/humanize';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 export type LogItem = [LogLevel, number, any[], HTMLDivElement | null];
@@ -85,7 +85,7 @@ const show = () => {
       const el = createEl('div');
       const type = log[0].toLowerCase();
       el.className = type;
-      el.innerText = logArgsToStr(log[2]);
+      el.innerText = humanize(log[2]);
       log[3] = el;
       consoleEl.appendChild(el);
     }

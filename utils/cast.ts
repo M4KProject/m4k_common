@@ -1,4 +1,4 @@
-import { isList, isDate, isNil, isStr, isItem, isPositive } from './check';
+import { isList, isDate, isNil, isStr, isItem, isPositive, isError } from './check';
 
 export const toMe = <T = any>(value: T): T => value;
 
@@ -66,7 +66,7 @@ export const toStr = ((v: any, d: any) => (isNil(v) ? d : String(v))) as ToStr;
 export const toVoid = () => {};
 export const toVoidAsync = () => Promise.resolve();
 
-export const toError = (v: any) => (v instanceof Error ? v : new Error(String(v)));
+export const toError = (v: any) => (isError(v) ? v : new Error(String(v)));
 
 export const toData = (v: any): any => {
   const result = {};

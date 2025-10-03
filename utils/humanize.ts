@@ -1,8 +1,9 @@
-import { isDate, isError, isObj } from './check';
+import { isDate, isError, isList, isObj } from './check';
 import { toError } from './cast';
 import { stringify } from './json';
 
-export const logArgToStr = (a: any) =>
+export const humanize = (a: any) =>
+  isList(a) ? a.map(humanize).join(' ') :
   isError(a)
     ? toError(a).toString()
     : isDate(a)
@@ -10,5 +11,3 @@ export const logArgToStr = (a: any) =>
       : isObj(a)
         ? stringify(a)
         : String(a);
-
-export const logArgsToStr = (args: any[]) => args.map(logArgToStr).join(' ');
