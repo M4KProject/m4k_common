@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { clsx, Css } from '@common/ui/css';
+import { Css } from '@common/ui/css';
 
 const c = Css('Iframe', {
   '': {

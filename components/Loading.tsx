@@ -2,7 +2,6 @@ import { Css } from '@common/ui/css';
 
 import { DivProps } from './types';
 import { Tr } from './Tr';
-import { RotateCcw } from 'lucide-react';
 
 import { addTr } from '../hooks/useTr';
 
