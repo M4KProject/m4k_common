@@ -1,5 +1,5 @@
 import { addItem, removeItem } from './list';
-import { throttle } from './async';
+import { throttle } from './throttle';
 import { isBool, isItem, isList, isNbr, isStr } from './check';
 import { global } from './global';
 import { len } from './obj';

@@ -1,5 +1,6 @@
 import { removeItem } from './list';
-import { debounce, throttle } from './async';
+import { debounce } from './debounce';
+import { throttle } from './throttle';
 import { toVoid } from './cast';
 import { isDef, isFun } from './check';
 import { global } from './global';

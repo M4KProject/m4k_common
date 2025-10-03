@@ -1,6 +1,6 @@
 import { addEl, setEl } from './html';
 import { CssValue, setCss } from './css';
-import { sleep } from '@common/utils/async';
+import { sleep } from '@common/utils/sleep';
 
 const overlayCss: CssValue = {
   '': {

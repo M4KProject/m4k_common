@@ -1,5 +1,6 @@
 import { error } from 'console';
-import { retry, sleep } from './async';
+import { retry } from './retry';
+import { sleep } from './sleep';
 import { toError } from './cast';
 import { isBetween, isDate, isDef, isFileOrBlob, isFun, isItem, isList, isObj } from './check';
 import { parse, stringify } from './json';
