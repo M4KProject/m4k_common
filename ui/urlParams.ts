@@ -1,3 +1,5 @@
+import { TMap } from '@common/utils/types';
+
 // deno-lint-ignore-file no-window
 export const updateUrlParams = (update: TMap<string>) => {
   const queryParams = new URLSearchParams(window.location.search);

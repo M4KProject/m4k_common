@@ -1,3 +1,5 @@
+import { TMap } from '@common/utils/types';
+
 export type Style = Partial<CSSStyleDeclaration>;
 
 export type HTMLAllElement = HTMLDivElement &

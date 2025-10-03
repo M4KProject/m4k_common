@@ -1,3 +1,5 @@
+import { TMap } from '@common/utils/types';
+
 export interface M4kExecResult {
   cmd: string;
   out: string;
