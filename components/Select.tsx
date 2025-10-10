@@ -13,9 +13,10 @@ const c = Css('Select', {
   Container: {
     fRow: 1,
     wh: '100%',
-    border: '1px solid #ddd',
+    border: '1px solid',
+    bColor: 'g2',
     rounded: 1,
-    bg: 'bg',
+    bg: 'b0',
     cursor: 'pointer',
   },
   'Container:hover': {
