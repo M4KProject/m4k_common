@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'preact/hooks';
 import { Css } from '@common/ui/css';
 import { isList } from '@common/utils/check';
 import { isSearched } from '@common/utils/str';
-import { ArrowDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 const c = Css('Select', {
   '': {
@@ -229,7 +229,7 @@ export const Select = ({
           </div>
         )}
         <div class={c('Arrow')}>
-          <ArrowDown />
+          <ChevronDown />
         </div>
       </div>
 
