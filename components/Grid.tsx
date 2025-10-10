@@ -32,9 +32,6 @@ const c = Css('Grid', {
     px: 0.5,
     h: 3,
   },
-  'Cell .Field': {
-    w: 'auto',
-  },
   'Cell input': {
     background: 'transparent',
     border: 0,
