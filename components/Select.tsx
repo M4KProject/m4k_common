@@ -3,17 +3,16 @@ import { useState, useRef, useEffect } from 'preact/hooks';
 import { Css } from '@common/ui/css';
 import { isList } from '@common/utils/check';
 import { isSearched } from '@common/utils/str';
+import { ArrowDown } from 'lucide-react';
 
 const c = Css('Select', {
   '': {
-    fCol: ['stretch', 'start'],
     position: 'relative',
-    border: 0,
-    p: 0,
+    fCol: ['stretch', 'start'],
     w: '100%',
   },
   Container: {
-    fRow: ['center', 'space-between'],
+    fRow: 1,
     wh: '100%',
     border: '1px solid',
     bColor: 'g2',
@@ -22,7 +21,8 @@ const c = Css('Select', {
     cursor: 'pointer',
   },
   'Container:hover': {
-    borderColor: '#777',
+    bColor: 'p5',
+    elevation: 1,
   },
   'Container:focus-within': {
     bColor: 'p5',
@@ -30,16 +30,16 @@ const c = Css('Select', {
   },
   Input: {
     flex: 1,
-    border: 'none',
-    outline: 'none',
-    bg: 'b1',
-    fg: 't2',
-    fontSize: 'inherit',
-    lineHeight: 1,
-    m: 0,
-    p: 0,
-    pl: 1,
-    w: '100%',
+    position: 'relative',
+    overflow: 'hidden',
+    hMin: 1.5,
+  },
+  InputText: {
+    position: 'absolute',
+    xy: 0,
+    wh: '100%',
+    fRow: ['center', 'start'],
+    pl: 0.5,
   },
   Dropdown: {
     position: 'absolute',
@@ -217,7 +217,7 @@ export const Select = ({
           />
         ) : (
           <div class={c('Input')} onKeyDown={handleKeyDown}>
-            {displayValue || placeholder}
+            <div class={c('InputText')}>{displayValue || placeholder}</div>
             <input
               ref={inputRef}
               name={name}
@@ -228,7 +228,9 @@ export const Select = ({
             />
           </div>
         )}
-        <div class={c('Arrow')}>▼</div>
+        <div class={c('Arrow')}>
+          <ArrowDown />
+        </div>
       </div>
 
       {isOpen && (
