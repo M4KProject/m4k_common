@@ -25,6 +25,15 @@ export const formatMs = (ms: number): string => {
   return `${sign}${seconds} sec`;
 };
 
+export const formatSeconds = (seconds: number): string => {
+  const t = Math.abs(seconds);
+  const h = floor(t / 3600);
+  const m = floor((t % 3600) / 60);
+  const s = floor(t % 60);
+  const r = `${pad(h, 2)}:${pad(m, 2)}:${pad(s, 2)}`;
+  return seconds < 0 ? `-${r}` : r;
+};
+
 /** Format date as DD/MM/YYYY */
 export const formatDate = (date?: any): string => {
   const d = toDate(date);
