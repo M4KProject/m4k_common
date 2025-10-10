@@ -31,6 +31,10 @@ const c = Css('Grid', {
     textAlign: 'left',
     px: 0.5,
     h: 3,
+    overflow: 'hidden',
+  },
+  'Cell .Field': {
+    w: 'auto',
   },
   'Cell input': {
     background: 'transparent',

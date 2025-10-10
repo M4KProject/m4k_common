@@ -28,7 +28,7 @@ const c = Css('AuthForm', {
   ' .FieldLabel': {
     mt: 0.5,
     mb: 0.5,
-  }
+  },
 });
 
 export const AuthForm = () => {
