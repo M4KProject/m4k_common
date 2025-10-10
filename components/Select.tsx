@@ -6,12 +6,14 @@ import { isSearched } from '@common/utils/str';
 
 const c = Css('Select', {
   '': {
+    fCol: ['stretch', 'start'],
     position: 'relative',
     border: 0,
     p: 0,
+    w: '100%',
   },
   Container: {
-    fRow: 1,
+    fRow: ['center', 'space-between'],
     wh: '100%',
     border: '1px solid',
     bColor: 'g2',
@@ -23,8 +25,8 @@ const c = Css('Select', {
     borderColor: '#777',
   },
   'Container:focus-within': {
-    borderColor: '#4a90e2',
-    boxShadow: '0 0 0 2px rgba(74, 144, 226, 0.2)',
+    bColor: 'p5',
+    elevation: 1,
   },
   Input: {
     flex: 1,
@@ -37,6 +39,7 @@ const c = Css('Select', {
     m: 0,
     p: 0,
     pl: 1,
+    w: '100%',
   },
   Dropdown: {
     position: 'absolute',
@@ -46,10 +49,11 @@ const c = Css('Select', {
     w: '100%',
     bg: 'b1',
     fg: 't1',
-    border: '1px solid #ddd',
+    border: '1px solid',
+    bColor: 'g2',
     borderTop: 'none',
     borderRadius: '0 0 4px 4px',
-    maxHeight: '200px',
+    hMax: 10,
     overflowY: 'auto',
     zIndex: 1000,
     elevation: 2,
