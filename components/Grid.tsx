@@ -1,7 +1,7 @@
 import { ComponentChildren, JSX } from 'preact';
 import { Css } from '@common/ui/css';
 import { DivProps } from './types';
-import { sum } from '@common/utils';
+import { isList, sum, toTrue } from '@common/utils';
 import { useMemo } from 'preact/compat';
 
 const c = Css('Grid', {
@@ -47,6 +47,19 @@ export type GridCol<T extends {} = any, C extends {} = any> = {
   if?: (col: GridCol<T, C>, ctx: C) => boolean;
 };
 
+export type ArrayGridCol<T extends {} = any, C extends {} = any> =
+  | [string | ComponentChildren, (item: T, ctx: C, index: number) => ComponentChildren]
+  | [
+      string | ComponentChildren,
+      (item: T, ctx: C, index: number) => ComponentChildren,
+      {
+        w?: number;
+        cls?: string;
+        props?: (item: T, ctx: C, index: number) => DivProps;
+        if?: (col: GridCol<T, C>, ctx: C) => boolean;
+      },
+    ];
+
 export type GridComputedCol = GridCol & {
   key: string;
   val: (item: any, ctx: any, index: number) => ComponentChildren;
@@ -55,7 +68,7 @@ export type GridComputedCol = GridCol & {
 };
 
 export type GridCols<T extends {} = any, C extends {} = any> = {
-  [K: string]: false | null | undefined | GridCol<T, C>;
+  [K: string]: false | null | undefined | ArrayGridCol<T, C> | GridCol<T, C>;
 };
 
 export interface GridProps<T extends {} = any, C extends {} = any> extends DivProps {
@@ -77,33 +90,52 @@ export interface IGrid {
 
 const defaultGetKey = (row: any, index: number) => row.id || index;
 
+const getComputedCols = (cols: GridCols<any, any>) => {
+  const computedCols: GridComputedCol[] = [];
+
+  for (const [key, data] of Object.entries(cols)) {
+    if (!data) continue;
+
+    const col = (
+      isList(data)
+        ? {
+            ...data[2],
+            title: data[0],
+            val: data[1],
+          }
+        : {
+            ...data,
+          }
+    ) as GridComputedCol;
+
+    col.key = key;
+
+    computedCols.push(col);
+  }
+
+  const wTotal = sum(computedCols.map((col) => col.w || 100));
+
+  for (const col of computedCols) {
+    if (!col.if) col.if = toTrue;
+    const width = (100 * (col.w || 100)) / wTotal + '%';
+    const getProps = col.props;
+    col.props = (item, ctx, index) => {
+      const props = getProps ? getProps(item, ctx, index) : ({} as DivProps);
+      return {
+        ...props,
+        class: c('Cell', col.cls, props),
+        style: { width, ...props.style },
+      };
+    };
+  }
+
+  return computedCols;
+};
+
 export const Grid = (({ cols, ctx, select, getKey, rowProps, items, ...props }: GridProps) => {
   if (!getKey) getKey = defaultGetKey;
 
-  const computedCols = useMemo(() => {
-    const entries = Object.entries(cols);
-    const wTotal = sum(entries.map(([_, c]) => (c ? c.w || 100 : 0)));
-    const results: GridComputedCol[] = [];
-    for (const [key, col] of entries) {
-      if (!col) continue;
-      const width = (100 * (col.w || 100)) / wTotal + '%';
-      results.push({
-        ...col,
-        key,
-        if: col.if || (() => true),
-        props: (item, ctx, index) => {
-          const props = col.props ? col.props(item, ctx, index) : ({} as DivProps);
-          return {
-            ...props,
-            class: c('Cell', col.cls, props),
-            style: { width, ...props.style },
-          };
-        },
-        val: col.val || ((item) => item[key]),
-      });
-    }
-    return results;
-  }, [cols]);
+  const computedCols = useMemo(() => getComputedCols(cols), [cols]);
 
   const visibleCols = computedCols.filter((col) => col.if(col, ctx));
 

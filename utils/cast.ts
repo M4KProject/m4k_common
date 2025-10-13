@@ -66,6 +66,8 @@ export const toStr = ((v: any, d: any) => (isNil(v) ? d : String(v))) as ToStr;
 export const toVoid = () => {};
 export const toVoidAsync = () => Promise.resolve();
 
+export const toTrue = () => true;
+
 export const toError = (v: any) => (isError(v) ? v : new Error(String(v)));
 
 export const toData = (v: any): any => {
