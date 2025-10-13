@@ -15,8 +15,15 @@ export const formatSeconds = (seconds: number): string => {
 
 export const parseSeconds = (value: string | number): number | null => {
   if (isStrDef(value)) {
-    const [h, m, s] = value.split(/[^\d]+/).map(Number);
-    const result = h * 3600 + m * 60 + s;
+    let [h, m, s] = value
+      .replace(/[^\d]+/g, ' ')
+      .split(' ')
+      .map(Number);
+    if (!m && h > 99) {
+      m = h % 100;
+      h = (h - m) / 100;
+    }
+    const result = h * 3600 + (m || 0) * 60 + (s || 0);
     console.debug('parseSeconds', value, h, m, s, result);
     return result;
   }

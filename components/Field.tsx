@@ -126,6 +126,7 @@ export type FieldComp<T = any> = (props: {
   required?: boolean;
   value: T;
   onChange: (e: any) => void;
+  onBlur?: () => void;
   fieldProps: FieldProps<T>;
 }) => ComponentChildren;
 
@@ -369,13 +370,14 @@ const compByType: Record<FieldType, FieldComp> = {
       class={c(cls, fieldProps.props)}
     />
   ),
-  seconds: ({ cls, name, required, value, onChange, fieldProps }) => (
+  seconds: ({ cls, name, required, value, onChange, onBlur, fieldProps }) => (
     <input
       type="text"
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
+      onBlur={onBlur}
       placeholder="00:00:00"
       {...fieldProps.props}
       class={c(cls, fieldProps.props)}
@@ -476,6 +478,14 @@ export const Field = (props: FieldProps) => {
     setChanged(next);
   };
 
+  const handleBlur = () => {
+    // On blur, reset to show the validated/formatted value
+    if (changed !== undefined && sended !== undefined) {
+      setChanged(undefined);
+      setInitiated(sended);
+    }
+  };
+
   const Comp = compByType[type || 'text'] || compByType.text;
 
   const formatValue = (value: any) => {
@@ -492,6 +502,7 @@ export const Field = (props: FieldProps) => {
           name={name}
           value={formatValue(changed === undefined ? initiated : changed)}
           onChange={handleChange}
+          onBlur={handleBlur}
           required={required}
           fieldProps={props}
         />
