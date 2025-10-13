@@ -12,6 +12,7 @@ import { Button } from './Button';
 import { Msg } from '@common/utils/Msg';
 import { useMsg } from '../hooks';
 import { TMap } from '@common/utils/types';
+import { formatSeconds, parseSeconds } from '@common/utils/date';
 
 const c = Css('Field', {
   '': {
@@ -144,7 +145,7 @@ export type FieldType =
   | 'doc'
   | 'date'
   | 'datetime'
-  | 'time';
+  | 'seconds';
 
 export interface FieldInfo<T = any> {
   col?: boolean;
@@ -173,6 +174,18 @@ export const castByType: TMap<(next: any) => any> = {
     const casted = toNbr(next, null);
     if (casted === null) throw toError('not-a-number');
     return casted;
+  },
+  seconds: (next: any) => {
+    const seconds = parseSeconds(next);
+    if (seconds === null) throw toError('invalid-time-format');
+    return seconds;
+  },
+};
+
+export const formatByType: TMap<(value: any) => any> = {
+  seconds: (value: any) => {
+    if (typeof value === 'number') return formatSeconds(value);
+    return value || '';
   },
 };
 
@@ -356,14 +369,14 @@ const compByType: Record<FieldType, FieldComp> = {
       class={c(cls, fieldProps.props)}
     />
   ),
-  time: ({ cls, name, required, value, onChange, fieldProps }) => (
+  seconds: ({ cls, name, required, value, onChange, fieldProps }) => (
     <input
-      type="time"
-      step="1"
+      type="text"
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
+      placeholder="00:00:00"
       {...fieldProps.props}
       class={c(cls, fieldProps.props)}
     />
@@ -465,6 +478,11 @@ export const Field = (props: FieldProps) => {
 
   const Comp = compByType[type || 'text'] || compByType.text;
 
+  const formatValue = (value: any) => {
+    if (type && type in formatByType) return formatByType[type](value);
+    return value;
+  };
+
   return (
     <div {...divProps} class={c('', col && '-col', type && `-${type}`, err && '-error', divProps)}>
       {label && <div class={c('Label')}>{label} :</div>}
@@ -472,7 +490,7 @@ export const Field = (props: FieldProps) => {
         <Comp
           cls={'Input'}
           name={name}
-          value={changed === undefined ? initiated : changed}
+          value={formatValue(changed === undefined ? initiated : changed)}
           onChange={handleChange}
           required={required}
           fieldProps={props}

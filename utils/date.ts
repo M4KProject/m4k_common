@@ -1,7 +1,28 @@
 import { toDate } from './cast';
-import { isDate } from './check';
+import { isDate, isReal, isStrDef } from './check';
 import { floor } from './nbr';
 import { pad } from './str';
+
+export const formatSeconds = (seconds: number): string => {
+  const t = Math.abs(seconds);
+  const h = floor(t / 3600);
+  const m = floor((t % 3600) / 60);
+  const s = floor(t % 60);
+  const r = `${pad(h, 2)}:${pad(m, 2)}:${pad(s, 2)}`;
+  console.debug('formatSeconds', seconds, r);
+  return seconds < 0 ? `-${r}` : r;
+};
+
+export const parseSeconds = (value: string | number): number | null => {
+  if (isStrDef(value)) {
+    const [h, m, s] = value.split(/[^\d]+/).map(Number);
+    const result = h * 3600 + m * 60 + s;
+    console.debug('parseSeconds', value, h, m, s, result);
+    return result;
+  }
+  console.debug('parseSeconds', value);
+  return isReal(value) ? value : 0;
+};
 
 /** Format time: hours > 0: "5h30", minutes > 0: "05:30 min", seconds only: "5 sec" */
 export const formatMs = (ms: number): string => {
@@ -23,15 +44,6 @@ export const formatMs = (ms: number): string => {
   }
 
   return `${sign}${seconds} sec`;
-};
-
-export const formatSeconds = (seconds: number): string => {
-  const t = Math.abs(seconds);
-  const h = floor(t / 3600);
-  const m = floor((t % 3600) / 60);
-  const s = floor(t % 60);
-  const r = `${pad(h, 2)}:${pad(m, 2)}:${pad(s, 2)}`;
-  return seconds < 0 ? `-${r}` : r;
 };
 
 /** Format date as DD/MM/YYYY */
@@ -121,35 +133,6 @@ export const secondsToTimeString = (seconds: number): string => {
   today.setHours(0, 0, 0, 0);
   today.setSeconds(seconds);
   return formatTime(today);
-};
-
-/** Parse time string or number to seconds since midnight */
-export const parseToSeconds = (value: string | number): number | null => {
-  if (typeof value === 'number') {
-    return value >= 0 && value <= 86400 ? value : null;
-  }
-
-  if (typeof value === 'string') {
-    const parsedDate = parseDate(value);
-    if (parsedDate) {
-      return dateToSeconds(parsedDate);
-    }
-
-    const timeMatch = value.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
-    if (!timeMatch) return null;
-
-    const h = parseInt(timeMatch[1], 10);
-    const m = parseInt(timeMatch[2], 10);
-    const s = parseInt(timeMatch[3] || '0', 10);
-
-    if (h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59) {
-      return null;
-    }
-
-    return h * 3600 + m * 60 + s;
-  }
-
-  return null;
 };
 
 /** Check if date is expired (date + delay < now) */
