@@ -48,11 +48,11 @@ export class MsgMap<T> extends Msg<TMap<T>> {
   }
 
   setItem(id: string, item: T | undefined) {
-    return this.update({ [id]: item });
+    return this.update({ [id]: item as T });
   }
 
   delete(id: string) {
-    return this.update({ [id]: null });
+    return this.update({ [id]: null as T });
   }
 
   getItems() {
@@ -61,8 +61,8 @@ export class MsgMap<T> extends Msg<TMap<T>> {
 }
 
 export const newMsgMap = <T extends {} = Item>(
-  initValue: T,
+  initValue: TMap<T>,
   key?: string,
   isStored?: boolean,
-  storedCheck?: (value: T) => boolean
+  storedCheck?: (value: TMap<T>) => boolean
 ) => new MsgMap<T>(initValue, key, isStored, storedCheck);

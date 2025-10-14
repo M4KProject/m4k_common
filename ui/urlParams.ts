@@ -5,8 +5,9 @@ export const updateUrlParams = (update: TMap<string>) => {
   const queryParams = new URLSearchParams(window.location.search);
   let count = 0;
   for (const prop in update) {
-    if (queryParams.get(prop) !== update[prop]) {
-      queryParams.set(prop, update[prop]);
+    const value = update[prop];
+    if (value && queryParams.get(prop) !== value) {
+      queryParams.set(prop, value);
       count++;
     }
   }
@@ -24,10 +25,12 @@ export const readUrlParams = () => {
   const urlParams: TMap<string> = {};
   const urlParams2: TMap<string> = {};
   while ((match = search.exec(query))) {
-    const key = decode(match[1]);
-    const value = decode(match[2]);
-    urlParams[key.toLowerCase()] = value;
-    urlParams2[key] = value;
+    const key = match[1];
+    const value = match[2];
+    if (key && value) {
+      urlParams[decode(key).toLowerCase()] = decode(value);
+      urlParams2[decode(key)] = decode(value);
+    }
   }
   return { ...urlParams, ...urlParams2 };
 };

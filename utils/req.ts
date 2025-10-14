@@ -128,7 +128,7 @@ export const reqXHR = async <T = any>(ctx: ReqContext<T>): Promise<void> => {
 
     for (const key in ctx.headers) {
       const val = ctx.headers[key];
-      xhr.setRequestHeader(key, val);
+      if (val !== undefined) xhr.setRequestHeader(key, val);
     }
 
     const onProgress = o.onProgress;
@@ -271,7 +271,9 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
 
   for (const key in params) {
     const v = params[key];
-    url.searchParams.set(key, typeof v === 'string' ? v : stringify(v));
+    if (v !== undefined) {
+      url.searchParams.set(key, typeof v === 'string' ? v : stringify(v));
+    }
   }
 
   const ctx = {
@@ -307,12 +309,12 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
       await request(ctx as any);
       if (o.cast) ctx.data = await o.cast(ctx);
       if (o.after) await o.after(ctx);
-      if (!isBetween(ctx.status, 200, 299)) throw ctx.status;
+      if (!isBetween(ctx.status ?? 0, 200, 299)) throw ctx.status;
       if (ctx.error) throw ctx.error;
     } catch (e) {
       ctx.error = e;
       o.onError && o.onError(toReqError(e, ctx));
-      if (ctx.error && isBetween(ctx.status, 500, 600)) {
+      if (ctx.error && isBetween(ctx.status ?? 0, 500, 600)) {
         await sleep(5000);
         throw ctx.error;
       }

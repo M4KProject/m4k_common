@@ -8,8 +8,10 @@ export type HTMLAllElement = HTMLDivElement &
   HTMLImageElement &
   HTMLHeadingElement;
 
-export const createEl: typeof document.createElement = (tagName, options) =>
-  document.createElement(tagName, options);
+export const createEl: typeof document.createElement = (
+  tagName: string,
+  options?: ElementCreationOptions
+) => document.createElement(tagName, options);
 
 const _cssFiles: TMap<HTMLLinkElement> = {};
 export const addCssFile = (url: string): HTMLLinkElement => {

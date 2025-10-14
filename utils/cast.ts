@@ -71,9 +71,9 @@ export const toTrue = () => true;
 export const toError = (v: any) => (isError(v) ? v : new Error(String(v)));
 
 export const toData = (v: any): any => {
-  const result = {};
+  const result: any = {};
   if (isItem(v)) {
-    const seen = {};
+    const seen: any = {};
     let o = v;
     while (o && o !== Object.prototype) {
       const props = Object.getOwnPropertyNames(o);

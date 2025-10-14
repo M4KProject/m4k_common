@@ -63,7 +63,7 @@ export class Msg<T = any> implements IMsg<T> {
   }
 
   static get<T>(key: string): Msg<T> {
-    return msgs[key];
+    return msgs[key]!;
   }
 
   /** k = key */

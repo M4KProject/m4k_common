@@ -78,9 +78,9 @@ const typeMap: TMap<(v: any) => boolean> = {
 };
 type TypeMap = typeof typeMap;
 
-export const isType = <K extends keyof TypeMap>(v: any, type: K): ReturnType<TypeMap[K]> => {
+export const isType = <K extends keyof TypeMap>(v: any, type: K): boolean => {
   const is = typeMap[type];
-  return is && is(v);
+  return !!(is && is(v));
 };
 
 // import { isBool, isNbr, isReal, isStr } from "./check";

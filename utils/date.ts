@@ -19,13 +19,15 @@ export const parseSeconds = (value: string | number): number | null => {
       .replace(/[^\d]+/g, ' ')
       .split(' ')
       .map(Number);
-    if (!m && h > 99) {
-      m = h % 100;
-      h = (h - m) / 100;
+    if (h !== undefined) {
+      if (!m && h > 99) {
+        m = h % 100;
+        h = (h - m) / 100;
+      }
+      const result = h * 3600 + (m || 0) * 60 + (s || 0);
+      console.debug('parseSeconds', value, h, m, s, result);
+      return result;
     }
-    const result = h * 3600 + (m || 0) * 60 + (s || 0);
-    console.debug('parseSeconds', value, h, m, s, result);
-    return result;
   }
   console.debug('parseSeconds', value);
   return isReal(value) ? value : 0;
@@ -94,15 +96,15 @@ export const parseDate = (str: string): Date | null => {
 
   const timeMatch = str.match(/(\d{2}):(\d{2})(?::(\d{2}))?/);
   if (timeMatch) {
-    h = parseInt(timeMatch[1], 10);
-    m = parseInt(timeMatch[2], 10);
+    h = parseInt(timeMatch[1]!, 10);
+    m = parseInt(timeMatch[2]!, 10);
     s = parseInt(timeMatch[3] || '0', 10);
   }
 
   const dateMatch = str.match(/(\d{2})\/(\d{2})(?:\/(\d{2,4}))?/);
   if (dateMatch) {
-    day = parseInt(dateMatch[1], 10);
-    month = parseInt(dateMatch[2], 10);
+    day = parseInt(dateMatch[1]!, 10);
+    month = parseInt(dateMatch[2]!, 10);
     const y = dateMatch[3];
     if (y) {
       year = parseInt(y, 10);

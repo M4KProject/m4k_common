@@ -24,7 +24,7 @@ export const fisrtKey = (v: Item): string | null => {
   return null;
 };
 
-export const lastKey = (v: Item): string | null => last(Object.keys(v));
+export const lastKey = (v: Item): string | null => last(Object.keys(v)) ?? null;
 
 export const setKey = <T, K extends keyof T>(record: T, key: K, value: T[K]): T => {
   record[key] = value;

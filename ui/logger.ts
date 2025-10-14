@@ -78,6 +78,7 @@ const show = () => {
     lastLogDisplayed = lastLog;
     for (let i = start + 1; i < logs.length; i++) {
       const log = logs[i];
+      if (!log) continue;
       if (log[3]) {
         consoleEl.appendChild(log[3]);
         continue;
