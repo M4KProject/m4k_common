@@ -163,7 +163,7 @@ export interface MediaModel extends BaseMediaModel {
   data?: VideoData & ImageData & PdfData & PlaylistData;
 }
 
-export type MediaType = MediaModel['type'];
+export type MediaType = MediaModel['type'] & string;
 
 export interface GroupModel extends _GroupModel {
   data?: {
