@@ -80,6 +80,7 @@ export type MediaAnim = 'toLeft' | 'toBottom' | 'fade' | 'zoom';
 export interface PlaylistEntry {
   title?: string;
   seconds?: number;
+  duration?: number;
   startHours?: number;
   endHours?: number;
   language?: string;
