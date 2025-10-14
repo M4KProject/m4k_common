@@ -19,7 +19,7 @@ export type ReqResponseType = '' | 'arraybuffer' | 'blob' | 'document' | 'json' 
 export class ReqError<T = any> extends Error {
   status: number;
   res?: Response;
-  data?: T;
+  data?: T | null;
   constructor(
     public error: Error,
     public ctx: Partial<ReqContext<T>>
@@ -27,7 +27,7 @@ export class ReqError<T = any> extends Error {
     super(error.message);
     this.status = ctx.status || 0;
     this.res = ctx.res;
-    this.data = ctx.data;
+    this.data = ctx.data ?? null;
   }
 }
 
