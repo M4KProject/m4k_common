@@ -42,7 +42,7 @@ const c = Css('Button', {
   },
   Icon: {
     position: 'relative',
-    fCenter: 1,
+    fCenter: [],
     m: 0.25,
     rounded: 2,
   },

@@ -25,7 +25,7 @@ const c = Css('Side', {
     transition: 0.2,
   },
   Content: {
-    fCol: 1,
+    fCol: [],
     position: 'absolute',
     xy: 0,
     wMin: 15,

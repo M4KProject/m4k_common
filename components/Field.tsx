@@ -67,7 +67,7 @@ const c = Css('Field', {
   },
 
   '-check &Input': {
-    fCenter: 1,
+    fCenter: [],
     p: 0,
     w: 1.4,
     h: 1.4,
@@ -94,7 +94,7 @@ const c = Css('Field', {
   },
 
   '-switch &Input': {
-    fCenter: 1,
+    fCenter: [],
     w: 2,
     h: 1.5,
     cursor: 'pointer',
@@ -452,10 +452,12 @@ export const Field = (props: FieldProps) => {
       () => {
         try {
           let casted = changed;
+          const castTypeFun = castType && castByType[castType];
+          const castFun = type && castByType[type];
 
-          if (castType && castType in castByType) casted = castByType[castType](casted);
+          if (castTypeFun) casted = castTypeFun(casted);
           else if (cast) casted = cast(casted);
-          else if (type && type in castByType) casted = castByType[type](casted);
+          else if (castFun) casted = castFun(casted);
 
           if (casted === sended) return;
           // console.debug('Field sync', name, sended, '->', casted);
@@ -489,8 +491,8 @@ export const Field = (props: FieldProps) => {
   const Comp = compByType[type || 'text'] || compByType.text;
 
   const formatValue = (value: any) => {
-    if (type && type in formatByType) return formatByType[type](value);
-    return value;
+    const format = type && formatByType[type];
+    return format ? format(value) : value;
   };
 
   return (

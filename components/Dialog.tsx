@@ -36,12 +36,12 @@ const c = Css('Dialog', {
     position: 'fixed',
     inset: 0,
     bg: 'mask',
-    fCenter: 1,
+    fCenter: [],
     opacity: 0,
     transition: 0.5,
   },
   Window: {
-    fCol: 1,
+    fCol: [],
     elevation: 3,
     rounded: 4,
     wMin: 40,
@@ -52,7 +52,7 @@ const c = Css('Dialog', {
     p: 0.5,
   },
   Header: {
-    fCenter: 1,
+    fCenter: [],
     m: 0.5,
   },
   HeaderText: {

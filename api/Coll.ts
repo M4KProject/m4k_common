@@ -149,7 +149,7 @@ export class Coll<T extends ModelBase> {
   }
 
   findId(where: Where<T>, o?: CollOptions<T>): Promise<string | null> {
-    return this.one(where, { ...o, select: ['id' as Keys<T>] }).then((r) => r?.id);
+    return this.one(where, { ...o, select: ['id' as Keys<T>] }).then((r) => r?.id ?? null);
   }
 
   findKey(key: string, o?: CollOptions<T>): Promise<T | null> {
@@ -212,6 +212,7 @@ export class Coll<T extends ModelBase> {
     o?: CollOptions<T>
   ): Promise<T | null> {
     const prev = await this.get(id, o);
+    if (!prev) return null;
     const next = deepClone(prev);
     await cb(next);
     const changes = getChanges(prev, next);

@@ -74,7 +74,8 @@ export const Flag = ({ iso, title, size, variant = '4x3', ...props }: FlagSVGPro
   // Normalize ISO code
   let normalizedIso = iso?.toLowerCase() || '';
   if (normalizedIso in ISO_MAPPING) {
-    normalizedIso = ISO_MAPPING[normalizedIso];
+    const iso = ISO_MAPPING[normalizedIso];
+    if (iso) normalizedIso = iso;
   }
 
   // Get flag SVG or fallback

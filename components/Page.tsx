@@ -3,12 +3,12 @@ import { DivProps } from './types';
 
 const c = Css('Page', {
   '': {
-    fCol: 1,
+    fCol: [],
     flex: 1,
     position: 'relative',
   },
   Container: {
-    fCol: 1,
+    fCol: [],
     overflowY: 'auto',
     bg: 'b2',
     p: 0.5,
@@ -16,7 +16,7 @@ const c = Css('Page', {
   },
   Section: {
     flex: 1,
-    fCol: 1,
+    fCol: [],
     position: 'relative',
     bg: 'b0',
     m: 0.5,

@@ -8,7 +8,7 @@ import { ComponentChildren } from 'preact';
 
 const c = Css('Progress', {
   '': {
-    fCenter: 1,
+    fCenter: [],
     position: 'relative',
     bg: 'b1',
     border: 'primary',
@@ -27,7 +27,7 @@ const c = Css('Progress', {
     transition: 0.5,
   },
   Text: {
-    fCenter: 1,
+    fCenter: [],
     position: 'absolute',
     xy: 0,
     wh: '100%',

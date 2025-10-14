@@ -12,7 +12,7 @@ const c = Css('Select', {
     w: '100%',
   },
   Container: {
-    fRow: 1,
+    fRow: [],
     wh: '100%',
     border: '1px solid',
     bColor: 'g2',
@@ -75,7 +75,7 @@ const c = Css('Select', {
     bg: '#e8f4fd',
   },
   Arrow: {
-    fCenter: 1,
+    fCenter: [],
     w: 1.5,
     h: 1.5,
     opacity: 0.6,
@@ -184,7 +184,7 @@ export const Select = ({
         break;
       case 'Enter':
         e.preventDefault();
-        if (isOpen && highlightedIndex >= 0) {
+        if (isOpen && highlightedIndex >= 0 && filteredItems[highlightedIndex]) {
           handleOptionClick(filteredItems[highlightedIndex][0]);
         } else if (!isOpen) {
           setIsOpen(true);

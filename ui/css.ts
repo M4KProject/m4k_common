@@ -68,8 +68,11 @@ const animToCss = (value: AnimValue, ctx: CssContext) => {
   const sb = ctx.a || (ctx.a = []);
   sb.push(`@keyframes ${name} {`);
   for (const key in keyframes) {
-    const { transform } = keyframes[key];
-    sb.push(`  ${key} { transform: ${transformToCss(transform)}; }`);
+    const keyframe = keyframes[key];
+    if (keyframe) {
+      const { transform } = keyframe;
+      sb.push(`  ${key} { transform: ${transformToCss(transform)}; }`);
+    }
   }
   sb.push(`}`);
   let css = `animation-name:${name};`;
@@ -234,11 +237,11 @@ const cssFunMap = {
   translateX: transformProp('translateX'),
   translateY: transformProp('translateY'),
 
-  fRow: (v: 1 | [] | [FlexAlign] | [FlexAlign, FlexJustify]) =>
+  fRow: (v: [] | [FlexAlign] | [FlexAlign, FlexJustify]) =>
     v && displayFlex('row', toStr(v[0], 'center'), toStr(v[1], 'space-between')),
-  fCol: (v: 1 | [] | [FlexAlign] | [FlexAlign, FlexJustify]) =>
+  fCol: (v: [] | [FlexAlign] | [FlexAlign, FlexJustify]) =>
     v && displayFlex('column', toStr(v[0], 'stretch'), toStr(v[1], 'start')),
-  fCenter: (v: 1 | [] | [FlexDirection]) => v && displayFlex(v[0] || 'column', 'center', 'center'),
+  fCenter: (v: [] | [FlexDirection]) => v && displayFlex(v[0] || 'column', 'center', 'center'),
 };
 
 type CssFunMap = typeof cssFunMap;
@@ -312,7 +315,7 @@ export const setCss = (key: string, css?: CssValue, order?: number, force?: bool
 export const Css = (key: string, css?: CssValue) => {
   const order = cssCount++;
   let isInit = false;
-  return (...args: (string | undefined | { class?: any })[]) => {
+  return (...args: (string | false | undefined | { class?: any })[]) => {
     if (!isInit) {
       setCss(key, css, order);
       isInit = true;
@@ -334,8 +337,11 @@ export const refreshCss = () => {
   const map = _cssMap;
   // for (const key in map) setCss(key, null);
   for (const key in map) {
-    const [, css, order] = map[key];
-    setCss(key, css, order, true);
+    const r = map[key];
+    if (r) {
+      const [, css, order] = r;
+      setCss(key, css, order, true);
+    }
   }
 };
 

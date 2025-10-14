@@ -23,7 +23,7 @@ const c = Css('AuthForm', {
     elevation: 0,
   },
   Col: {
-    fCol: 1,
+    fCol: [],
   },
   ' .FieldLabel': {
     mt: 0.5,

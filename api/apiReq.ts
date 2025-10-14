@@ -3,8 +3,9 @@ import { pathJoin } from '../utils/pathJoin';
 import { createReq, Req, ReqError, ReqMethod, ReqOptions } from '../utils/req';
 import { isItem, isStr, isStrDef } from '@common/utils/check';
 import { toError } from '@common/utils/cast';
+import { TMap } from '@common/utils/types';
 
-export const apiError$ = new Msg<ReqError<any>>(null);
+export const apiError$ = new Msg<ReqError<any> | null>(null);
 
 export interface ApiAuth {
   id: string;
@@ -33,7 +34,7 @@ export const needAuthId = () => {
   return id;
 };
 
-export const getAuthHeaders = (token: string) =>
+export const getAuthHeaders = (token: string): TMap<string> =>
   token
     ? {
         Authorization: `Bearer ${token}`,

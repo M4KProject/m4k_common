@@ -14,7 +14,7 @@ const c = Css('Tooltip', {
     zIndex: 9999,
   },
   Content: {
-    fCenter: 1,
+    fCenter: [],
     textAlign: 'center',
     position: 'absolute',
     p: 0.5,

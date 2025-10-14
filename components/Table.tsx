@@ -36,7 +36,7 @@ const c = Css('Table', {
     fRow: ['center', 'start'],
   },
   'Cell-center &CellContent': {
-    fCenter: 1,
+    fCenter: [],
   },
   'Cell-around &CellContent': {
     fRow: ['center', 'space-around'],

@@ -28,19 +28,20 @@ const initRealtime = () => {
 
     // Remove old listeners first to prevent duplication
     for (const key in wrappedListeners) {
-      eventSource.removeEventListener(key, wrappedListeners[key]);
+      const listener = wrappedListeners[key];
+      if (listener) eventSource.removeEventListener(key, listener);
       delete wrappedListeners[key];
     }
 
     // Add new listeners
     for (const key in subscriptions) {
       const listeners = subscriptions[key];
-      if (listeners.length > 0) {
-        wrappedListeners[key] = (event: any) => {
+      if (listeners && listeners.length > 0) {
+        const listener = (wrappedListeners[key] = (event: any) => {
           lastHeartbeat = Date.now();
           listeners.forEach((listener) => listener(event));
-        };
-        eventSource.addEventListener(key, wrappedListeners[key]);
+        });
+        eventSource.addEventListener(key, listener);
       }
     }
   };
@@ -54,7 +55,8 @@ const initRealtime = () => {
     if (eventSource) {
       // Clean up listeners before closing
       for (const key in wrappedListeners) {
-        eventSource.removeEventListener(key, wrappedListeners[key]);
+        const listener = wrappedListeners[key];
+        if (listener) eventSource.removeEventListener(key, listener);
         delete wrappedListeners[key];
       }
       eventSource.close();
@@ -95,7 +97,8 @@ const initRealtime = () => {
 
       const subscriptionKeys: string[] = [];
       for (const key in subscriptions) {
-        if (!subscriptions[key].length) {
+        const sub = subscriptions[key];
+        if (!sub || !sub.length) {
           delete subscriptions[key];
         } else {
           subscriptionKeys.push(key);
