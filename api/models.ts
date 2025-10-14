@@ -74,13 +74,18 @@ export interface HtmlContentModel extends ContentModel {
   };
 }
 
+export type MediaFit = 'contain' | 'cover' | 'fill';
+export type MediaAnim = 'toLeft' | 'toBottom' | 'fade' | 'zoom';
+
 export interface PlaylistEntry {
   title?: string;
-  duration?: number;
+  seconds?: number;
   startHours?: number;
   endHours?: number;
   language?: string;
   media?: string;
+  fit?: MediaFit;
+  anim?: MediaAnim;
 }
 
 export interface PlaylistContentModel extends ContentModel {
