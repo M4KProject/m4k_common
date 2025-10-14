@@ -3,12 +3,12 @@ import { throttle } from './throttle';
 import { isBool, isItem, isList, isNbr, isStr } from './check';
 import { global } from './global';
 import { len } from './obj';
-import { TMap } from './types';
+import { Fun, TMap } from './types';
 import { toError } from './cast';
 import { typeError } from './error';
 
 const newStorage = (): typeof localStorage => {
-  const r = {
+  const r: typeof localStorage & { length: number } = {
     _d: {} as TMap<string>,
     _r: () => {
       r.length = len(r._d);
@@ -26,7 +26,7 @@ const newStorage = (): typeof localStorage => {
       delete r._d[key];
       r._r();
     },
-    key: (index: number) => Object.keys(r._d)[index],
+    key: (index: number) => Object.keys(r._d)[index] || null,
     length: 0,
   };
   return r;
@@ -37,7 +37,7 @@ export const storage: typeof localStorage =
 
 let prefix = 'm4k_';
 
-const _listeners = [];
+const _listeners = [] as Fun[];
 const _signal = throttle<undefined>(() => {
   for (const listener of _listeners) {
     listener();
@@ -59,7 +59,7 @@ export const getStoragePrefix = () => prefix;
 
 export const getStored = <T = any, U = T>(
   key: string,
-  initValue?: U,
+  initValue: U,
   check?: (value: T) => boolean
 ): T | U => {
   try {
@@ -113,7 +113,7 @@ export const getStoredKeys = (): string[] => {
   const keys = [];
   for (let i = 0, l = storage.length; i < l; i++) {
     const fullKey = storage.key(i);
-    if (fullKey.startsWith(prefix)) {
+    if (fullKey?.startsWith(prefix)) {
       keys.push(fullKey.slice(prefix.length));
     }
   }
@@ -124,7 +124,7 @@ export const getStoredData = (): TMap<any> => {
   const keys = getStoredKeys();
   const result = {} as TMap<any>;
   for (const key of keys) {
-    result[key] = getStored(key);
+    result[key] = getStored(key, undefined);
   }
   return result;
 };

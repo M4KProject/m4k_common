@@ -66,7 +66,9 @@ export const deepClone = <T>(obj: T): T => {
     const keys = Object.keys(obj);
     for (let i = 0, l = keys.length; i < l; i++) {
       const key = keys[i];
-      c[key] = deepClone((obj as any)[key]);
+      if (key) {
+        c[key] = deepClone((obj as any)[key]);
+      }
     }
   }
   return c as T;
