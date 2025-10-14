@@ -42,15 +42,15 @@ export const useMsgItem = <T = any>(
   msg: NMsgMap<T>,
   key: string
 ): [T | undefined, (next: T) => void] => {
-  const [state, setState] = useState(msg && msg.getItem(key));
+  const [state, setState] = useState(msg ? msg.getItem(key) : undefined);
   useEffect(() => {
-    setState(msg && msg.getItem(key));
-    return (
-      msg &&
-      msg.on(() => {
+    setState(msg ? msg.getItem(key) : undefined);
+    if (msg) {
+      return msg.on(() => {
         setState(msg && msg.getItem(key));
-      })
-    );
+      });
+    }
+    return;
   }, [msg, key]);
   return [state, (next) => msg && msg.setItem(key, next)];
 };

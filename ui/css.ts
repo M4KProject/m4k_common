@@ -315,7 +315,7 @@ export const setCss = (key: string, css?: CssValue, order?: number, force?: bool
 export const Css = (key: string, css?: CssValue) => {
   const order = cssCount++;
   let isInit = false;
-  return (...args: (string | boolean | number | undefined | { class?: any })[]) => {
+  return (...args: (string | { class?: any } | boolean | number | undefined | null)[]) => {
     if (!isInit) {
       setCss(key, css, order);
       isInit = true;

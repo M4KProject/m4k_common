@@ -100,7 +100,7 @@ export const Button = ({
         '',
         `-${color || 'default'}`,
         selected && `-selected`,
-        isIcon && `-icon`,
+        isIcon ? `-icon` : null,
         variant && `-${variant}`,
         props
       )}

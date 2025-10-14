@@ -46,8 +46,8 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
 
   // bind methods
   for (const name in m4kMethods) {
-    const cb = methods[name];
-    m4k[name] = async (...args: any[]) => {
+    const cb = methods[name as keyof M4Kiosk];
+    m4k[name as keyof M4Kiosk] = async (...args: any[]) => {
       const canLog = name !== 'log';
       if (!cb) {
         canLog && console.warn('m4k', name, 'not implemented', args);

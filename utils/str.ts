@@ -30,7 +30,7 @@ export const isSearched = (
  */
 export const words = (arg: string): string[] =>
   clean(arg)
-    .replace(/[a-z0-9][A-Z]/g, (s) => s[0] + ' ' + s[1].toLowerCase())
+    .replace(/[a-z0-9][A-Z]/g, (s) => s[0] + ' ' + (s[1] || '').toLowerCase())
     .replace(/[^a-z0-9A-Z]+/g, () => ' ')
     .toLowerCase()
     .split(' ')
@@ -41,10 +41,10 @@ export const pascal = (arg: any): string => words(arg).map(firstUpper).join('');
 export const camel = (arg: string): string => firstLower(pascal(arg));
 
 export const firstLower = (arg: string): string =>
-  arg ? arg[0].toLowerCase() + arg.substring(1) : arg;
+  arg ? (arg[0] || '').toLowerCase() + arg.substring(1) : arg;
 
 export const firstUpper = (arg: string): string =>
-  arg ? arg[0].toUpperCase() + arg.substring(1) : arg;
+  arg ? (arg[0] || '').toUpperCase() + arg.substring(1) : arg;
 
 /**
  * @param val
@@ -84,7 +84,7 @@ export const randStr = (count: number, chars: string = 'abcdefghjkmnpqrstuvwxyz2
     const buff = new Uint32Array(count);
     crypto.getRandomValues(buff);
     for (let i = 0; i < count; i++) {
-      result += charset[buff[i] % charset.length];
+      result += charset[buff[i]! % charset.length];
     }
   } else {
     for (let i = 0; i < count; i++) {

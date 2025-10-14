@@ -11,10 +11,10 @@ export const m4kFully = (m4k: M4Kiosk, fully: Fully) => {
       const imgBase64 = fully.getScreenshotPngBase64();
       const dataUrl = await imgResize(
         imgBase64,
-        options.min,
-        options.max,
-        options.format,
-        options.quality
+        options?.min,
+        options?.max,
+        options?.format,
+        options?.quality
       );
       return dataUrl;
     },
