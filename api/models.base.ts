@@ -9,6 +9,10 @@ export interface ModelBase extends ModelId {
   // collectionName?: string;
 }
 
+export interface KeyModelBase extends ModelBase {
+  key?: string;
+}
+
 export interface GroupModelBase extends ModelBase {
   group?: string;
 }
