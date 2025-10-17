@@ -3,6 +3,10 @@ import { M4Kiosk } from './m4kInterface';
 export const m4kMethods: Record<keyof M4Kiosk, string[]> = {
   global: [],
 
+  getSetting: ['key'],
+  setSetting: ['key', 'value'],
+  clearSettings: [],
+
   pressKey: ['key'],
   tap: ['x', 'y'],
   swipe: ['x', 'y', 'xEnd', 'yEnd', 'ms'],

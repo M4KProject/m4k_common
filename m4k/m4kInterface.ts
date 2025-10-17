@@ -311,6 +311,10 @@ export type M4kResizeOptions = {
 export interface M4Kiosk {
   global: any;
 
+  getSetting(key: string): Promise<any>;
+  setSetting(key: string, value: any): Promise<void>;
+  clearSettings(): Promise<void>;
+
   pressKey(key: string): Promise<void>;
   tap(x: number, y: number): Promise<void>;
   swipe(x: number, y: number, xEnd: number, yEnd: number, ms: number): Promise<void>;
