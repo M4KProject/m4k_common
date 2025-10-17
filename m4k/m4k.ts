@@ -46,7 +46,7 @@ export const m4k = (() => {
   const onM4k = w.onM4k;
   if (onM4k) onM4k(m4k);
 
-  m4k.log('info', 'm4k ready');
+  console.info('m4k ready');
 
   // setTimeout(() => {
   //     document.querySelectorAll('meta[name="viewport"]').forEach(meta => meta.remove())

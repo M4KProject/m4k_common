@@ -15,8 +15,8 @@ type MethodsAsyncOrSync<T> = {
 export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {}) => {
   const m = m4k as any;
 
-  if (!methods.js) {
-    methods.js = async (script: string) => {
+  if (!methods.evalJs) {
+    methods.evalJs = async (script: string) => {
       try {
         console.debug('eval', script);
         let result = await m4k.global.eval(script);
