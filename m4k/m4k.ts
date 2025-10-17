@@ -21,6 +21,7 @@ export const m4k = (() => {
   w.m4k = m4k;
 
   _m4k ? m4kBridge(m4k) : fully ? m4kFully(m4k, fully) : m4kBase(m4k);
+  m4k.isInterface = !!(_m4k || fully);
 
   const listeners: ((event: M4kEvent) => void)[] = [];
 

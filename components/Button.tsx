@@ -1,6 +1,7 @@
-import { ComponentChildren, JSX } from 'preact';
+import { ComponentChildren } from 'preact';
 import { useRef } from 'preact/hooks';
 import { Css } from '@common/ui/css';
+import { Props } from '@common/components';
 import { Tr } from './Tr';
 
 const c = Css('Button', {
@@ -69,7 +70,11 @@ const c = Css('Button', {
   ':hover': { elevation: 0, fg: 'w0' },
 });
 
-export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
+type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {
+  onClick?: (e: Event) => void;
+};
+
+export interface ButtonProps extends BaseButtonProps {
   class?: string;
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
@@ -77,6 +82,7 @@ export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement>
   icon?: ComponentChildren;
   before?: ComponentChildren;
   title?: string;
+  link?: boolean;
 }
 
 export const Button = ({
@@ -87,24 +93,22 @@ export const Button = ({
   icon,
   children,
   before,
-  onClick,
+  link,
   ...props
 }: ButtonProps) => {
   const isIcon = icon && !(children || title);
 
-  return (
-    <button
-      onClick={onClick}
-      {...props}
-      class={c(
-        '',
-        `-${color || 'default'}`,
-        selected && `-selected`,
-        isIcon ? `-icon` : null,
-        variant && `-${variant}`,
-        props
-      )}
-    >
+  const cls = c(
+    '',
+    `-${color || 'default'}`,
+    selected && `-selected`,
+    isIcon ? `-icon` : null,
+    variant && `-${variant}`,
+    props
+  );
+
+  const content = (
+    <>
       <div class={c('Sfx')} />
       {before}
       {icon && <div class={c('Icon')}>{icon}</div>}
@@ -112,6 +116,20 @@ export const Button = ({
         {title && <Tr>{title}</Tr>}
         {children}
       </div>
+    </>
+  );
+
+  if (link) {
+    return (
+      <a class={cls} {...props}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button class={cls} {...props}>
+      {content}
     </button>
   );
 };

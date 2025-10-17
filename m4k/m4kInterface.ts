@@ -309,6 +309,7 @@ export type M4kResizeOptions = {
 };
 
 export interface M4Kiosk {
+  isInterface: boolean;
   global: any;
 
   getSetting(key: string): Promise<any>;
