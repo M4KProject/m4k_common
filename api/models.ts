@@ -8,6 +8,7 @@ import {
   _UserModel,
   _LockModel,
   _SuperuserModel,
+  _ApplicationModel,
 } from './models.generated';
 
 export * from './models.base';
@@ -199,6 +200,8 @@ export interface MemberModel extends _MemberModel {
 }
 
 export interface UserModel extends Omit<_UserModel, 'tokenKey'> {}
+
+export interface ApplicationModel extends _ApplicationModel {}
 
 export interface DeviceModel extends _DeviceModel {
   // config?: {
