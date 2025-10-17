@@ -89,7 +89,7 @@ export const removeItem = <T>(items: T[], item: T) => {
 
 export const sortItems = <T = any>(
   items: T[],
-  prop: (item: T) => string | number | Date = toStr
+  prop: (item: T) => string | number | Date | undefined = toStr
 ) => {
   const list = items.map((i) => [prop(i), i]) as [string | number | Date, T][];
   list.sort(([a], [b]) =>

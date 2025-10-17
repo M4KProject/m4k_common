@@ -367,7 +367,7 @@ export interface M4Kiosk {
   packageInfo(name: String): Promise<M4kPackageInfo>;
   startIntent(options: M4kIntentOptions): Promise<void>;
   installApk(path?: M4kPath): Promise<void>;
-  
+
   subscribe(listener?: (event: M4kEvent) => void): () => void;
   signal(event: M4kSignalEvent): void;
 }
