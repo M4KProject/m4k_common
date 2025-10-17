@@ -319,17 +319,10 @@ export interface M4Kiosk {
   up(x: number, y: number): Promise<void>;
   inputText(text: string): Promise<void>;
 
-  loadJs(path: string): Promise<any>;
-  eval(script: string): Promise<null | string | number>;
-  js(script: string): Promise<{ success: boolean; value?: any; error?: string }>;
+  loadJs(path: string): Promise<{ success: boolean; value?: any; error?: string }>;
+  evalJs(script: string): Promise<{ success: boolean; value?: any; error?: string }>;
   su(cmd: string): Promise<M4kExecResult>;
   sh(cmd: string): Promise<M4kExecResult>;
-
-  // setStorage(json: string): Promise<void>;
-  // getStorage(): Promise<string>;
-
-  setConfig(config: M4kConfig): Promise<void>;
-  getConfig(): Promise<M4kConfig>;
 
   fileInfo(path: M4kPath): Promise<M4kFileInfo>;
   absolutePath(path: M4kPath): Promise<string>;
@@ -350,7 +343,6 @@ export interface M4Kiosk {
   resize(path: M4kPath, options?: M4kResizeOptions): Promise<string>;
   capture(options?: M4kResizeOptions): Promise<string>;
 
-  readAsset(path: string, encoding?: 'utf8' | 'base64'): Promise<string | undefined>;
   read(path: string, encoding?: 'utf8' | 'base64'): Promise<string | undefined>;
   write(
     path: string,
@@ -367,23 +359,11 @@ export interface M4Kiosk {
   setKioskOn(val: boolean): Promise<void>;
   setScreenOn(val: boolean): Promise<void>;
 
-  log(level: string, message: string, data?: any, source?: string, line?: number): Promise<void>;
-  // popLogs(count?: number): Promise<M4kLog[]>;
-
-  // wvKey(): Promise<string>;
-  // wvList(): Promise<TMap<M4kWebViewConfig>>;
-  // wvConfig(options: { reset?: boolean, [key: string]: M4kWebViewConfig|boolean|undefined }): Promise<void>;
-
   installedPackages(): Promise<String[]>;
   packageInfo(name: String): Promise<M4kPackageInfo>;
-  startIntent(options: M4kIntentOptions | string): Promise<void>;
-
+  startIntent(options: M4kIntentOptions): Promise<void>;
   installApk(path?: M4kPath): Promise<void>;
-
-  openAutoStart(): Promise<void>;
-
-  showMessage(message: string): Promise<void>;
-
+  
   subscribe(listener?: (event: M4kEvent) => void): () => void;
   signal(event: M4kSignalEvent): void;
 }

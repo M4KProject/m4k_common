@@ -12,15 +12,10 @@ export const m4kMethods: Record<keyof M4Kiosk, string[]> = {
   inputText: ['text'],
 
   loadJs: ['path'],
-  eval: ['script'],
-  js: ['script'],
+  evalJs: ['script'],
   su: ['cmd'],
   sh: ['cmd'],
 
-  // setStorage: ['json'],
-  // getStorage: [],
-  setConfig: [],
-  getConfig: [],
   fileInfo: ['path'],
   absolutePath: ['path'],
   mkdir: ['path'],
@@ -37,7 +32,6 @@ export const m4kMethods: Record<keyof M4Kiosk, string[]> = {
   resize: ['path', 'options'],
   capture: ['options'],
 
-  readAsset: ['path', 'encoding'],
   read: ['path', 'encoding'],
   write: ['path', 'content', 'encoding', 'append'],
   url: ['path'],
@@ -47,17 +41,10 @@ export const m4kMethods: Record<keyof M4Kiosk, string[]> = {
   exit: [],
   info: [],
 
-  log: ['level', 'message', 'data', 'source', 'line'],
-
   installedPackages: [],
   packageInfo: ['name'],
   startIntent: ['options'],
-
   installApk: ['path'],
-
-  openAutoStart: [],
-
-  showMessage: ['message'],
 
   subscribe: ['listener'],
   signal: ['event'],
