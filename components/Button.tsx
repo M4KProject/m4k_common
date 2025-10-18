@@ -121,14 +121,14 @@ export const Button = ({
 
   if (link) {
     return (
-      <a class={cls} {...props}>
+      <a {...props} class={cls}>
         {content}
       </a>
     );
   }
 
   return (
-    <button class={cls} {...props}>
+    <button {...props} class={cls}>
       {content}
     </button>
   );
