@@ -331,13 +331,13 @@ export interface M4Kiosk {
 
   fileInfo(path: M4kPath): Promise<M4kFileInfo>;
   absolutePath(path: M4kPath): Promise<string>;
-  mkdir(path: M4kPath): Promise<void>;
+  mkdir(path: M4kPath): Promise<boolean>;
   ls(path: M4kPath, recursive?: boolean): Promise<string[]>;
-  cp(path: M4kPath, dest: M4kPath): Promise<void>;
-  mv(path: M4kPath, dest: M4kPath): Promise<void>;
-  rm(path: M4kPath): Promise<void>;
-  zip(path: M4kPath, dest?: M4kPath, uncompressed?: boolean): Promise<void>;
-  unzip(path: M4kPath, dest?: M4kPath): Promise<void>;
+  cp(path: M4kPath, dest: M4kPath): Promise<boolean>;
+  mv(path: M4kPath, dest: M4kPath): Promise<boolean>;
+  rm(path: M4kPath): Promise<boolean>;
+  zip(path: M4kPath, dest?: M4kPath, uncompressed?: boolean): Promise<string>;
+  unzip(path: M4kPath, dest?: M4kPath): Promise<string>;
 
   download(url: string, dest?: M4kPath): Promise<void>;
 
