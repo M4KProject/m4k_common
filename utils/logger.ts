@@ -9,19 +9,24 @@ interface Logger {
 
 const cache: TMap<Logger> = {};
 
-let _log = (tag: string, level: string, args: any[]) => {
-    (console as any)[level](tag, ...args);
+let log = (tag: string, level: 'd'|'i'|'w'|'e', args: any[]) => {
+    switch(level) {
+        case 'd': console.debug(tag, ...args); break;
+        case 'i': console.info(tag, ...args); break;
+        case 'w': console.warn(tag, ...args); break;
+        case 'e': console.error(tag, ...args); break;
+    }
 }
 
-export const setLog = (next: typeof _log) => _log = next;
+export const setLog = (next: typeof log) => log = next;
 
 const newLogger = (tag: string): Logger => {
     const TAG = tag ? `[${tag}] ` : '';
     return {
-        d: (...args: any[]) => _log(tag, 'debug', args),
-        i: (...args: any[]) => _log(tag, 'info', args),
-        w: (...args: any[]) => _log(tag, 'warn', args),
-        e: (...args: any[]) => _log(tag, 'error', args),
+        d: (...args: any[]) => log(TAG, 'd', args),
+        i: (...args: any[]) => log(TAG, 'i', args),
+        w: (...args: any[]) => log(TAG, 'w', args),
+        e: (...args: any[]) => log(TAG, 'e', args),
     }
 }
 

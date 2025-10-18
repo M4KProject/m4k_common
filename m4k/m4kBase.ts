@@ -36,8 +36,8 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
     methods.restart = () => location.reload();
   }
 
-  if (!methods.info) {
-    methods.info = () => ({
+  if (!methods.deviceInfo) {
+    methods.deviceInfo = () => ({
       type: 'browser',
       width: screen.width,
       height: screen.height,
