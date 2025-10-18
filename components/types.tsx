@@ -8,8 +8,3 @@ export type Props = {
 };
 
 export type DivProps = Props['div'];
-export type LinkProps = Props['a'];
-export type ButtonProps = Props['button'];
-export type FormProps = Props['form'];
-export type SpanProps = Props['span'];
-export type IframeProps = Props['iframe'];

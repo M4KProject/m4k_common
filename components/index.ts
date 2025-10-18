@@ -2,7 +2,6 @@ export * from './AuthForm';
 export * from './BackButton';
 export * from './Button';
 export * from './Dialog';
-export * from './types';
 export * from './Field';
 export * from './Flag';
 export * from './Picker';
