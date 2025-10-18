@@ -313,7 +313,7 @@ export interface M4Kiosk {
   global: any;
 
   getSetting(key: string): Promise<string|null>;
-  setSetting(key: string, value: string): Promise<void>;
+  setSetting(key: string, value: string|null): Promise<void>;
   clearSettings(): Promise<void>;
 
   pressKey(key: string): Promise<void>;

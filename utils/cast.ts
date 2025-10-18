@@ -1,4 +1,5 @@
-import { isList, isDate, isNil, isStr, isItem, isPositive, isError } from './check';
+import { isList, isDate, isNil, isStr, isItem, isPositive, isError, isBool, isDef } from './check';
+import { TMap } from './types';
 
 export const toMe = <T = any>(value: T): T => value;
 
@@ -14,12 +15,10 @@ interface ToBool {
   (v: any): boolean | undefined;
   <T>(v: any, defVal: T): boolean | T;
 }
-export const toBool = (<T = boolean>(v: any, defVal?: T | boolean): boolean | T | undefined =>
-  isStr(v)
-    ? ['true', 'ok', 'on', '1'].indexOf(String(v).toLowerCase()) !== -1
-    : isNil(v)
-      ? defVal
-      : !!v) as ToBool;
+const boolMap: TMap<boolean> = { true: true, ok: true, on: true, 1: true, false: false, ko: false, off: false, 0: false };
+export const toBool = (<T = boolean>(v: any, defVal?: T | boolean): boolean | T | undefined => (
+  isBool(v) ? v : isNil(v) ? defVal : isDef(v = boolMap[String(v).toLowerCase()]) ? v as boolean : defVal
+)) as ToBool;
 
 export const toClassName = (obj: any): string => {
   if (!obj) return '';
