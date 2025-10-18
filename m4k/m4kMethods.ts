@@ -1,6 +1,6 @@
 import { M4Kiosk } from './m4kInterface';
 
-export const m4kMethods: Record<keyof M4Kiosk, string[]> = {
+export const m4kMethods: Record<keyof Omit<M4Kiosk, 'isInterface'>, string[]> = {
   global: [],
 
   getSetting: ['key'],
