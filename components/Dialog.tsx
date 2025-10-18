@@ -82,8 +82,14 @@ interface DialogRenderProps extends DivProps {
 }
 const DialogRender = ({ open$, variant, title, children, ...props }: DialogRenderProps) => {
   const open = useMsg(open$);
-  const onClose = () => open$.set(false);
   const [init, setInit] = useState(false);
+  const [canClose, setCanClose] = useState(false);
+
+  const onClose = () => {
+    if (canClose) {
+      open$.set(false);
+    }
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -92,7 +98,12 @@ const DialogRender = ({ open$, variant, title, children, ...props }: DialogRende
   }, []);
 
   useEffect(() => {
-    if (open) setInit(true);
+    if (open) {
+      setInit(true);
+      setTimeout(() => {
+        setCanClose(true);
+      }, 2000);
+    }
   }, [open]);
 
   return (
