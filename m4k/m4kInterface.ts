@@ -66,103 +66,103 @@ export interface M4kLog {
 //     // };
 // }
 
-export interface M4kConfig {
-  ///// URL /////
-  startUrl?: string;
-  zipUrl?: string;
-  url?: string;
+// export interface M4kConfig {
+//   ///// URL /////
+//   startUrl?: string;
+//   zipUrl?: string;
+//   url?: string;
 
-  ///// Authentication /////
-  password?: string;
+//   ///// Authentication /////
+//   password?: string;
 
-  ///// Playlist /////
-  copyDir?: string;
-  itemDurationMs?: number;
-  itemFit?: 'contain' | 'cover' | 'fill';
-  itemAnim?: 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
-  hasVideoMuted?: boolean;
-  playlist?: any[];
+//   ///// Playlist /////
+//   copyDir?: string;
+//   itemDurationMs?: number;
+//   itemFit?: 'contain' | 'cover' | 'fill';
+//   itemAnim?: 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
+//   hasVideoMuted?: boolean;
+//   playlist?: any[];
 
-  ///// UI /////
-  backColor?: string;
+//   ///// UI /////
+//   backColor?: string;
 
-  ///// Device /////
-  deviceUsername?: string;
-  devicePassword?: string;
+//   ///// Device /////
+//   deviceUsername?: string;
+//   devicePassword?: string;
 
-  ///// Cache /////
-  deleteCacheOnReload?: boolean;
-  deleteHistoryOnReload?: boolean;
-  deleteStorageOnReload?: boolean;
-  deleteCookiesOnReload?: boolean;
-  syncM4kStorage?: boolean;
+//   ///// Cache /////
+//   deleteCacheOnReload?: boolean;
+//   deleteHistoryOnReload?: boolean;
+//   deleteStorageOnReload?: boolean;
+//   deleteCookiesOnReload?: boolean;
+//   syncM4kStorage?: boolean;
 
-  ///// App /////
-  restartOnCrash?: boolean;
-  restartHours?: number; // 22h30 -> 22,5
-  rebootHours?: number; // 22h30 -> 22,5
-  reloadIdle?: number;
-  appToRunOnStart?: string;
+//   ///// App /////
+//   restartOnCrash?: boolean;
+//   restartHours?: number; // 22h30 -> 22,5
+//   rebootHours?: number; // 22h30 -> 22,5
+//   reloadIdle?: number;
+//   appToRunOnStart?: string;
 
-  ///// Screen /////
+//   ///// Screen /////
 
-  /** Screen orientation (0=portrait, 1=landscape, etc.) */
-  screenOrientation?: number;
-  keepScreenOn?: boolean;
-  screenStartHours?: string; // 22h30 -> 22,5
-  screenEndHours?: string; // 22h30 -> 22,5
+//   /** Screen orientation (0=portrait, 1=landscape, etc.) */
+//   screenOrientation?: number;
+//   keepScreenOn?: boolean;
+//   screenStartHours?: string; // 22h30 -> 22,5
+//   screenEndHours?: string; // 22h30 -> 22,5
 
-  ///// Kiosk //////
-  showActionBar?: boolean;
-  showStatusBar?: boolean;
-  launchOnBoot?: boolean;
-  kioskPin?: string;
-  kioskMode?: string;
-  forceImmersive?: boolean;
-  hideKeyboard?: boolean;
-  allowTextSelection?: boolean;
-  confirmExit?: boolean;
+//   ///// Kiosk //////
+//   showActionBar?: boolean;
+//   showStatusBar?: boolean;
+//   launchOnBoot?: boolean;
+//   kioskPin?: string;
+//   kioskMode?: string;
+//   forceImmersive?: boolean;
+//   hideKeyboard?: boolean;
+//   allowTextSelection?: boolean;
+//   confirmExit?: boolean;
 
-  ///// Server /////
-  enableLocalhost?: boolean;
+//   ///// Server /////
+//   enableLocalhost?: boolean;
 
-  ///// WiFi /////
-  resetWifiOnDisconnection?: boolean;
-  resetWifiEachSeconds?: number;
-  wifiType?: string;
-  wifiName?: string;
-  wifiPass?: string;
+//   ///// WiFi /////
+//   resetWifiOnDisconnection?: boolean;
+//   resetWifiEachSeconds?: number;
+//   wifiType?: string;
+//   wifiName?: string;
+//   wifiPass?: string;
 
-  ///// Idle /////
-  reloadEachSeconds?: number;
+//   ///// Idle /////
+//   reloadEachSeconds?: number;
 
-  ///// Zoom /////
-  initialScale?: number;
-  textZoom?: number;
-  enableZoom?: boolean;
-  resetZoom?: number;
-  resetZoomMs?: number;
-  builtInZoomControls?: boolean;
-  displayZoomControls?: boolean;
+//   ///// Zoom /////
+//   initialScale?: number;
+//   textZoom?: number;
+//   enableZoom?: boolean;
+//   resetZoom?: number;
+//   resetZoomMs?: number;
+//   builtInZoomControls?: boolean;
+//   displayZoomControls?: boolean;
 
-  ///// InjectJs /////
-  injectSh?: string;
-  injectJs?: string;
+//   ///// InjectJs /////
+//   injectSh?: string;
+//   injectJs?: string;
 
-  ///// WebView //////
-  debuggingEnabled?: boolean;
-  domStorageEnabled?: boolean;
-  loadWithOverviewMode?: boolean;
-  useWideViewPort?: boolean;
-  allowContentAccess?: boolean;
-  allowFileAccess?: boolean;
-  mediaPlaybackRequiresUserGesture?: boolean;
-  mixedContentMode?: 'never' | 'compatible' | 'always';
-  webviewMixedContent?: number; // TODO
-  desktopMode?: boolean;
-  customUserAgent?: string;
-  autoplayVideo?: boolean;
-}
+//   ///// WebView //////
+//   debuggingEnabled?: boolean;
+//   domStorageEnabled?: boolean;
+//   loadWithOverviewMode?: boolean;
+//   useWideViewPort?: boolean;
+//   allowContentAccess?: boolean;
+//   allowFileAccess?: boolean;
+//   mediaPlaybackRequiresUserGesture?: boolean;
+//   mixedContentMode?: 'never' | 'compatible' | 'always';
+//   webviewMixedContent?: number; // TODO
+//   desktopMode?: boolean;
+//   customUserAgent?: string;
+//   autoplayVideo?: boolean;
+// }
 
 // interface BridgeConfig {
 //     kiosk?: boolean;
