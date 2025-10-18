@@ -16,6 +16,7 @@ export * from './global';
 export * from './isDeepEqual';
 export * from './json';
 export * from './list';
+export * from './logger';
 export * from './humanize';
 export * from './Msg';
 export * from './MsgMap';

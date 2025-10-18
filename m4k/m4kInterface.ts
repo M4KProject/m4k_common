@@ -360,7 +360,7 @@ export interface M4Kiosk {
   restart(): Promise<void>;
   reload(): Promise<void>;
   exit(): Promise<void>;
-  info(): Promise<M4kDeviceInfo>;
+  deviceInfo(): Promise<M4kDeviceInfo>;
   setKioskOn(val: boolean): Promise<void>;
   setScreenOn(val: boolean): Promise<void>;
 
@@ -371,4 +371,11 @@ export interface M4Kiosk {
 
   subscribe(listener?: (event: M4kEvent) => void): () => void;
   signal(event: M4kSignalEvent): void;
+
+  d(...args: any[]): void;
+  i(...args: any[]): void;
+  w(...args: any[]): void;
+  e(...args: any[]): void;
 }
+
+export type M4KAsyncMethods = keyof Omit<M4Kiosk, 'isInterface'|'d'|'i'|'w'|'e'>;

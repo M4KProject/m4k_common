@@ -1,6 +1,6 @@
-import { M4Kiosk } from './m4kInterface';
+import { M4KAsyncMethods } from './m4kInterface';
 
-export const m4kMethods: Record<keyof Omit<M4Kiosk, 'isInterface'>, string[]> = {
+export const m4kMethods: Record<M4KAsyncMethods, string[]> = {
   global: [],
 
   getSetting: ['key'],
@@ -43,7 +43,7 @@ export const m4kMethods: Record<keyof Omit<M4Kiosk, 'isInterface'>, string[]> = 
   restart: [],
   reload: [],
   exit: [],
-  info: [],
+  deviceInfo: [],
 
   installedPackages: [],
   packageInfo: ['name'],

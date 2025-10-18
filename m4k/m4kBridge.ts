@@ -1,5 +1,7 @@
+import { humanize } from '@common/utils';
 import { M4Kiosk } from './m4kInterface';
 import { m4kMethods } from './m4kMethods';
+import { setLog } from '@common/utils/logger';
 
 export const m4kBridge = (m4k: M4Kiosk) => {
   const m = m4k as any;
@@ -9,7 +11,6 @@ export const m4kBridge = (m4k: M4Kiosk) => {
   const newCb = (name: string) => 'cb_' + name + count++;
 
   Object.entries(m4kMethods).map(([method, argKeys]) => {
-    // logDebug('add method', method, argKeys)
     m[method] = (...args: any[]) =>
       new Promise<any>((resolve, reject) => {
         const cb = newCb(method);
@@ -43,4 +44,6 @@ export const m4kBridge = (m4k: M4Kiosk) => {
         }
       });
   });
+
+  setLog((tag, level, args) => g._m4k.log(level, tag + humanize(args)));
 };
