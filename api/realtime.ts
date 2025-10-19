@@ -4,6 +4,7 @@ import { pathJoin } from '@common/utils/pathJoin';
 import { toError } from '@common/utils/cast';
 import { getApiUrl } from './apiReq';
 import { TMap } from '@common/utils/types';
+import { clamp } from '@common/utils';
 
 const initRealtime = () => {
   let clientId: string = '';
@@ -15,6 +16,8 @@ const initRealtime = () => {
   const realtimeUrl = pathJoin(getApiUrl(), 'realtime');
 
   let lastHeartbeat = 0;
+  let reconnectAttempts = 0;
+  let reconnectTimeout: any;
   const wrappedListeners: TMap<(event: any) => void> = {};
 
   const isConnected = (): boolean =>
@@ -47,7 +50,8 @@ const initRealtime = () => {
   };
 
   const disconnect = () => {
-    // console.debug('realtime disconnect');
+    console.log('🔌 Realtime disconnect');
+    clearTimeout(reconnectTimeout);
     if (reqCtx) {
       reqCtx.abort();
       reqCtx = undefined;
@@ -67,27 +71,65 @@ const initRealtime = () => {
     lastState = '';
   };
 
-  const connect = async () => {
-    // console.debug('realtime connecting', realtimeUrl);
+  const scheduleReconnect = (req: Req) => {
+    clearTimeout(reconnectTimeout);
+    reconnectAttempts++;
+    const delay = 2000;
+    console.log(`⏳ Scheduling reconnect attempt #${reconnectAttempts} in ${delay}ms`);
+    reconnectTimeout = setTimeout(() => update(req), delay);
+  };
+
+  const connect = async (req: Req) => {
+    console.log('🔄 Realtime connecting to', realtimeUrl);
     disconnect();
-    await new Promise<void>((resolve) => {
+
+    return new Promise<void>((resolve, reject) => {
+      const connectTimeout = setTimeout(() => {
+        reject(new Error('Connection timeout after 30s'));
+      }, 30000);
+
       eventSource = new EventSource(realtimeUrl);
+
       eventSource.addEventListener('PB_CONNECT', (e: MessageEvent) => {
-        // console.debug('PB_CONNECT', e);
-        if (!e) return console.warn('PB_CONNECT e');
+        clearTimeout(connectTimeout);
+        if (!e) {
+          console.warn('⚠️ PB_CONNECT event is null');
+          return reject(new Error('PB_CONNECT event is null'));
+        }
         const id = (parse(e.data) || {}).clientId;
-        if (!id) return console.warn('PB_CONNECT id');
+        if (!id) {
+          console.warn('⚠️ PB_CONNECT missing clientId');
+          return reject(new Error('PB_CONNECT missing clientId'));
+        }
         clientId = id;
         lastHeartbeat = Date.now();
+        reconnectAttempts = 0; // Reset on successful connection
+        console.log('✅ Realtime connected, clientId:', clientId);
         resolve();
       });
+
+      eventSource.addEventListener('error', (e: Event) => {
+        console.error('❌ EventSource error:', e);
+        clearTimeout(connectTimeout);
+
+        if (eventSource?.readyState === EventSource.CLOSED) {
+          console.log('🔴 EventSource closed, scheduling reconnect');
+          disconnect();
+          scheduleReconnect(req);
+        } else if (eventSource?.readyState === EventSource.CONNECTING) {
+          console.log('🟡 EventSource reconnecting...');
+        }
+      });
+
+      eventSource.addEventListener('open', () => {
+        console.log('🟢 EventSource opened');
+      });
     });
-    // console.debug('realtime connected', clientId);
   };
 
   const update = async (req: Req) => {
     try {
-      // console.debug('realtime update');
+      console.log('🔄 Realtime update');
       clearInterval(intervalId);
       intervalId = setInterval(() => update(req), 10000);
 
@@ -104,13 +146,15 @@ const initRealtime = () => {
           subscriptionKeys.push(key);
         }
       }
-      // console.debug('realtime update state', state);
+      console.log('📊 Realtime state:', state, 'subscriptions:', subscriptionKeys.length);
 
       if (!subscriptionKeys.length) return disconnect();
-      if (!isConnected()) await connect();
+      if (!isConnected()) {
+        await connect(req);
+      }
 
+      console.log('📤 Sending subscription request for', subscriptionKeys.length, 'topics');
       await req('POST', realtimeUrl, {
-        // xhr: true,
         json: {
           clientId,
           subscriptions: subscriptionKeys,
@@ -124,10 +168,15 @@ const initRealtime = () => {
       });
 
       reqCtx = undefined;
-      if (eventSource) addAllListeners(eventSource);
+      if (eventSource) {
+        addAllListeners(eventSource);
+        console.log('✅ Listeners attached successfully');
+      }
     } catch (e) {
       const error = toError(e);
-      console.error('realtime update', error);
+      console.error('❌ Realtime update error:', error.message);
+      disconnect();
+      scheduleReconnect(req);
     }
   };
 
