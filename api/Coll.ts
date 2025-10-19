@@ -9,6 +9,7 @@ import { getUrl, Thumb } from './getUrl';
 import { deepClone, getChanges } from '@common/utils/obj';
 import { newApiReq } from './apiReq';
 import { TMap } from '@common/utils/types';
+import { updateUrlParams } from '@common/ui/urlParams';
 
 export type Operator =
   | '=' // Equal
@@ -222,6 +223,10 @@ export class Coll<T extends ModelBase> {
 
   getUrl(id?: string, filename?: any, thumb?: Thumb) {
     return getUrl(this.name, id, filename, thumb);
+  }
+
+  getDownloadUrl(id?: string, filename?: any, thumb?: Thumb) {
+    return updateUrlParams(getUrl(this.name, id, filename, thumb), { download: '1' });
   }
 
   on(
