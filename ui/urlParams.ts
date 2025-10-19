@@ -31,7 +31,7 @@ export const getUrlParams = (url: string): TMap<string> => {
     }
   }
   return { ...urlParams };
-}
+};
 
 export const updateUrlParams = (url: string, params: TMap<string>): string => {
   const parts = url.split('#');
@@ -52,7 +52,7 @@ export const updateUrlParams = (url: string, params: TMap<string>): string => {
 
   const newQuery = pairs.join('&');
   return path + (newQuery ? '?' + newQuery : '') + (hash ? '#' + hash : '');
-}
+};
 
 export const replaceUrlParams = (url: string, params: TMap<string>): string => {
   const parts = url.split('#');
@@ -70,4 +70,4 @@ export const replaceUrlParams = (url: string, params: TMap<string>): string => {
 
   const newQuery = pairs.join('&');
   return path + (newQuery ? '?' + newQuery : '') + (hash ? '#' + hash : '');
-}
+};
