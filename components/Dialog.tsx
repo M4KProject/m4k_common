@@ -22,13 +22,13 @@ export const showDialog = (
   console.debug('showDialog', title);
 
   const open$ = new Msg(false);
-  
+
   const dispose = portal(
     <DialogRender open$={open$} title={title} {...props}>
       <Tr>{getContent(open$)}</Tr>
     </DialogRender>
   );
-  
+
   open$.on((v) => !v && setTimeout(dispose, 500));
 };
 

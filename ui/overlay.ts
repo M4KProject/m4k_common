@@ -3,7 +3,7 @@ import { CssValue, setCss } from './css';
 import { sleep } from '@common/utils/sleep';
 import { logger } from '@common/utils';
 
-const log = logger('Overlay')
+const log = logger('Overlay');
 
 const overlayCss: CssValue = {
   '': {
