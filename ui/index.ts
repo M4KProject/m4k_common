@@ -9,6 +9,7 @@ export * from './imgResize';
 export * from './logger';
 export * from './overlay';
 export * from './responsive';
+export * from './startDownload';
 export * from './swClear';
 export * from './tPriceToHtml';
 export * from './theme';

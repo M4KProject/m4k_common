@@ -12,6 +12,7 @@ export * from './check';
 export * from './color';
 export * from './date';
 export * from './error';
+export * from './getExt';
 export * from './global';
 export * from './isDeepEqual';
 export * from './json';
