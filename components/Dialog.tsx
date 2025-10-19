@@ -22,13 +22,14 @@ export const showDialog = (
   console.debug('showDialog', title);
 
   const open$ = new Msg(false);
-  open$.on((v) => !v && setTimeout(() => el.remove(), 500));
-
-  const el = portal(
+  
+  const dispose = portal(
     <DialogRender open$={open$} title={title} {...props}>
       <Tr>{getContent(open$)}</Tr>
     </DialogRender>
   );
+  
+  open$.on((v) => !v && setTimeout(dispose, 500));
 };
 
 const c = Css('Dialog', {
