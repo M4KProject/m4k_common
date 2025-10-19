@@ -312,8 +312,8 @@ export interface M4Kiosk {
   isInterface: boolean;
   global: any;
 
-  getSetting(key: string): Promise<string|null>;
-  setSetting(key: string, value: string|null): Promise<void>;
+  getSetting(key: string): Promise<string | null>;
+  setSetting(key: string, value: string | null): Promise<void>;
   clearSettings(): Promise<void>;
 
   pressKey(key: string): Promise<void>;
@@ -378,4 +378,4 @@ export interface M4Kiosk {
   e(...args: any[]): void;
 }
 
-export type M4KAsyncMethods = keyof Omit<M4Kiosk, 'isInterface'|'d'|'i'|'w'|'e'>;
+export type M4KAsyncMethods = keyof Omit<M4Kiosk, 'isInterface' | 'd' | 'i' | 'w' | 'e'>;

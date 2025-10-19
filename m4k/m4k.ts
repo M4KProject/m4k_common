@@ -29,7 +29,7 @@ export const m4k = (() => {
   m4k.i = log.i;
   m4k.w = log.w;
   m4k.e = log.e;
-  
+
   const listeners: ((event: M4kEvent) => void)[] = [];
 
   m4k.subscribe = (listener: (event: M4kEvent) => void) => {

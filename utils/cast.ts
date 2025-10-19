@@ -15,10 +15,24 @@ interface ToBool {
   (v: any): boolean | undefined;
   <T>(v: any, defVal: T): boolean | T;
 }
-const boolMap: TMap<boolean> = { true: true, ok: true, on: true, 1: true, false: false, ko: false, off: false, 0: false };
-export const toBool = (<T = boolean>(v: any, defVal?: T | boolean): boolean | T | undefined => (
-  isBool(v) ? v : isNil(v) ? defVal : isDef(v = boolMap[String(v).toLowerCase()]) ? v as boolean : defVal
-)) as ToBool;
+const boolMap: TMap<boolean> = {
+  true: true,
+  ok: true,
+  on: true,
+  1: true,
+  false: false,
+  ko: false,
+  off: false,
+  0: false,
+};
+export const toBool = (<T = boolean>(v: any, defVal?: T | boolean): boolean | T | undefined =>
+  isBool(v)
+    ? v
+    : isNil(v)
+      ? defVal
+      : isDef((v = boolMap[String(v).toLowerCase()]))
+        ? (v as boolean)
+        : defVal) as ToBool;
 
 export const toClassName = (obj: any): string => {
   if (!obj) return '';
