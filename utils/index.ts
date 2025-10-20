@@ -1,3 +1,4 @@
+export * from './app';
 export * from './retry';
 export * from './withTimeout';
 export * from './sleep';
@@ -30,5 +31,4 @@ export * from './rand';
 export * from './req';
 export * from './storage';
 export * from './str';
-export * from './timer';
 export * from './types';

@@ -1,1 +1,3 @@
-export const global: any = typeof globalThis !== 'undefined' ? globalThis : window;
+import { appGlobal } from "./app";
+
+export const global = appGlobal;
