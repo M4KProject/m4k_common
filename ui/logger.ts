@@ -31,7 +31,7 @@ const info = g('info', nInfo);
 const warn = g('warn', nWarn);
 const error = g('error', nError);
 
-// window.onerror = (event: Event | string, source?: string, lineno?: number, colno?: number, err?: Error) => {
+// appGlobal.onerror = (event: Event | string, source?: string, lineno?: number, colno?: number, err?: Error) => {
 //   error('onerror event', event);
 //   error('onerror source', source, lineno, colno);
 //   error('onerror error', err);

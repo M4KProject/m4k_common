@@ -1,20 +1,5 @@
 import { TMap } from '@common/utils/types';
 
-// export const updateUrlParams = (update: TMap<string>) => {
-//   const queryParams = new URLSearchParams(window.location.search);
-//   let count = 0;
-//   for (const prop in update) {
-//     const value = update[prop];
-//     if (value && queryParams.get(prop) !== value) {
-//       queryParams.set(prop, value);
-//       count++;
-//     }
-//   }
-//   if (count > 0) {
-//     window.history.pushState(null, '', `?${queryParams}`);
-//   }
-// };
-
 export const getUrlParams = (url: string): TMap<string> => {
   let match;
   const pl = /\+/g;

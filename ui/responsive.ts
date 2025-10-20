@@ -1,5 +1,6 @@
 import { Msg } from '@common/utils/Msg';
 import { setCss } from './css';
+import { appGlobal } from '@common/utils/app';
 
 export type Responsive = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -23,5 +24,5 @@ export const addResponsiveListener = () => {
   // console.debug('addResponsiveListener');
   [50, 100, 200, 500, 1000, 2000].forEach((ms) => setTimeout(applyResponsive, ms));
   // deno-lint-ignore no-window no-window-prefix
-  window.addEventListener('resize', applyResponsive, true);
+  appGlobal.addEventListener('resize', applyResponsive, true);
 };

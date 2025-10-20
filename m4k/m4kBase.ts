@@ -1,7 +1,7 @@
 import { toError } from '@common/utils/cast';
 import { M4Kiosk } from './m4kInterface';
 import { m4kMethods } from './m4kMethods';
-import { global } from '@common/utils/global';
+import { app, appGlobal } from '@common/utils/app';
 import { isFun } from '@common/utils/check';
 
 type MethodAsyncOrSync<T> = T extends (...args: infer A) => Promise<infer R>
@@ -19,7 +19,7 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
     methods.evalJs = async (script: string) => {
       try {
         console.debug('eval', script);
-        let result = await m4k.global.eval(script);
+        let result = await appGlobal.eval(script);
         if (isFun(result)) result = await result(m4k);
         return { success: true, value: result };
       } catch (e) {
@@ -66,7 +66,8 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
     };
   }
 
-  m4k.global = global;
+  m4k.app = app;
+  m4k.global = appGlobal;
 
   // // sync storage
   // (async () => {

@@ -3,7 +3,7 @@ import { debounce } from './debounce';
 import { throttle } from './throttle';
 import { toVoid } from './cast';
 import { isDef, isFun } from './check';
-import { global } from './global';
+import { app } from './app';
 import { getStored, setStored } from './storage';
 import { TMap } from './types';
 
@@ -47,7 +47,7 @@ export interface IMsg<T> extends IMsgReadonly<T>, IMsgSet<T> {
   next(value: T | ((value: T) => T)): IMsg<T>;
 }
 
-export const msgs: TMap<Msg> = global.m4kMsgs || (global.m4kMsgs = {});
+export const msgs: TMap<Msg> = app.msgs || (app.msgs = {});
 
 export class Msg<T = any> implements IMsg<T> {
   static from<T>(sourceOn: (target: IMsg<T>) => () => void, initValue: T): Msg<T>;

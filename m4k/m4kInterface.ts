@@ -1,4 +1,5 @@
-import { TMap } from '@common/utils/types';
+import type { appGlobal } from '@common/utils/app';
+import type { TMap } from '@common/utils/types';
 
 export interface M4kExecResult {
   cmd: string;
@@ -309,8 +310,9 @@ export type M4kResizeOptions = {
 };
 
 export interface M4Kiosk {
+  app: TMap<any>;
+  global: typeof appGlobal;
   isInterface: boolean;
-  global: any;
 
   getSetting(key: string): Promise<string | null>;
   setSetting(key: string, value: string | null): Promise<void>;
@@ -378,4 +380,4 @@ export interface M4Kiosk {
   e(...args: any[]): void;
 }
 
-export type M4KAsyncMethods = keyof Omit<M4Kiosk, 'isInterface' | 'd' | 'i' | 'w' | 'e'>;
+export type M4KAsyncMethods = keyof Omit<M4Kiosk, 'isInterface' | 'app' | 'global' | 'd' | 'i' | 'w' | 'e'>;

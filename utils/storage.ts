@@ -1,7 +1,7 @@
 import { addItem, removeItem } from './list';
 import { throttle } from './throttle';
 import { isBool, isItem, isList, isNbr, isStr } from './check';
-import { global } from './global';
+import { appGlobal } from './app';
 import { len } from './obj';
 import { Fun, TMap } from './types';
 import { toError } from './cast';
@@ -33,7 +33,7 @@ const newStorage = (): typeof localStorage => {
 };
 
 export const storage: typeof localStorage =
-  global.localStorage || (global.localStorage = newStorage());
+  appGlobal.localStorage || (appGlobal.localStorage = newStorage());
 
 let prefix = 'm4k_';
 

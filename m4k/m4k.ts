@@ -3,14 +3,14 @@ import { m4kBridge } from './m4kBridge';
 import { m4kFully } from './m4kFully';
 import { m4kBase } from './m4kBase';
 import type { M4Kiosk, M4kEvent, M4kSignalEvent } from './m4kInterface';
-import { global } from '@common/utils/global';
+import { appGlobal } from '@common/utils/app';
 import type { Fully } from './fullyInterfaces';
 import { msgs } from '@common/utils/Msg';
 import { toError } from '@common/utils/cast';
 import { logger } from '@common/utils/logger';
 
 export const m4k = (() => {
-  const w = global;
+  const w = appGlobal;
 
   const _m4k = w._m4k;
   const fully = w.fully as Fully | undefined;
