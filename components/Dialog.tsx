@@ -6,13 +6,6 @@ import { DivProps } from './types';
 import { Tr } from './Tr';
 import { portal } from './Portal';
 import { useEffect, useState } from 'preact/hooks';
-import { addTr } from '../hooks/useTr';
-
-addTr({
-  Error: 'Erreur',
-  ReqError: 'Erreur serveur',
-  'Failed to update record.': 'Échec de la modification.',
-});
 
 export const showDialog = (
   title: string,
