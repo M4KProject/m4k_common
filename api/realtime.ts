@@ -4,7 +4,6 @@ import { pathJoin } from '@common/utils/pathJoin';
 import { toError } from '@common/utils/cast';
 import { getApiUrl } from './apiReq';
 import { TMap } from '@common/utils/types';
-import { clamp } from '@common/utils';
 
 const initRealtime = () => {
   let clientId: string = '';
