@@ -1,3 +1,3 @@
-import { appGlobal } from "./app";
+import { appGlobal } from './app';
 
 export const global = appGlobal;

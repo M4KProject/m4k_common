@@ -380,4 +380,7 @@ export interface M4Kiosk {
   e(...args: any[]): void;
 }
 
-export type M4KAsyncMethods = keyof Omit<M4Kiosk, 'isInterface' | 'app' | 'global' | 'd' | 'i' | 'w' | 'e'>;
+export type M4KAsyncMethods = keyof Omit<
+  M4Kiosk,
+  'isInterface' | 'app' | 'global' | 'd' | 'i' | 'w' | 'e'
+>;
