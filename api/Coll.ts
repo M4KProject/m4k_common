@@ -51,11 +51,9 @@ const stringifyFilter = (key: string, propFilter: Filter) => {
   const [operator, operand] = isList(propFilter) ? propFilter : ['=', propFilter];
 
   const operandString =
-    typeof operand === 'string'
-      ? `"${operand}"`
-      : operand instanceof Date
-        ? stringify(operand)
-        : operand;
+    typeof operand === 'string' ? `"${operand}"`
+    : operand instanceof Date ? stringify(operand)
+    : operand;
 
   return `${key} ${operator} ${operandString}`;
 };

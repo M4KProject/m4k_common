@@ -26,7 +26,9 @@ export const isPositive = (v: any): v is number => isReal(v) && v > 0;
 export const isNegative = (v: any): v is number => isReal(v) && v < 0;
 export const isInt = (v: any): v is number => isReal(v) && Number.isInteger(v);
 export const isBetween = (v: number, min?: number, max?: number): boolean =>
-  isNbr(min) && v < min ? false : isNbr(max) && v > max ? false : true;
+  isNbr(min) && v < min ? false
+  : isNbr(max) && v > max ? false
+  : true;
 
 ///// String /////
 export const isStr = (v: any): v is string => typeof v === 'string';

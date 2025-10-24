@@ -73,9 +73,8 @@ export const refreshTheme = () => {
   const t2 = isD ? w2 : g2;
   const t3 = isD ? w3 : g3;
   const mask = isD ? setRgb(b3, { a: 0.8 }) : setRgb(b3, { a: 0.8 });
-  const shadow = isD
-    ? setHsl(primary, { s: 100, l: 10 })
-    : setHsl(primary, { s: 100, l: 20, a: 0.1 });
+  const shadow =
+    isD ? setHsl(primary, { s: 100, l: 10 }) : setHsl(primary, { s: 100, l: 20, a: 0.1 });
 
   Object.assign(t, {
     primary,

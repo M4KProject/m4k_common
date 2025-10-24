@@ -508,13 +508,13 @@ export const Field = (props: FieldProps) => {
           required={required}
           fieldProps={props}
         />
-        {err ? (
+        {err ?
           <div class={c('Error')}>
             <Tr>{err}</Tr>
           </div>
-        ) : helper ? (
+        : helper ?
           <div class={c('Helper')}>{helper}</div>
-        ) : null}
+        : null}
       </div>
     </div>
   );

@@ -66,17 +66,13 @@ export const getStored = <T = any, U = T>(
     const json = storage.getItem(prefix + key);
     let value = json ? JSON.parse(json) : undefined;
     if (!check) {
-      check = isStr(initValue)
-        ? isStr
-        : isNbr(initValue)
-          ? isNbr
-          : isBool(initValue)
-            ? isBool
-            : isList(initValue)
-              ? isList
-              : isItem(initValue)
-                ? isItem
-                : () => true;
+      check =
+        isStr(initValue) ? isStr
+        : isNbr(initValue) ? isNbr
+        : isBool(initValue) ? isBool
+        : isList(initValue) ? isList
+        : isItem(initValue) ? isItem
+        : () => true;
     }
     if (value !== undefined && !check(value)) {
       throw typeError(key, value);

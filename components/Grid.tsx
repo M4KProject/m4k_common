@@ -97,16 +97,15 @@ const getComputedCols = (cols: GridCols<any, any>) => {
     if (!data) continue;
 
     const col = (
-      isList(data)
-        ? {
-            ...data[2],
-            title: data[0],
-            val: data[1],
-          }
-        : {
-            ...data,
-          }
-    ) as GridComputedCol;
+      isList(data) ?
+        {
+          ...data[2],
+          title: data[0],
+          val: data[1],
+        }
+      : {
+          ...data,
+        }) as GridComputedCol;
 
     col.key = key;
 

@@ -35,12 +35,12 @@ export const needAuthId = () => {
 };
 
 export const getAuthHeaders = (token: string): TMap<string> =>
-  token
-    ? {
-        Authorization: `Bearer ${token}`,
-        'X-Auth-Token': token, // For Android WebView
-      }
-    : {};
+  token ?
+    {
+      Authorization: `Bearer ${token}`,
+      'X-Auth-Token': token, // For Android WebView
+    }
+  : {};
 
 export const newApiReq = (baseUrl: string = '', baseOptions: ReqOptions<any> = {}) =>
   createReq({

@@ -8,7 +8,9 @@ interface ToList {
   <T = any>(v: any, def: T[]): T[];
 }
 export const toList = (<T = any>(v: any, def: T[] = []): T[] =>
-  isNil(v) ? def : isList(v) ? v : [v]) as ToList;
+  isNil(v) ? def
+  : isList(v) ? v
+  : [v]) as ToList;
 
 interface ToBool {
   (v: boolean | string | number): boolean;
@@ -26,13 +28,10 @@ const boolMap: TMap<boolean> = {
   0: false,
 };
 export const toBool = (<T = boolean>(v: any, defVal?: T | boolean): boolean | T | undefined =>
-  isBool(v)
-    ? v
-    : isNil(v)
-      ? defVal
-      : isDef((v = boolMap[String(v).toLowerCase()]))
-        ? (v as boolean)
-        : defVal) as ToBool;
+  isBool(v) ? v
+  : isNil(v) ? defVal
+  : isDef((v = boolMap[String(v).toLowerCase()])) ? (v as boolean)
+  : defVal) as ToBool;
 
 export const toClassName = (obj: any): string => {
   if (!obj) return '';
@@ -47,7 +46,9 @@ interface ToDate {
   <TDef>(v: any, defVal?: TDef): Date | TDef | undefined;
 }
 export const toDate = (<TDef>(v: any, defVal?: TDef): Date | TDef | undefined =>
-  isDate(v) ? v : isPositive((v = new Date(v)).getTime()) ? v : defVal) as ToDate;
+  isDate(v) ? v
+  : isPositive((v = new Date(v)).getTime()) ? v
+  : defVal) as ToDate;
 
 export const toTime = (v: any): number => (isDate((v = toDate(v))) ? v.getTime() : 0);
 
@@ -68,7 +69,10 @@ interface ToItem {
   <T = any>(value?: T | null | undefined): T & {};
   <T = any, U = any>(value: T | null | undefined, defaultValue: U): T & U & {};
 }
-export const toItem = ((v: any, d: any) => (isItem(v) ? v : isItem(d) ? d : {})) as ToItem;
+export const toItem = ((v: any, d: any) =>
+  isItem(v) ? v
+  : isItem(d) ? d
+  : {}) as ToItem;
 
 interface ToStr {
   (value: any): string;

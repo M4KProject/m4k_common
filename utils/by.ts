@@ -28,16 +28,14 @@ interface ById {
 }
 
 const _groupBy = (items: any, key: any, val: any, add: any) => {
-  const getK: (item: any, index: any) => any = isFun(key)
-    ? key
-    : isNil(key)
-      ? (i: any) => i
-      : (i: any) => i[key];
-  const getV: (item: any, index: any) => any = isFun(val)
-    ? val
-    : isNil(val)
-      ? (i: any) => i
-      : (i: any) => i[val];
+  const getK: (item: any, index: any) => any =
+    isFun(key) ? key
+    : isNil(key) ? (i: any) => i
+    : (i: any) => i[key];
+  const getV: (item: any, index: any) => any =
+    isFun(val) ? val
+    : isNil(val) ? (i: any) => i
+    : (i: any) => i[val];
   if (isList(items)) {
     items.forEach((item, index) => {
       add(getK(item, index), getV(item, index));

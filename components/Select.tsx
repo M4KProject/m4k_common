@@ -120,12 +120,12 @@ export const Select = ({
   const validItems = items.filter((item) => isList(item)) as [string, ComponentChildren][];
 
   const filteredItems =
-    searchable && search
-      ? validItems.filter(
-          ([key, label]) =>
-            isSearched(key, search) || (typeof label === 'string' && isSearched(label, search))
-        )
-      : validItems;
+    searchable && search ?
+      validItems.filter(
+        ([key, label]) =>
+          isSearched(key, search) || (typeof label === 'string' && isSearched(label, search))
+      )
+    : validItems;
 
   const selectedItem = validItems.find(([key]) => key === value);
   const displayValue = selectedItem ? selectedItem[1] : '';
@@ -202,7 +202,7 @@ export const Select = ({
   return (
     <div ref={dropdownRef} {...props} class={c('', isOpen && `-open`, props)}>
       <div class={c('Container')} onClick={handleInputClick}>
-        {searchable && isOpen ? (
+        {searchable && isOpen ?
           <input
             ref={inputRef}
             class={`${c}Input`}
@@ -215,8 +215,7 @@ export const Select = ({
             autocomplete="off"
             onClick={(e) => e.stopPropagation()}
           />
-        ) : (
-          <div class={c('Input')} onKeyDown={handleKeyDown}>
+        : <div class={c('Input')} onKeyDown={handleKeyDown}>
             <div class={c('InputText')}>{displayValue || placeholder}</div>
             <input
               ref={inputRef}
@@ -227,7 +226,7 @@ export const Select = ({
               tabIndex={-1}
             />
           </div>
-        )}
+        }
         <div class={c('Arrow')}>
           <ChevronDown />
         </div>
@@ -235,10 +234,9 @@ export const Select = ({
 
       {isOpen && (
         <div class={c('Dropdown')}>
-          {filteredItems.length === 0 ? (
+          {filteredItems.length === 0 ?
             <div class={c('Option')}>Aucun résultat</div>
-          ) : (
-            filteredItems.map(([key, label], index) => (
+          : filteredItems.map(([key, label], index) => (
               <div
                 key={key}
                 class={c(
@@ -251,7 +249,7 @@ export const Select = ({
                 {label}
               </div>
             ))
-          )}
+          }
         </div>
       )}
     </div>

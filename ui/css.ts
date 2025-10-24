@@ -131,7 +131,9 @@ const py = (v: Em) => pt(v) + pb(v);
 
 type Em = number | string | (number | string)[];
 const em = (v: Em): string =>
-  typeof v === 'number' ? v + 'rem' : typeof v === 'string' ? v : v.map(em).join(' ');
+  typeof v === 'number' ? v + 'rem'
+  : typeof v === 'string' ? v
+  : v.map(em).join(' ');
 
 export type FlexDirection = '' | 'row' | 'column' | 'row-reverse' | 'column-reverse';
 export type FlexAlign = '' | 'start' | 'center' | 'end' | 'stretch' | 'baseline';
@@ -209,23 +211,17 @@ const cssFunMap = {
     `background-repeat:no-repeat;background-position:center;background-size:${v === 'fill' ? '100% 100%' : v};`,
 
   itemFit: (v: 'contain' | 'cover' | 'fill') =>
-    v === 'contain'
-      ? `object-fit:contain;max-width:100%;max-height:100%;`
-      : v === 'cover'
-        ? `object-fit:cover;min-width:100%;min-height:100%;`
-        : v === 'fill'
-          ? `object-fit:fill;min-width:100%;min-height:100%;`
-          : '',
+    v === 'contain' ? `object-fit:contain;max-width:100%;max-height:100%;`
+    : v === 'cover' ? `object-fit:cover;min-width:100%;min-height:100%;`
+    : v === 'fill' ? `object-fit:fill;min-width:100%;min-height:100%;`
+    : '',
 
   anim: animToCss,
   transition: (v: number | string | boolean) =>
-    typeof v === 'number'
-      ? `transition:all ${v}s ease;`
-      : typeof v === 'string'
-        ? `transition:${v};`
-        : v === true
-          ? 'transition:all 0.3s ease;'
-          : '',
+    typeof v === 'number' ? `transition:all ${v}s ease;`
+    : typeof v === 'string' ? `transition:${v};`
+    : v === true ? 'transition:all 0.3s ease;'
+    : '',
 
   rotate: transformProp('rotate'),
 
@@ -277,9 +273,8 @@ export const setCss = (key: string, css?: CssValue, order?: number, force?: bool
         const kPrefix = '.' + key;
         for (const k in css) {
           const ctx: CssContext = { key, css };
-          const query = k.startsWith('.')
-            ? k
-            : (k.startsWith('&') ? k : '&' + k).replace(/&/g, kPrefix);
+          const query =
+            k.startsWith('.') ? k : (k.startsWith('&') ? k : '&' + k).replace(/&/g, kPrefix);
           sb.push(`${query} {`);
           const props = css[k];
           for (const prop in props) {

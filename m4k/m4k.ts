@@ -21,7 +21,9 @@ export const m4k = (() => {
   const m4k: M4Kiosk = m;
   w.m4k = m4k;
 
-  _m4k ? m4kBridge(m4k) : fully ? m4kFully(m4k, fully) : m4kBase(m4k);
+  _m4k ? m4kBridge(m4k)
+  : fully ? m4kFully(m4k, fully)
+  : m4kBase(m4k);
   m4k.isInterface = !!(_m4k || fully);
 
   const log = logger('M4K');

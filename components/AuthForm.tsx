@@ -53,9 +53,9 @@ export const AuthForm = () => {
   return (
     <div class={c()}>
       <Form>
-        {isAuthLoading ? (
+        {isAuthLoading ?
           <Loading />
-        ) : page === 'sign-in' ? (
+        : page === 'sign-in' ?
           <>
             {emailField}
             <Field
@@ -96,7 +96,7 @@ export const AuthForm = () => {
               />
             </div>
           </>
-        ) : page === 'sign-up' ? (
+        : page === 'sign-up' ?
           <>
             {emailField}
             <Field
@@ -126,7 +126,7 @@ export const AuthForm = () => {
               />
             </div>
           </>
-        ) : page === 'forgot-password' ? (
+        : page === 'forgot-password' ?
           <>
             {emailField}
             <div class={c('Col')}>
@@ -148,7 +148,7 @@ export const AuthForm = () => {
               />
             </div>
           </>
-        ) : page === 'code' ? (
+        : page === 'code' ?
           <>
             {emailField}
             <Field col value={password} onValue={setPassword} label="Le CODE reçu par email" />
@@ -168,9 +168,7 @@ export const AuthForm = () => {
               />
             </div>
           </>
-        ) : (
-          <Loading />
-        )}
+        : <Loading />}
       </Form>
     </div>
   );

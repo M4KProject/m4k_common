@@ -262,7 +262,11 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
   headers.Accept = acceptMap[resType] || acceptJson;
 
   const body =
-    o.body || (json ? (formData ? toFormData(json, formData) : stringify(json)) : formData);
+    o.body ||
+    (json ?
+      formData ? toFormData(json, formData)
+      : stringify(json)
+    : formData);
 
   if (json) headers['Content-Type'] = 'application/json';
 
@@ -292,15 +296,11 @@ const _req = async <T>(options?: ReqOptions<T>): Promise<T> => {
   await retry(async () => {
     try {
       const request =
-        o.request || typeof o.fetch === 'function'
-          ? reqFetch
-          : typeof o.xhr === 'function'
-            ? reqXHR
-            : o.xhr && typeof XMLHttpRequest === 'function'
-              ? reqXHR
-              : typeof fetch === 'function'
-                ? reqFetch
-                : null;
+        o.request || typeof o.fetch === 'function' ? reqFetch
+        : typeof o.xhr === 'function' ? reqXHR
+        : o.xhr && typeof XMLHttpRequest === 'function' ? reqXHR
+        : typeof fetch === 'function' ? reqFetch
+        : null;
 
       if (!request) {
         throw toError('no request xhr or fetch');
@@ -343,17 +343,17 @@ export const createReq =
     options?: ReqOptions<T>
   ): Promise<T> =>
     _req<T>(
-      optionsOrMethod && typeof optionsOrMethod === 'object'
-        ? ({
-            ...baseOptions,
-            ...optionsOrMethod,
-          } as any)
-        : ({
-            ...baseOptions,
-            method: optionsOrMethod,
-            url: url!,
-            ...options,
-          } as any)
+      optionsOrMethod && typeof optionsOrMethod === 'object' ?
+        ({
+          ...baseOptions,
+          ...optionsOrMethod,
+        } as any)
+      : ({
+          ...baseOptions,
+          method: optionsOrMethod,
+          url: url!,
+          ...options,
+        } as any)
     );
 
 export const req = createReq({});

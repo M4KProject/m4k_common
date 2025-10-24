@@ -4,9 +4,8 @@ import { m4kMethods } from './m4kMethods';
 import { app, appGlobal } from '@common/utils/app';
 import { isFun } from '@common/utils/check';
 
-type MethodAsyncOrSync<T> = T extends (...args: infer A) => Promise<infer R>
-  ? (...args: A) => Promise<R> | R
-  : T;
+type MethodAsyncOrSync<T> =
+  T extends (...args: infer A) => Promise<infer R> ? (...args: A) => Promise<R> | R : T;
 
 type MethodsAsyncOrSync<T> = {
   [P in keyof T]?: MethodAsyncOrSync<T[P]>;

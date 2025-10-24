@@ -155,4 +155,8 @@ export const deepMap = (
 };
 
 export const len = (v: any): number =>
-  isObj(v) ? (isList(v) ? v.length : Object.keys(v).length) : isStr(v) ? v.length : 0;
+  isObj(v) ?
+    isList(v) ? v.length
+    : Object.keys(v).length
+  : isStr(v) ? v.length
+  : 0;
