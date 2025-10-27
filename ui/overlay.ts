@@ -1,7 +1,7 @@
 import { addEl, setEl } from './html';
 import { CssValue, setCss } from './css';
-import { sleep } from '@common/utils/sleep';
-import { logger } from '@common/utils';
+import { sleep } from 'fluxio';
+import { logger } from 'fluxio';
 
 const log = logger('Overlay');
 

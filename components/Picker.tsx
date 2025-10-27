@@ -1,7 +1,7 @@
 import { ComponentChildren } from 'preact';
 import { Css } from '@common/ui/css';
 import { Button } from './Button';
-import { isList } from '@common/utils/check';
+import { isArray } from 'fluxio';
 
 const c = Css('Picker', {
   '': {
@@ -40,7 +40,7 @@ export const Picker = ({
   items = [],
   ...props
 }: PickerProps) => {
-  const validItems = items.filter((item) => isList(item)) as [string, ComponentChildren][];
+  const validItems = items.filter((item) => isArray(item)) as [string, ComponentChildren][];
 
   const handleIconClick = (iconValue: string) => {
     onChange?.(iconValue);

@@ -1,11 +1,11 @@
-import { toStr } from '@common/utils/cast';
-import { TMap } from '@common/utils/types';
-import { isItem, isList, isNbr, isStr, isStrDef } from '@common/utils/check';
+import { toString } from 'fluxio';
+import { Dictionary } from 'fluxio';
+import { isItem, isArray, isNumber, isString, isStringValid } from 'fluxio';
 import { JSX } from 'preact/jsx-runtime';
 import { createEl } from './html';
-import { isDeepEqual } from '@common/utils/isDeepEqual';
+import { isDeepEqual } from 'fluxio';
 
-let _colors: TMap<string> = {};
+let _colors: Dictionary<string> = {};
 
 type CssTransform =
   | string
@@ -28,7 +28,7 @@ type AnimValue =
 
 interface CssContext {
   key: string;
-  css: TMap<CssRecord>;
+  css: Dictionary<CssRecord>;
   t?: string[];
   a?: string[];
 }
@@ -38,7 +38,7 @@ export const clsx = (...classNames: any[]) => {
   for (const c of classNames) {
     if (c) {
       if (typeof c === 'string') sb.push(c);
-      else if (isList(c)) {
+      else if (isArray(c)) {
         const cls = clsx(...c);
         if (cls) sb.push(cls);
       }
@@ -51,10 +51,10 @@ const transformToCss = (transform: CssTransform) => {
   if (typeof transform === 'string') return transform;
   const { rotate: r, scale: s, translateX: x, translateY: y } = transform;
   let css = '';
-  if (r) css += `rotate(${isNbr(r) ? `${r}deg` : r});`;
+  if (r) css += `rotate(${isNumber(r) ? `${r}deg` : r});`;
   if (s) css += `scale(${s});`;
-  if (x) css += `translateX(${isNbr(x) ? `${x}%` : x});`;
-  if (y) css += `translateY(${isNbr(y) ? `${y}%` : y});`;
+  if (x) css += `translateX(${isNumber(x) ? `${x}%` : x});`;
+  if (y) css += `translateY(${isNumber(y) ? `${y}%` : y});`;
   return css;
 };
 
@@ -234,9 +234,9 @@ const cssFunMap = {
   translateY: transformProp('translateY'),
 
   fRow: (v: [] | [FlexAlign] | [FlexAlign, FlexJustify]) =>
-    v && displayFlex('row', toStr(v[0], 'center'), toStr(v[1], 'space-between')),
+    v && displayFlex('row', toString(v[0], 'center'), toString(v[1], 'space-between')),
   fCol: (v: [] | [FlexAlign] | [FlexAlign, FlexJustify]) =>
-    v && displayFlex('column', toStr(v[0], 'stretch'), toStr(v[1], 'start')),
+    v && displayFlex('column', toString(v[0], 'stretch'), toString(v[1], 'start')),
   fCenter: (v: [] | [FlexDirection]) => v && displayFlex(v[0] || 'column', 'center', 'center'),
 };
 
@@ -249,7 +249,7 @@ export type CssRecord =
   | (JSX.CSSProperties & {
       [K in keyof CssFunMap]?: Parameters<CssFunMap[K]>[0];
     });
-export type CssValue = null | string | string[] | TMap<CssRecord>;
+export type CssValue = null | string | string[] | Dictionary<CssRecord>;
 
 const _cssMap: { [key: string]: [HTMLElement, CssValue, number] } = {};
 
@@ -266,7 +266,7 @@ export const setCss = (key: string, css?: CssValue, order?: number, force?: bool
     const el = createEl('style');
     let content = '';
     if (typeof css === 'object') {
-      if (isList(css)) {
+      if (isArray(css)) {
         content = css.join('\n');
       } else {
         const sb: string[] = [];
@@ -318,10 +318,10 @@ export const Css = (key: string, css?: CssValue) => {
     if (args.length === 0) return key;
     const sb = [];
     for (const arg of args) {
-      if (isStr(arg)) {
+      if (isString(arg)) {
         sb.push(key + arg);
       } else if (isItem(arg)) {
-        isStrDef(arg.class) && sb.push(arg.class);
+        isStringValid(arg.class) && sb.push(arg.class);
       }
     }
     return sb.join(' ');
@@ -343,7 +343,7 @@ export const refreshCss = () => {
 export const getColors = () => _colors;
 export const getColor = (k: string) => _colors[k] || k;
 
-export const setColors = (colors: TMap<string>) => {
+export const setColors = (colors: Dictionary<string>) => {
   console.debug('setColors', colors);
   _colors = colors;
   refreshCss();

@@ -1,6 +1,6 @@
 import { JSX } from 'preact';
 import { useTr } from '../hooks/useTr';
-import { isStr } from '@common/utils/check';
+import { isString } from 'fluxio';
 
 export interface TrProps extends JSX.HTMLAttributes<HTMLDivElement> {
   children?: any;
@@ -8,5 +8,5 @@ export interface TrProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 export const Tr = ({ children }: TrProps) => {
   const tr = useTr();
-  return isStr(children) ? tr(children) : children;
+  return isString(children) ? tr(children) : children;
 };

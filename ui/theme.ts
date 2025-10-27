@@ -1,9 +1,8 @@
-import { by } from '@common/utils/by';
-import { isBool, isItem } from '@common/utils/check';
-import { Msg } from '@common/utils/Msg';
+import { by, fluxStored, isBoolean } from 'fluxio';
+import { isItem } from 'fluxio';
 import { setColors } from './css';
-import { setHsl, addHsl, toHsl, toColor, setRgb } from '@common/utils/color';
-import { TMap } from '@common/utils/types';
+import { setHsl, addHsl, toHsl, toColor, setRgb } from 'fluxio/color';
+import { Dictionary } from 'fluxio';
 
 export interface ThemeInfo {
   isDark?: boolean;
@@ -13,10 +12,10 @@ export interface ThemeInfo {
   grey?: string;
 }
 
-export const theme$ = new Msg<ThemeInfo>({}, 'theme$', true, isItem);
+export const theme$ = fluxStored<ThemeInfo>('theme$', {}, isItem);
 
 export const updateTheme = (changes?: Partial<ThemeInfo>) => {
-  theme$.next((prev) => ({ ...prev, ...changes }));
+  theme$.set((prev) => ({ ...prev, ...changes }));
 };
 
 // export const lerp = (points: [number, number][]): ((x: number) => number) => {
@@ -49,8 +48,8 @@ export const newColors = (p: string, color: string, isD: boolean = false) => {
 };
 
 export const refreshTheme = () => {
-  const { isDark, isUserDark, ...t } = theme$.v;
-  const isD = isBool(isUserDark) ? isUserDark : isDark;
+  const { isDark, isUserDark, ...t } = theme$.get();
+  const isD = isBoolean(isUserDark) ? isUserDark : isDark;
 
   const primary = t.primary || '#28A8D9';
   const secondary = t.secondary || addHsl(primary, { h: 360 / 3 });
@@ -110,7 +109,7 @@ export const refreshTheme = () => {
     warn: setHsl(primary, { h: 30 }),
   });
 
-  setColors(t as TMap<string>);
+  setColors(t as Dictionary<string>);
 };
 
 theme$.on(refreshTheme);

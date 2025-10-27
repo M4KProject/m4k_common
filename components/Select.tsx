@@ -1,8 +1,8 @@
 import { ComponentChildren } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import { Css } from '@common/ui/css';
-import { isList } from '@common/utils/check';
-import { isSearched } from '@common/utils/str';
+import { isArray } from 'fluxio';
+import { isSearched } from 'fluxio';
 import { ChevronDown } from 'lucide-react';
 
 const c = Css('Select', {
@@ -117,7 +117,7 @@ export const Select = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const validItems = items.filter((item) => isList(item)) as [string, ComponentChildren][];
+  const validItems = items.filter((item) => isArray(item)) as [string, ComponentChildren][];
 
   const filteredItems =
     searchable && search ?

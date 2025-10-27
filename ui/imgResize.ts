@@ -1,5 +1,5 @@
-import { toError, toList } from '@common/utils/cast';
-import { clamp } from '@common/utils/nbr';
+import { toError, toArray } from 'fluxio';
+import { clamp } from 'fluxio';
 import { toImg } from './toImg';
 
 export const imgResize = async (
@@ -17,8 +17,8 @@ export const imgResize = async (
     if (!ctx) throw new Error('no ctx');
 
     // Convertir en tableaux [width, height]
-    const min = toList(minSize) as [number, number];
-    const max = toList(maxSize) as [number, number];
+    const min = toArray(minSize) as [number, number];
+    const max = toArray(maxSize) as [number, number];
 
     const wMin = min[0];
     const hMin = min.length !== 2 ? min[0] : min[1];

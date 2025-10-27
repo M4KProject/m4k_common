@@ -1,7 +1,7 @@
-import { humanize } from '@common/utils';
+import { humanize } from 'fluxio';
 import { M4Kiosk } from './m4kInterface';
 import { m4kMethods } from './m4kMethods';
-import { setLog } from '@common/utils/logger';
+import { setLog } from 'fluxio/logger';
 
 export const m4kBridge = (m4k: M4Kiosk) => {
   const m = m4k as any;

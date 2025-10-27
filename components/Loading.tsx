@@ -1,8 +1,6 @@
 import { Css } from '@common/ui/css';
-
 import { DivProps } from './types';
 import { Tr } from './Tr';
-
 import { addTr } from '../hooks/useTr';
 
 const c = Css('Loading', {

@@ -370,8 +370,8 @@ export interface Fully {
   /** Add current page to home screen */
   addToHomeScreen(): void;
 
-  /** Print current page (appGlobal.print() doesn't work in kiosk) */
-  print(): void; // appGlobal.print() doesn't work
+  /** Print current page (glb.print() doesn't work in kiosk) */
+  print(): void; // glb.print() doesn't work
 
   /** Exit Fully Kiosk Browser app */
   exit(): void;

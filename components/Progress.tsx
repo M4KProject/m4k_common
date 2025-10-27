@@ -1,8 +1,7 @@
 import { Css } from '@common/ui/css';
 import { DivProps } from './types';
-
-import { clamp, round } from '@common/utils/nbr';
-import { toNbr } from '@common/utils/cast';
+import { clamp, round } from 'fluxio';
+import { toNumber } from 'fluxio';
 
 import { ComponentChildren } from 'preact';
 
@@ -45,7 +44,7 @@ export interface ProgressProps extends DivProps {
   progress?: number | null;
 }
 export const Progress = ({ progress, step, children, ...props }: ProgressProps) => {
-  const prct = clamp(toNbr(progress, 0), 0, 100);
+  const prct = clamp(toNumber(progress, 0), 0, 100);
   const text = step ? `${step} ${round(prct)}%` : `${round(prct)}%`;
   return (
     <div {...props} class={c('', props)}>

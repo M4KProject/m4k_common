@@ -1,26 +1,26 @@
 import { useMemo, useEffect } from 'preact/hooks';
-import { Msg } from '@common/utils/Msg';
-import { useMsg } from './useMsg';
-import { toError } from '@common/utils';
+import { flux, Flux, fluxStored } from 'fluxio';
+import { useFlux } from './useFlux';
+import { toError } from 'fluxio';
 
 export const useAsync = <T>(
   initValue: T,
   load: () => T | Promise<T>,
   storedKey?: string | null,
   deps?: any[]
-): [T, () => void, Msg<T>] => {
+): [T, () => void, Flux<T>] => {
   const _deps = deps ? [...deps, storedKey] : [storedKey];
 
-  // import { isList, isDefined } from "@common/utils/check";
+  // import { isArray, isDefined } from "fluxio";
   // const msg = useMemo(() => {
-  //     const msg = new Msg<T>(initValue, storedKey, !!storedKey);
-  //     if (isDefined(initValue) && (typeof msg.v !== typeof initValue || isList(msg.v) !== isList(initValue))) {
+  //     const msg = fluxStored<T>(initValue, storedKey, !!storedKey);
+  //     if (isDefined(initValue) && (typeof msg.v !== typeof initValue || isArray(msg.v) !== isArray(initValue))) {
   //         msg.set(initValue);
   //     }
   //     return msg;
   // }, _deps);
 
-  const msg = useMemo(() => new Msg<T>(initValue, storedKey || undefined, !!storedKey), _deps);
+  const msg = useMemo(() => storedKey ? fluxStored<T>(storedKey, initValue) : flux(initValue), _deps);
 
   const reload = async () => {
     const value = await load();
@@ -35,7 +35,7 @@ export const useAsync = <T>(
     });
   }, _deps);
 
-  const value = useMsg(msg);
+  const value = useFlux(msg);
 
   return [value, reload, msg];
 };

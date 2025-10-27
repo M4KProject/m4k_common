@@ -1,8 +1,6 @@
 import { M4KAsyncMethods } from './m4kInterface';
 
 export const m4kMethods: Record<M4KAsyncMethods, string[]> = {
-  global: [],
-
   getSetting: ['key'],
   setSetting: ['key', 'value'],
   clearSettings: [],

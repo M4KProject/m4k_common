@@ -1,7 +1,7 @@
 import { render } from 'preact';
 import { El, ElOptions } from '@common/ui/html';
 import { ComponentChildren } from 'preact';
-import { logger } from '@common/utils/logger';
+import { logger } from 'fluxio/logger';
 
 const log = logger('portal');
 

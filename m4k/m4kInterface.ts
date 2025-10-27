@@ -1,5 +1,5 @@
-import type { appGlobal } from '@common/utils/app';
-import type { TMap } from '@common/utils/types';
+import type { glb } from 'fluxio';
+import type { Dictionary } from 'fluxio';
 
 export interface M4kExecResult {
   cmd: string;
@@ -281,7 +281,7 @@ export interface M4kIntentOptions {
   component?: string;
   flags?: M4kFlag[] | number;
   categories?: string[];
-  extras?: TMap<any>;
+  extras?: Dictionary<any>;
 }
 
 export type M4kPath = string | string[];
@@ -310,8 +310,8 @@ export type M4kResizeOptions = {
 };
 
 export interface M4Kiosk {
-  app: TMap<any>;
-  global: typeof appGlobal;
+  app: Dictionary<any>;
+  global: typeof glb;
   isInterface: boolean;
 
   getSetting(key: string): Promise<string | null>;

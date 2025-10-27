@@ -1,18 +1,18 @@
 import { Css } from '@common/ui/css';
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { toNbr } from '@common/utils/cast';
+import { toNumber } from 'fluxio';
 import { DivProps } from './types';
 import { Tr } from './Tr';
 import { Select } from './Select';
 import { Picker } from './Picker';
-import { toError } from '@common/utils/cast';
+import { toError } from 'fluxio';
 import { Check, Eye, EyeOff } from 'lucide-react';
 import { Button } from './Button';
-import { Msg } from '@common/utils/Msg';
-import { useMsg } from '../hooks';
-import { TMap } from '@common/utils/types';
-import { formatSeconds, parseSeconds } from '@common/utils/date';
+import { Flux } from 'fluxio';
+import { useFlux } from '../hooks';
+import { Dictionary } from 'fluxio';
+import { formatSeconds, parseSeconds } from '../utils/date';
 
 const c = Css('Field', {
   '': {
@@ -163,16 +163,16 @@ export interface FieldInfo<T = any> {
 }
 
 export interface FieldProps<T = any> extends FieldInfo, DivProps {
-  msg?: Msg<T>;
+  msg?: Flux<T>;
   value?: T;
   cast?: (next: any) => T;
   onValue?: (next: T) => void;
   delay?: number;
 }
 
-export const castByType: TMap<(next: any) => any> = {
+export const castByType: Dictionary<(next: any) => any> = {
   number: (next: any) => {
-    const casted = toNbr(next, null);
+    const casted = toNumber(next, null);
     if (casted === null) throw toError('not-a-number');
     return casted;
   },
@@ -183,7 +183,7 @@ export const castByType: TMap<(next: any) => any> = {
   },
 };
 
-export const formatByType: TMap<(value: any) => any> = {
+export const formatByType: Dictionary<(value: any) => any> = {
   seconds: (value: any) => {
     if (typeof value === 'number') return formatSeconds(value);
     return value || '';
@@ -193,9 +193,9 @@ export const formatByType: TMap<(value: any) => any> = {
 const getMediaField = (_mimetypes: string[]): FieldComp => {
   // const mimetypeMap = by(mimetypes, m => m, () => true);
   return ({ cls, name, required, value, onChange, fieldProps }) => {
-    // const medias = Object.values(useMsg(medias$));
+    // const medias = Object.values(useFlux(medias$));
     // const filteredMedias = medias.filter(m => mimetypeMap[m.mimetype]);
-    // const groupId = useMsg(groupId$);
+    // const groupId = useFlux(groupId$);
     return (
       <select
         name={name}
@@ -310,7 +310,7 @@ const compByType: Record<FieldType, FieldComp> = {
   //     <select class={cls} name={name} required={required} value={value||''} onChange={onChange} {...fieldProps.props}>
   //         {/* <option value=""></option> */}
   //         {fieldProps.items?.map(kv => (
-  //             isList(kv) ? (
+  //             isArray(kv) ? (
   //                 <option key={kv[0]} value={kv[0]} class={kv[0] === value ? `${cls}Selected` : undefined}>
   //                     {kv[1]}
   //                 </option>
@@ -407,7 +407,7 @@ export const Field = (props: FieldProps) => {
   } = props;
   const valDelay = delay || type === 'switch' || type === 'check' ? 0 : delay;
 
-  const msgVal = useMsg(msg);
+  const msgVal = useFlux(msg);
   const val = msg ? msgVal : value;
 
   const handleValue = (casted: any) => {
@@ -527,17 +527,17 @@ export const FieldGroup = (props: DivProps) => <div {...props} class={c('Group',
 // //     label?: string|ReactNode;
 // //     value?: any;
 // //     required?: boolean;
-// //     values?: TMap<string|ReactNode>;
+// //     values?: Dictionary<string|ReactNode>;
 // //     onChange: (e: any, next: any) => void,
 // //     error?: string,
 // //     helperText?: string,
 // //     className?: string,
 // //     children?: ReactNode,
 
-// export type SelectItems = TMap<ReactNode>|[string, ReactNode][]
+// export type SelectItems = Dictionary<ReactNode>|[string, ReactNode][]
 
 // export interface SelectFieldProps<T> extends FieldProps<T> {
-//     items?: () => T[]|Msg<T[]>|null,
+//     items?: () => T[]|Flux<T[]>|null,
 
 //     addContent?: ReactNode,
 //     emptyContent?: ReactNode,
@@ -547,7 +547,7 @@ export const FieldGroup = (props: DivProps) => <div {...props} class={c('Group',
 // const Field = ({ className, getItems, value$, emptyContent, addContent, onAdd }: FieldProps) => {
 //     const cls = useCss('Field', css);
 //     const [items, error, isLoading, refresh] = usePromise(getItems, []);
-//     const selectedId = useMsg(selectedId$);
+//     const selectedId = useFlux(selectedId$);
 
 //     return (
 //         <div className={className ? `${cls} ${className}` : cls}>

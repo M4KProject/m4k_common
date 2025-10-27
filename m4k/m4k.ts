@@ -1,25 +1,22 @@
-import { removeItem } from '@common/utils/list';
+import { removeItem } from 'fluxio';
 import { m4kBridge } from './m4kBridge';
 import { m4kFully } from './m4kFully';
 import { m4kBase } from './m4kBase';
 import type { M4Kiosk, M4kEvent, M4kSignalEvent } from './m4kInterface';
-import { appGlobal } from '@common/utils/app';
+import { glb } from 'fluxio';
 import type { Fully } from './fullyInterfaces';
-import { msgs } from '@common/utils/Msg';
-import { toError } from '@common/utils/cast';
-import { logger } from '@common/utils/logger';
+import { toError } from 'fluxio';
+import { logger } from 'fluxio/logger';
 
 export const m4k = (() => {
-  const w = appGlobal;
-
-  const _m4k = w._m4k;
-  const fully = w.fully as Fully | undefined;
+  const _m4k = glb._m4k;
+  const fully = glb.fully as Fully | undefined;
 
   console.debug('init m4k', typeof _m4k);
 
-  const m: any = { global: w, msgs };
+  const m: any = { global: glb };
   const m4k: M4Kiosk = m;
-  w.m4k = m4k;
+  glb.m4k = m4k;
 
   _m4k ? m4kBridge(m4k)
   : fully ? m4kFully(m4k, fully)
@@ -53,7 +50,7 @@ export const m4k = (() => {
     }
   };
 
-  const onM4k = w.onM4k;
+  const onM4k = glb.onM4k;
   if (onM4k) onM4k(m4k);
 
   console.info('m4k ready');

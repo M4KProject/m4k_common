@@ -1,4 +1,4 @@
-import { TMap } from '@common/utils/types';
+import { Dictionary } from 'fluxio';
 
 export type Style = Partial<CSSStyleDeclaration>;
 
@@ -13,7 +13,7 @@ export const createEl: typeof document.createElement = (
   options?: ElementCreationOptions
 ) => document.createElement(tagName, options);
 
-const _cssFiles: TMap<HTMLLinkElement> = {};
+const _cssFiles: Dictionary<HTMLLinkElement> = {};
 export const addCssFile = (url: string): HTMLLinkElement => {
   if (_cssFiles[url]) return _cssFiles[url];
   const el = createEl('link');
@@ -24,7 +24,7 @@ export const addCssFile = (url: string): HTMLLinkElement => {
   return el;
 };
 
-const _jsFiles: TMap<HTMLScriptElement> = {};
+const _jsFiles: Dictionary<HTMLScriptElement> = {};
 export const addJsFile = (url: string): HTMLScriptElement => {
   if (_jsFiles[url]) return _jsFiles[url];
   const el = createEl('script');
@@ -154,12 +154,12 @@ export const eventXY = (ev: MouseEvent | TouchEvent | Touch): EventXY => {
 export const getAttrs = (el: Element) =>
   Object.fromEntries(el.getAttributeNames().map((name) => [name, el.getAttribute(name)]));
 
-export const setAttrs = (el: Element, attrs: TMap<any>, update?: boolean) => {
+export const setAttrs = (el: Element, attrs: Dictionary<any>, update?: boolean) => {
   if (!update) for (const a of Array.from(el.attributes)) el.removeAttribute(a.name);
   for (const n in attrs) el.setAttribute(n, attrs[n]);
 };
 
-export type Cls = TMap<boolean | number | undefined | null>;
+export type Cls = Dictionary<boolean | number | undefined | null>;
 
 export const getCls = (el: Element): Cls =>
   Object.fromEntries(el.className.split(' ').map((k) => [k, true]));
@@ -193,7 +193,7 @@ export type ElOptions = Omit<Omit<Partial<HTMLAllElement>, 'children'>, 'style'>
   readonly reset?: boolean;
   readonly cls?: Cls;
   readonly style?: Style;
-  readonly attrs?: TMap<any>;
+  readonly attrs?: Dictionary<any>;
   readonly children?: HTMLElement[];
   readonly ctn?: string;
   readonly parent?: 'body' | HTMLElement;

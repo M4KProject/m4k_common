@@ -3,7 +3,7 @@ export * from './useAsync';
 export * from './useAsyncEffect';
 export * from './useConstant';
 export * from './useInterval';
-export * from './useMsg';
+export * from './useFlux';
 export * from './usePromise';
 export * from './useTimeout';
 export * from './useTr';

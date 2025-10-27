@@ -1,7 +1,7 @@
 import { ComponentChildren, JSX } from 'preact';
 import { Css } from '@common/ui/css';
 import { DivProps } from './types';
-import { isList, sum, toTrue } from '@common/utils';
+import { isArray, sum, toTrue } from 'fluxio';
 import { useMemo } from 'preact/compat';
 
 const c = Css('Grid', {
@@ -97,7 +97,7 @@ const getComputedCols = (cols: GridCols<any, any>) => {
     if (!data) continue;
 
     const col = (
-      isList(data) ?
+      isArray(data) ?
         {
           ...data[2],
           title: data[0],

@@ -1,20 +1,17 @@
-import { toDate } from './cast';
-import { isDate, isReal, isStrDef } from './check';
-import { floor } from './nbr';
-import { pad } from './str';
+import { floor, isDate, isNumber, isStringValid, padStart, toDate } from "fluxio";
 
 export const formatSeconds = (seconds: number): string => {
   const t = Math.abs(seconds);
   const h = floor(t / 3600);
   const m = floor((t % 3600) / 60);
   const s = floor(t % 60);
-  const r = `${pad(h, 2)}:${pad(m, 2)}:${pad(s, 2)}`;
+  const r = `${padStart(h, 2)}:${padStart(m, 2)}:${padStart(s, 2)}`;
   console.debug('formatSeconds', seconds, r);
   return seconds < 0 ? `-${r}` : r;
 };
 
 export const parseSeconds = (value: string | number): number | null => {
-  if (isStrDef(value)) {
+  if (isStringValid(value)) {
     let [h, m, s] = value
       .replace(/[^\d]+/g, ' ')
       .split(' ')
@@ -30,7 +27,7 @@ export const parseSeconds = (value: string | number): number | null => {
     }
   }
   console.debug('parseSeconds', value);
-  return isReal(value) ? value : 0;
+  return isNumber(value) ? value : 0;
 };
 
 /** Format time: hours > 0: "5h30", minutes > 0: "05:30 min", seconds only: "5 sec" */
@@ -45,11 +42,11 @@ export const formatMs = (ms: number): string => {
   const sign = ms < 0 ? '-' : '';
 
   if (hours > 0) {
-    return `${sign}${hours}h${pad(minutes, 2)}`;
+    return `${sign}${hours}h${padStart(minutes, 2)}`;
   }
 
   if (minutes > 0) {
-    return `${sign}${pad(minutes, 2)}:${pad(seconds, 2)} min`;
+    return `${sign}${padStart(minutes, 2)}:${padStart(seconds, 2)} min`;
   }
 
   return `${sign}${seconds} sec`;
@@ -59,8 +56,8 @@ export const formatMs = (ms: number): string => {
 export const formatDate = (date?: any): string => {
   const d = toDate(date);
   if (!isDate(d)) return '';
-  const day = pad(d.getDate(), 2);
-  const month = pad(d.getMonth() + 1, 2);
+  const day = padStart(d.getDate(), 2);
+  const month = padStart(d.getMonth() + 1, 2);
   const year = d.getFullYear();
 
   return `${day}/${month}/${year}`;
@@ -70,9 +67,9 @@ export const formatDate = (date?: any): string => {
 export const formatTime = (date?: any): string => {
   const d = toDate(date);
   if (!isDate(d)) return '';
-  const hours = pad(d.getHours(), 2);
-  const minutes = pad(d.getMinutes(), 2);
-  const secondes = pad(d.getSeconds(), 2);
+  const hours = padStart(d.getHours(), 2);
+  const minutes = padStart(d.getMinutes(), 2);
+  const secondes = padStart(d.getSeconds(), 2);
   return secondes === '00' ? `${hours}:${minutes}` : `${hours}:${minutes}:${secondes}`;
 };
 

@@ -1,8 +1,8 @@
-import { toError } from '@common/utils/cast';
+import { toError } from 'fluxio';
 import { M4Kiosk } from './m4kInterface';
 import { m4kMethods } from './m4kMethods';
-import { app, appGlobal } from '@common/utils/app';
-import { isFun } from '@common/utils/check';
+import { glb } from 'fluxio';
+import { isFunction } from 'fluxio';
 
 type MethodAsyncOrSync<T> =
   T extends (...args: infer A) => Promise<infer R> ? (...args: A) => Promise<R> | R : T;
@@ -18,8 +18,8 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
     methods.evalJs = async (script: string) => {
       try {
         console.debug('eval', script);
-        let result = await appGlobal.eval(script);
-        if (isFun(result)) result = await result(m4k);
+        let result = await glb.eval(script);
+        if (isFunction(result)) result = await result(m4k);
         return { success: true, value: result };
       } catch (e) {
         return { success: false, error: String(toError(e)) };
@@ -45,8 +45,8 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
 
   // bind methods
   for (const name in m4kMethods) {
-    const cb = methods[name as keyof M4Kiosk];
-    m4k[name as keyof M4Kiosk] = async (...args: any[]) => {
+    const cb = methods[name as keyof M4Kiosk] as any;
+    m[name as keyof M4Kiosk] = async (...args: any[]) => {
       const canLog = name !== 'log';
       if (!cb) {
         canLog && console.warn('m4k', name, 'not implemented', args);
@@ -64,19 +64,18 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
       }
     };
   }
-
-  m4k.app = app;
-  m4k.global = appGlobal;
+  
+  m4k.global = glb;
 
   // // sync storage
   // (async () => {
   //     onStored(() => {
   //         const data = getStoredData();
-  //         const json = stringify(data);
+  //         const json = jsonStringify(data);
   //         m4k.setStorage(json);
   //     });
   //     const json = await m4k.getStorage();
-  //     const data = parse(json);
+  //     const data = jsonParse(json);
   //     if (data) replaceStoredData(data);
   // })();
 };
