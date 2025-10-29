@@ -154,7 +154,7 @@ const displayFlex = (direction: FlexDirection, align: FlexAlign, justify: FlexJu
     justify ? `  justify-content:${justify};` : '',
   ].join('\n');
 
-const cssFunMap = {
+export const cssFunMap = {
   x,
   y,
   xy,
