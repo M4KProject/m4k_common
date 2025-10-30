@@ -94,7 +94,7 @@
 // // };
 
 // export const forEachBox = (boxes: Box[]) => {
-  
+
 // }
 
 // export class BList {
@@ -303,13 +303,10 @@
 //   children?: Box[] = [];
 //   parent?: Box;
 //   el: HTMLElement;
-  
+
 //   protected constructor(data: BoxData, parent?: Box) {
 //     this.data = data;
 
-
-
-    
 //     this.el = this.reset(d.hTag || B.hTag);
 //     this.parent = parent;
 //     this.children = d.children ? d.children.map((d) => new B(d, this)) : [];

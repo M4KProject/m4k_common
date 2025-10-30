@@ -20,7 +20,10 @@ export const useAsync = <T>(
   //     return msg;
   // }, _deps);
 
-  const msg = useMemo(() => storedKey ? fluxStored<T>(storedKey, initValue) : flux(initValue), _deps);
+  const msg = useMemo(
+    () => (storedKey ? fluxStored<T>(storedKey, initValue) : flux(initValue)),
+    _deps
+  );
 
   const reload = async () => {
     const value = await load();

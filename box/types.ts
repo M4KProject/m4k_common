@@ -1,5 +1,5 @@
-import { CssRecord } from "../ui/css";
-import { Dictionary } from "fluxio";
+import { CssRecord } from '../ui/css';
+import { Dictionary } from 'fluxio';
 
 export type BoxTranslates = Dictionary<BoxData>;
 
@@ -15,9 +15,9 @@ export type BoxScript = {
 
 export interface BoxData {
   children?: string[];
-  
+
   // content
-  type?: 'iframe'|'video'|'carousel'|'html';
+  type?: 'iframe' | 'video' | 'carousel' | 'html';
   url?: string;
   html?: string;
   mediaId?: string;
@@ -44,7 +44,7 @@ export interface BoxData {
   onInit?: BoxScript;
   onClick?: BoxScript;
   onRender?: BoxScript;
-  
+
   // editor info
   meta?: {
     // title?: string;

@@ -64,7 +64,7 @@ export const m4kBase = (m4k: M4Kiosk, methods: MethodsAsyncOrSync<M4Kiosk> = {})
       }
     };
   }
-  
+
   m4k.global = glb;
 
   // // sync storage
