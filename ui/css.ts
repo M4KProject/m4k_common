@@ -51,10 +51,10 @@ const transformToCss = (transform: CssTransform) => {
   if (typeof transform === 'string') return transform;
   const { rotate: r, scale: s, translateX: x, translateY: y } = transform;
   let css = '';
-  if (r) css += `rotate(${isNumber(r) ? `${r}deg` : r});`;
+  if (r) css += `rotate(${isFloat(r) ? `${r}deg` : r});`;
   if (s) css += `scale(${s});`;
-  if (x) css += `translateX(${isNumber(x) ? `${x}%` : x});`;
-  if (y) css += `translateY(${isNumber(y) ? `${y}%` : y});`;
+  if (x) css += `translateX(${isFloat(x) ? `${x}%` : x});`;
+  if (y) css += `translateY(${isFloat(y) ? `${y}%` : y});`;
   return css;
 };
 

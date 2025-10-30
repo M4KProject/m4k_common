@@ -27,7 +27,7 @@ export const parseSeconds = (value: string | number): number | null => {
     }
   }
   console.debug('parseSeconds', value);
-  return isNumber(value) ? value : 0;
+  return isFloat(value) ? value : 0;
 };
 
 /** Format time: hours > 0: "5h30", minutes > 0: "05:30 min", seconds only: "5 sec" */
