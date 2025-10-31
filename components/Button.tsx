@@ -98,7 +98,7 @@ export const Button = ({
 }: ButtonProps) => {
   const isIcon = icon && !(children || title);
 
-  const cls = c(
+  const clsProps = c(
     '',
     `-${color || 'default'}`,
     selected && `-selected`,
@@ -121,14 +121,14 @@ export const Button = ({
 
   if (link) {
     return (
-      <a {...props} class={cls}>
+      <a {...props} {...clsProps}>
         {content}
       </a>
     );
   }
 
   return (
-    <button {...props} class={cls}>
+    <button {...props} {...clsProps}>
       {content}
     </button>
   );

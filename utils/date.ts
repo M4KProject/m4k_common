@@ -1,4 +1,4 @@
-import { floor, isDate, isNumber, isStringValid, padStart, toDate } from 'fluxio';
+import { floor, isDate, isFloat, isNumber, isStringValid, padStart, toDate } from 'fluxio';
 
 export const formatSeconds = (seconds: number): string => {
   const t = Math.abs(seconds);

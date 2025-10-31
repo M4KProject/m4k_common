@@ -122,7 +122,7 @@ const getComputedCols = (cols: GridCols<any, any>) => {
       const props = getProps ? getProps(item, ctx, index) : ({} as DivProps);
       return {
         ...props,
-        class: c('Cell', col.cls, props),
+        ...c('Cell', col.cls, props),
         style: { width, ...props.style },
       };
     };

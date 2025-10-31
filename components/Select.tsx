@@ -205,7 +205,7 @@ export const Select = ({
         {searchable && isOpen ?
           <input
             ref={inputRef}
-            class={`${c}Input`}
+            {...c('Input')}
             name={name}
             required={required}
             value={search}
