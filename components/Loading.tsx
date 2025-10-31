@@ -48,19 +48,19 @@ addTr({
 });
 
 export const LoadingSpinner = (props: DivProps) => (
-  <div {...props} class={c('Spinner', props)}>
-    <div {...props} class={c('SpinnerCircle', props)}>
-      <div class={c('SpinnerIcon')} />
+  <div {...props} {...c('Spinner', props)}>
+    <div {...props} {...c('SpinnerCircle', props)}>
+      <div {...c('SpinnerIcon')} />
     </div>
   </div>
 );
 
 export const Loading = ({ content, children, ...props }: DivProps & { content?: string }) => {
   return (
-    <div {...props} class={c('', props)}>
+    <div {...props} {...c('', props)}>
       <LoadingSpinner />
       {content !== '' && (
-        <div class={c('Content')}>
+        <div {...c('Content')}>
           <Tr>{content || 'loading'}</Tr>
         </div>
       )}

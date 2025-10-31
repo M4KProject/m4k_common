@@ -75,18 +75,18 @@ export interface SideButtonProps extends ButtonProps {
   tab?: boolean;
 }
 export const SideButton = ({ tab, ...props }: SideButtonProps) => (
-  <Button {...props} class={c('Button', tab && 'Button-tab', props)} />
+  <Button {...props} {...c('Button', tab && 'Button-tab', props)} />
 );
 
-export const SideSep = (props: DivProps) => <div {...props} class={c('Sep', props)} />;
+export const SideSep = (props: DivProps) => <div {...props} {...c('Sep', props)} />;
 
 export const Side = ({ children, ...props }: DivProps) => {
   const [open, setOpen] = useState(true);
   const toggleOpen = () => setOpen((open) => !open);
   return (
-    <div {...props} class={c('', open ? '-open' : '-close', props)}>
-      <div class={c('Mask')}>
-        <div class={c('Content')}>
+    <div {...props} {...c('', open ? '-open' : '-close', props)}>
+      <div {...c('Mask')}>
+        <div {...c('Content')}>
           <Button icon={<Menu />} onClick={toggleOpen}>
             Ouvrir
           </Button>

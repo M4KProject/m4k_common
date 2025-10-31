@@ -139,23 +139,19 @@ export const Grid = (({ cols, ctx, select, getKey, rowProps, items, ...props }: 
   const visibleCols = computedCols.filter((col) => col.if(col, ctx));
 
   return (
-    <div {...props} class={c('', props)}>
-      <div class={c('Head')}>
+    <div {...props} {...c('', props)}>
+      <div {...c('Head')}>
         {visibleCols.map((col) => (
           <div key={col.key} {...col.props({}, ctx, -1)}>
             {col.title}
           </div>
         ))}
       </div>
-      <div class={c('Body')}>
+      <div {...c('Body')}>
         {items.map((item: any, index: number) => {
           const { mode, ...props } = rowProps ? rowProps(item, ctx, index) : {};
           return (
-            <div
-              key={getKey(item, index)}
-              {...props}
-              class={c('Row', mode && `Row-${mode}`, props)}
-            >
+            <div key={getKey(item, index)} {...props} {...c('Row', mode && `Row-${mode}`, props)}>
               {visibleCols.map((col) => (
                 <div key={col.key} {...col.props(item, ctx, index)}>
                   {col.val(item, ctx, index)}

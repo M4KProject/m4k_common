@@ -71,38 +71,38 @@ const c = Css('Table', {
 });
 
 export interface TableProps extends JSX.HTMLAttributes<HTMLTableElement> {}
-export const Table = (props: TableProps) => <table {...props} class={c('', props)} />;
+export const Table = (props: TableProps) => <table {...props} {...c('', props)} />;
 
 export interface TableHeadProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
-export const TableHead = (props: TableHeadProps) => <thead {...props} class={c('Head', props)} />;
+export const TableHead = (props: TableHeadProps) => <thead {...props} {...c('Head', props)} />;
 
 export interface TableBodyProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
-export const TableBody = (props: TableBodyProps) => <tbody {...props} class={c('Body', props)} />;
+export const TableBody = (props: TableBodyProps) => <tbody {...props} {...c('Body', props)} />;
 
 export interface TableFootProps extends JSX.HTMLAttributes<HTMLTableSectionElement> {}
-export const TableFoot = (props: TableFootProps) => <tfoot {...props} class={c('Foot', props)} />;
+export const TableFoot = (props: TableFootProps) => <tfoot {...props} {...c('Foot', props)} />;
 
 export interface RowProps extends JSX.HTMLAttributes<HTMLTableRowElement> {
   mode?: 'success' | 'error' | 'selected';
 }
 export const Row = (props: RowProps) => (
-  <tr {...props} class={c('Row', props.mode && `Row-${props.mode}`, props)} />
+  <tr {...props} {...c('Row', props.mode && `Row-${props.mode}`, props)} />
 );
 
 export interface CellProps extends JSX.HTMLAttributes<HTMLTableCellElement> {
   variant?: 'row' | 'center' | 'around' | 'check' | 'actions';
 }
 export const Cell = ({ variant, children, ...props }: CellProps) => (
-  <td {...props} class={c('Cell', variant && `Cell-${variant}`, props)}>
-    <div class={c('CellContent')}>{children}</div>
+  <td {...props} {...c('Cell', variant && `Cell-${variant}`, props)}>
+    <div {...c('CellContent')}>{children}</div>
   </td>
 );
 
 export interface RowHeadProps extends JSX.HTMLAttributes<HTMLTableRowElement> {}
 export const RowHead = (props: RowProps) => (
   <>
-    <div class={c('RowHeadBg')} />
-    <tr {...props} class={c('RowHead', props)} />
+    <div {...c('RowHeadBg')} />
+    <tr {...props} {...c('RowHead', props)} />
   </>
 );
 
@@ -110,7 +110,7 @@ export interface CellHeadProps extends JSX.HTMLAttributes<HTMLTableCellElement> 
   variant?: 'row' | 'center';
 }
 export const CellHead = ({ variant, children, ...props }: CellHeadProps) => (
-  <th {...props} class={c('CellHead', variant && `Cell-${variant}`, props)}>
-    <div class={c('CellContent')}>{children}</div>
+  <th {...props} {...c('CellHead', variant && `Cell-${variant}`, props)}>
+    <div {...c('CellContent')}>{children}</div>
   </th>
 );

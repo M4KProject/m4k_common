@@ -47,10 +47,10 @@ export const Progress = ({ progress, step, children, ...props }: ProgressProps) 
   const prct = clamp(toNumber(progress, 0), 0, 100);
   const text = step ? `${step} ${round(prct)}%` : `${round(prct)}%`;
   return (
-    <div {...props} class={c('', props)}>
-      <div class={c('Text')}>{text}</div>
-      <div class={c('Bar')} style={{ left: prct - 100 + '%' }}>
-        <div class={c('Text', 'Text-in')} style={{ left: -(prct - 100) + '%' }}>
+    <div {...props} {...c('', props)}>
+      <div {...c('Text')}>{text}</div>
+      <div {...c('Bar')} style={{ left: prct - 100 + '%' }}>
+        <div {...c('Text', 'Text-in')} style={{ left: -(prct - 100) + '%' }}>
           {text}
         </div>
       </div>

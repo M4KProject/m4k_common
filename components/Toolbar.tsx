@@ -25,9 +25,9 @@ export interface ToolbarProps extends DivProps {
 }
 export const Toolbar = ({ title, children, ...props }: DivProps) => {
   return (
-    <div {...props} class={c('', props)}>
+    <div {...props} {...c('', props)}>
       {title && (
-        <div class={c('Title')}>
+        <div {...c('Title')}>
           <Tr>{title}</Tr>
         </div>
       )}

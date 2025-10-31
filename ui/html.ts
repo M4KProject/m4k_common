@@ -164,7 +164,7 @@ export type Cls = Dictionary<boolean | number | undefined | null>;
 export const getCls = (el: Element): Cls =>
   Object.fromEntries(el.className.split(' ').map((k) => [k, true]));
 
-export const setCls = (el: Element|undefined, cls: Cls | string, replace?: boolean) => {
+export const setCls = (el: Element | undefined, cls: Cls | string, replace?: boolean) => {
   if (!el) return;
   if (typeof cls === 'string') {
     el.className = cls;

@@ -109,10 +109,10 @@ export const Button = ({
 
   const content = (
     <>
-      <div class={c('Sfx')} />
+      <div {...c('Sfx')} />
       {before}
-      {icon && <div class={c('Icon')}>{icon}</div>}
-      <div class={c('Content')}>
+      {icon && <div {...c('Icon')}>{icon}</div>}
+      <div {...c('Content')}>
         {title && <Tr>{title}</Tr>}
         {children}
       </div>

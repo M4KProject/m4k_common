@@ -26,13 +26,13 @@ export const Form = ({ children, title, onSubmit, ...props }: FormProps) => {
   return (
     <form
       {...props}
-      class={c('', props)}
+      {...c('', props)}
       onSubmit={(e) => {
         e.preventDefault();
         if (onSubmit) onSubmit(e);
       }}
     >
-      {title && <div class={c('Title')}>{title}</div>}
+      {title && <div {...c('Title')}>{title}</div>}
       {children}
     </form>
   );

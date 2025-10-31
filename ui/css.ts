@@ -1,6 +1,6 @@
-import { toString } from 'fluxio';
+import { isFloat, toString } from 'fluxio';
 import { Dictionary } from 'fluxio';
-import { isItem, isArray, isNumber, isString, isStringValid } from 'fluxio';
+import { isItem, isArray, isString, isStringValid } from 'fluxio';
 import { JSX } from 'preact/jsx-runtime';
 import { createEl } from './html';
 import { isDeepEqual } from 'fluxio';
@@ -315,7 +315,7 @@ export const Css = (key: string, css?: CssValue) => {
       setCss(key, css, order);
       isInit = true;
     }
-    if (args.length === 0) return key;
+    if (args.length === 0) return { class: key };
     const sb = [];
     for (const arg of args) {
       if (isString(arg)) {
@@ -324,7 +324,7 @@ export const Css = (key: string, css?: CssValue) => {
         isStringValid(arg.class) && sb.push(arg.class);
       }
     }
-    return sb.join(' ');
+    return { class: sb.join(' ') };
   };
 };
 

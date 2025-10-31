@@ -101,16 +101,16 @@ const DialogRender = ({ open$, variant, title, children, ...props }: DialogRende
   }, [open]);
 
   return (
-    <div class={c('', open && '-open', variant && `-${variant}`)} onClick={onClose} {...props}>
-      <div class={c('Window')} onClick={(e) => e.stopPropagation()}>
+    <div {...c('', open && '-open', variant && `-${variant}`)} onClick={onClose} {...props}>
+      <div {...c('Window')} onClick={(e) => e.stopPropagation()}>
         {title && (
-          <div class={c('Header')}>
-            <div class={c('HeaderText')}>
+          <div {...c('Header')}>
+            <div {...c('HeaderText')}>
               <Tr>{title}</Tr>
             </div>
           </div>
         )}
-        <div class={c('Content')}>{init ? children : null}</div>
+        <div {...c('Content')}>{init ? children : null}</div>
       </div>
     </div>
   );

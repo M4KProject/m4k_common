@@ -12,5 +12,5 @@ export interface IframeProps extends JSX.HTMLAttributes<HTMLIFrameElement> {
 }
 
 export const Iframe = ({ className, ...props }: IframeProps) => {
-  return <iframe {...props} class={c('', props)} />;
+  return <iframe {...props} {...c('', props)} />;
 };

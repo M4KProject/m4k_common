@@ -200,8 +200,8 @@ export const Select = ({
   };
 
   return (
-    <div ref={dropdownRef} {...props} class={c('', isOpen && `-open`, props)}>
-      <div class={c('Container')} onClick={handleInputClick}>
+    <div ref={dropdownRef} {...props} {...c('', isOpen && `-open`, props)}>
+      <div {...c('Container')} onClick={handleInputClick}>
         {searchable && isOpen ?
           <input
             ref={inputRef}
@@ -215,8 +215,8 @@ export const Select = ({
             autocomplete="off"
             onClick={(e) => e.stopPropagation()}
           />
-        : <div class={c('Input')} onKeyDown={handleKeyDown}>
-            <div class={c('InputText')}>{displayValue || placeholder}</div>
+        : <div {...c('Input')} onKeyDown={handleKeyDown}>
+            <div {...c('InputText')}>{displayValue || placeholder}</div>
             <input
               ref={inputRef}
               name={name}
@@ -227,19 +227,19 @@ export const Select = ({
             />
           </div>
         }
-        <div class={c('Arrow')}>
+        <div {...c('Arrow')}>
           <ChevronDown />
         </div>
       </div>
 
       {isOpen && (
-        <div class={c('Dropdown')}>
+        <div {...c('Dropdown')}>
           {filteredItems.length === 0 ?
-            <div class={c('Option')}>Aucun résultat</div>
+            <div {...c('Option')}>Aucun résultat</div>
           : filteredItems.map(([key, label], index) => (
               <div
                 key={key}
-                class={c(
+                {...c(
                   `Option`,
                   key === value && `Option-selected`,
                   index === highlightedIndex && `Option-highlighted`

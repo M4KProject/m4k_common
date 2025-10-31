@@ -92,7 +92,7 @@ export const Flag = ({ iso, title, size, variant = '4x3', ...props }: FlagSVGPro
   }
 
   return (
-    <span class={c('', variant === '1x1' && '-square', props)} title={flagTitle} style={style}>
+    <span {...c('', variant === '1x1' && '-square', props)} title={flagTitle} style={style}>
       {flagSVG}
     </span>
   );

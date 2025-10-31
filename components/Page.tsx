@@ -27,14 +27,14 @@ const c = Css('Page', {
 
 // export interface PageActionsProps extends DivProps {}
 // export const PageActions = (props: PageActionsProps) => {
-//   return <div {...props} class={c('Actions', props)} />;
+//   return <div {...props} {...c('Actions', props)} />;
 // };
 
-export const Page = (props: DivProps) => <div {...props} class={c('', props)} />;
+export const Page = (props: DivProps) => <div {...props} {...c('', props)} />;
 
-export const PageSection = (props: DivProps) => <div {...props} class={c('Section', props)} />;
+export const PageSection = (props: DivProps) => <div {...props} {...c('Section', props)} />;
 
-export const PageContainer = (props: DivProps) => <div {...props} class={c('Container', props)} />;
+export const PageContainer = (props: DivProps) => <div {...props} {...c('Container', props)} />;
 
 export const PageBody = ({ children, ...props }: DivProps) => (
   <PageContainer {...props}>

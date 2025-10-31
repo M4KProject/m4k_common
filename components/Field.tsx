@@ -203,7 +203,7 @@ const getMediaField = (_mimetypes: string[]): FieldComp => {
         value={value || ''}
         onChange={onChange}
         {...fieldProps.props}
-        class={c(cls, fieldProps.props)}
+        {...c(cls, fieldProps.props)}
       >
         {/* <option value="" className={!value ? `${cls}Selected` : undefined}></option>
                 {Object.values(filteredMedias).map(media => (
@@ -225,7 +225,7 @@ const compByType: Record<FieldType, FieldComp> = {
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
   password: ({ cls, name, required, value, onChange, fieldProps }) => {
@@ -239,7 +239,7 @@ const compByType: Record<FieldType, FieldComp> = {
           value={value || ''}
           onChange={onChange}
           {...fieldProps.props}
-          class={c(cls, fieldProps.props)}
+          {...c(cls, fieldProps.props)}
         />
         <Button
           onClick={(e) => {
@@ -259,7 +259,7 @@ const compByType: Record<FieldType, FieldComp> = {
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
   text: ({ cls, name, required, value, onChange, fieldProps }) => (
@@ -270,7 +270,7 @@ const compByType: Record<FieldType, FieldComp> = {
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
   number: ({ cls, name, required, value, onChange, fieldProps }) => (
@@ -281,7 +281,7 @@ const compByType: Record<FieldType, FieldComp> = {
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
   multiline: ({ cls, name, required, value, onChange, fieldProps }) => (
@@ -292,7 +292,7 @@ const compByType: Record<FieldType, FieldComp> = {
       onChange={onChange}
       rows={5}
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
   html: ({ cls, name, required, value, onChange, fieldProps }) => (
@@ -303,7 +303,7 @@ const compByType: Record<FieldType, FieldComp> = {
       onChange={onChange}
       rows={5}
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
   // select: ({ name, required, value, onChange, fieldProps }) => (
@@ -329,9 +329,9 @@ const compByType: Record<FieldType, FieldComp> = {
       <div
         onClick={() => onChange(!value)}
         {...fieldProps.props}
-        class={c(cls, value && `${cls}-selected`, fieldProps.props)}
+        {...c(cls, value && `${cls}-selected`, fieldProps.props)}
       >
-        <div class={c(`${cls}Handle`)}></div>
+        <div {...c(`${cls}Handle`)}></div>
       </div>
     );
   },
@@ -340,7 +340,7 @@ const compByType: Record<FieldType, FieldComp> = {
       <div
         onClick={() => onChange(!value)}
         {...fieldProps.props}
-        class={c(cls, value && `${cls}-selected`, fieldProps.props)}
+        {...c(cls, value && `${cls}-selected`, fieldProps.props)}
       >
         <Check />
       </div>
@@ -356,7 +356,7 @@ const compByType: Record<FieldType, FieldComp> = {
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
   datetime: ({ cls, name, required, value, onChange, fieldProps }) => (
@@ -367,7 +367,7 @@ const compByType: Record<FieldType, FieldComp> = {
       value={value || ''}
       onChange={onChange}
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
   seconds: ({ cls, name, required, value, onChange, onBlur, fieldProps }) => (
@@ -380,7 +380,7 @@ const compByType: Record<FieldType, FieldComp> = {
       onBlur={onBlur}
       placeholder="00:00:00"
       {...fieldProps.props}
-      class={c(cls, fieldProps.props)}
+      {...c(cls, fieldProps.props)}
     />
   ),
 };
@@ -496,9 +496,9 @@ export const Field = (props: FieldProps) => {
   };
 
   return (
-    <div {...divProps} class={c('', col && '-col', type && `-${type}`, err && '-error', divProps)}>
-      {label && <div class={c('Label')}>{label} :</div>}
-      <div class={c('Content')}>
+    <div {...divProps} {...c('', col && '-col', type && `-${type}`, err && '-error', divProps)}>
+      {label && <div {...c('Label')}>{label} :</div>}
+      <div {...c('Content')}>
         <Comp
           cls={'Input'}
           name={name}
@@ -509,18 +509,18 @@ export const Field = (props: FieldProps) => {
           fieldProps={props}
         />
         {err ?
-          <div class={c('Error')}>
+          <div {...c('Error')}>
             <Tr>{err}</Tr>
           </div>
         : helper ?
-          <div class={c('Helper')}>{helper}</div>
+          <div {...c('Helper')}>{helper}</div>
         : null}
       </div>
     </div>
   );
 };
 
-export const FieldGroup = (props: DivProps) => <div {...props} class={c('Group', props)} />;
+export const FieldGroup = (props: DivProps) => <div {...props} {...c('Group', props)} />;
 
 // //     type?: 'text'|'textarea'|'select';
 // //     name: string;

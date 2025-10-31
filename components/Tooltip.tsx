@@ -53,9 +53,9 @@ export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
 
   const pos: string = top > 40 ? 'top' : 'bottom';
   return (
-    <div {...props} class={c('', `-${pos}`, props)} style={{ top, left, width, height }}>
-      <div class={c('Arrow')} />
-      <div class={c('Content')}>
+    <div {...props} {...c('', `-${pos}`, props)} style={{ top, left, width, height }}>
+      <div {...c('Arrow')} />
+      <div {...c('Content')}>
         <Tr>{children}</Tr>
       </div>
     </div>

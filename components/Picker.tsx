@@ -47,7 +47,7 @@ export const Picker = ({
   };
 
   return (
-    <div {...props} class={c('', props)}>
+    <div {...props} {...c('', props)}>
       {/* Hidden input for form compatibility */}
       <input
         name={name}
