@@ -1,14 +1,14 @@
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { DivProps } from './types';
 
 const c = Css('Page', {
   '': {
-    fCol: [],
+    fCol: 1,
     flex: 1,
     position: 'relative',
   },
   Container: {
-    fCol: [],
+    fCol: 1,
     overflowY: 'auto',
     bg: 'b2',
     p: 0.5,
@@ -16,7 +16,7 @@ const c = Css('Page', {
   },
   Section: {
     flex: 1,
-    fCol: [],
+    fCol: 1,
     position: 'relative',
     bg: 'b0',
     m: 0.5,

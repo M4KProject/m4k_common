@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { DivProps } from './types';
 import { Tr } from './Tr';
 
@@ -9,7 +9,7 @@ const c = Css('Toolbar', {
     px: 2,
     my: 0,
     elevation: 2,
-    fRow: [],
+    fRow: 1,
     h: 4,
     zIndex: 20,
   },

@@ -1,6 +1,6 @@
 import { ComponentChildren } from 'preact';
 import { useState, useRef, useEffect } from 'preact/hooks';
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { isArray } from 'fluxio';
 import { isSearched } from 'fluxio';
 import { ChevronDown } from 'lucide-react';
@@ -12,7 +12,7 @@ const c = Css('Select', {
     w: '100%',
   },
   Container: {
-    fRow: [],
+    fRow: 1,
     wh: '100%',
     border: '1px solid',
     bColor: 'g2',
@@ -75,7 +75,7 @@ const c = Css('Select', {
     bg: '#e8f4fd',
   },
   Arrow: {
-    fCenter: [],
+    fCenter: 1,
     w: 1.5,
     h: 1.5,
     opacity: 0.6,

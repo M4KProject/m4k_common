@@ -1,5 +1,5 @@
 import { useFlux } from '../hooks/useFlux';
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { ComponentChildren } from 'preact';
 import { Flux } from 'fluxio';
 import { DivProps } from './types';
@@ -30,12 +30,12 @@ const c = Css('Dialog', {
     position: 'fixed',
     inset: 0,
     bg: 'mask',
-    fCenter: [],
+    fCenter: 1,
     opacity: 0,
     transition: 0.5,
   },
   Window: {
-    fCol: [],
+    fCol: 1,
     elevation: 3,
     rounded: 4,
     wMin: 40,
@@ -46,7 +46,7 @@ const c = Css('Dialog', {
     p: 0.5,
   },
   Header: {
-    fCenter: [],
+    fCenter: 1,
     m: 0.5,
   },
   HeaderText: {
@@ -55,7 +55,7 @@ const c = Css('Dialog', {
     fontSize: 2,
   },
   Content: {
-    fCol: ['center'],
+    fCol: 'center',
     m: 0.5,
   },
 

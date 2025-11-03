@@ -1,6 +1,4 @@
-import { flux } from 'fluxio';
-import { setCss } from './css';
-import { glb } from 'fluxio';
+import { flux, setCss, glb } from 'fluxio';
 
 export type Responsive = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 

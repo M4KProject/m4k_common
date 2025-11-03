@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { DivProps } from './types';
 import { clamp, round } from 'fluxio';
 import { toNumber } from 'fluxio';
@@ -7,7 +7,7 @@ import { ComponentChildren } from 'preact';
 
 const c = Css('Progress', {
   '': {
-    fCenter: [],
+    fCenter: 1,
     position: 'relative',
     bg: 'b1',
     border: 'primary',
@@ -26,7 +26,7 @@ const c = Css('Progress', {
     transition: 0.5,
   },
   Text: {
-    fCenter: [],
+    fCenter: 1,
     position: 'absolute',
     xy: 0,
     wh: '100%',

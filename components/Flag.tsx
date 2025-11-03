@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { Dictionary } from 'fluxio';
 
 const c = Css('Flag', {

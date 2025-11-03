@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { DivProps } from './types';
 import { Tr } from './Tr';
 import { addTr } from '../hooks/useTr';
@@ -7,21 +7,21 @@ const c = Css('Loading', {
   '': {
     w: '100%',
     h: '100%',
-    fCenter: [],
+    fCenter: 1,
   },
   Content: {
     ml: 0.5,
   },
 
   Spinner: {
-    fCenter: [],
+    fCenter: 1,
   },
   SpinnerCircle: {
     w: 5,
     h: 5,
     bg: 'p5',
     rounded: 50,
-    fCenter: [],
+    fCenter: 1,
   },
   SpinnerIcon: {
     w: 2.5,

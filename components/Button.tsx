@@ -1,6 +1,6 @@
 import { ComponentChildren } from 'preact';
 import { useRef } from 'preact/hooks';
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { Props } from '@common/components';
 import { Tr } from './Tr';
 
@@ -43,7 +43,7 @@ const c = Css('Button', {
   },
   Icon: {
     position: 'relative',
-    fCenter: [],
+    fCenter: 1,
     m: 0.25,
     rounded: 2,
   },

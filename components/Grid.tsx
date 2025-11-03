@@ -1,5 +1,5 @@
 import { ComponentChildren, JSX } from 'preact';
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { DivProps } from './types';
 import { isArray, sum, toTrue } from 'fluxio';
 import { useMemo } from 'preact/compat';

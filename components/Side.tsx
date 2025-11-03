@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { DivProps } from './types';
 import { Button, ButtonProps } from './Button';
 import { useState } from 'preact/hooks';
@@ -25,7 +25,7 @@ const c = Css('Side', {
     transition: 0.2,
   },
   Content: {
-    fCol: [],
+    fCol: 1,
     position: 'absolute',
     xy: 0,
     wMin: 15,

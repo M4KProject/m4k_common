@@ -1,4 +1,4 @@
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { toNumber } from 'fluxio';
@@ -12,11 +12,11 @@ import { Button } from './Button';
 import { Flux } from 'fluxio';
 import { useFlux } from '../hooks';
 import { Dictionary } from 'fluxio';
-import { formatSeconds, parseSeconds } from '../utils/date';
+import { formatSeconds, parseSeconds } from 'fluxio';
 
 const c = Css('Field', {
   '': {
-    fRow: ['center'],
+    fRow: 'center',
     my: 0.4,
     w: '100%',
   },
@@ -24,7 +24,7 @@ const c = Css('Field', {
     fRow: ['center', 'space-between'],
   },
   '-col': {
-    fCol: ['stretch'],
+    fCol: 'stretch',
   },
   '-error &Label': { fg: 'error' },
   '-error &Input': { border: 'error' },
@@ -67,7 +67,7 @@ const c = Css('Field', {
   },
 
   '-check &Input': {
-    fCenter: [],
+    fCenter: 1,
     p: 0,
     w: 1.4,
     h: 1.4,
@@ -94,7 +94,7 @@ const c = Css('Field', {
   },
 
   '-switch &Input': {
-    fCenter: [],
+    fCenter: 1,
     w: 2,
     h: 1.5,
     cursor: 'pointer',

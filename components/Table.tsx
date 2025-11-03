@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 
 const c = Css('Table', {
   '': {
@@ -36,7 +36,7 @@ const c = Css('Table', {
     fRow: ['center', 'start'],
   },
   'Cell-center &CellContent': {
-    fCenter: [],
+    fCenter: 1,
   },
   'Cell-around &CellContent': {
     fRow: ['center', 'space-around'],

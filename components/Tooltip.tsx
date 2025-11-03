@@ -1,9 +1,9 @@
 import { ComponentChildren } from 'preact';
 import { render } from 'preact';
-import { addListener } from '@common/ui/html';
-import { Css } from '@common/ui/css';
+import { onEvent } from 'fluxio';
+import { Css } from 'fluxio';
 import { Tr } from './Tr';
-import { addOverlay, removeOverlay } from '@common/ui/overlay';
+import { addOverlay, removeOverlay } from 'fluxio';
 import { DivProps } from './types';
 
 const c = Css('Tooltip', {
@@ -14,7 +14,7 @@ const c = Css('Tooltip', {
     zIndex: 9999,
   },
   Content: {
-    fCenter: [],
+    fCenter: 1,
     textAlign: 'center',
     position: 'absolute',
     p: 0.5,
@@ -98,10 +98,10 @@ export const tooltip = (content: ComponentChildren | (() => ComponentChildren)) 
       }, 500);
 
       if (removeLeaveListener) removeLeaveListener();
-      removeLeaveListener = addListener(target, 'mouseleave', remove);
+      removeLeaveListener = onEvent(target, 'mouseleave', remove);
 
       if (removeClickListener) removeClickListener();
-      removeClickListener = addListener(0, 'click', remove);
+      removeClickListener = onEvent(0, 'click', remove);
 
       if (!overlay) overlay = addOverlay();
 

@@ -1,9 +1,9 @@
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { JSX } from 'preact/jsx-runtime';
 
 const c = Css('Form', {
   '': {
-    fCol: ['stretch'],
+    fCol: 'stretch',
     m: 1,
     p: 1,
   },

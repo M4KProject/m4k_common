@@ -1,5 +1,5 @@
 import { ComponentChildren } from 'preact';
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { Button } from './Button';
 import { isArray } from 'fluxio';
 

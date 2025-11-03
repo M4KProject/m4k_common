@@ -1,6 +1,5 @@
 import { by, fluxStored, isBoolean } from 'fluxio';
-import { isItem } from 'fluxio';
-import { setColors } from './css';
+import { isItem, setCssColors } from 'fluxio';
 import { setHsl, addHsl, toHsl, toColor, setRgb } from 'fluxio';
 import { Dictionary } from 'fluxio';
 
@@ -109,7 +108,7 @@ export const refreshTheme = () => {
     warn: setHsl(primary, { h: 30 }),
   });
 
-  setColors(t as Dictionary<string>);
+  setCssColors(t as Dictionary<string>);
 };
 
 theme$.on(refreshTheme);

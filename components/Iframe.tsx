@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 
 const c = Css('Iframe', {
   '': {
