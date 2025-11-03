@@ -1,8 +1,9 @@
-import { Css } from 'fluxio';
+import { Css, flux } from 'fluxio';
 import { DivProps } from './types';
 import { Button, ButtonProps } from './Button';
 import { useState } from 'preact/hooks';
 import { Menu } from 'lucide-react';
+import { useFlux } from '@common/hooks';
 
 const c = Css('Side', {
   '': {
@@ -80,9 +81,11 @@ export const SideButton = ({ tab, ...props }: SideButtonProps) => (
 
 export const SideSep = (props: DivProps) => <div {...props} {...c('Sep', props)} />;
 
+export const sideOpen$ = flux(true);
+
 export const Side = ({ children, ...props }: DivProps) => {
-  const [open, setOpen] = useState(true);
-  const toggleOpen = () => setOpen((open) => !open);
+  const open = useFlux(sideOpen$);
+  const toggleOpen = () => sideOpen$.set((open) => !open);
   return (
     <div {...props} {...c('', open ? '-open' : '-close', props)}>
       <div {...c('Mask')}>
