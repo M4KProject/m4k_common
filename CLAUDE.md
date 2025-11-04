@@ -38,6 +38,7 @@ theme$.set(newTheme);
 ```
 
 **Key Hooks** (`hooks/`):
+
 - `useFlux()` - Subscribe to Fluxio messages with automatic re-rendering
 - `useFluxState()` - Get state and setter like useState
 - `useFluxItem()` - Work with array items in flux messages
@@ -77,21 +78,25 @@ export const Component = (props: Props) => {
 **CSS Utility Shortcuts:**
 
 **Layout & Dimensions:**
+
 - `x`, `y`, `xy` - positioning (em units)
 - `w`, `h`, `wh` - width/height (em units)
 - `wMin`, `hMin`, `wMax`, `hMax` - min/max dimensions
 - `inset` - all sides positioning
 
 **Flexbox:**
+
 - `fRow: [align?, justify?]` - flex-direction: row with optional alignment
 - `fCol: [align?, justify?]` - flex-direction: column with optional alignment
 - `fCenter: [direction?]` - centered flex container
 
 **Spacing:**
+
 - `m`, `mt`, `mb`, `ml`, `mr`, `mx`, `my` - margins (em units)
 - `p`, `pt`, `pb`, `pl`, `pr`, `px`, `py` - padding (em units)
 
 **Visual:**
+
 - `bg: 'colorKey'` - background color from theme
 - `fg: 'colorKey'` - text color from theme
 - `elevation: 0-10` - box-shadow depth
@@ -99,11 +104,13 @@ export const Component = (props: Props) => {
 - `fontSize`, `bold`, `opacity`
 
 **Transform & Animation:**
+
 - `scale`, `rotate`, `translate` - CSS transforms
 - `transition: number | string` - CSS transitions
 - `anim: AnimValue` - CSS animations with keyframes
 
 **Background & Images:**
+
 - `bgUrl: 'url'` - background-image
 - `bgMode: 'contain' | 'cover' | 'fill'` - background-size
 - `itemFit` - object-fit for media elements
@@ -136,6 +143,7 @@ export const Component = (props: ComponentProps) => {
 ```
 
 **Pattern Notes:**
+
 - Extend `DivProps` for HTML attributes
 - Use `{...props}` first, then `{...c()}` to allow prop overrides
 - Pass `props` to `c()` for conditional styling based on props
@@ -146,6 +154,7 @@ export const Component = (props: ComponentProps) => {
 ### Form Components
 
 **Field.tsx** - Multi-purpose form field with 13+ field types:
+
 ```typescript
 <Field
   type="text" | "email" | "password" | "number" | "select" | "picker" |
@@ -160,6 +169,7 @@ export const Component = (props: ComponentProps) => {
 ```
 
 **Select.tsx** - Dropdown with search and keyboard navigation:
+
 ```typescript
 <Select
   value={selected}
@@ -174,6 +184,7 @@ export const Component = (props: ComponentProps) => {
 ### UI Components
 
 **Button.tsx** - Flexible button with variants and states:
+
 ```typescript
 <Button
   variant="primary" | "secondary" | "success" | "warn" | "error" | "upload"
@@ -186,17 +197,19 @@ export const Component = (props: ComponentProps) => {
 ```
 
 **Dialog.tsx** - Modal dialog system:
+
 ```typescript
 import { showDialog } from '@common/components';
 
 const result = await showDialog({
   title: 'Confirmation',
   message: 'Are you sure?',
-  variant: 'confirm'
+  variant: 'confirm',
 });
 ```
 
 **Table.tsx** - Data table with row variants:
+
 ```typescript
 <Table>
   <tr variant="success" | "error" | "selected">
@@ -208,6 +221,7 @@ const result = await showDialog({
 ### Layout Components
 
 **Page.tsx** - Page layout structure:
+
 ```typescript
 <Page>
   <PageContainer>
@@ -253,6 +267,7 @@ theme$.set({ ...theme, dark: !theme.dark });
 ```
 
 **Color Palette:**
+
 - Base: `w0-w3` (white), `g0-g3` (grey), `b0-b3` (background), `t0-t3` (text)
 - Primary: `p0-p9` (primary scale)
 - Secondary: `s0-s9` (secondary scale)
@@ -318,11 +333,13 @@ m4k.writeFile('path', 'content'); // Write file
 ```
 
 **Supported Platforms:**
+
 1. **M4K Bridge** - Native Android bridge via `window._m4k`
 2. **Fully Kiosk Browser** - Full API integration via `window.fully`
 3. **Base** - Fallback implementation for web browsers
 
 **Key Files:**
+
 - `m4k.ts` - Main entry point with auto-detection
 - `m4kBridge.ts` - Native M4K bridge integration
 - `m4kFully.ts` - Fully Kiosk Browser integration
@@ -334,17 +351,20 @@ m4k.writeFile('path', 'content'); // Write file
 ### State Management Hooks
 
 **useFlux()** - Subscribe to Fluxio messages:
+
 ```typescript
 const value = useFlux(message$);
 // Auto re-renders when message$ changes
 ```
 
 **useFluxState()** - State and setter like useState:
+
 ```typescript
 const [value, setValue] = useFluxState(message$);
 ```
 
 **useFluxItem()** - Work with array items:
+
 ```typescript
 const [item, setItem] = useFluxItem(arrayMessage$, index);
 ```
@@ -352,23 +372,19 @@ const [item, setItem] = useFluxItem(arrayMessage$, index);
 ### Async Data Hooks
 
 **useAsync()** - Async data loading with localStorage:
+
 ```typescript
-const [data, reload, message$] = useAsync(
-  'storageKey',
-  async () => fetchData(),
-  dependencies
-);
+const [data, reload, message$] = useAsync('storageKey', async () => fetchData(), dependencies);
 ```
 
 **usePromise()** - Generic promise handler:
+
 ```typescript
-const [value, error, isLoading, refresh] = usePromise(
-  async () => fetchData(),
-  dependencies
-);
+const [value, error, isLoading, refresh] = usePromise(async () => fetchData(), dependencies);
 ```
 
 **useAsyncEffect()** - Async useEffect with cleanup:
+
 ```typescript
 useAsyncEffect(async () => {
   await fetchData();
@@ -388,17 +404,20 @@ useAsyncEffect(async () => {
 ### Code Patterns
 
 **Component Creation:**
+
 - Always use `Css()` for styling with the custom utility system
 - Extend `DivProps` for HTML attribute support
 - Use `class` prop (not `className`) for Preact compatibility
 - Import from `preact/hooks`, not React
 
 **State Management:**
+
 - Use Fluxio messages for all shared state
 - Prefer `useFlux()` over direct `.get()` calls
 - Store persistent state with `fluxStored(key, defaultValue)`
 
 **Type Safety:**
+
 - Use TypeScript for all files
 - Define proper interfaces for component props
 - Leverage `ComponentChildren` from Preact for children props
@@ -423,10 +442,11 @@ import { m4k } from '@common/m4k';
 ### Styling Best Practices
 
 **Prefer CSS utilities over raw CSS:**
+
 ```typescript
 // Good
 const css = Css('Component', {
-  '': { fCol: 1, p: 2, bg: 'primary' }
+  '': { fCol: 1, p: 2, bg: 'primary' },
 });
 
 // Avoid
@@ -435,12 +455,13 @@ const css = Css('Component', {
     display: 'flex',
     flexDirection: 'column',
     padding: '2em',
-    backgroundColor: 'var(--primary-color)'
-  }
+    backgroundColor: 'var(--primary-color)',
+  },
 });
 ```
 
 **Use theme colors:**
+
 ```typescript
 // Good - uses theme system
 { bg: 'primary', fg: 'text' }
@@ -450,6 +471,7 @@ const css = Css('Component', {
 ```
 
 **Responsive values:**
+
 ```typescript
 // Arrays for responsive values
 {
@@ -463,6 +485,7 @@ const css = Css('Component', {
 This library is included as a Git submodule in parent projects:
 
 **Update submodule:**
+
 ```bash
 cd common
 git pull origin main
@@ -472,11 +495,13 @@ git commit -m "Update common submodule"
 ```
 
 **Clone parent project with submodules:**
+
 ```bash
 git clone --recurse-submodules <parent-repo-url>
 ```
 
 **Initialize submodules in existing clone:**
+
 ```bash
 git submodule update --init --recursive
 ```
@@ -484,6 +509,7 @@ git submodule update --init --recursive
 ## Usage in Parent Projects
 
 **Path Alias Configuration** (in parent's `vite.config.ts` or `tsconfig.json`):
+
 ```typescript
 resolve: {
   alias: {
@@ -493,6 +519,7 @@ resolve: {
 ```
 
 **Import Pattern:**
+
 ```typescript
 import { Button, Field } from '@common/components';
 import { useFlux, useAsync } from '@common/hooks';
@@ -503,6 +530,7 @@ import { m4k } from '@common/m4k';
 ## External Dependencies
 
 **Required peer dependencies:**
+
 - `fluxio` - Reactive state management and CSS-in-JS utilities
 - `preact` - UI framework (with React compatibility)
 - `preact/hooks` - Hooks API
