@@ -1,4 +1,4 @@
-import { Css } from 'fluxio';
+import { Css, Style } from 'fluxio';
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { toNumber } from 'fluxio';
@@ -21,7 +21,7 @@ const c = Css('Field', {
     w: '100%',
   },
   Group: {
-    fRow: ['center', 'space-between'],
+    fRow: ['center', 'between'],
   },
   '-col': {
     fCol: 'stretch',
@@ -46,8 +46,7 @@ const c = Css('Field', {
     h: 2,
     py: 0.2,
     px: 1,
-    border: '1px solid',
-    bColor: 'g2',
+    border: 'g2',
     rounded: 2,
     outline: 'none',
     bg: 'b1',
@@ -56,14 +55,14 @@ const c = Css('Field', {
     // elevation: 1,
   },
   'Input:hover': {
-    borderColor: '#777',
+    bColor: 'g3',
   },
 
   // Régle la couleur de l'autocompletion
   'Input:autofill': {
     '-webkit-text-fill-color': 'black',
     '-webkit-box-shadow': '0 0 0 1000px white inset',
-    'caret-color': 'black',
+    caretColor: 'black',
   },
 
   '-check &Input': {
@@ -72,8 +71,7 @@ const c = Css('Field', {
     w: 1.4,
     h: 1.4,
     cursor: 'pointer',
-    border: '1px solid',
-    bColor: 'g2',
+    border: 'g2',
     bg: 'b1',
     position: 'relative',
     rounded: 1,
@@ -81,7 +79,7 @@ const c = Css('Field', {
     boxSizing: 'border-box',
   },
   '-check &Input-selected': {
-    bColor: 'p5',
+    borderColor: 'p5',
     bg: 'p5',
   },
   '-check &Input svg': {
@@ -98,14 +96,13 @@ const c = Css('Field', {
     w: 2,
     h: 1.5,
     cursor: 'pointer',
-    border: '1px solid',
-    bColor: 'g2',
+    border: 'g2',
     bg: 'b1',
     position: 'relative',
     borderRadius: '999px',
     transition: 0.3,
   },
-  '-switch &Input-selected': { bColor: 'p6', bg: 'p5' },
+  '-switch &Input-selected': { borderColor: 'p6', bg: 'p5' },
 
   '-switch &InputHandle': {
     w: 1.2,

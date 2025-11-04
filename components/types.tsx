@@ -1,7 +1,6 @@
-import { CssStyle } from 'fluxio';
 import { JSX } from 'preact';
 
-export type GetProps<T> = Omit<T, 'style'> & { style?: CssStyle };
+export type GetProps<T> = Omit<T, 'style'> & { style?: JSX.CSSProperties };
 
 export type Props = {
   [K in keyof JSX.IntrinsicElements]: GetProps<JSX.IntrinsicElements[K]>;

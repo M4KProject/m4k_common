@@ -26,7 +26,7 @@ const c = Css('Loading', {
   SpinnerIcon: {
     w: 2.5,
     h: 2.5,
-    border: '3px solid',
+    border: 3,
     bColor: 'w1',
     borderTop: '3px solid transparent',
     rounded: 50,

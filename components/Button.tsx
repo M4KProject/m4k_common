@@ -11,7 +11,7 @@ const c = Css('Button', {
     m: 0.25,
     p: 0.25,
     rounded: 2,
-    border: 'none',
+    border: 0,
     bg: 'transparent',
     fg: 'w2',
     wMin: 2.2,

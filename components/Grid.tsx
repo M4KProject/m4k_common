@@ -2,20 +2,20 @@ import { ComponentChildren, JSX } from 'preact';
 import { Css } from 'fluxio';
 import { DivProps } from './types';
 import { isArray, sum, toTrue } from 'fluxio';
-import { useMemo } from 'preact/compat';
+import { useMemo } from 'preact/hooks';
 
 const c = Css('Grid', {
   '': {
     m: 0.5,
   },
   Head: {
-    fRow: ['center', 'space-between'],
+    fRow: ['center', 'between'],
   },
   Body: {
     fCol: ['stretch', 'start'],
   },
   Row: {
-    fRow: ['center', 'space-between'],
+    fRow: ['center', 'between'],
     w: '100%',
     bg: 'b0',
     fg: 't2',
@@ -27,7 +27,7 @@ const c = Css('Grid', {
   'Row-selected': { fg: 'selected' },
   Cell: {
     position: 'relative',
-    fRow: ['center', 'space-around'],
+    fRow: ['center', 'around'],
     textAlign: 'left',
     px: 0.5,
     h: 3,
