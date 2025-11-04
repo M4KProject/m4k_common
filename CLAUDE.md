@@ -59,7 +59,7 @@ const css = Css('ComponentName', {
     bg: 'primary'                      // background: var(--primary-color)
   },
   'Header': {
-    fRow: ['center', 'space-between'], // flex row with alignment
+    fRow: ['center', 'between'],       // flex row with alignment
     w: 20,                             // width: 20em
     elevation: 2                       // box-shadow with depth
   }
