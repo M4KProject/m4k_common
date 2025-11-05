@@ -55,7 +55,7 @@ const c = Css('Field', {
     // elevation: 1,
   },
   'Input:hover': {
-    bColor: 'g3',
+    borderColor: 'g3',
   },
 
   // Régle la couleur de l'autocompletion
