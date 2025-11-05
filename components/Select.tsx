@@ -20,11 +20,11 @@ const c = Css('Select', {
     cursor: 'pointer',
   },
   'Container:hover': {
-    bColor: 'p5',
+    borderColor: 'p5',
     elevation: 1,
   },
   'Container:focus-within': {
-    bColor: 'p5',
+    borderColor: 'p5',
     elevation: 1,
   },
   Input: {

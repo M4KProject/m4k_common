@@ -27,8 +27,8 @@ const c = Css('Loading', {
     w: 2.5,
     h: 2.5,
     border: 3,
-    bColor: 'w1',
-    borderTop: '3px solid transparent',
+    borderColor: 'w1',
+    borderTop: 'transparent',
     rounded: 50,
     anim: {
       name: 'spin',
