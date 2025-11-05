@@ -30,24 +30,24 @@ const c = Css('Dialog', {
     position: 'fixed',
     inset: 0,
     bg: 'mask',
-    fCenter: 1,
+    center: 1,
     opacity: 0,
     transition: 0.5,
   },
   Window: {
-    fCol: 1,
+    col: 1,
     elevation: 3,
-    rounded: 4,
+    rounded: 7,
     wMin: 40,
     bg: 'b0',
     fg: 't2',
     scale: 0,
     transition: 0.5,
-    p: 0.5,
+    p: 4,
   },
   Header: {
-    fCenter: 1,
-    m: 0.5,
+    center: 1,
+    m: 4,
   },
   HeaderText: {
     fg: 't3',
@@ -55,8 +55,8 @@ const c = Css('Dialog', {
     fontSize: 2,
   },
   Content: {
-    fCol: 'center',
-    m: 0.5,
+    col: 'center',
+    m: 4,
   },
 
   '-open': {

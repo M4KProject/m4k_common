@@ -6,11 +6,11 @@ const c = Css('Toolbar', {
   '': {
     bg: 'b1',
     fg: 't3',
-    px: 2,
+    px: 8,
     my: 0,
     elevation: 2,
-    fRow: 1,
-    h: 4,
+    row: 1,
+    h: 40,
     zIndex: 20,
   },
   Title: {

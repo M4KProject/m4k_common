@@ -5,7 +5,7 @@ const c = Css('Table', {
   '': {
     border: 0,
     borderCollapse: 'collapse',
-    m: 0.5,
+    m: 4,
   },
 
   Row: {
@@ -28,28 +28,28 @@ const c = Css('Table', {
   },
   CellContent: {
     position: 'relative',
-    fCol: ['stretch', 'center'],
-    px: 0.5,
+    col: ['stretch', 'center'],
+    px: 4,
     h: 3,
   },
   'Cell-row &CellContent': {
-    fRow: ['center', 'start'],
+    row: ['center', 'start'],
   },
   'Cell-center &CellContent': {
-    fCenter: 1,
+    center: 1,
   },
   'Cell-around &CellContent': {
-    fRow: ['center', 'space-around'],
+    row: ['center', 'around'],
   },
   'Cell-actions': {
     w: 0,
   },
   'Cell-actions &CellContent': {
-    fRow: ['center', 'end'],
+    row: ['center', 'end'],
     p: 0,
   },
   'Cell-actions .Button': {
-    m: 0.2,
+    m: 2,
   },
   'Cell-check': {
     width: 0,

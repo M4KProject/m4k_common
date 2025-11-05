@@ -5,7 +5,7 @@ import { isArray } from 'fluxio';
 
 const c = Css('Picker', {
   '': {
-    fRow: ['center', 'center'],
+    row: ['center', 'center'],
     flexWrap: 'wrap',
     w: '100%',
     p: 0,

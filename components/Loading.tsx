@@ -7,21 +7,21 @@ const c = Css('Loading', {
   '': {
     w: '100%',
     h: '100%',
-    fCenter: 1,
+    center: 1,
   },
   Content: {
-    ml: 0.5,
+    ml: 4,
   },
 
   Spinner: {
-    fCenter: 1,
+    center: 1,
   },
   SpinnerCircle: {
     w: 5,
     h: 5,
     bg: 'p5',
     rounded: 50,
-    fCenter: 1,
+    center: 1,
   },
   SpinnerIcon: {
     w: 2.5,

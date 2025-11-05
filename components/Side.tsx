@@ -1,7 +1,6 @@
 import { Css, flux } from 'fluxio';
 import { DivProps } from './types';
 import { Button, ButtonProps } from './Button';
-import { useState } from 'preact/hooks';
 import { Menu } from 'lucide-react';
 import { useFlux } from '@common/hooks';
 
@@ -10,7 +9,7 @@ const c = Css('Side', {
     position: 'relative',
     transition: 0.2,
     elevation: 3,
-    w: 3,
+    w: 34,
     bg: 'b0',
     zIndex: 50,
   },
@@ -18,7 +17,7 @@ const c = Css('Side', {
     position: 'absolute',
     x: 0,
     y: '50%',
-    w: 3,
+    w: 34,
     h: '100%',
     zIndex: 100,
     overflow: 'hidden',
@@ -26,15 +25,15 @@ const c = Css('Side', {
     transition: 0.2,
   },
   Content: {
-    fCol: 1,
+    col: 1,
     position: 'absolute',
     xy: 0,
-    wMin: 15,
+    wMin: 160,
     h: '100%',
   },
   Button: {
     elevation: 0,
-    my: 0.25,
+    my: 2,
   },
 
   ' .ButtonContent': {
@@ -44,26 +43,23 @@ const c = Css('Side', {
   '-close .ButtonContent': {
     opacity: 0,
   },
-  // ' .Button': {
-  //   mx: 0.5,
-  // },
   ' &Button-tab': {
-    ml: 2,
+    ml: 16,
     transition: 0.2,
   },
   '-close .Button': {
-    ml: 0.25,
+    ml: 2,
   },
 
   '-open': {
-    w: 15,
+    w: 160,
   },
   '-open &Mask': {
-    w: 15,
+    w: 160,
   },
 
   Sep: {
-    fCol: ['start', 'end'],
+    col: ['start', 'end'],
     pl: 1,
     flex: 1,
     color: '#0a536f',

@@ -3,13 +3,13 @@ import { JSX } from 'preact/jsx-runtime';
 
 const c = Css('Form', {
   '': {
-    fCol: 'stretch',
-    m: 1,
-    p: 1,
+    col: 'stretch',
+    m: 8,
+    p: 8,
   },
   Title: {
-    fCol: ['start', 'end'],
-    py: 0.5,
+    col: ['start', 'end'],
+    py: 4,
     color: 'p8',
     bold: 1,
     // borderBottom: '1px solid #0a536f',

@@ -54,13 +54,13 @@ import { Css, useCss } from 'fluxio';
 
 const css = Css('ComponentName', {
   '': {
-    fCol: 1,                           // flex column
+    col: 1,                           // flex column
     p: 2,                              // padding: 2em
     bg: 'primary'                      // background: var(--primary-color)
   },
   'Header': {
-    fRow: ['center', 'between'],       // flex row with alignment
-    w: 20,                             // width: 20em
+    row: ['center', 'between'],       // flex row with alignment
+    w: 160,                             // width: 20em
     elevation: 2                       // box-shadow with depth
   }
 });
@@ -86,9 +86,9 @@ export const Component = (props: Props) => {
 
 **Flexbox:**
 
-- `fRow: [align?, justify?]` - flex-direction: row with optional alignment
-- `fCol: [align?, justify?]` - flex-direction: column with optional alignment
-- `fCenter: [direction?]` - centered flex container
+- `row: [align?, justify?]` - flex-direction: row with optional alignment
+- `col: [align?, justify?]` - flex-direction: column with optional alignment
+- `center: [direction?]` - centered flex container
 
 **Spacing:**
 
@@ -446,7 +446,7 @@ import { m4k } from '@common/m4k';
 ```typescript
 // Good
 const css = Css('Component', {
-  '': { fCol: 1, p: 2, bg: 'primary' },
+  '': { col: 1, p: 2, bg: 'primary' },
 });
 
 // Avoid

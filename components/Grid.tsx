@@ -6,16 +6,16 @@ import { useMemo } from 'preact/hooks';
 
 const c = Css('Grid', {
   '': {
-    m: 0.5,
+    m: 4,
   },
   Head: {
-    fRow: ['center', 'between'],
+    row: ['center', 'between'],
   },
   Body: {
-    fCol: ['stretch', 'start'],
+    col: ['stretch', 'start'],
   },
   Row: {
-    fRow: ['center', 'between'],
+    row: ['center', 'between'],
     w: '100%',
     bg: 'b0',
     fg: 't2',
@@ -27,10 +27,10 @@ const c = Css('Grid', {
   'Row-selected': { fg: 'selected' },
   Cell: {
     position: 'relative',
-    fRow: ['center', 'around'],
+    row: ['center', 'around'],
     textAlign: 'left',
-    px: 0.5,
-    h: 3,
+    px: 4,
+    h: 34,
   },
   'Cell input': {
     background: 'transparent',

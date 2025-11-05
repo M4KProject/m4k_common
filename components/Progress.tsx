@@ -7,14 +7,14 @@ import { ComponentChildren } from 'preact';
 
 const c = Css('Progress', {
   '': {
-    fCenter: 1,
+    center: 1,
     position: 'relative',
     bg: 'b1',
     border: 'primary',
     borderRadius: '0.2em',
     w: '100%',
     overflow: 'hidden',
-    h: 1.5,
+    h: 12,
   },
   Bar: {
     position: 'absolute',
@@ -26,7 +26,7 @@ const c = Css('Progress', {
     transition: 0.5,
   },
   Text: {
-    fCenter: 1,
+    center: 1,
     position: 'absolute',
     xy: 0,
     wh: '100%',
