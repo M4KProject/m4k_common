@@ -10,7 +10,7 @@ const c = Css('Toolbar', {
     my: 0,
     elevation: 2,
     row: 1,
-    h: 40,
+    hMin: 44,
     zIndex: 20,
   },
   Title: {

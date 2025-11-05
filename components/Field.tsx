@@ -14,12 +14,15 @@ import { useFlux } from '../hooks';
 import { Dictionary } from 'fluxio';
 import { formatSeconds, parseSeconds } from 'fluxio';
 
+export const FIELD_HEIGHT = 22;
+export const LABEL_WIDTH = 200;
+
 const c = Css('Field', {
   '': {
     row: 'center',
     my: 4,
     w: '100%',
-    hMin: 22,
+    hMin: FIELD_HEIGHT,
   },
   Group: {
     row: ['center', 'between'],
@@ -35,7 +38,7 @@ const c = Css('Field', {
     textAlign: 'left',
     opacity: 0.6,
     fg: 't2',
-    w: 200,
+    w: LABEL_WIDTH,
   },
   Content: {
     row: ['center', 'start'],
@@ -44,7 +47,7 @@ const c = Css('Field', {
   },
   Input: {
     w: '100%',
-    hMin: 22,
+    hMin: FIELD_HEIGHT,
     py: 2,
     px: 8,
     border: 'g2',
@@ -69,8 +72,9 @@ const c = Css('Field', {
   '-check &Input': {
     center: 1,
     p: 0,
-    whMin: 20,
-    whMax: 20,
+    mx: 4,
+    whMin: FIELD_HEIGHT,
+    whMax: FIELD_HEIGHT,
     cursor: 'pointer',
     border: 'g2',
     bg: 'b1',
@@ -86,34 +90,34 @@ const c = Css('Field', {
   '-check &Input svg': {
     fg: 'w1',
     transition: 0.3,
-    transform: 'scale(0)',
+    scale: 0,
   },
   '-check &Input-selected svg': {
-    transform: 'scale(1)',
+    scale: 1,
   },
 
   '-switch &Input': {
     center: 1,
-    w: 40,
+    w: FIELD_HEIGHT * 2,
     cursor: 'pointer',
     border: 'g2',
     bg: 'b1',
     position: 'relative',
-    rounded: 999,
+    rounded: 99,
     transition: 0.3,
   },
   '-switch &Input-selected': { borderColor: 'p6', bg: 'p5' },
 
   '-switch &InputHandle': {
-    wh: 18,
+    wh: FIELD_HEIGHT - 4,
     bg: 'w0',
-    rounded: '50%',
+    rounded: 99,
     position: 'absolute',
     elevation: 1,
     transition: 0.3,
-    translateX: '-1em',
+    translateX: -(FIELD_HEIGHT - 4) + 'px',
   },
-  '-switch &Input-selected &InputHandle': { translateX: '1em' },
+  '-switch &Input-selected &InputHandle': { translateX: FIELD_HEIGHT - 4 + 'px' },
 });
 
 export type FieldComp<T = any> = (props: {
@@ -517,48 +521,3 @@ export const Field = (props: FieldProps) => {
 };
 
 export const FieldGroup = (props: DivProps) => <div {...props} {...c('Group', props)} />;
-
-// //     type?: 'text'|'textarea'|'select';
-// //     name: string;
-// //     label?: string|ReactNode;
-// //     value?: any;
-// //     required?: boolean;
-// //     values?: Dictionary<string|ReactNode>;
-// //     onChange: (e: any, next: any) => void,
-// //     error?: string,
-// //     helperText?: string,
-// //     className?: string,
-// //     children?: ReactNode,
-
-// export type SelectItems = Dictionary<ReactNode>|[string, ReactNode][]
-
-// export interface SelectFieldProps<T> extends FieldProps<T> {
-//     items?: () => T[]|Flux<T[]>|null,
-
-//     addContent?: ReactNode,
-//     emptyContent?: ReactNode,
-//     onAdd?: () => any|Promise<any>,
-// }
-
-// const Field = ({ className, getItems, value$, emptyContent, addContent, onAdd }: FieldProps) => {
-//     const cls = useCss('Field', css);
-//     const [items, error, isLoading, refresh] = usePromise(getItems, []);
-//     const selectedId = useFlux(selectedId$);
-
-//     return (
-//         <div className={className ? `${cls} ${className}` : cls}>
-//             {isLoading ? (
-//                 "Chargement..."
-//             ) : error ? (
-//                 <span>{error}</span>
-//             ) : (
-//
-//             )}
-//             <IconButton onClick={refresh}>
-//                 <FcSynchronize />
-//             </IconButton>
-//         </div>
-//     );
-// };
-
-// export default Input;

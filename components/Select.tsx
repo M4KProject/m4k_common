@@ -5,13 +5,18 @@ import { isArray } from 'fluxio';
 import { isSearched } from 'fluxio';
 import { ChevronDown } from 'lucide-react';
 
+const FIELD_HEIGHT = 22;
+
 const c = Css('Select', {
   '': {
     position: 'relative',
     col: ['stretch', 'start'],
     w: '100%',
+    wMax: '100%',
   },
   Container: {
+    position: 'absolute',
+    inset: 0,
     row: 1,
     wh: '100%',
     border: 'g2',
@@ -31,27 +36,26 @@ const c = Css('Select', {
     flex: 1,
     position: 'relative',
     overflow: 'hidden',
-    hMin: 1.5,
+    hMin: FIELD_HEIGHT,
   },
   InputText: {
     position: 'absolute',
     xy: 0,
-    wh: '100%',
     row: ['center', 'start'],
-    pl: 0.5,
+    pl: 4,
   },
   Dropdown: {
     position: 'absolute',
-    y: '100%',
-    mt: 2,
     x: 0,
+    y: '100%',
     w: '100%',
+    mt: 2,
     bg: 'b1',
     fg: 't1',
     border: 'g2',
     borderTop: 'none',
-    borderRadius: '0 0 4px 4px',
-    hMax: 10,
+    rounded: [0, 0, 4, 4],
+    hMax: 100,
     overflowY: 'auto',
     zIndex: 1000,
     elevation: 2,
@@ -63,14 +67,14 @@ const c = Css('Select', {
     transition: 0.2,
   },
   'Option:hover': {
-    bg: '#f5f5f5',
+    bg: 'b2',
   },
   'Option-selected': {
-    bg: '#e3f2fd',
-    fg: '#1976d2',
+    bg: 'p2',
+    fg: 'p6',
   },
   'Option-highlighted': {
-    bg: '#e8f4fd',
+    bg: 'b2',
   },
   Arrow: {
     center: 1,

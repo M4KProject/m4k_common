@@ -4,12 +4,15 @@ import { Button, ButtonProps } from './Button';
 import { Menu } from 'lucide-react';
 import { useFlux } from '@common/hooks';
 
+export const SIDE_MIN = 40;
+export const SIDE_OPEN = 180;
+
 const c = Css('Side', {
   '': {
     position: 'relative',
     transition: 0.2,
     elevation: 3,
-    w: 34,
+    w: SIDE_MIN,
     bg: 'b0',
     zIndex: 50,
   },
@@ -17,7 +20,7 @@ const c = Css('Side', {
     position: 'absolute',
     x: 0,
     y: '50%',
-    w: 34,
+    w: SIDE_MIN,
     h: '100%',
     zIndex: 100,
     overflow: 'hidden',
@@ -28,12 +31,12 @@ const c = Css('Side', {
     col: 1,
     position: 'absolute',
     xy: 0,
-    wMin: 160,
+    wMin: SIDE_OPEN,
     h: '100%',
   },
   Button: {
-    elevation: 0,
-    my: 2,
+    elevation: 1,
+    my: 4,
   },
 
   ' .ButtonContent': {
@@ -44,27 +47,19 @@ const c = Css('Side', {
     opacity: 0,
   },
   ' &Button-tab': {
-    ml: 16,
+    ml: 24,
     transition: 0.2,
   },
   '-close .Button': {
     ml: 2,
   },
 
-  '-open': {
-    w: 160,
-  },
-  '-open &Mask': {
-    w: 160,
+  '-open, -open &Mask': {
+    w: SIDE_OPEN,
   },
 
   Sep: {
-    col: ['start', 'end'],
-    pl: 1,
     flex: 1,
-    color: '#0a536f',
-    bold: 1,
-    // borderBottom: '1px solid #0a536f',
   },
 });
 

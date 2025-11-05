@@ -1,5 +1,5 @@
 import { ComponentChildren, JSX } from 'preact';
-import { Css } from 'fluxio';
+import { Css, CssStyle } from 'fluxio';
 import { DivProps } from './types';
 import { isArray, sum, toTrue } from 'fluxio';
 import { useMemo } from 'preact/hooks';
@@ -38,27 +38,22 @@ const c = Css('Grid', {
   },
 });
 
+export type GridColTitle = string | ComponentChildren;
+export type GridColVal<T, C> = (item: T, ctx: C, index: number) => ComponentChildren;
+
 export type GridCol<T extends {} = any, C extends {} = any> = {
   w?: number;
-  title?: string | ComponentChildren;
-  cls?: string;
-  val?: (item: T, ctx: C, index: number) => ComponentChildren;
+  flex?: number;
+  title?: GridColTitle;
+  cls?: string | { class: string };
+  val?: GridColVal<T, C>;
   props?: (item: T, ctx: C, index: number) => DivProps;
   if?: (col: GridCol<T, C>, ctx: C) => boolean;
 };
 
 export type ArrayGridCol<T extends {} = any, C extends {} = any> =
-  | [string | ComponentChildren, (item: T, ctx: C, index: number) => ComponentChildren]
-  | [
-      string | ComponentChildren,
-      (item: T, ctx: C, index: number) => ComponentChildren,
-      {
-        w?: number;
-        cls?: string;
-        props?: (item: T, ctx: C, index: number) => DivProps;
-        if?: (col: GridCol<T, C>, ctx: C) => boolean;
-      },
-    ];
+  | [GridColTitle, GridColVal<T, C>]
+  | [GridColTitle, GridColVal<T, C>, GridCol<T>];
 
 export type GridComputedCol = GridCol & {
   key: string;
@@ -112,18 +107,21 @@ const getComputedCols = (cols: GridCols<any, any>) => {
     computedCols.push(col);
   }
 
-  const wTotal = sum(computedCols.map((col) => col.w || 100));
-
   for (const col of computedCols) {
     if (!col.if) col.if = toTrue;
-    const width = (100 * (col.w || 100)) / wTotal + '%';
+    const sizeStyle: CssStyle = {};
+    if (col.w) sizeStyle.width = col.w + 'px';
+    if (col.flex || !col.w) sizeStyle.flex = col.flex || 1;
     const getProps = col.props;
     col.props = (item, ctx, index) => {
       const props = getProps ? getProps(item, ctx, index) : ({} as DivProps);
       return {
         ...props,
         ...c('Cell', col.cls, props),
-        style: { width, ...props.style },
+        style: {
+          ...sizeStyle,
+          ...props.style,
+        },
       };
     };
   }
